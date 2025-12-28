@@ -1,0 +1,962 @@
+import { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
+import { Search, Mic, TrendingUp, Shield, Zap, CheckCircle, PhoneOff, DollarSign, Home, Building2, Store, MapPin, Users, ArrowRight, Key } from 'lucide-react'
+import { supabase } from '../lib/supabase'
+import { Property } from '../types'
+import { PropertyCard } from '../components/PropertyCard'
+import { LocationAutocomplete } from '../components/LocationAutocomplete'
+import { ChatBot } from '../components/ChatBot'
+import { WhatsAppButton } from '../components/WhatsAppButton'
+import { AITypingAnimation } from '../components/AITypingAnimation'
+import { AISearchSuggestions } from '../components/AISearchSuggestions'
+import { WelcomeMessage } from '../components/WelcomeMessage'
+import { LoginPrompt } from '../components/LoginPrompt'
+import { AuthModal } from '../components/AuthModal'
+import { useAuth } from '../contexts/AuthContext'
+import { useSearchHistory } from '../hooks/useSearchHistory'
+
+type TabType = 'buy' | 'rent' | 'commercial'
+type PropertyCategory = 'full_house' | 'land_plot' | 'pg_hostel' | 'flatmates'
+
+export function HomePage() {
+  const { user } = useAuth()
+  const { lastSearch, saveSearch } = useSearchHistory()
+  const [activeTab, setActiveTab] = useState<TabType>('buy')
+  const [propertyCategory, setPropertyCategory] = useState<PropertyCategory>('full_house')
+  const [location, setLocation] = useState('Visakhapatnam')
+  const [locality, setLocality] = useState('')
+  const [bhkType, setBhkType] = useState('')
+  const [propertyStatus, setPropertyStatus] = useState('')
+  const [newBuilderProjects, setNewBuilderProjects] = useState(false)
+  const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
+  const [loading, setLoading] = useState(true)
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [showWelcome, setShowWelcome] = useState(false)
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false)
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const searchInputRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('login') === 'true') {
+      setShowAuthModal(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (user && lastSearch) {
+      setShowWelcome(true)
+    } else if (!user) {
+      const timer = setTimeout(() => {
+        setShowLoginPrompt(true)
+      }, 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [user, lastSearch])
+
+  useEffect(() => {
+    document.title = 'Vizag Real Estate: Buy, Sell & Rent Property in Visakhapatnam'
+
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Find the best vizag real estate deals. Search vizag plots for sale, flats, villas, and houses in Madhurawada, PM Palem, Yendada. Vizag property prices with AI-powered search.')
+    } else {
+      const meta = document.createElement('meta')
+      meta.name = 'description'
+      meta.content = 'Find the best vizag real estate deals. Search vizag plots for sale, flats, villas, and houses in Madhurawada, PM Palem, Yendada. Vizag property prices with AI-powered search.'
+      document.head.appendChild(meta)
+    }
+
+    const metaKeywords = document.querySelector('meta[name="keywords"]')
+    if (metaKeywords) {
+      metaKeywords.setAttribute('content', 'vizag real estate, vizag plots for sale, vizag house for sale, vizag flats for sale, vizag villas for sale, vizag real estate prices, vizag property, residential property in vizag')
+    } else {
+      const meta = document.createElement('meta')
+      meta.name = 'keywords'
+      meta.content = 'vizag real estate, vizag plots for sale, vizag house for sale, vizag flats for sale, vizag villas for sale, vizag real estate prices, vizag property, residential property in vizag'
+      document.head.appendChild(meta)
+    }
+
+    const faqSchema = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the price of plots in Vizag?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Vizag plot prices vary by location and size. Open plots in prime areas like Madhurawada and PM Palem range from ₹25 lakhs to ₹1 crore+ depending on proximity to IT SEZ and infrastructure. VMRDA approved plots in gated communities typically cost ₹3,000-₹8,000 per sq yard. Budget-friendly areas like Gajuwaka and Kommadi offer plots starting from ₹15-20 lakhs, while premium beachside locations like Yendada and Rushikonda can exceed ₹1.5 crore."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which area is best to buy property in Vizag?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The best areas to buy property in Vizag depend on your needs: Madhurawada is ideal for IT professionals with excellent connectivity to IT SEZ and modern infrastructure. PM Palem offers affordable residential plots with good appreciation potential. Yendada provides premium beachside villas and luxury properties. MVP Colony is perfect for established neighborhoods with complete amenities. Rushikonda suits those seeking coastal living and investment opportunities near the beach."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are VMRDA plots safe to buy in Vizag?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, VMRDA approved plots in Vizag are safe to buy. The Visakhapatnam Metropolitan Region Development Authority ensures all approved plots have clear title deeds, proper documentation, and legal compliance with urban planning regulations. VMRDA approval guarantees infrastructure development including roads, water supply, and electricity. Always verify VMRDA approval certificates, check land records, and ensure proper registration to avoid legal complications."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Vizag good for real estate investment?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Vizag is excellent for real estate investment due to multiple growth factors: expanding IT corridor in Madhurawada attracting tech companies, ongoing infrastructure projects including metro rail and port expansion, growing demand for residential and commercial properties, strong rental yields in IT hub areas (8-10% annually), government initiatives promoting industrial development, and strategic coastal location making it a prime business hub in Andhra Pradesh. Property values have shown consistent 10-15% annual appreciation in key localities."
+          }
+        }
+      ]
+    }
+
+    const existingSchema = document.querySelector('script[type="application/ld+json"]')
+    if (existingSchema) {
+      existingSchema.textContent = JSON.stringify(faqSchema)
+    } else {
+      const script = document.createElement('script')
+      script.type = 'application/ld+json'
+      script.textContent = JSON.stringify(faqSchema)
+      document.head.appendChild(script)
+    }
+
+    loadFeaturedProperties()
+  }, [])
+
+  const loadFeaturedProperties = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('status', 'available')
+        .eq('featured', true)
+        .order('created_at', { ascending: false })
+        .limit(6)
+
+      if (error) throw error
+      setFeaturedProperties(data || [])
+    } catch (error) {
+      console.error('Error loading properties:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleAdvancedSearch = async () => {
+    if (user && locality) {
+      await saveSearch(location, locality, activeTab, locality)
+    }
+
+    const params = new URLSearchParams()
+
+    if (activeTab) params.append('type', activeTab)
+    if (location) params.append('location', location)
+    if (locality) params.append('locality', locality)
+    if (bhkType) params.append('bhk', bhkType)
+    if (propertyStatus) params.append('status', propertyStatus)
+    if (propertyCategory) params.append('category', propertyCategory)
+    if (newBuilderProjects) params.append('new_builder', 'true')
+
+    window.location.href = `/properties?${params.toString()}`
+  }
+
+  const handleWelcomeSearch = () => {
+    if (lastSearch?.locality) {
+      setLocality(lastSearch.locality)
+      setLocation(lastSearch.location || 'Visakhapatnam')
+      setActiveTab(lastSearch.search_type as TabType || 'buy')
+      setShowWelcome(false)
+      setTimeout(() => {
+        handleAdvancedSearch()
+      }, 100)
+    }
+  }
+
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab)
+    if (tab === 'buy') {
+      setPropertyCategory('full_house')
+    } else if (tab === 'rent') {
+      setPropertyCategory('full_house')
+    } else {
+      setPropertyCategory('full_house')
+    }
+  }
+
+  const handleSuggestionSelect = (query: string) => {
+    setLocality(query)
+    setShowSuggestions(false)
+    handleAdvancedSearch()
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      {showWelcome && lastSearch?.locality && (
+        <WelcomeMessage
+          locality={lastSearch.locality}
+          onSearch={handleWelcomeSearch}
+        />
+      )}
+      {showLoginPrompt && !user && (
+        <LoginPrompt
+          onLogin={() => {
+            setShowLoginPrompt(false)
+            setShowAuthModal(true)
+          }}
+        />
+      )}
+      <section className="relative py-16 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-10">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 leading-tight">
+              Vizag Real Estate: Buy, Sell & Rent Property
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Find vizag plots for sale, flats, villas & houses in Visakhapatnam with AI-powered search. Check vizag real estate prices and property listings across all localities.
+            </p>
+          </div>
+
+          <div className="max-w-6xl mx-auto mb-8">
+            <AITypingAnimation />
+
+            <div className="mb-6 flex flex-col items-center justify-center gap-2">
+              <a
+                href="/add-property"
+                className="group bg-white text-primary-600 border-2 border-primary-600 px-8 py-3 rounded-full hover:bg-primary-50 transition-all font-bold text-base shadow-md hover:shadow-xl hover:scale-105 transform duration-200"
+              >
+                Post Property Free
+              </a>
+              <p className="text-xs text-gray-600 font-medium text-center">
+                Get instant buyers & tenants in Vizag
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+              <div className="flex border-b border-gray-200">
+                <button
+                  onClick={() => handleTabChange('buy')}
+                  className={`flex-1 py-4 px-6 font-semibold text-center transition-all relative ${
+                    activeTab === 'buy'
+                      ? 'text-primary-600 bg-primary-50'
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <Home className="h-5 w-5" />
+                    <span>Buy</span>
+                  </div>
+                  {activeTab === 'buy' && (
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary-600"></div>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => handleTabChange('rent')}
+                  className={`flex-1 py-4 px-6 font-semibold text-center transition-all relative ${
+                    activeTab === 'rent'
+                      ? 'text-rose-600 bg-rose-50'
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <Building2 className="h-5 w-5" />
+                    <span>Rent</span>
+                  </div>
+                  {activeTab === 'rent' && (
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-rose-600"></div>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => handleTabChange('commercial')}
+                  className={`flex-1 py-4 px-6 font-semibold text-center transition-all relative ${
+                    activeTab === 'commercial'
+                      ? 'text-orange-600 bg-orange-50'
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <Store className="h-5 w-5" />
+                    <span>Commercial</span>
+                  </div>
+                  {activeTab === 'commercial' && (
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-orange-600"></div>
+                  )}
+                </button>
+              </div>
+
+              <div className="p-4 md:p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 md:gap-4 mb-6">
+                  <div className="lg:col-span-3">
+                    <LocationAutocomplete
+                      value={location}
+                      onChange={setLocation}
+                      placeholder="Select City"
+                      className="h-12 md:h-12 border-4 border-gray-400 text-base"
+                    />
+                  </div>
+
+                  <div className="lg:col-span-6">
+                    <div className="relative" ref={searchInputRef}>
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 z-10" />
+                      <input
+                        type="text"
+                        value={locality}
+                        onChange={(e) => setLocality(e.target.value)}
+                        onFocus={() => setShowSuggestions(true)}
+                        placeholder="Search localities or landmarks"
+                        className="w-full pl-10 pr-4 py-3 h-12 border-4 border-red-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-600 text-base relative z-0 font-medium"
+                      />
+                      {showSuggestions && (
+                        <AISearchSuggestions
+                          onSelect={handleSuggestionSelect}
+                          onClose={() => setShowSuggestions(false)}
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="lg:col-span-3">
+                    <button
+                      onClick={handleAdvancedSearch}
+                      className={`w-full h-12 text-white px-6 py-3 rounded-full font-bold transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl ${
+                        activeTab === 'buy'
+                          ? 'bg-accent-500 hover:bg-accent-600'
+                          : activeTab === 'rent'
+                          ? 'bg-accent-500 hover:bg-accent-600'
+                          : 'bg-accent-500 hover:bg-accent-600'
+                      }`}
+                    >
+                      <Search className="h-5 w-5" />
+                      <span>Search</span>
+                    </button>
+                  </div>
+                </div>
+
+                {activeTab === 'buy' && (
+                  <div className="space-y-4">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <div className="flex items-center gap-4">
+                        <label className="flex items-center gap-2 cursor-pointer group">
+                          <input
+                            type="radio"
+                            name="propertyCategory"
+                            value="full_house"
+                            checked={propertyCategory === 'full_house'}
+                            onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
+                            className="w-5 h-5 text-primary-600"
+                          />
+                          <span className="font-medium text-gray-700 group-hover:text-primary-600 transition-colors">
+                            Full House
+                          </span>
+                        </label>
+
+                        <label className="flex items-center gap-2 cursor-pointer group">
+                          <input
+                            type="radio"
+                            name="propertyCategory"
+                            value="land_plot"
+                            checked={propertyCategory === 'land_plot'}
+                            onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
+                            className="w-5 h-5 text-primary-600"
+                          />
+                          <span className="font-medium text-gray-700 group-hover:text-primary-600 transition-colors">
+                            Land/Plot
+                          </span>
+                        </label>
+                      </div>
+
+                      <div className="flex-1 min-w-[200px]">
+                        <select
+                          value={bhkType}
+                          onChange={(e) => setBhkType(e.target.value)}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
+                        >
+                          <option value="">BHK Type</option>
+                          <option value="1">1 BHK</option>
+                          <option value="2">2 BHK</option>
+                          <option value="3">3 BHK</option>
+                          <option value="4">4 BHK</option>
+                          <option value="5+">5+ BHK</option>
+                        </select>
+                      </div>
+
+                      <div className="flex-1 min-w-[200px]">
+                        <select
+                          value={propertyStatus}
+                          onChange={(e) => setPropertyStatus(e.target.value)}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
+                        >
+                          <option value="">Property Status</option>
+                          <option value="ready_to_move">Ready to Move</option>
+                          <option value="under_construction">Under Construction</option>
+                        </select>
+                      </div>
+
+                      <label className="flex items-center gap-2 cursor-pointer px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                        <input
+                          type="checkbox"
+                          checked={newBuilderProjects}
+                          onChange={(e) => setNewBuilderProjects(e.target.checked)}
+                          className="w-4 h-4 text-primary-600 rounded"
+                        />
+                        <span className="font-medium text-gray-700">New Builder Projects</span>
+                      </label>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'rent' && (
+                  <div className="space-y-4">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <div className="flex items-center gap-4">
+                        <label className="flex items-center gap-2 cursor-pointer group">
+                          <input
+                            type="radio"
+                            name="propertyCategory"
+                            value="full_house"
+                            checked={propertyCategory === 'full_house'}
+                            onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
+                            className="w-5 h-5 text-rose-600"
+                          />
+                          <span className="font-medium text-gray-700 group-hover:text-rose-600 transition-colors">
+                            Full House
+                          </span>
+                        </label>
+
+                        <label className="flex items-center gap-2 cursor-pointer group">
+                          <input
+                            type="radio"
+                            name="propertyCategory"
+                            value="pg_hostel"
+                            checked={propertyCategory === 'pg_hostel'}
+                            onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
+                            className="w-5 h-5 text-rose-600"
+                          />
+                          <span className="font-medium text-gray-700 group-hover:text-rose-600 transition-colors">
+                            PG/Hostel
+                          </span>
+                        </label>
+
+                        <label className="flex items-center gap-2 cursor-pointer group">
+                          <input
+                            type="radio"
+                            name="propertyCategory"
+                            value="flatmates"
+                            checked={propertyCategory === 'flatmates'}
+                            onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
+                            className="w-5 h-5 text-rose-600"
+                          />
+                          <span className="font-medium text-gray-700 group-hover:text-rose-600 transition-colors">
+                            Flatmates
+                          </span>
+                        </label>
+                      </div>
+
+                      {propertyCategory === 'full_house' && (
+                        <div className="flex-1 min-w-[200px]">
+                          <select
+                            value={bhkType}
+                            onChange={(e) => setBhkType(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent bg-white"
+                          >
+                            <option value="">BHK Type</option>
+                            <option value="1">1 BHK</option>
+                            <option value="2">2 BHK</option>
+                            <option value="3">3 BHK</option>
+                            <option value="4">4 BHK</option>
+                            <option value="5+">5+ BHK</option>
+                          </select>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'commercial' && (
+                  <div className="space-y-4">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <div className="flex items-center gap-4">
+                        <label className="flex items-center gap-2 cursor-pointer group">
+                          <input
+                            type="radio"
+                            name="commercialType"
+                            value="rent"
+                            checked={true}
+                            className="w-5 h-5 text-orange-600"
+                          />
+                          <span className="font-medium text-gray-700 group-hover:text-orange-600 transition-colors">
+                            Rent
+                          </span>
+                        </label>
+
+                        <label className="flex items-center gap-2 cursor-pointer group">
+                          <input
+                            type="radio"
+                            name="commercialType"
+                            value="buy"
+                            className="w-5 h-5 text-orange-600"
+                          />
+                          <span className="font-medium text-gray-700 group-hover:text-orange-600 transition-colors">
+                            Buy
+                          </span>
+                        </label>
+                      </div>
+
+                      <div className="flex-1 min-w-[200px]">
+                        <select
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
+                        >
+                          <option value="">Property Type</option>
+                          <option value="office">Office Space</option>
+                          <option value="shop">Shop/Showroom</option>
+                          <option value="warehouse">Warehouse</option>
+                          <option value="coworking">Co-working Space</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-6xl mx-auto mb-12">
+            <div className="mb-10">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                Best Areas to Buy Plots in Vizag
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <a
+                href="/vizag/madhurawada"
+                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all overflow-hidden"
+              >
+                <div className="bg-gradient-to-br from-blue-700 to-blue-800 p-6">
+                  <MapPin className="h-10 w-10 text-white mb-3" />
+                  <h3 className="text-2xl font-bold text-white mb-1">
+                    Madhurawada
+                  </h3>
+                  <p className="text-blue-100 text-sm">
+                    IT Hub & Premium Locality
+                  </p>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-700 mb-4 leading-relaxed">
+                    Prime location near IT SEZ with excellent connectivity and modern infrastructure.
+                  </p>
+                  <div className="flex items-center text-blue-700 font-bold group-hover:gap-2 transition-all">
+                    View Properties <ArrowRight className="h-5 w-5 ml-1" />
+                  </div>
+                </div>
+              </a>
+
+              <a
+                href="/vizag/pm-palem"
+                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all overflow-hidden"
+              >
+                <div className="bg-gradient-to-br from-green-600 to-green-700 p-6">
+                  <MapPin className="h-10 w-10 text-white mb-3" />
+                  <h3 className="text-2xl font-bold text-white mb-1">
+                    PM Palem
+                  </h3>
+                  <p className="text-green-100 text-sm">
+                    Affordable Residential Hub
+                  </p>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-700 mb-4 leading-relaxed">
+                    Growing residential area with good appreciation potential and family-friendly environment.
+                  </p>
+                  <div className="flex items-center text-green-600 font-bold group-hover:gap-2 transition-all">
+                    View Properties <ArrowRight className="h-5 w-5 ml-1" />
+                  </div>
+                </div>
+              </a>
+
+              <a
+                href="/vizag/yendada"
+                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all overflow-hidden"
+              >
+                <div className="bg-gradient-to-br from-orange-600 to-orange-700 p-6">
+                  <MapPin className="h-10 w-10 text-white mb-3" />
+                  <h3 className="text-2xl font-bold text-white mb-1">
+                    Yendada
+                  </h3>
+                  <p className="text-orange-100 text-sm">
+                    Premium Beachside Living
+                  </p>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-700 mb-4 leading-relaxed">
+                    Luxury beachfront properties with scenic coastal views and premium amenities.
+                  </p>
+                  <div className="flex items-center text-orange-600 font-bold group-hover:gap-2 transition-all">
+                    View Properties <ArrowRight className="h-5 w-5 ml-1" />
+                  </div>
+                </div>
+              </a>
+
+              <a
+                href="/vizag/mvp-colony"
+                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all overflow-hidden"
+              >
+                <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-6">
+                  <MapPin className="h-10 w-10 text-white mb-3" />
+                  <h3 className="text-2xl font-bold text-white mb-1">
+                    MVP Colony
+                  </h3>
+                  <p className="text-blue-100 text-sm">
+                    Established Prime Area
+                  </p>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-700 mb-4 leading-relaxed">
+                    Well-established locality with complete amenities and excellent infrastructure.
+                  </p>
+                  <div className="flex items-center text-blue-600 font-bold group-hover:gap-2 transition-all">
+                    View Properties <ArrowRight className="h-5 w-5 ml-1" />
+                  </div>
+                </div>
+              </a>
+
+              <a
+                href="/vizag/gajuwaka"
+                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all overflow-hidden"
+              >
+                <div className="bg-gradient-to-br from-teal-600 to-teal-700 p-6">
+                  <MapPin className="h-10 w-10 text-white mb-3" />
+                  <h3 className="text-2xl font-bold text-white mb-1">
+                    Gajuwaka
+                  </h3>
+                  <p className="text-teal-100 text-sm">
+                    Budget-Friendly Investment
+                  </p>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-700 mb-4 leading-relaxed">
+                    Affordable properties with high rental yields and strong growth potential.
+                  </p>
+                  <div className="flex items-center text-teal-600 font-bold group-hover:gap-2 transition-all">
+                    View Properties <ArrowRight className="h-5 w-5 ml-1" />
+                  </div>
+                </div>
+              </a>
+
+              <a
+                href="/properties?q=rushikonda"
+                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all overflow-hidden"
+              >
+                <div className="bg-gradient-to-br from-cyan-600 to-cyan-700 p-6">
+                  <MapPin className="h-10 w-10 text-white mb-3" />
+                  <h3 className="text-2xl font-bold text-white mb-1">
+                    Rushikonda
+                  </h3>
+                  <p className="text-cyan-100 text-sm">
+                    Coastal Paradise
+                  </p>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-700 mb-4 leading-relaxed">
+                    Beachfront properties with panoramic ocean views and resort-style living.
+                  </p>
+                  <div className="flex items-center text-cyan-600 font-bold group-hover:gap-2 transition-all">
+                    View Properties <ArrowRight className="h-5 w-5 ml-1" />
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div className="max-w-6xl mx-auto mb-12">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                Browse by Property Type
+              </h2>
+              <p className="text-gray-600">Explore different property categories across Visakhapatnam</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Link
+                to="/vmrda-approved-plots-vizag"
+                className="group bg-gradient-to-br from-primary-50 to-white p-8 rounded-2xl border-2 border-primary-200 hover:border-primary-500 hover:shadow-2xl transition-all"
+              >
+                <div className="bg-primary-600 w-16 h-16 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <MapPin className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">VMRDA Approved Plots</h3>
+                <p className="text-gray-700 mb-4">
+                  100% legal plots with VMRDA approval. Safe investment with 180% appreciation potential.
+                </p>
+                <div className="flex items-center text-primary-600 font-semibold group-hover:gap-2 transition-all">
+                  View Plots <ArrowRight className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              <Link
+                to="/residential-property-in-vizag"
+                className="group bg-gradient-to-br from-green-50 to-white p-8 rounded-2xl border-2 border-green-200 hover:border-green-500 hover:shadow-2xl transition-all"
+              >
+                <div className="bg-green-600 w-16 h-16 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Home className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Residential Property</h3>
+                <p className="text-gray-700 mb-4">
+                  Houses, villas, and independent homes in prime Vizag localities.
+                </p>
+                <div className="flex items-center text-green-600 font-semibold group-hover:gap-2 transition-all">
+                  View Properties <ArrowRight className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              <Link
+                to="/flats-for-sale-in-vizag"
+                className="group bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl border-2 border-blue-200 hover:border-blue-500 hover:shadow-2xl transition-all"
+              >
+                <div className="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Building2 className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Flats for Sale</h3>
+                <p className="text-gray-700 mb-4">
+                  2 BHK, 3 BHK apartments in Madhurawada, MVP Colony, and other areas.
+                </p>
+                <div className="flex items-center text-blue-600 font-semibold group-hover:gap-2 transition-all">
+                  View Flats <ArrowRight className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              <Link
+                to="/flats-for-rent-vizag"
+                className="group bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl border-2 border-orange-200 hover:border-orange-500 hover:shadow-2xl transition-all"
+              >
+                <div className="bg-orange-600 w-16 h-16 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Key className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Flats for Rent</h3>
+                <p className="text-gray-700 mb-4">
+                  Rental apartments from ₹8,000/month. 1 BHK, 2 BHK, 3 BHK options available.
+                </p>
+                <div className="flex items-center text-orange-600 font-semibold group-hover:gap-2 transition-all">
+                  View Rentals <ArrowRight className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              <Link
+                to="/pg-hostels-in-vizag"
+                className="group bg-gradient-to-br from-purple-50 to-white p-8 rounded-2xl border-2 border-purple-200 hover:border-purple-500 hover:shadow-2xl transition-all"
+              >
+                <div className="bg-purple-600 w-16 h-16 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Users className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">PG & Hostels</h3>
+                <p className="text-gray-700 mb-4">
+                  Affordable PG accommodations for students and professionals across Vizag.
+                </p>
+                <div className="flex items-center text-purple-600 font-semibold group-hover:gap-2 transition-all">
+                  View PG Options <ArrowRight className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              <Link
+                to="/gated-community-plots-vizag"
+                className="group bg-gradient-to-br from-teal-50 to-white p-8 rounded-2xl border-2 border-teal-200 hover:border-teal-500 hover:shadow-2xl transition-all"
+              >
+                <div className="bg-teal-600 w-16 h-16 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Shield className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Gated Community Plots</h3>
+                <p className="text-gray-700 mb-4">
+                  Premium plots in secure gated communities with world-class amenities.
+                </p>
+                <div className="flex items-center text-teal-600 font-semibold group-hover:gap-2 transition-all">
+                  View Communities <ArrowRight className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-3 mb-8">
+            {['Vizag Plots for Sale', 'Vizag Villas for Sale', 'Vizag Flats for Sale', 'Vizag House for Sale'].map((tag) => (
+              <button
+                key={tag}
+                onClick={() => {
+                  window.location.href = `/properties?q=${encodeURIComponent(tag)}`
+                }}
+                className="px-5 py-2.5 bg-white text-gray-700 rounded-full hover:bg-primary-600 hover:text-white transition-all border-2 border-gray-200 hover:border-primary-600 shadow-sm hover:shadow-lg font-medium"
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+
+          <div className="max-w-4xl mx-auto mb-12">
+            <div className="bg-gradient-to-br from-primary-50 to-white rounded-2xl px-8 py-6 border border-primary-100 shadow-sm">
+              <p className="text-gray-700 text-sm md:text-base leading-relaxed text-center">
+                Vizag real estate market offers prime vizag plots for sale, vizag house for sale, and vizag villas for sale across top localities like Madhurawada, Yendada, and MVP Colony. Find open plots in vizag, independent houses, and gated community properties with transparent vizag real estate prices. Whether you're looking for residential property in vizag or commercial spaces, our AI-powered platform helps you discover verified listings. Search vizag flats for sale and rent with instant WhatsApp connectivity to property owners across Visakhapatnam.
+              </p>
+            </div>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl px-8 py-6 border border-gray-200 shadow-sm">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="flex items-center justify-center md:justify-start gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                  <span className="text-sm font-medium text-gray-800">
+                    AI does not rank listings by payment
+                  </span>
+                </div>
+                <div className="flex items-center justify-center md:justify-start gap-3">
+                  <PhoneOff className="h-5 w-5 text-green-600 flex-shrink-0" />
+                  <span className="text-sm font-medium text-gray-800">
+                    No spam calls
+                  </span>
+                </div>
+                <div className="flex items-center justify-center md:justify-start gap-3">
+                  <DollarSign className="h-5 w-5 text-green-600 flex-shrink-0" />
+                  <span className="text-sm font-medium text-gray-800">
+                    Explainable pricing
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-gray-600">
+              Everything you need to know about Vizag real estate
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 rounded-2xl p-6 hover:border-primary-500 hover:shadow-lg transition-all">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                What is the price of plots in Vizag?
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                Vizag plot prices vary by location and size. Open plots in prime areas like Madhurawada and PM Palem range from ₹25 lakhs to ₹1 crore+ depending on proximity to IT SEZ and infrastructure. VMRDA approved plots in gated communities typically cost ₹3,000-₹8,000 per sq yard. Budget-friendly areas like Gajuwaka and Kommadi offer plots starting from ₹15-20 lakhs, while premium beachside locations like Yendada and Rushikonda can exceed ₹1.5 crore.
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 rounded-2xl p-6 hover:border-primary-500 hover:shadow-lg transition-all">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                Which area is best to buy property in Vizag?
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                The best areas to buy property in Vizag depend on your needs: <strong>Madhurawada</strong> is ideal for IT professionals with excellent connectivity to IT SEZ and modern infrastructure. <strong>PM Palem</strong> offers affordable residential plots with good appreciation potential. <strong>Yendada</strong> provides premium beachside villas and luxury properties. <strong>MVP Colony</strong> is perfect for established neighborhoods with complete amenities. <strong>Rushikonda</strong> suits those seeking coastal living and investment opportunities near the beach.
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 rounded-2xl p-6 hover:border-primary-500 hover:shadow-lg transition-all">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                Are VMRDA plots safe to buy in Vizag?
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                Yes, VMRDA approved plots in Vizag are safe to buy. The Visakhapatnam Metropolitan Region Development Authority ensures all approved plots have clear title deeds, proper documentation, and legal compliance with urban planning regulations. VMRDA approval guarantees infrastructure development including roads, water supply, and electricity. Always verify VMRDA approval certificates, check land records, and ensure proper registration to avoid legal complications.
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 rounded-2xl p-6 hover:border-primary-500 hover:shadow-lg transition-all">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                Is Vizag good for real estate investment?
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                Vizag is excellent for real estate investment due to multiple growth factors: expanding IT corridor in Madhurawada attracting tech companies, ongoing infrastructure projects including metro rail and port expansion, growing demand for residential and commercial properties, strong rental yields in IT hub areas (8-10% annually), government initiatives promoting industrial development, and strategic coastal location making it a prime business hub in Andhra Pradesh. Property values have shown consistent 10-15% annual appreciation in key localities.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 px-4 bg-gradient-to-b from-white to-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-16">
+            <div className="bg-gradient-to-br from-white to-primary-50 p-6 rounded-2xl shadow-lg border border-primary-100 text-center hover:shadow-xl transition-all hover:-translate-y-1 duration-300">
+              <div className="bg-gradient-to-br from-primary-500 to-primary-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Zap className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">AI-Powered Search</h3>
+              <p className="text-gray-600 text-sm">
+                Natural language search understands what you want
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-white to-primary-50 p-6 rounded-2xl shadow-lg border border-primary-100 text-center hover:shadow-xl transition-all hover:-translate-y-1 duration-300">
+              <div className="bg-gradient-to-br from-primary-500 to-primary-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Mic className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Voice Assistant</h3>
+              <p className="text-gray-600 text-sm">
+                Search hands-free with voice commands
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-white to-primary-50 p-6 rounded-2xl shadow-lg border border-primary-100 text-center hover:shadow-xl transition-all hover:-translate-y-1 duration-300">
+              <div className="bg-gradient-to-br from-primary-500 to-primary-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Shield className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Verified Listings</h3>
+              <p className="text-gray-600 text-sm">
+                All properties verified by our team
+              </p>
+            </div>
+          </div>
+
+          {featuredProperties.length > 0 && (
+            <>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+                <div>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
+                    Featured Properties
+                  </h2>
+                  <p className="text-gray-600">Handpicked properties just for you</p>
+                </div>
+                <a
+                  href="/properties"
+                  className="text-primary-600 hover:text-primary-700 font-semibold flex items-center gap-1 px-4 py-2 bg-primary-50 hover:bg-primary-100 rounded-lg transition-all"
+                >
+                  View All
+                  <TrendingUp className="h-4 w-4" />
+                </a>
+              </div>
+
+              {loading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="bg-gradient-to-br from-gray-100 to-gray-200 h-80 rounded-2xl animate-pulse shadow-lg" />
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                  {featuredProperties.map((property) => (
+                    <div key={property.id} className="animate-slide-up">
+                      <PropertyCard property={property} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </section>
+
+      <ChatBot />
+      <WhatsAppButton autoOpen={true} />
+      {showAuthModal && (
+        <AuthModal onClose={() => setShowAuthModal(false)} />
+      )}
+    </div>
+  )
+}
