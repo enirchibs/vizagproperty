@@ -36,15 +36,12 @@ export function Header() {
       <header className="bg-primary-600 sticky top-0 z-40 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 md:h-18">
-            <a href="/" className="flex items-center space-x-2 py-2 flex-shrink-0">
-              <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 md:w-7 md:h-7">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="#2D4A9E" stroke="#2D4A9E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <polyline points="9 22 9 12 15 12 15 22" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-              <span className="text-sm md:text-lg lg:text-xl font-semibold text-white hidden sm:inline">Vizag Property Experts</span>
-              <span className="text-sm font-semibold text-white sm:hidden">VPE</span>
+            <a href="/" className="flex items-center py-2 flex-shrink-0">
+              <img
+                src="/assets/logo/vizag-property-logo.png"
+                alt="Vizag Property Experts logo"
+                className="h-8 md:h-10 w-auto"
+              />
             </a>
 
             <nav className="hidden md:flex items-center space-x-3 md:space-x-4 lg:space-x-6 overflow-x-auto scrollbar-hide flex-1 mx-2 md:mx-4">
