@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Heart, LogOut, Menu, X, Shield, Plus } from 'lucide-react'
+import { Heart, LogOut, Menu, X, Shield, Plus, MessageCircle } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { AuthModal } from './AuthModal'
 import { trackEvent } from '../lib/analytics'
@@ -60,6 +60,15 @@ export function Header() {
               </a>
               <a href="/vizag" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
                 About
+              </a>
+              <a
+                href="https://wa.me/917207550499?text=Hi%20Vizag%20Property%20Experts%2C%20I%20want%20to%20list%20my%20property%20in%20Vizag.%20Please%20guide%20me."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-green-600 text-white px-3 lg:px-4 py-2 md:py-2.5 rounded-full hover:bg-green-700 transition-all font-semibold shadow-sm text-xs md:text-sm lg:text-base whitespace-nowrap flex items-center gap-1.5"
+              >
+                <MessageCircle className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
+                <span>List Property</span>
               </a>
               {!user && (
                 <button
@@ -229,6 +238,16 @@ export function Header() {
               </a>
               <a href="/vizag" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center" onClick={() => setShowMenu(false)}>
                 About
+              </a>
+              <a
+                href="https://wa.me/917207550499?text=Hi%20Vizag%20Property%20Experts%2C%20I%20want%20to%20list%20my%20property%20in%20Vizag.%20Please%20guide%20me."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-green-600 text-white px-4 py-2.5 rounded-full hover:bg-green-700 transition-all font-semibold shadow-sm my-2 flex items-center gap-2"
+                onClick={() => setShowMenu(false)}
+              >
+                <MessageCircle className="h-5 w-5" />
+                <span>Post Property via WhatsApp</span>
               </a>
 
               {!user && (

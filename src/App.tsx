@@ -3,7 +3,7 @@ import { AuthProvider } from './contexts/AuthContext'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { ChatBot } from './components/ChatBot'
-import { WhatsAppButton } from './components/WhatsAppButton'
+import { FloatingWhatsAppButton } from './components/FloatingWhatsAppButton'
 import { HomePage } from './pages/HomePage'
 import { PropertiesPage } from './pages/PropertiesPage'
 import { PropertyDetailsPage } from './pages/PropertyDetailsPage'
@@ -61,7 +61,7 @@ function App() {
           </Routes>
           <Footer />
           <ChatBot />
-          <WhatsAppButton />
+          <FloatingWhatsAppButton />
         </div>
       </Router>
     </AuthProvider>

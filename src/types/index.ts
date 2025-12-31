@@ -1,3 +1,14 @@
+export interface VizagLocality {
+  id: string
+  locality_name: string
+  locality_slug: string
+  city: string
+  latitude: number
+  longitude: number
+  is_active: boolean
+  created_at: string
+}
+
 export interface Property {
   id: string
   title: string
@@ -8,8 +19,9 @@ export interface Property {
   bedrooms: number
   bathrooms: number
   area_sqft: number
-  location: string
-  city: string
+  locality_id: string
+  location?: string
+  city?: string
   state: string
   pincode?: string
   latitude?: number
@@ -60,6 +72,7 @@ export interface ChatMessage {
 export interface SearchFilters {
   property_type?: string
   listing_type?: string
+  locality_id?: string
   city?: string
   min_price?: number
   max_price?: number
@@ -68,4 +81,8 @@ export interface SearchFilters {
   min_area?: number
   max_area?: number
   amenities?: string[]
+  radius_enabled?: boolean
+  radius_km?: number
+  center_latitude?: number
+  center_longitude?: number
 }

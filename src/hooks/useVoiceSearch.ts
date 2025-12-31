@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { parseVoiceToLocality } from '../lib/voiceLocalityParser'
 
 interface SpeechRecognition extends EventTarget {
   continuous: boolean
@@ -52,6 +53,8 @@ export function useVoiceSearch() {
   const [transcript, setTranscript] = useState('')
   const [recognition, setRecognition] = useState<SpeechRecognition | null>(null)
   const [isSupported, setIsSupported] = useState(false)
+  const [localityMatch, setLocalityMatch] = useState<{ locality_name: string; locality_slug: string; confidence: string } | null>(null)
+  const [noMatchMessage, setNoMatchMessage] = useState<string | null>(null)
 
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
@@ -62,13 +65,24 @@ export function useVoiceSearch() {
       recognitionInstance.interimResults = true
       recognitionInstance.lang = 'en-US'
 
-      recognitionInstance.onresult = (event: SpeechRecognitionEvent) => {
+      recognitionInstance.onresult = async (event: SpeechRecognitionEvent) => {
         const transcript = Array.from(event.results)
           .map(result => result[0])
           .map(result => result.transcript)
           .join('')
 
         setTranscript(transcript)
+
+        if (event.results[event.results.length - 1].isFinal) {
+          const match = await parseVoiceToLocality(transcript)
+          if (match) {
+            setLocalityMatch(match)
+            setNoMatchMessage(null)
+          } else {
+            setLocalityMatch(null)
+            setNoMatchMessage('Select a Vizag locality')
+          }
+        }
       }
 
       recognitionInstance.onerror = () => {
@@ -89,6 +103,8 @@ export function useVoiceSearch() {
   const startListening = useCallback(() => {
     if (recognition && !isListening) {
       setTranscript('')
+      setLocalityMatch(null)
+      setNoMatchMessage(null)
       recognition.start()
       setIsListening(true)
     }
@@ -103,11 +119,15 @@ export function useVoiceSearch() {
 
   const resetTranscript = useCallback(() => {
     setTranscript('')
+    setLocalityMatch(null)
+    setNoMatchMessage(null)
   }, [])
 
   return {
     isListening,
     transcript,
+    localityMatch,
+    noMatchMessage,
     startListening,
     stopListening,
     resetTranscript,

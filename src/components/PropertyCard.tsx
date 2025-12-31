@@ -52,11 +52,10 @@ export function PropertyCard({ property, onFavoriteChange }: PropertyCardProps) 
 
   const handleWhatsAppInquiry = (e: React.MouseEvent) => {
     e.preventDefault()
-    const phoneNumber = property.agent_whatsapp || property.agent_phone || import.meta.env.VITE_WHATSAPP_BUSINESS_NUMBER
     const message = encodeURIComponent(
-      `Hi! I'm interested in "${property.title}" listed on VizagProperty. Can you provide more details?`
+      `Hi Vizag Property Experts, I am interested in this property in ${property.location}, Vizag.`
     )
-    window.open(`https://wa.me/${phoneNumber.replace(/[^0-9]/g, '')}?text=${message}`, '_blank')
+    window.open(`https://wa.me/917207550499?text=${message}`, '_blank')
   }
 
   const mainImage = property.images[0] || 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=800'
@@ -142,7 +141,7 @@ export function PropertyCard({ property, onFavoriteChange }: PropertyCardProps) 
             className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all text-sm font-semibold shadow-md hover:shadow-lg min-h-[44px]"
           >
             <MessageCircle className="h-4 w-4" />
-            <span>Inquire</span>
+            <span>WhatsApp Now</span>
           </button>
         </div>
       </div>

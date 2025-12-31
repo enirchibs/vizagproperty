@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { MapPin, Bed, Bath, Maximize, Heart, Share2, Phone, MessageCircle, Check } from 'lucide-react'
+import { MapPin, Bed, Bath, Maximize, Heart, Share2, Phone, MessageCircle, Check, MessageSquare } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { useAuth } from '../contexts/AuthContext'
+import { openWhatsApp } from '../lib/whatsapp'
 import { GoodDealAnalysis } from '../components/GoodDealAnalysis'
 import { BudgetStretchAdvisor } from '../components/BudgetStretchAdvisor'
 import { NegotiationCoach } from '../components/NegotiationCoach'
@@ -326,13 +327,13 @@ export function PropertyDetailsPage() {
             <BudgetStretchAdvisor
               currentPrice={property.price}
               propertyType={property.property_type}
-              location={property.location}
+              location={property.location || property.city || 'Vizag'}
               bedrooms={property.bedrooms}
             />
 
             <NegotiationCoach propertyId={property.id} currentPrice={property.price} />
 
-            <SmartAreaDiscovery currentCity={property.city} />
+            <SmartAreaDiscovery currentCity={property.city || 'Vizag'} />
 
             <PropertyShortlistMemory propertyId={property.id} />
 
@@ -354,7 +355,7 @@ export function PropertyDetailsPage() {
                   className="w-full bg-green-600 text-white py-3.5 md:py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2 font-medium text-base min-h-[48px]"
                 >
                   <MessageCircle className="h-5 w-5" />
-                  <span>WhatsApp</span>
+                  <span>WhatsApp Agent</span>
                 </button>
 
                 <button
@@ -363,6 +364,14 @@ export function PropertyDetailsPage() {
                 >
                   <Phone className="h-5 w-5" />
                   <span>Call Now</span>
+                </button>
+
+                <button
+                  onClick={() => openWhatsApp(`Hi Vizag Property Experts, I am interested in this property:\n${property.title}\nLocation: ${property.location}\nPrice: ${formatPrice(property.price)}\nPlease share more details.`)}
+                  className="w-full bg-green-50 text-green-700 border-2 border-green-600 py-3.5 md:py-3 rounded-lg hover:bg-green-100 transition-colors flex items-center justify-center space-x-2 font-medium text-base min-h-[48px]"
+                >
+                  <MessageSquare className="h-5 w-5" />
+                  <span>Enquire on WhatsApp</span>
                 </button>
               </div>
 

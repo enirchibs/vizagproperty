@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { MessageCircle, X, Home, Building2, Key, Phone, Sparkles } from 'lucide-react'
+import { openWhatsApp } from '../lib/whatsapp'
 
 interface WhatsAppButtonProps {
   autoOpen?: boolean
@@ -19,22 +20,37 @@ export function WhatsAppButton({ autoOpen = false, message, showVillaOption = fa
     }
   }, [autoOpen])
 
+  const getLocalityFromUrl = (): string | null => {
+    const localityMap: Record<string, string> = {
+      'madhurawada': 'Madhurawada',
+      'yendada': 'Yendada',
+      'pm-palem': 'PM Palem',
+      'mvp-colony': 'MVP Colony',
+      'gajuwaka': 'Gajuwaka',
+    }
+
+    const path = window.location.pathname
+    const segments = path.split('/').filter(Boolean)
+    const lastSegment = segments[segments.length - 1]
+
+    return localityMap[lastSegment] || null
+  }
+
   const handleWhatsAppClick = (message?: string) => {
-    const phoneNumber = import.meta.env.VITE_WHATSAPP_BUSINESS_NUMBER || '919182737473'
-    const defaultMessage = message || "Hi! I'm interested in properties listed on VizagProperty. Can you help me?"
-    const encodedMessage = encodeURIComponent(defaultMessage)
-    const whatsappUrl = `https://wa.me/${phoneNumber.replace(/[^0-9]/g, '')}?text=${encodedMessage}`
-    window.open(whatsappUrl, '_blank')
+    openWhatsApp(message)
     setShowPopup(false)
   }
 
   const handleQuickReply = (type: string) => {
+    const locality = getLocalityFromUrl()
+    const locationText = locality ? ` in ${locality}, Vizag` : ' in Vizag'
+
     const messages = {
-      plot: "Hi 👋 I'm looking for a Plot in Vizag. Can you help me find VMRDA approved plots?",
-      flat: "Hi 👋 I'm interested in buying a Flat in Vizag. What options are available?",
-      villa: "Hi 👋 I'm interested in luxury villas in Vizag. Can you show me available properties?",
-      rent: "Hi 👋 I'm looking for a flat for Rent in Vizag. Can you show me available properties?",
-      expert: "Hi 👋 I need expert guidance on Vizag real estate. Can we discuss?"
+      plot: `Hi 👋 I'm looking for a Plot${locationText}. Can you help me find VMRDA approved plots?`,
+      flat: `Hi 👋 I'm interested in buying a Flat${locationText}. What options are available?`,
+      villa: `Hi 👋 I'm interested in luxury villas${locationText}. Can you show me available properties?`,
+      rent: `Hi 👋 I'm looking for a flat for Rent${locationText}. Can you show me available properties?`,
+      expert: `Hi 👋 I need expert guidance on${locationText} real estate. Can we discuss?`
     }
     handleWhatsAppClick(messages[type as keyof typeof messages])
   }

@@ -1,8 +1,8 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
-import { Home, Upload, X, Camera, Video, Youtube, Instagram } from 'lucide-react'
-import { LocationAutocomplete } from '../components/LocationAutocomplete'
+import { Home, Upload, X, Camera, Video, Youtube, Instagram, MessageCircle } from 'lucide-react'
+import { VizagLocality } from '../types'
 
 export function AddPropertyPage() {
   const { user, profile } = useAuth()
@@ -15,6 +15,7 @@ export function AddPropertyPage() {
   const [youtubeLinks, setYoutubeLinks] = useState<string[]>([''])
   const [instagramLinks, setInstagramLinks] = useState<string[]>([''])
   const [showCamera, setShowCamera] = useState(false)
+  const [localities, setLocalities] = useState<VizagLocality[]>([])
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
@@ -27,15 +28,30 @@ export function AddPropertyPage() {
     bedrooms: '2',
     bathrooms: '2',
     area_sqft: '',
-    location: '',
-    city: 'Bangalore',
-    state: 'Karnataka',
+    locality_id: '',
+    state: 'Andhra Pradesh',
     pincode: '',
     agent_name: profile?.full_name || '',
     agent_phone: '',
     agent_whatsapp: '',
     amenities: [] as string[]
   })
+
+  useEffect(() => {
+    loadLocalities()
+  }, [])
+
+  const loadLocalities = async () => {
+    const { data, error } = await supabase
+      .from('vizag_localities')
+      .select('*')
+      .eq('is_active', true)
+      .order('locality_name')
+
+    if (data && !error) {
+      setLocalities(data)
+    }
+  }
 
   const propertyTypes = [
     'apartment',
@@ -317,6 +333,11 @@ export function AddPropertyPage() {
       return
     }
 
+    if (!formData.locality_id) {
+      alert('Please select a locality')
+      return
+    }
+
     setLoading(true)
     try {
       stopCamera()
@@ -326,11 +347,21 @@ export function AddPropertyPage() {
       const { data: propertyData, error } = await supabase
         .from('properties')
         .insert({
-          ...formData,
+          title: formData.title,
+          description: formData.description,
+          property_type: formData.property_type,
+          listing_type: formData.listing_type,
           price: parseFloat(formData.price),
           bedrooms: parseInt(formData.bedrooms),
           bathrooms: parseInt(formData.bathrooms),
           area_sqft: parseInt(formData.area_sqft),
+          locality_id: formData.locality_id,
+          state: formData.state,
+          pincode: formData.pincode || null,
+          amenities: formData.amenities,
+          agent_name: formData.agent_name,
+          agent_phone: formData.agent_phone,
+          agent_whatsapp: formData.agent_whatsapp || null,
           owner_id: user.id,
           images: imageUrls
         })
@@ -436,6 +467,35 @@ export function AddPropertyPage() {
           <div className="flex items-center space-x-3 mb-6">
             <Home className="h-8 w-8 text-primary-600" />
             <h1 className="text-3xl font-bold text-gray-900">List Your Property</h1>
+          </div>
+
+          <div className="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-200">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Prefer WhatsApp? List via WhatsApp!</h3>
+                <p className="text-sm text-gray-600">Share property details directly on WhatsApp and our team will list it for you within 24 hours.</p>
+              </div>
+              <a
+                href="https://wa.me/917207550499?text=Hi%20Vizag%20Property%20Experts%2C%20I%20want%20to%20post%20my%20property%20in%20Vizag."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-full hover:bg-green-700 transition-all font-semibold shadow-lg whitespace-nowrap"
+              >
+                <MessageCircle className="h-5 w-5" />
+                <span>Post Property via WhatsApp</span>
+              </a>
+            </div>
+          </div>
+
+          <div className="mb-6 text-center">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-gray-500">OR fill the form below</span>
+              </div>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -557,53 +617,26 @@ export function AddPropertyPage() {
                 />
               </div>
 
-              <div>
+              <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Location
+                  Locality <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="text"
+                <select
                   required
-                  value={formData.location}
-                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                  value={formData.locality_id}
+                  onChange={(e) => setFormData({ ...formData, locality_id: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Whitefield"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  City
-                </label>
-                <LocationAutocomplete
-                  value={formData.city}
-                  onChange={(value) => {
-                    const parts = value.split(',').map(p => p.trim())
-                    if (parts.length >= 2) {
-                      setFormData({
-                        ...formData,
-                        city: parts[0],
-                        state: parts[parts.length - 1]
-                      })
-                    } else {
-                      setFormData({ ...formData, city: value })
-                    }
-                  }}
-                  placeholder="Search for city or state"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  State
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.state}
-                  onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                />
+                >
+                  <option value="">Select a locality in Vizag</option>
+                  {localities.map(locality => (
+                    <option key={locality.id} value={locality.id}>
+                      {locality.locality_name}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  All properties must be in Visakhapatnam (Vizag) area
+                </p>
               </div>
 
               <div>

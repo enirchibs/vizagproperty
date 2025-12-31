@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Home, TrendingUp, MapPin, DollarSign, Building2, Landmark, CheckCircle, ArrowLeft } from 'lucide-react'
+import { Home, TrendingUp, MapPin, DollarSign, Building2, Landmark, CheckCircle, ArrowLeft, MessageCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { PropertyCard } from '../components/PropertyCard'
 import { WhatsAppButton } from '../components/WhatsAppButton'
+import { openWhatsApp } from '../lib/whatsapp'
 import { buildStrictQuery, getLocalityContext } from '../lib/searchFilters'
 
 export function MVPColonyPage() {
@@ -86,10 +87,17 @@ export function MVPColonyPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
             <div className="lg:col-span-2">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 flex items-center gap-3">
                 <Building2 className="h-8 w-8 text-orange-600" />
                 Flats for Sale in MVP Colony
               </h2>
+              <button
+                onClick={() => openWhatsApp('Hi Vizag Property Experts, I am looking for property in MVP Colony, Vizag')}
+                className="inline-flex items-center gap-2 bg-green-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-green-700 transition-all mb-6"
+              >
+                <MessageCircle className="h-5 w-5" />
+                Get Properties on WhatsApp
+              </button>
               <p className="text-gray-700 leading-relaxed mb-4">
                 MVP Colony stands as one of Visakhapatnam's oldest and most well-established residential localities, offering a unique blend of mature neighborhood character and modern living conveniences. The area features a mix of older apartment buildings and contemporary complexes, providing options across various budget ranges and age preferences. Established in the 1970s and 80s to house Visakhapatnam Steel Plant employees, the locality has evolved into a diverse residential community with excellent social infrastructure and strong community bonds.
               </p>
@@ -337,24 +345,22 @@ export function MVPColonyPage() {
             </div>
           </div>
 
-          {properties.length > 0 && (
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+            Latest Properties in MVP Colony
+          </h2>
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="bg-gray-200 h-80 rounded-2xl animate-pulse" />
+              ))}
+            </div>
+          ) : properties.length > 0 ? (
             <>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
-                Latest Properties in MVP Colony
-              </h2>
-              {loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="bg-gray-200 h-80 rounded-2xl animate-pulse" />
-                  ))}
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {properties.map((property) => (
-                    <PropertyCard key={property.id} property={property} />
-                  ))}
-                </div>
-              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {properties.map((property) => (
+                  <PropertyCard key={property.id} property={property} />
+                ))}
+              </div>
               <div className="text-center mt-8">
                 <a
                   href="/properties?location=MVP Colony"
@@ -365,6 +371,19 @@ export function MVPColonyPage() {
                 </a>
               </div>
             </>
+          ) : (
+            <div className="text-center py-12 bg-gray-50 rounded-2xl">
+              <Home className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">No matching properties found in this area.</h3>
+              <p className="text-gray-600 mb-6">We couldn't find any properties in MVP Colony matching your search</p>
+              <button
+                onClick={() => openWhatsApp('Hi Vizag Property Experts, I searched for property in MVP Colony but found no results. Please share matching options.')}
+                className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-all"
+              >
+                <MessageCircle className="h-5 w-5" />
+                Get properties on WhatsApp
+              </button>
+            </div>
           )}
         </div>
       </section>

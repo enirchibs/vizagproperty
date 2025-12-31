@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Search, MapPin, Users, CheckCircle2, Home, Wifi, Utensils, ShieldCheck, Building2, TrendingUp, Zap, DollarSign, Upload } from 'lucide-react'
+import { Search, MapPin, Users, CheckCircle2, Home, Wifi, Utensils, ShieldCheck, Building2, TrendingUp, Zap, DollarSign, Upload, Mic, MicOff, X } from 'lucide-react'
+import { useVoiceSearch } from '../hooks/useVoiceSearch'
 
 export default function PGHostelsPage() {
+  const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
   const [searchQuery, setSearchQuery] = useState('')
   const [showBudgetPrompt, setShowBudgetPrompt] = useState(false)
   const [selectedLocation, setSelectedLocation] = useState('')
@@ -77,8 +79,29 @@ export default function PGHostelsPage() {
     }
   }, [])
 
+  useEffect(() => {
+    if (transcript) {
+      setSearchQuery(transcript)
+    }
+  }, [transcript])
+
+  useEffect(() => {
+    if (localityMatch) {
+      setSearchQuery(localityMatch.locality_name)
+    }
+  }, [localityMatch])
+
   const handleSearch = () => {
     window.location.href = `/properties?search=${encodeURIComponent(searchQuery)}`
+  }
+
+  const handleVoiceToggle = () => {
+    if (isListening) {
+      stopListening()
+    } else {
+      resetTranscript()
+      startListening()
+    }
   }
 
   const handleAISearch = () => {
@@ -109,14 +132,64 @@ export default function PGHostelsPage() {
 
             <div className="bg-white rounded-2xl shadow-2xl p-2">
               <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Search PG & Hostels in Vizag..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  className="flex-1 px-6 py-4 text-gray-900 rounded-xl focus:outline-none"
-                />
+                <div className="flex-1 relative">
+                  <input
+                    type="text"
+                    placeholder="Search PG & Hostels in Vizag..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                    className="w-full px-6 py-4 pr-14 text-gray-900 rounded-xl focus:outline-none"
+                  />
+                  {isSupported && (
+                    <button
+                      onClick={handleVoiceToggle}
+                      className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg transition-all ${
+                        isListening
+                          ? 'bg-red-600 text-white animate-pulse'
+                          : 'text-gray-600 hover:bg-gray-200'
+                      }`}
+                      aria-label={isListening ? "Stop voice search" : "Start voice search"}
+                    >
+                      {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+                    </button>
+                  )}
+                  {localityMatch && (
+                    <div className="absolute top-full left-0 right-0 mt-2 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between z-20">
+                      <div className="flex items-center space-x-2">
+                        <MapPin className="h-5 w-5 text-green-600 flex-shrink-0" />
+                        <div>
+                          <div className="text-sm font-medium text-green-900">
+                            Found: {localityMatch.locality_name}
+                          </div>
+                          <div className="text-xs text-green-600">
+                            {localityMatch.confidence === 'exact' ? 'Exact match' : 'Similar match'}
+                          </div>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => resetTranscript()}
+                        className="text-green-600 hover:text-green-800"
+                      >
+                        <X className="h-5 w-5" />
+                      </button>
+                    </div>
+                  )}
+                  {noMatchMessage && (
+                    <div className="absolute top-full left-0 right-0 mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center justify-between z-20">
+                      <div className="flex items-center space-x-2">
+                        <MapPin className="h-5 w-5 text-yellow-600 flex-shrink-0" />
+                        <div className="text-sm font-medium text-yellow-900">{noMatchMessage}</div>
+                      </div>
+                      <button
+                        onClick={() => resetTranscript()}
+                        className="text-yellow-600 hover:text-yellow-800"
+                      >
+                        <X className="h-5 w-5" />
+                      </button>
+                    </div>
+                  )}
+                </div>
                 <button
                   onClick={handleSearch}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 transition-colors"

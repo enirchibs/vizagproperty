@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Home, TrendingUp, MapPin, DollarSign, Building2, Landmark, CheckCircle, ArrowLeft } from 'lucide-react'
+import { Home, TrendingUp, MapPin, DollarSign, Building2, Landmark, CheckCircle, ArrowLeft, MessageCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { PropertyCard } from '../components/PropertyCard'
 import { WhatsAppButton } from '../components/WhatsAppButton'
 import { buildStrictQuery, getLocalityContext } from '../lib/searchFilters'
+import { openWhatsApp } from '../lib/whatsapp'
 
 export function PMPalemPage() {
   const [properties, setProperties] = useState<Property[]>([])
@@ -86,10 +87,17 @@ export function PMPalemPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
             <div className="lg:col-span-2">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 flex items-center gap-3">
                 <Building2 className="h-8 w-8 text-green-600" />
                 Flats for Sale in PM Palem
               </h2>
+              <button
+                onClick={() => openWhatsApp('Hi Vizag Property Experts, I am looking for property in PM Palem, Vizag')}
+                className="inline-flex items-center gap-2 bg-green-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-green-700 transition-all mb-6"
+              >
+                <MessageCircle className="h-5 w-5" />
+                Get Properties on WhatsApp
+              </button>
               <p className="text-gray-700 leading-relaxed mb-4">
                 PM Palem has established itself as one of Visakhapatnam's most sought-after mid-range residential localities, offering excellent value propositions for homebuyers seeking quality apartments without premium pricing. The area features numerous apartment complexes ranging from budget-friendly 2 BHK units to spacious 3 BHK homes, all equipped with essential modern amenities including covered parking, power backup, water supply, and security services. The locality's strategic positioning between IT hubs and the city center makes it particularly attractive to working professionals.
               </p>
@@ -337,24 +345,22 @@ export function PMPalemPage() {
             </div>
           </div>
 
-          {properties.length > 0 && (
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+            Latest Properties in PM Palem
+          </h2>
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="bg-gray-200 h-80 rounded-2xl animate-pulse" />
+              ))}
+            </div>
+          ) : properties.length > 0 ? (
             <>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
-                Latest Properties in PM Palem
-              </h2>
-              {loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="bg-gray-200 h-80 rounded-2xl animate-pulse" />
-                  ))}
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {properties.map((property) => (
-                    <PropertyCard key={property.id} property={property} />
-                  ))}
-                </div>
-              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {properties.map((property) => (
+                  <PropertyCard key={property.id} property={property} />
+                ))}
+              </div>
               <div className="text-center mt-8">
                 <a
                   href="/properties?location=PM Palem"
@@ -365,6 +371,19 @@ export function PMPalemPage() {
                 </a>
               </div>
             </>
+          ) : (
+            <div className="text-center py-12 bg-gray-50 rounded-2xl">
+              <Home className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">No matching properties found in this area.</h3>
+              <p className="text-gray-600 mb-6">We couldn't find any properties in PM Palem matching your search</p>
+              <button
+                onClick={() => openWhatsApp('Hi Vizag Property Experts, I searched for property in PM Palem but found no results. Please share matching options.')}
+                className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-all"
+              >
+                <MessageCircle className="h-5 w-5" />
+                Get properties on WhatsApp
+              </button>
+            </div>
           )}
         </div>
       </section>
