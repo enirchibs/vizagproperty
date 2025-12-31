@@ -218,7 +218,7 @@ export function HomePage() {
               Vizag Real Estate: Buy, Sell & Rent Property
             </h1>
             <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Find vizag plots for sale, flats, villas & houses in Visakhapatnam with AI-powered search. Check vizag real estate prices and property listings across all localities.
+              Find vizag plots for sale, flats, villas & houses in Visakhapatnam with AI-powered search. 
             </p>
           </div>
 
