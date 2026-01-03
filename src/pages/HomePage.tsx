@@ -9,7 +9,6 @@ import { ChatBot } from '../components/ChatBot'
 import { AITypingAnimation } from '../components/AITypingAnimation'
 import { AISearchSuggestions } from '../components/AISearchSuggestions'
 import { WelcomeMessage } from '../components/WelcomeMessage'
-import { LoginPrompt } from '../components/LoginPrompt'
 import { AuthModal } from '../components/AuthModal'
 import { useAuth } from '../contexts/AuthContext'
 import { useSearchHistory } from '../hooks/useSearchHistory'
@@ -34,7 +33,6 @@ export function HomePage() {
   const [loading, setLoading] = useState(true)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [showWelcome, setShowWelcome] = useState(false)
-  const [showLoginPrompt, setShowLoginPrompt] = useState(false)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const searchInputRef = useRef<HTMLDivElement>(null)
 
@@ -48,11 +46,6 @@ export function HomePage() {
   useEffect(() => {
     if (user && lastSearch) {
       setShowWelcome(true)
-    } else if (!user) {
-      const timer = setTimeout(() => {
-        setShowLoginPrompt(true)
-      }, 3000)
-      return () => clearTimeout(timer)
     }
   }, [user, lastSearch])
 
@@ -224,14 +217,6 @@ export function HomePage() {
         <WelcomeMessage
           locality={lastSearch.locality}
           onSearch={handleWelcomeSearch}
-        />
-      )}
-      {showLoginPrompt && !user && (
-        <LoginPrompt
-          onLogin={() => {
-            setShowLoginPrompt(false)
-            setShowAuthModal(true)
-          }}
         />
       )}
       <section className="relative py-16 px-4">

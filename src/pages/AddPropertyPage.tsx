@@ -3,10 +3,12 @@ import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Home, Upload, X, Camera, Video, Youtube, Instagram, MessageCircle } from 'lucide-react'
 import { VizagLocality } from '../types'
+import { AuthModal } from '../components/AuthModal'
 
 export function AddPropertyPage() {
   const { user, profile } = useAuth()
   const [loading, setLoading] = useState(false)
+  const [showAuthModal, setShowAuthModal] = useState(false)
   const [uploadingImages, setUploadingImages] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [imagePreviews, setImagePreviews] = useState<string[]>([])
@@ -396,53 +398,53 @@ export function AddPropertyPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-50 flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-          <div className="mb-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mb-4">
-              <Home className="h-8 w-8 text-gray-900" />
+      <>
+        {showAuthModal && (
+          <AuthModal
+            onClose={() => setShowAuthModal(false)}
+            intentRole="owner"
+            redirectTo="/add-property"
+          />
+        )}
+        <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-50 flex items-center justify-center px-4">
+          <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
+            <div className="mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mb-4">
+                <Home className="h-8 w-8 text-gray-900" />
+              </div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Post Your Property — Free</h2>
+              <p className="text-gray-600 mb-6">Register now to list your property and reach thousands of buyers</p>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Post Your Property — Free</h2>
-            <p className="text-gray-600 mb-6">Register now to list your property and reach thousands of buyers</p>
-          </div>
 
-          <div className="space-y-4 mb-6">
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-              <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
-              <span>Verified listings</span>
+            <div className="space-y-4 mb-6">
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
+                <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
+                <span>Verified listings</span>
+              </div>
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
+                <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
+                <span>AI-powered property matching</span>
+              </div>
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
+                <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
+                <span>Transparent pricing</span>
+              </div>
             </div>
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-              <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
-              <span>AI-powered property matching</span>
-            </div>
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-              <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
-              <span>Transparent pricing</span>
-            </div>
-          </div>
 
-          <div className="space-y-3">
-            <a
-              href="/?auth=signup"
-              className="block w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-6 py-3 rounded-full hover:from-yellow-500 hover:to-orange-600 transition-all font-bold shadow-lg hover:shadow-xl"
-            >
-              Register with Email
-            </a>
-            <a
-              href="/?auth=signup"
-              className="block w-full bg-primary-600 text-white px-6 py-3 rounded-full hover:bg-primary-700 transition-all font-semibold"
-            >
-              Register with Mobile
-            </a>
-            <p className="text-sm text-gray-600 pt-2">
-              Already have an account?{' '}
-              <a href="/?auth=signin" className="text-primary-600 hover:text-primary-700 font-semibold">
-                Sign in
-              </a>
-            </p>
+            <div className="space-y-3">
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="block w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-6 py-3 rounded-full hover:from-yellow-500 hover:to-orange-600 transition-all font-bold shadow-lg hover:shadow-xl"
+              >
+                Login with Mobile OTP
+              </button>
+              <p className="text-sm text-gray-600">
+                We never spam. OTP based secure login.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     )
   }
 
