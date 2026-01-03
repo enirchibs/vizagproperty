@@ -7,7 +7,7 @@ interface PostPropertyModalProps {
 }
 
 export function PostPropertyModal({ onClose }: PostPropertyModalProps) {
-  const { signUp } = useAuth()
+  const { signInWithPhone } = useAuth()
   const [authType, setAuthType] = useState<'email' | 'mobile'>('mobile')
   const [email, setEmail] = useState('')
   const [mobile, setMobile] = useState('')
@@ -28,9 +28,12 @@ export function PostPropertyModal({ onClose }: PostPropertyModalProps) {
 
     setLoading(true)
     try {
-      const emailToUse = authType === 'email' ? email : `${mobile}@mobile.placeholder`
-      await signUp(emailToUse, password, fullName, 'seller')
-      window.location.href = '/add-property'
+      if (authType === 'mobile' && mobile) {
+        await signInWithPhone(`+91${mobile}`)
+        setError('OTP sent! Please check your phone.')
+      } else {
+        setError('Email authentication is temporarily unavailable. Please use mobile.')
+      }
     } catch (err: any) {
       setError(err.message || 'An error occurred. Please try again.')
     } finally {
