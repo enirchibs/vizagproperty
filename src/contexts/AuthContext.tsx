@@ -11,7 +11,10 @@ interface AuthContextType {
   signUp: (email: string, password: string, fullName: string, userType: 'buyer' | 'seller' | 'agent') => Promise<void>
   signIn: (email: string, password: string) => Promise<void>
   signInWithPhone: (phone: string) => Promise<void>
-  verifyOtp: (phone: string, otp: string) => Promise<void>
+  verifyOtp: (phone: string, otp: string, intentRole?: 'buyer' | 'owner', redirectTo?: string) => Promise<void>
+  signInWithEmail: (email: string, password: string, redirectTo?: string) => Promise<void>
+  signUpWithEmail: (email: string, password: string, name: string, intentRole?: 'buyer' | 'owner', redirectTo?: string) => Promise<void>
+  signInWithOAuth: (provider: 'google' | 'microsoft', intentRole?: 'buyer' | 'owner', redirectTo?: string) => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -98,7 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) throw error
   }
 
-  const verifyOtp = async (phone: string, token: string) => {
+  const verifyOtp = async (phone: string, token: string, intentRole: 'buyer' | 'owner' = 'buyer', redirectTo?: string) => {
     const { data, error } = await supabase.auth.verifyOtp({
       phone,
       token,
@@ -106,23 +109,93 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
     if (error) throw error
 
-    if (data.user && !data.user.user_metadata?.profile_created) {
+    if (data.user) {
+      const { data: existingProfile } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('id', data.user.id)
+        .maybeSingle()
+
+      if (!existingProfile) {
+        const { error: profileError } = await supabase
+          .from('user_profiles')
+          .insert({
+            id: data.user.id,
+            name: data.user.phone || 'User',
+            phone: data.user.phone,
+            role: intentRole,
+            auth_provider: 'phone',
+            user_type: intentRole === 'owner' ? 'seller' : 'buyer'
+          })
+
+        if (profileError && profileError.code !== '23505') {
+          console.error('Error creating profile:', profileError)
+        }
+      } else if (existingProfile.role !== 'both' && existingProfile.role !== intentRole) {
+        await supabase.rpc('upgrade_user_role', { user_id: data.user.id, new_role: intentRole })
+      }
+
+      if (redirectTo) {
+        window.location.href = redirectTo
+      }
+    }
+  }
+
+  const signInWithEmail = async (email: string, password: string, redirectTo?: string) => {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) throw error
+
+    if (redirectTo && data.user) {
+      window.location.href = redirectTo
+    }
+  }
+
+  const signUpWithEmail = async (email: string, password: string, name: string, intentRole: 'buyer' | 'owner' = 'buyer', redirectTo?: string) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name,
+          role: intentRole
+        }
+      }
+    })
+    if (error) throw error
+
+    if (data.user) {
       const { error: profileError } = await supabase
         .from('user_profiles')
         .insert({
           id: data.user.id,
-          full_name: data.user.phone || 'User',
-          user_type: 'buyer',
+          name,
+          email: data.user.email,
+          role: intentRole,
+          auth_provider: 'email',
+          user_type: intentRole === 'owner' ? 'seller' : 'buyer'
         })
 
       if (profileError && profileError.code !== '23505') {
         console.error('Error creating profile:', profileError)
       }
 
-      await supabase.auth.updateUser({
-        data: { profile_created: true }
-      })
+      if (redirectTo) {
+        window.location.href = redirectTo
+      }
     }
+  }
+
+  const signInWithOAuth = async (provider: 'google' | 'microsoft', intentRole: 'buyer' | 'owner' = 'buyer', redirectTo?: string) => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: provider === 'microsoft' ? 'azure' : 'google',
+      options: {
+        redirectTo: redirectTo || window.location.origin,
+        queryParams: {
+          intent_role: intentRole
+        }
+      }
+    })
+    if (error) throw error
   }
 
   const signOut = async () => {
@@ -131,7 +204,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, profile, session, loading, signUp, signIn, signInWithPhone, verifyOtp, signOut }}>
+    <AuthContext.Provider value={{
+      user,
+      profile,
+      session,
+      loading,
+      signUp,
+      signIn,
+      signInWithPhone,
+      verifyOtp,
+      signInWithEmail,
+      signUpWithEmail,
+      signInWithOAuth,
+      signOut
+    }}>
       {children}
     </AuthContext.Provider>
   )

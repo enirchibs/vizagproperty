@@ -43,11 +43,15 @@ export interface Property {
 
 export interface UserProfile {
   id: string
-  full_name: string
+  full_name?: string
+  name?: string
   phone?: string
+  email?: string
   avatar_url?: string
   user_type: 'buyer' | 'seller' | 'agent'
-  preferences: Record<string, any>
+  role?: 'buyer' | 'owner' | 'both'
+  auth_provider?: 'phone' | 'email' | 'google' | 'microsoft'
+  preferences?: Record<string, any>
   created_at: string
   updated_at: string
 }

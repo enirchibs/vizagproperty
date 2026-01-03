@@ -20,10 +20,27 @@ export function PropertiesPage() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    const query = params.get('q')
+    const query = params.get('keyword') || params.get('q')
+    const propertyType = params.get('propertyType')
+    const listingType = params.get('listingType')
+    const localitySlug = params.get('locality')
+
     if (query) {
       setSearchQuery(query)
     }
+
+    if (propertyType) {
+      setFilters(prev => ({ ...prev, property_type: propertyType }))
+    }
+
+    if (listingType) {
+      setFilters(prev => ({ ...prev, listing_type: listingType }))
+    }
+
+    if (localitySlug) {
+      setFilters(prev => ({ ...prev, locality_id: localitySlug }))
+    }
+
     loadProperties()
   }, [])
 
@@ -59,6 +76,7 @@ export function PropertiesPage() {
         let query = supabase
           .from('properties')
           .select('*')
+          .eq('city', 'Vizag')
           .eq('status', 'available')
 
         if (filters.property_type) {
@@ -80,7 +98,11 @@ export function PropertiesPage() {
           query = query.eq('bedrooms', filters.bedrooms)
         }
 
-        query = query.order('created_at', { ascending: false })
+        if (searchQuery) {
+          query = query.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`)
+        }
+
+        query = query.order('created_at', { ascending: false }).limit(50)
 
         const { data, error } = await query
 

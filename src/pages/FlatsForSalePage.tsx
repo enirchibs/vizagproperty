@@ -62,18 +62,38 @@ export default function FlatsForSalePage() {
       const existingScript = document.querySelector('script[type="application/ld+json"]')
       if (existingScript) existingScript.remove()
     }
-  }, [])
+  }, [selectedBudget, selectedBHK])
 
   const loadProperties = async () => {
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('properties')
         .select('*')
-        .in('property_type', ['Apartment', 'Flat'])
-        .eq('listing_type', 'sale')
+        .eq('city', 'Vizag')
         .eq('status', 'available')
-        .order('created_at', { ascending: false })
-        .limit(12)
+        .in('property_type', ['apartment', 'flat'])
+        .eq('listing_type', 'sale')
+
+      if (selectedBudget) {
+        const [min, max] = selectedBudget.split('-').map(v => v.replace('+', ''))
+        if (min) {
+          const minPrice = parseInt(min) * 100000
+          query = query.gte('price', minPrice)
+        }
+        if (max) {
+          const maxPrice = parseInt(max) * 100000
+          query = query.lte('price', maxPrice)
+        }
+      }
+
+      if (selectedBHK) {
+        const bhkNum = selectedBHK.replace('BHK', '').trim()
+        query = query.eq('bedrooms', parseInt(bhkNum))
+      }
+
+      query = query.order('created_at', { ascending: false }).limit(12)
+
+      const { data, error } = await query
 
       if (error) throw error
       setProperties(data || [])
@@ -101,7 +121,11 @@ export default function FlatsForSalePage() {
   }, [localityMatch])
 
   const handleSearch = () => {
-    window.location.href = `/properties?search=${encodeURIComponent(searchQuery)}`
+    const params = new URLSearchParams()
+    params.append('propertyType', 'flat')
+    params.append('listingType', 'sale')
+    if (searchQuery) params.append('keyword', searchQuery)
+    window.location.href = `/properties?${params.toString()}`
   }
 
   const handleVoiceToggle = () => {
@@ -299,12 +323,7 @@ export default function FlatsForSalePage() {
           <div className="text-center mt-6">
             <button
               onClick={() => {
-                let searchUrl = '/properties?type=Apartment,Flat&listing_type=sale&'
-                if (selectedBHK) searchUrl += `bhk=${encodeURIComponent(selectedBHK)}&`
-                if (selectedBudget) searchUrl += `budget=${selectedBudget}&`
-                if (selectedStatus) searchUrl += `status=${selectedStatus}&`
-                searchUrl = searchUrl.slice(0, -1)
-                window.location.href = searchUrl
+                loadProperties()
               }}
               className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-12 py-4 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all flex items-center gap-3 mx-auto"
             >
