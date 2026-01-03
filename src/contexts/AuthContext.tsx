@@ -54,19 +54,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             .maybeSingle()
 
           if (!existingProfile) {
+            const authProvider = session.user.app_metadata?.provider || 'google'
             await supabase
               .from('user_profiles')
               .insert({
                 id: session.user.id,
-                name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
+                name: session.user.user_metadata?.name || session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
                 email: session.user.email,
+                phone: session.user.phone,
                 role: intentRole as 'buyer' | 'owner',
-                auth_provider: 'google',
+                auth_provider: authProvider,
                 user_type: intentRole === 'owner' ? 'seller' : 'buyer'
               })
               .then(() => loadProfile(session.user.id))
           } else {
-            await loadProfile(session.user.id)
+            if (intentRole === 'owner' && existingProfile.role === 'buyer') {
+              await supabase.rpc('upgrade_user_role', {
+                user_id: session.user.id,
+                new_role: 'owner'
+              })
+              await loadProfile(session.user.id)
+            } else {
+              await loadProfile(session.user.id)
+            }
           }
 
           if (redirectTo && event === 'SIGNED_IN') {

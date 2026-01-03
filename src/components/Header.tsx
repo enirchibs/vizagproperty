@@ -7,6 +7,7 @@ import { trackEvent } from '../lib/analytics'
 export function Header() {
   const { user, signOut } = useAuth()
   const [showAuthModal, setShowAuthModal] = useState(false)
+  const [authModalProps, setAuthModalProps] = useState<{ intentRole?: 'buyer' | 'owner'; redirectTo?: string }>({})
   const [showMenu, setShowMenu] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
 
@@ -27,6 +28,7 @@ export function Header() {
     if (user) {
       window.location.href = '/add-property'
     } else {
+      setAuthModalProps({ intentRole: 'owner', redirectTo: '/add-property' })
       setShowAuthModal(true)
       setShowMenu(false)
     }
@@ -286,7 +288,14 @@ export function Header() {
       </header>
 
       {showAuthModal && (
-        <AuthModal onClose={() => setShowAuthModal(false)} />
+        <AuthModal
+          onClose={() => {
+            setShowAuthModal(false)
+            setAuthModalProps({})
+          }}
+          intentRole={authModalProps.intentRole}
+          redirectTo={authModalProps.redirectTo}
+        />
       )}
     </>
   )
