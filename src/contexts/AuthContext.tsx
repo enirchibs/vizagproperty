@@ -14,7 +14,7 @@ interface AuthContextType {
   verifyOtp: (phone: string, otp: string, intentRole?: 'buyer' | 'owner', redirectTo?: string) => Promise<void>
   signInWithEmail: (email: string, password: string, redirectTo?: string) => Promise<void>
   signUpWithEmail: (email: string, password: string, name: string, intentRole?: 'buyer' | 'owner', redirectTo?: string) => Promise<void>
-  signInWithOAuth: (provider: 'google' | 'microsoft', intentRole?: 'buyer' | 'owner', redirectTo?: string) => Promise<void>
+  signInWithOAuth: (provider: 'google', intentRole?: 'buyer' | 'owner', redirectTo?: string) => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -185,9 +185,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const signInWithOAuth = async (provider: 'google' | 'microsoft', intentRole: 'buyer' | 'owner' = 'buyer', redirectTo?: string) => {
+  const signInWithOAuth = async (_provider: 'google', intentRole: 'buyer' | 'owner' = 'buyer', redirectTo?: string) => {
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: provider === 'microsoft' ? 'azure' : 'google',
+      provider: 'google',
       options: {
         redirectTo: redirectTo || window.location.origin,
         queryParams: {

@@ -8,7 +8,7 @@ interface AuthModalProps {
   redirectTo?: string
 }
 
-type AuthMethod = 'phone' | 'email' | 'google' | 'microsoft'
+type AuthMethod = 'phone' | 'email' | 'google'
 
 export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthModalProps) {
   const { signInWithPhone, verifyOtp, signInWithEmail, signUpWithEmail, signInWithOAuth } = useAuth()
@@ -94,14 +94,23 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+
+    if (isSignUp) {
+      if (!name) {
+        setError('Please enter your name')
+        return
+      }
+      const passwordError = validatePassword(password)
+      if (passwordError) {
+        setError(passwordError)
+        return
+      }
+    }
+
     setLoading(true)
 
     try {
       if (isSignUp) {
-        if (!name) {
-          setError('Please enter your name')
-          return
-        }
         await signUpWithEmail(email, password, name, intentRole, redirectTo)
       } else {
         await signInWithEmail(email, password, redirectTo)
@@ -114,16 +123,29 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
     }
   }
 
-  const handleOAuthSignIn = async (provider: 'google' | 'microsoft') => {
+  const handleOAuthSignIn = async () => {
     setError('')
     setLoading(true)
 
     try {
-      await signInWithOAuth(provider, intentRole, redirectTo)
+      await signInWithOAuth('google', intentRole, redirectTo)
     } catch (err: any) {
       setError(err.message || 'Authentication failed. Please try again.')
       setLoading(false)
     }
+  }
+
+  const validatePassword = (password: string): string | null => {
+    if (password.length < 8) {
+      return 'Password must be at least 8 characters long'
+    }
+    if (!/\d/.test(password)) {
+      return 'Password must contain at least one number'
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return 'Password must contain at least one special character'
+    }
+    return null
   }
 
   const handleResendOtp = async () => {
@@ -235,11 +257,11 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
                     </div>
                   </div>
 
-                  <div className="mt-6 grid grid-cols-2 gap-3">
+                  <div className="mt-6">
                     <button
-                      onClick={() => handleOAuthSignIn('google')}
+                      onClick={handleOAuthSignIn}
                       disabled={loading}
-                      className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 mb-3"
                     >
                       <svg className="h-5 w-5" viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -247,31 +269,14 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
                         <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                         <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                       </svg>
-                      <span className="text-sm font-medium">Google</span>
+                      <span className="text-sm font-medium">Continue with Google</span>
                     </button>
 
-                    <button
-                      onClick={() => handleOAuthSignIn('microsoft')}
-                      disabled={loading}
-                      className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
-                    >
-                      <svg className="h-5 w-5" viewBox="0 0 23 23">
-                        <path fill="#f3f3f3" d="M0 0h23v23H0z"/>
-                        <path fill="#f35325" d="M1 1h10v10H1z"/>
-                        <path fill="#81bc06" d="M12 1h10v10H12z"/>
-                        <path fill="#05a6f0" d="M1 12h10v10H1z"/>
-                        <path fill="#ffba08" d="M12 12h10v10H12z"/>
-                      </svg>
-                      <span className="text-sm font-medium">Microsoft</span>
-                    </button>
-                  </div>
-
-                  <div className="mt-4 text-center">
                     <button
                       onClick={() => setAuthMethod('email')}
-                      className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                      className="w-full text-sm text-primary-600 hover:text-primary-700 font-medium"
                     >
-                      Use email instead
+                      Continue with Email & Password
                     </button>
                   </div>
                 </div>
@@ -394,8 +399,13 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
                       onChange={(e) => setPassword(e.target.value)}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       placeholder={isSignUp ? "Create a password" : "Enter your password"}
-                      minLength={6}
+                      minLength={8}
                     />
+                    {isSignUp && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Must be at least 8 characters with 1 number and 1 special character
+                      </p>
+                    )}
                   </div>
 
                   <button
