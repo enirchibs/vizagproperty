@@ -40,10 +40,10 @@ export function HomePage() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    if (params.get('login') === 'true') {
+    if (params.get('login') === 'true' && !user) {
       setShowAuthModal(true)
     }
-  }, [])
+  }, [user])
 
   useEffect(() => {
     if (user && lastSearch) {

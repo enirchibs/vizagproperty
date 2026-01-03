@@ -37,16 +37,60 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      (async () => {
-        setSession(session)
-        setUser(session?.user ?? null)
-        if (session?.user) {
-          await loadProfile(session.user.id)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setSession(session)
+      setUser(session?.user ?? null)
+
+      if (session?.user) {
+        if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+          const urlParams = new URLSearchParams(window.location.search)
+          const intentRole = urlParams.get('intent_role') || 'buyer'
+          const redirectTo = urlParams.get('redirect_to')
+
+          const { data: existingProfile } = await supabase
+            .from('user_profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .maybeSingle()
+
+          if (!existingProfile) {
+            await supabase
+              .from('user_profiles')
+              .insert({
+                id: session.user.id,
+                name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
+                email: session.user.email,
+                role: intentRole as 'buyer' | 'owner',
+                auth_provider: 'google',
+                user_type: intentRole === 'owner' ? 'seller' : 'buyer'
+              })
+              .then(() => loadProfile(session.user.id))
+          } else {
+            await loadProfile(session.user.id)
+          }
+
+          if (redirectTo && event === 'SIGNED_IN') {
+            const cleanUrl = new URL(window.location.href)
+            cleanUrl.searchParams.delete('intent_role')
+            cleanUrl.searchParams.delete('redirect_to')
+            window.history.replaceState({}, '', cleanUrl.toString())
+
+            setTimeout(() => {
+              window.location.href = redirectTo
+            }, 500)
+          } else if (event === 'SIGNED_IN') {
+            const cleanUrl = new URL(window.location.href)
+            cleanUrl.searchParams.delete('intent_role')
+            cleanUrl.searchParams.delete('redirect_to')
+            window.history.replaceState({}, '', cleanUrl.toString())
+          }
         } else {
-          setProfile(null)
+          await loadProfile(session.user.id)
         }
-      })()
+      } else {
+        setProfile(null)
+        setLoading(false)
+      }
     })
 
     return () => subscription.unsubscribe()
@@ -186,13 +230,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signInWithOAuth = async (_provider: 'google', intentRole: 'buyer' | 'owner' = 'buyer', redirectTo?: string) => {
+    const callbackUrl = new URL(redirectTo || window.location.href)
+    callbackUrl.searchParams.set('intent_role', intentRole)
+    if (redirectTo) {
+      callbackUrl.searchParams.set('redirect_to', redirectTo)
+    }
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: redirectTo || window.location.origin,
-        queryParams: {
-          intent_role: intentRole
-        }
+        redirectTo: callbackUrl.toString()
       }
     })
     if (error) throw error

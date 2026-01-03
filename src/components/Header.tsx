@@ -28,6 +28,7 @@ export function Header() {
       window.location.href = '/add-property'
     } else {
       setShowAuthModal(true)
+      setShowMenu(false)
     }
   }
 

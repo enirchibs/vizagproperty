@@ -11,7 +11,7 @@ interface AuthModalProps {
 type AuthMethod = 'phone' | 'email' | 'google'
 
 export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthModalProps) {
-  const { signInWithPhone, verifyOtp, signInWithEmail, signUpWithEmail, signInWithOAuth } = useAuth()
+  const { user, signInWithPhone, verifyOtp, signInWithEmail, signUpWithEmail, signInWithOAuth } = useAuth()
   const [authMethod, setAuthMethod] = useState<AuthMethod>('phone')
   const [countryCode, setCountryCode] = useState('+91')
   const [phoneNumber, setPhoneNumber] = useState('')
@@ -25,6 +25,21 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
   const [otpSent, setOtpSent] = useState(false)
   const [resendTimer, setResendTimer] = useState(0)
   const [resendAttempts, setResendAttempts] = useState(0)
+
+  useEffect(() => {
+    if (user) {
+      onClose()
+      if (redirectTo) {
+        setTimeout(() => {
+          window.location.href = redirectTo
+        }, 100)
+      }
+    }
+  }, [user, onClose, redirectTo])
+
+  if (user) {
+    return null
+  }
 
   useEffect(() => {
     if (resendTimer > 0) {
