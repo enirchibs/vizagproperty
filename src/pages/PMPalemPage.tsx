@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { PropertyCard } from '../components/PropertyCard'
 import { WhatsAppButton } from '../components/WhatsAppButton'
-import { buildStrictQuery, getLocalityContext } from '../lib/searchFilters'
+import { buildStrictQuery, getLocalityContextBySlug } from '../lib/searchFilters'
 import { openWhatsApp } from '../lib/whatsapp'
 
 export function PMPalemPage() {
@@ -23,8 +23,12 @@ export function PMPalemPage() {
 
   const loadPMPalemProperties = async () => {
     try {
-      // STRICT: PM Palem locality only
-      const localityContext = getLocalityContext('pm-palem')
+      const localityContext = await getLocalityContextBySlug('pm-palem')
+      if (!localityContext) {
+        console.error('PM Palem locality not found')
+        return
+      }
+
       const query = buildStrictQuery(supabase, {}, {}, localityContext).limit(12)
       const { data, error } = await query
 

@@ -5,7 +5,7 @@ import { Property } from '../types'
 import { PropertyCard } from '../components/PropertyCard'
 import { WhatsAppButton } from '../components/WhatsAppButton'
 import { openWhatsApp } from '../lib/whatsapp'
-import { buildStrictQuery, getLocalityContext } from '../lib/searchFilters'
+import { buildStrictQuery, getLocalityContextBySlug } from '../lib/searchFilters'
 
 export function MVPColonyPage() {
   const [properties, setProperties] = useState<Property[]>([])
@@ -23,8 +23,12 @@ export function MVPColonyPage() {
 
   const loadMVPColonyProperties = async () => {
     try {
-      // STRICT: MVP Colony locality only
-      const localityContext = getLocalityContext('mvp-colony')
+      const localityContext = await getLocalityContextBySlug('mvp-colony')
+      if (!localityContext) {
+        console.error('MVP Colony locality not found')
+        return
+      }
+
       const query = buildStrictQuery(supabase, {}, {}, localityContext).limit(12)
       const { data, error } = await query
 

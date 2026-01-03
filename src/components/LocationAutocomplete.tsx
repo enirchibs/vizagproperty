@@ -3,13 +3,14 @@ import { MapPin, X } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
 interface LocalityResult {
-  locality_name: string
-  locality_slug: string
+  id: string
+  name: string
+  slug: string
 }
 
 interface LocationAutocompleteProps {
   value: string
-  onChange: (value: string) => void
+  onChange: (value: string, localityId?: string) => void
   placeholder?: string
   className?: string
 }
@@ -34,10 +35,10 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
 
       try {
         const { data } = await supabase
-          .from('vizag_localities')
-          .select('locality_name, locality_slug')
-          .eq('is_active', true)
-          .order('locality_name')
+          .from('localities')
+          .select('id, name, slug')
+          .eq('city', 'Visakhapatnam')
+          .order('name')
           .limit(10)
 
         if (data) {
@@ -63,8 +64,9 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
   }, [])
 
   useEffect(() => {
-    if (query.trim().length < 1) {
+    if (query.trim().length < 3) {
       setResults([])
+      setShowResults(false)
       return
     }
 
@@ -81,11 +83,11 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
       setLoading(true)
       try {
         const { data } = await supabase
-          .from('vizag_localities')
-          .select('locality_name, locality_slug')
-          .ilike('locality_name', `${searchTerm}%`)
-          .eq('is_active', true)
-          .order('locality_name')
+          .from('localities')
+          .select('id, name, slug')
+          .eq('city', 'Visakhapatnam')
+          .ilike('name', `${searchTerm}%`)
+          .order('name')
           .limit(10)
 
         const localities = data || []
@@ -104,17 +106,17 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
   }, [query])
 
   const handleFocus = () => {
-    if (query.length >= 1 && results.length > 0) {
+    if (query.length >= 3 && results.length > 0) {
       setShowResults(true)
-    } else if (popularLocalities.length > 0) {
+    } else if (query.length < 3 && popularLocalities.length > 0) {
       setResults(popularLocalities)
       setShowResults(true)
     }
   }
 
   const handleSelect = (result: LocalityResult) => {
-    setQuery(result.locality_name)
-    onChange(result.locality_name)
+    setQuery(result.name)
+    onChange(result.name, result.id)
     setShowResults(false)
   }
 
@@ -127,7 +129,9 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value
     setQuery(newValue)
-    onChange(newValue)
+    if (newValue.length < 3) {
+      onChange(newValue)
+    }
   }
 
   return (
@@ -139,7 +143,7 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
           value={query}
           onChange={handleInputChange}
           onFocus={handleFocus}
-          placeholder={placeholder || 'Enter locality'}
+          placeholder={placeholder || 'Type 3+ characters to search localities'}
           className={`w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${className || ''}`}
         />
         {query && (
@@ -160,14 +164,14 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
               <div className="animate-spin h-5 w-5 border-2 border-primary-600 border-t-transparent rounded-full mx-auto"></div>
             </div>
           )}
-          {!loading && query.length === 0 && (
+          {!loading && query.length < 3 && (
             <div className="px-4 py-2 bg-gradient-to-r from-primary-50 to-primary-100 border-b border-primary-200">
               <div className="text-sm font-semibold text-primary-800">Popular Localities</div>
             </div>
           )}
           {!loading && results.map((result) => (
             <button
-              key={result.locality_slug}
+              key={result.slug}
               type="button"
               onClick={() => handleSelect(result)}
               className="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-0 transition-colors"
@@ -175,8 +179,8 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
               <div className="flex items-start">
                 <MapPin className="h-5 w-5 text-primary-600 mr-3 mt-0.5 flex-shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-gray-900">{result.locality_name}</div>
-                  <div className="text-xs text-primary-600 mt-1">Vizag Locality</div>
+                  <div className="font-medium text-gray-900">{result.name}</div>
+                  <div className="text-xs text-primary-600 mt-1">Visakhapatnam</div>
                 </div>
               </div>
             </button>
@@ -184,9 +188,9 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
         </div>
       )}
 
-      {showResults && !loading && query.length >= 1 && results.length === 0 && (
+      {showResults && !loading && query.length >= 3 && results.length === 0 && (
         <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-4 text-center text-gray-500">
-          No localities found
+          No matching localities found
         </div>
       )}
     </div>

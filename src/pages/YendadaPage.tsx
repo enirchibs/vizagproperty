@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { PropertyCard } from '../components/PropertyCard'
 import { WhatsAppButton } from '../components/WhatsAppButton'
-import { buildStrictQuery, getLocalityContext } from '../lib/searchFilters'
+import { buildStrictQuery, getLocalityContextBySlug } from '../lib/searchFilters'
 import { openWhatsApp } from '../lib/whatsapp'
 
 export function YendadaPage() {
@@ -23,8 +23,12 @@ export function YendadaPage() {
 
   const loadYendadaProperties = async () => {
     try {
-      // STRICT: Yendada locality only
-      const localityContext = getLocalityContext('yendada')
+      const localityContext = await getLocalityContextBySlug('yendada')
+      if (!localityContext) {
+        console.error('Yendada locality not found')
+        return
+      }
+
       const query = buildStrictQuery(supabase, {}, {}, localityContext).limit(12)
       const { data, error } = await query
 

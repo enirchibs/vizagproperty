@@ -5,7 +5,7 @@ import { Property } from '../types'
 import { PropertyCard } from '../components/PropertyCard'
 import { WhatsAppButton } from '../components/WhatsAppButton'
 import { openWhatsApp } from '../lib/whatsapp'
-import { buildStrictQuery, getLocalityContext } from '../lib/searchFilters'
+import { buildStrictQuery, getLocalityContextBySlug } from '../lib/searchFilters'
 
 export function GajuwakaPage() {
   const [properties, setProperties] = useState<Property[]>([])
@@ -23,8 +23,12 @@ export function GajuwakaPage() {
 
   const loadGajuwakaProperties = async () => {
     try {
-      // STRICT: Gajuwaka locality only
-      const localityContext = getLocalityContext('gajuwaka')
+      const localityContext = await getLocalityContextBySlug('gajuwaka')
+      if (!localityContext) {
+        console.error('Gajuwaka locality not found')
+        return
+      }
+
       const query = buildStrictQuery(supabase, {}, {}, localityContext).limit(12)
       const { data, error } = await query
 

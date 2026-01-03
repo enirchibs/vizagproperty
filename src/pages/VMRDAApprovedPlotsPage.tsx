@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, MapPin, Shield, TrendingUp, Home, Building2, CheckCircle2, ArrowRight, Phone, Mic, MicOff, X, MessageCircle } from 'lucide-react'
 import { PropertyCard } from '../components/PropertyCard'
+import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { supabase } from '../lib/supabase'
 import type { Property } from '../types'
 import { buildStrictQuery, CATEGORY_CONTEXTS } from '../lib/searchFilters'
@@ -14,6 +15,7 @@ import { WhatsAppZeroResultsModal } from '../components/WhatsAppZeroResultsModal
 export default function VMRDAApprovedPlotsPage() {
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
   const [searchQuery, setSearchQuery] = useState('')
+  const [localityId, setLocalityId] = useState<string | undefined>()
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedLocality, setSelectedLocality] = useState('')
@@ -98,8 +100,15 @@ export default function VMRDAApprovedPlotsPage() {
   }, [localityMatch])
 
   const handleSearch = () => {
-    // Always maintain category filters
-    window.location.href = `/properties?city=Vizag&property_type=plot&listing_type=sale&q=${encodeURIComponent(searchQuery)}`
+    const params = new URLSearchParams()
+    params.append('propertyType', 'plot')
+    params.append('listingType', 'sale')
+    if (localityId) {
+      params.append('localityId', localityId)
+    } else if (searchQuery) {
+      params.append('keyword', searchQuery)
+    }
+    window.location.href = `/properties?${params.toString()}`
   }
 
   const handleVoiceToggle = () => {
@@ -131,27 +140,32 @@ export default function VMRDAApprovedPlotsPage() {
             <div className="bg-white rounded-2xl shadow-2xl p-2">
               <div className="flex gap-2">
                 <div className="flex-1 relative">
-                  <input
-                    type="text"
-                    placeholder="Search plots in Madhurawada, PM Palem, Yendada..."
+                  <LocationAutocomplete
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                    className="w-full px-6 py-4 pr-14 text-gray-900 rounded-xl focus:outline-none"
+                    onChange={(value, locId) => {
+                      setSearchQuery(value)
+                      setLocalityId(locId)
+                    }}
+                    placeholder="Type 3+ characters to search localities (e.g., Madhurawada, PM Palem, Yendada)"
+                    className="w-full px-6 py-4 text-gray-900 rounded-xl focus:outline-none"
                   />
-                  {isSupported && (
-                    <button
-                      onClick={handleVoiceToggle}
-                      className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg transition-all ${
-                        isListening
-                          ? 'bg-red-600 text-white animate-pulse'
-                          : 'text-gray-600 hover:bg-gray-200'
-                      }`}
-                      aria-label={isListening ? "Stop voice search" : "Start voice search"}
-                    >
-                      {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
-                    </button>
-                  )}
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10 pointer-events-none">
+                    <div className="pointer-events-auto">
+                      {isSupported && (
+                        <button
+                          onClick={handleVoiceToggle}
+                          className={`p-2 rounded-lg transition-all ${
+                            isListening
+                              ? 'bg-red-600 text-white animate-pulse'
+                              : 'text-gray-600 hover:bg-gray-200'
+                          }`}
+                          aria-label={isListening ? "Stop voice search" : "Start voice search"}
+                        >
+                          {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+                        </button>
+                      )}
+                    </div>
+                  </div>
                   {localityMatch && (
                     <div className="absolute top-full left-0 right-0 mt-2 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between z-20">
                       <div className="flex items-center space-x-2">

@@ -1,29 +1,42 @@
 import { SupabaseClient } from '@supabase/supabase-js'
+import { supabase } from './supabase'
 
-// Locality normalization map - converts user input to database-friendly slugs
-export const LOCALITY_MAP: Record<string, string[]> = {
-  'madhurawada': ['madhurawada', 'madhurwada', 'madhurvada', 'madhurawada vizag'],
-  'pm-palem': ['pm palem', 'pmpalem', 'pm-palem', 'p m palem', 'pm palem vizag'],
-  'yendada': ['yendada', 'endada', 'yendada vizag'],
-  'mvp-colony': ['mvp colony', 'mvp', 'mvpcolony', 'mvp colony vizag'],
-  'gajuwaka': ['gajuwaka', 'gajjuwaka', 'gajuvaka', 'gajuwaka vizag'],
-  'kommadi': ['kommadi', 'komadi', 'kommadi vizag'],
-  'rushikonda': ['rushikonda', 'rushikonda beach', 'rushikonda vizag'],
-  'seethammadhara': ['seethammadhara', 'seethamadhara', 'seethammadhara vizag'],
-  'dwaraka-nagar': ['dwaraka nagar', 'dwarakanagar', 'dwarka nagar'],
-  'pedagantyada': ['pedagantyada', 'pedda gantyada', 'pedagantyada vizag'],
-  'akkayyapalem': ['akkayyapalem', 'akkayapalem', 'akkayyapalem vizag'],
-  'cbm-compound': ['cbm compound', 'cbm', 'cbm compound vizag'],
-  'kapuluppada': ['kapuluppada', 'kapulupada', 'kapuluppada vizag'],
-  'bheemunipatnam': ['bheemunipatnam', 'bheemili', 'bhimli', 'bheemunipatnam vizag'],
-  'anandapuram': ['anandapuram', 'anandpuram', 'anandapuram vizag'],
-  'pendurthi': ['pendurthi', 'pendurthy', 'pendurthi vizag'],
-  'nad-junction': ['nad junction', 'nad', 'nad junction vizag'],
-  'au-college': ['au college', 'au', 'andhra university', 'au college vizag'],
-  'asilmetta': ['asilmetta', 'asilmeta', 'asilmetta vizag'],
-  'kirlampudi': ['kirlampudi', 'kirlampudi vizag'],
-  'chinagadili': ['chinagadili', 'chinagadili vizag'],
-  'rtc-colony': ['rtc colony', 'rtc', 'rtc colony vizag']
+export async function getLocalityIdByName(localityName: string): Promise<string | null> {
+  const { data } = await supabase
+    .from('localities')
+    .select('id')
+    .eq('city', 'Visakhapatnam')
+    .ilike('name', localityName)
+    .maybeSingle()
+
+  return data?.id || null
+}
+
+export async function getLocalityIdBySlug(slug: string): Promise<string | null> {
+  const { data } = await supabase
+    .from('localities')
+    .select('id')
+    .eq('city', 'Visakhapatnam')
+    .eq('slug', slug)
+    .maybeSingle()
+
+  return data?.id || null
+}
+
+export async function searchLocalities(query: string, limit: number = 10): Promise<Array<{id: string, name: string, slug: string}>> {
+  if (query.length < 3) {
+    return []
+  }
+
+  const { data } = await supabase
+    .from('localities')
+    .select('id, name, slug')
+    .eq('city', 'Visakhapatnam')
+    .ilike('name', `${query}%`)
+    .order('name')
+    .limit(limit)
+
+  return data || []
 }
 
 // Property type normalization
@@ -37,17 +50,15 @@ export const PROPERTY_TYPE_MAP: Record<string, string[]> = {
   'pg': ['pg', 'hostel', 'paying guest'],
 }
 
-// Normalize locality name to slug
-export function normalizeLocality(input: string): string | null {
+export async function normalizeLocality(input: string): Promise<string | null> {
   const normalized = input.toLowerCase().trim()
 
-  for (const [slug, variants] of Object.entries(LOCALITY_MAP)) {
-    if (variants.some(variant => normalized.includes(variant))) {
-      return slug
-    }
+  if (normalized.length < 3) {
+    return null
   }
 
-  return null
+  const localities = await searchLocalities(normalized, 1)
+  return localities.length > 0 ? localities[0].slug : null
 }
 
 // Normalize property type
@@ -63,12 +74,12 @@ export function normalizePropertyType(input: string): string | null {
   return null
 }
 
-// Property search filters interface with strict typing
 export interface StrictSearchFilters {
-  city?: string // EXACT match (case-insensitive)
-  locality_slug?: string // EXACT match using normalized slug
-  property_type?: string // EXACT match
-  listing_type?: 'sale' | 'rent' // EXACT match
+  city?: string
+  locality_id?: string
+  locality_name?: string
+  property_type?: string
+  listing_type?: 'sale' | 'rent'
   bedrooms?: number
   min_price?: number
   max_price?: number
@@ -149,13 +160,29 @@ export const CATEGORY_CONTEXTS: Record<string, CategoryContext> = {
   }
 }
 
-// Locality-specific immutable filters
-export function getLocalityContext(localitySlug: string): CategoryContext {
+export async function getLocalityContextBySlug(slug: string): Promise<CategoryContext | null> {
+  const localityId = await getLocalityIdBySlug(slug)
+
+  if (!localityId) {
+    return null
+  }
+
   return {
     category_type: 'locality',
     immutable_filters: {
-      city: 'Vizag',
-      locality_slug: localitySlug,
+      city: 'Visakhapatnam',
+      locality_id: localityId,
+      status: 'available'
+    }
+  }
+}
+
+export function getLocalityContextById(localityId: string): CategoryContext {
+  return {
+    category_type: 'locality',
+    immutable_filters: {
+      city: 'Visakhapatnam',
+      locality_id: localityId,
       status: 'available'
     }
   }
@@ -184,21 +211,8 @@ export function buildStrictQuery(
 
   // Apply filters in strict order
 
-  // MANDATORY: Status filter (always available)
-  query = query.eq('status', finalFilters.status || 'available')
-
-  // STRICT LOCATION FILTER - EXACT match
-  if (finalFilters.city) {
-    query = query.ilike('city', finalFilters.city)
-  }
-
-  if (finalFilters.locality_slug) {
-    // Convert slug to proper case for location field
-    const localityName = finalFilters.locality_slug
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
-    query = query.ilike('location', `%${localityName}%`)
+  if (finalFilters.locality_id) {
+    query = query.eq('locality_id', finalFilters.locality_id)
   }
 
   // STRICT PROPERTY TYPE FILTER - EXACT match
@@ -235,17 +249,16 @@ export function buildStrictQuery(
   return query.order('created_at', { ascending: false })
 }
 
-// Extract filters from URL parameters
-export function extractFiltersFromURL(): StrictSearchFilters {
+export async function extractFiltersFromURL(): Promise<StrictSearchFilters> {
   const params = new URLSearchParams(window.location.search)
   const filters: StrictSearchFilters = {}
 
   const location = params.get('location') || params.get('locality')
-  if (location) {
-    const slug = normalizeLocality(location)
-    if (slug) {
-      filters.locality_slug = slug
-      filters.city = 'Vizag'
+  if (location && location.length >= 3) {
+    const localityId = await getLocalityIdByName(location)
+    if (localityId) {
+      filters.locality_id = localityId
+      filters.city = 'Visakhapatnam'
     }
   }
 
@@ -285,40 +298,43 @@ export function extractFiltersFromURL(): StrictSearchFilters {
   return filters
 }
 
-// Parse natural language query to extract filters
-export function parseNaturalLanguageQuery(query: string): StrictSearchFilters {
+export async function parseNaturalLanguageQuery(query: string): Promise<StrictSearchFilters> {
   const filters: StrictSearchFilters = {}
   const lowerQuery = query.toLowerCase()
 
-  // Extract location
-  const localitySlug = normalizeLocality(query)
-  if (localitySlug) {
-    filters.locality_slug = localitySlug
-    filters.city = 'Vizag'
-  } else if (lowerQuery.includes('vizag') || lowerQuery.includes('visakhapatnam')) {
-    filters.city = 'Vizag'
+  if (lowerQuery.includes('vizag') || lowerQuery.includes('visakhapatnam')) {
+    filters.city = 'Visakhapatnam'
   }
 
-  // Extract property type
+  const words = query.split(/\s+/)
+  for (const word of words) {
+    if (word.length >= 3) {
+      const localities = await searchLocalities(word, 1)
+      if (localities.length > 0) {
+        filters.locality_id = localities[0].id
+        filters.locality_name = localities[0].name
+        filters.city = 'Visakhapatnam'
+        break
+      }
+    }
+  }
+
   const propertyType = normalizePropertyType(query)
   if (propertyType) {
     filters.property_type = propertyType
   }
 
-  // Extract listing type
   if (lowerQuery.includes('for sale') || lowerQuery.includes('buy')) {
     filters.listing_type = 'sale'
   } else if (lowerQuery.includes('for rent') || lowerQuery.includes('rent')) {
     filters.listing_type = 'rent'
   }
 
-  // Extract BHK
   const bhkMatch = lowerQuery.match(/(\d+)\s*bhk/)
   if (bhkMatch) {
     filters.bedrooms = parseInt(bhkMatch[1])
   }
 
-  // Extract price
   const lakhMatch = lowerQuery.match(/(\d+)\s*(?:lakh|lakhs|l)/i)
   if (lakhMatch) {
     const lakhs = parseInt(lakhMatch[1])
@@ -338,7 +354,6 @@ export function parseNaturalLanguageQuery(query: string): StrictSearchFilters {
   return filters
 }
 
-// Validate filters completeness for search
 export function validateSearchFilters(filters: StrictSearchFilters): {
   isValid: boolean
   missingFields: string[]
@@ -346,7 +361,7 @@ export function validateSearchFilters(filters: StrictSearchFilters): {
 } {
   const missingFields: string[] = []
 
-  if (!filters.city && !filters.locality_slug) {
+  if (!filters.city && !filters.locality_id) {
     missingFields.push('location')
   }
 
@@ -369,21 +384,6 @@ export function validateSearchFilters(filters: StrictSearchFilters): {
   return { isValid: true, missingFields: [] }
 }
 
-// Get nearby localities for suggestions when no results found
-export function getNearbyLocalities(localitySlug: string): string[] {
-  const nearbyMap: Record<string, string[]> = {
-    'madhurawada': ['pm-palem', 'yendada', 'rushikonda'],
-    'pm-palem': ['madhurawada', 'kommadi', 'anandapuram'],
-    'yendada': ['madhurawada', 'rushikonda', 'mvp-colony'],
-    'mvp-colony': ['seethammadhara', 'dwaraka-nagar', 'yendada'],
-    'gajuwaka': ['pedagantyada', 'pendurthi', 'anandapuram'],
-    'rushikonda': ['yendada', 'madhurawada']
-  }
-
-  return nearbyMap[localitySlug] || []
-}
-
-// Generate SEO-friendly search description
 export function generateSearchDescription(filters: StrictSearchFilters): string {
   const parts: string[] = []
 
@@ -399,12 +399,8 @@ export function generateSearchDescription(filters: StrictSearchFilters): string 
     parts.push(`for ${filters.listing_type}`)
   }
 
-  if (filters.locality_slug) {
-    const localityName = filters.locality_slug
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
-    parts.push(`in ${localityName}`)
+  if (filters.locality_name) {
+    parts.push(`in ${filters.locality_name}`)
   } else if (filters.city) {
     parts.push(`in ${filters.city}`)
   }

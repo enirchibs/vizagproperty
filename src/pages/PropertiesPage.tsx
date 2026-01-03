@@ -3,6 +3,7 @@ import { Search, Mic, MicOff, Filter, X, MapPin, MessageCircle } from 'lucide-re
 import { supabase } from '../lib/supabase'
 import { Property, SearchFilters } from '../types'
 import { PropertyCard } from '../components/PropertyCard'
+import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { useRadiusSearch } from '../hooks/useRadiusSearch'
 import MapRadiusToggle from '../components/MapRadiusToggle'
@@ -11,6 +12,7 @@ export function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
+  const [localityName, setLocalityName] = useState('')
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState<SearchFilters>({})
   const [radiusEnabled, setRadiusEnabled] = useState(false)
@@ -23,7 +25,8 @@ export function PropertiesPage() {
     const query = params.get('keyword') || params.get('q')
     const propertyType = params.get('propertyType')
     const listingType = params.get('listingType')
-    const localitySlug = params.get('locality')
+    const localityId = params.get('localityId')
+    const localityName = params.get('locality')
 
     if (query) {
       setSearchQuery(query)
@@ -37,8 +40,10 @@ export function PropertiesPage() {
       setFilters(prev => ({ ...prev, listing_type: listingType }))
     }
 
-    if (localitySlug) {
-      setFilters(prev => ({ ...prev, locality_id: localitySlug }))
+    if (localityId) {
+      setFilters(prev => ({ ...prev, locality_id: localityId }))
+    } else if (localityName) {
+      setFilters(prev => ({ ...prev, locality_id: localityName }))
     }
 
     loadProperties()
@@ -132,6 +137,7 @@ export function PropertiesPage() {
   const clearFilters = () => {
     setFilters({})
     setSearchQuery('')
+    setLocalityName('')
     setRadiusEnabled(false)
     setRadiusKm(3)
     loadProperties()
@@ -317,14 +323,16 @@ export function PropertiesPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Locality ID
+                    Locality
                   </label>
-                  <input
-                    type="text"
-                    value={filters.locality_id || ''}
-                    onChange={(e) => setFilters({ ...filters, locality_id: e.target.value || undefined })}
-                    placeholder="Enter locality"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  <LocationAutocomplete
+                    value={localityName}
+                    onChange={(value, localityId) => {
+                      setLocalityName(value)
+                      setFilters({ ...filters, locality_id: localityId })
+                    }}
+                    placeholder="Search localities"
+                    className="w-full"
                   />
                 </div>
 

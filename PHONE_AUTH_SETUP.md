@@ -1,16 +1,85 @@
 # Phone Authentication Setup Guide
 
-Your mobile number authentication modal is now ready! However, to enable SMS OTP functionality, you need to configure an SMS provider in your Supabase project.
+## ⚠️ CRITICAL: SMS Provider Required
+
+Your application now uses **MOBILE OTP ONLY** for authentication. Email and Google login have been removed.
+
+**Current Status:**
+- ✅ Mobile OTP UI is implemented
+- ✅ No auto-login popups
+- ❌ SMS provider NOT configured (you need to do this)
+
+**What works now:**
+- Browsing properties (no login required)
+- Searching and viewing listings
+
+**What doesn't work until SMS is configured:**
+- Logging in (users can't receive OTP)
+- Posting properties
+- Any authenticated features
+
+---
+
+## 🚀 Quick Start: Configure Phone Auth in 3 Steps
+
+### Step 1: Find Phone Provider Settings
+
+**Method A - Direct URL (Fastest):**
+1. Open: `https://app.supabase.com/project/YOUR_PROJECT_ID/auth/providers`
+2. Find your PROJECT_ID in your Supabase dashboard URL
+3. Replace YOUR_PROJECT_ID with your actual project ID
+
+**Method B - Navigate in Dashboard:**
+1. Go to [Supabase Dashboard](https://app.supabase.com)
+2. Select your project
+3. Left sidebar → **Authentication** (shield icon)
+4. Click **Providers** or **Auth Providers**
+5. Scroll to **Phone** section
+6. Enable the toggle
+
+**Method C - Settings Path:**
+1. Left sidebar → **Settings** (gear icon)
+2. → **Authentication**
+3. → **Auth Providers** tab
+4. Find and enable **Phone**
+
+### Step 2: Choose SMS Provider
+
+Pick one based on your location and budget:
+- **India:** Exotel (₹0.20-0.40/SMS) or MSG91 (₹0.15-0.30/SMS)
+- **Global:** Twilio (₹0.60-1.20/SMS)
+
+### Step 3: Add SMS Provider Credentials
+
+Enter the credentials from your chosen SMS provider into Supabase Phone settings.
+
+---
 
 ## Steps to Enable Phone Authentication
 
 ### 1. Configure SMS Provider in Supabase
 
+**Updated Navigation for 2026:**
+
 1. Go to your [Supabase Dashboard](https://app.supabase.com)
-2. Select your project
-3. Navigate to **Authentication** → **Providers**
-4. Find **Phone** in the list and click to configure
-5. Enable the Phone provider
+2. Select your project from the project list
+3. In the left sidebar, look for **Authentication** (shield icon)
+4. Click on **Authentication** to expand the menu
+5. Click on **Providers** (or **Auth Providers**)
+6. Scroll down to find **Phone** in the providers list
+7. Click on **Phone** to expand its settings
+8. Toggle the switch to **Enable Phone provider**
+
+**Alternative path if above doesn't work:**
+- Look for **Settings** in left sidebar
+- Go to **Authentication** under Settings
+- Find **Auth Providers** tab
+- Enable **Phone** provider
+
+**Note:** If you don't see the Phone option, ensure:
+- You're on a Supabase project (not organization settings)
+- Your project is fully provisioned (may take a few minutes for new projects)
+- You have the necessary permissions (owner/admin role)
 
 ### 2. Choose and Configure an SMS Provider
 
@@ -85,6 +154,33 @@ In Supabase Phone provider settings:
 
 ## Troubleshooting
 
+### Can't Find Phone Provider in Dashboard
+If you can't locate the Phone provider settings:
+
+1. **Verify you're in the correct location:**
+   - URL should be: `https://app.supabase.com/project/[your-project-id]/auth/providers`
+   - Make sure you're not in Settings → API or Database settings
+
+2. **Try direct URL access:**
+   - Replace `[your-project-id]` with your actual project ID
+   - Navigate to: `https://app.supabase.com/project/[your-project-id]/auth/providers`
+
+3. **Check Supabase CLI as alternative:**
+   ```bash
+   # Install Supabase CLI if not already installed
+   npm install -g supabase
+
+   # Login to Supabase
+   supabase login
+
+   # Link your project
+   supabase link --project-ref [your-project-id]
+   ```
+
+4. **Contact Supabase Support:**
+   - If the option is completely missing, contact support
+   - Phone auth may not be available in your region/plan
+
 ### OTP Not Received
 1. Check Exotel Dashboard → SMS Logs for delivery status
 2. Verify DLT template is approved
@@ -105,21 +201,45 @@ In Supabase Phone provider settings:
 3. Check console for profile creation errors
 4. Ensure role column exists with proper constraints
 
+## Quick Check: Is Phone Auth Working?
+
+To verify your current setup status:
+
+1. **Check if phone auth is already enabled:**
+   - Open your app at `/add-property`
+   - Try entering a mobile number
+   - Click "Continue"
+   - If you see an error about SMS provider, it needs configuration
+   - If OTP is sent successfully, it's already working
+
+2. **View current auth methods in Supabase:**
+   - Dashboard → Authentication → Users
+   - Create a test user to see which methods work
+   - Check if phone numbers are being stored
+
 ## Testing Without SMS Provider
 
-If you haven't configured an SMS provider yet:
-1. The modal will show an error when trying to send OTP
-2. Configure the SMS provider first before testing
-3. Use Email or OAuth login as alternative during development
+**Current Authentication Status:** Mobile OTP ONLY
+
+Since we've removed Email and Google login, you MUST configure an SMS provider to use this application for authentication.
+
+**What happens if SMS provider is not configured:**
+1. Users can browse properties without login (this works)
+2. Clicking "Login with Mobile OTP" will fail when sending OTP
+3. Users cannot post properties until SMS is configured
+4. The app is read-only until phone auth is set up
+
+**Recommended Action:**
+Configure an SMS provider immediately to enable full functionality. See SMS provider options below.
 
 ## Features Implemented
 
 ### Authentication Methods
-✅ Mobile Number + OTP (Primary)
-✅ Google OAuth
-✅ Email + Password
-✅ Microsoft OAuth
-✅ Facebook login removed (as requested)
+✅ Mobile Number + OTP (ONLY method available)
+❌ Google OAuth (REMOVED)
+❌ Email + Password (REMOVED)
+❌ Microsoft OAuth (REMOVED)
+❌ Facebook login (REMOVED)
 
 ### UI Features
 ✅ Two-column responsive modal layout
@@ -132,7 +252,8 @@ If you haven't configured an SMS provider yet:
 ✅ Phone number masking after entry
 ✅ Clean, modern UI with smooth animations
 ✅ Mobile-first responsive design
-✅ Method switching (phone/email/OAuth)
+✅ No auto-popup login prompts
+✅ Distraction-free browsing experience
 
 ### Role Management
 ✅ Automatic role detection (buyer/owner)
@@ -151,20 +272,21 @@ If you haven't configured an SMS provider yet:
 
 ## Authentication Flow
 
-### For Buyers
-1. User browses properties or uses search
-2. Clicks contact/save/WhatsApp button
+### For Buyers (Optional - Browsing doesn't require login)
+1. User browses properties freely without login
+2. If user clicks contact/save/WhatsApp button (optional)
 3. Auth modal opens with `intentRole='buyer'`
-4. User signs up via phone/email/OAuth
+4. User enters mobile number + OTP
 5. Profile created with `role='buyer'`
 6. Redirected back to previous page
 
-### For Owners
-1. User clicks "Post Property Free" button
+### For Owners (Login Required)
+1. User clicks "Post Property Free" button or "Login with Mobile OTP"
 2. Auth modal opens with `intentRole='owner'`
-3. User signs up via phone/email/OAuth
-4. Profile created with `role='owner'`
-5. Redirected to `/post-property` page
+3. User enters mobile number + receives OTP via SMS
+4. User enters 6-digit OTP to verify
+5. Profile created with `role='owner'`
+6. Redirected to `/add-property` page
 
 ### Role Upgrade
 1. Existing buyer posts a property
@@ -172,10 +294,17 @@ If you haven't configured an SMS provider yet:
 3. Automatically upgrades role to `'both'`
 4. User can now act as buyer and owner
 
-## Triggers
+## When Login Modal Appears
 
-The login modal opens when users:
-- Click "Post Property Free" (opens with role='owner')
-- Try to contact an owner (opens with role='buyer')
-- Try to save a property (opens with role='buyer')
-- Use WhatsApp features (opens with role='buyer')
+The Mobile OTP login modal ONLY opens when users explicitly:
+- Click "Login / Sign up" button in header
+- Click "Post Property — Free" button (when not logged in)
+- Click "Login with Mobile OTP" on add-property page
+
+**NO automatic popups:**
+- ❌ No time-based popups (e.g., after 3 seconds)
+- ❌ No scroll-triggered popups
+- ❌ No exit-intent popups
+- ❌ No browsing interruptions
+
+Users can freely browse, search, and view all properties without any login prompts.

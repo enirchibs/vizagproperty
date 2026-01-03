@@ -5,7 +5,8 @@ import { Property } from '../types'
 export interface PropertySearchParams {
   propertyType?: 'flat' | 'plot' | 'villa' | 'pg' | 'commercial'
   listingType?: 'sale' | 'rent'
-  localitySlug?: string
+  localityId?: string
+  localityName?: string
   keyword?: string
   minPrice?: number
   maxPrice?: number
@@ -43,11 +44,24 @@ export function usePropertySearch(): UsePropertySearchReturn {
     setError(null)
 
     try {
+      let localityIdToUse = params.localityId
+
+      if (!localityIdToUse && params.localityName) {
+        const { data: localities } = await supabase
+          .from('localities')
+          .select('id')
+          .eq('city', 'Visakhapatnam')
+          .ilike('name', params.localityName)
+          .maybeSingle()
+
+        if (localities) {
+          localityIdToUse = localities.id
+        }
+      }
+
       let query = supabase
         .from('properties')
-        .select('*', { count: 'exact' })
-        .eq('status', 'available')
-        .eq('city', 'Vizag')
+        .select('*, localities!inner(name, slug, city)', { count: 'exact' })
 
       if (params.propertyType) {
         const types = PROPERTY_TYPE_MAP[params.propertyType] || [params.propertyType]
@@ -62,8 +76,8 @@ export function usePropertySearch(): UsePropertySearchReturn {
         query = query.eq('listing_type', params.listingType)
       }
 
-      if (params.localitySlug) {
-        query = query.eq('locality_id', params.localitySlug)
+      if (localityIdToUse) {
+        query = query.eq('locality_id', localityIdToUse)
       }
 
       if (params.minPrice) {
@@ -82,7 +96,7 @@ export function usePropertySearch(): UsePropertySearchReturn {
         query = query.or(`title.ilike.%${params.keyword}%,description.ilike.%${params.keyword}%`)
       }
 
-      if (params.radiusEnabled && params.centerLat && params.centerLng && params.radiusKm) {
+      if (params.radiusEnabled && params.centerLat && params.centerLng && params.radiusKm && !localityIdToUse) {
         query = query.not('latitude', 'is', null)
           .not('longitude', 'is', null)
           .gte('latitude', params.centerLat - (params.radiusKm / 111))

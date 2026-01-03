@@ -26,6 +26,7 @@ export function HomePage() {
   const [propertyCategory, setPropertyCategory] = useState<PropertyCategory>('full_house')
   const [location, setLocation] = useState('Visakhapatnam')
   const [locality, setLocality] = useState('')
+  const [localityId, setLocalityId] = useState<string | undefined>()
   const [bhkType, setBhkType] = useState('')
   const [propertyStatus, setPropertyStatus] = useState('')
   const [newBuilderProjects, setNewBuilderProjects] = useState(false)
@@ -164,7 +165,11 @@ export function HomePage() {
 
     if (activeTab) params.append('type', activeTab)
     if (location) params.append('location', location)
-    if (locality) params.append('locality', locality)
+    if (localityId) {
+      params.append('localityId', localityId)
+    } else if (locality) {
+      params.append('locality', locality)
+    }
     if (bhkType) params.append('bhk', bhkType)
     if (propertyStatus) params.append('status', propertyStatus)
     if (propertyCategory) params.append('category', propertyCategory)
@@ -301,47 +306,42 @@ export function HomePage() {
 
               <div className="p-4 md:p-6">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 md:gap-4 mb-6">
-                  <div className="lg:col-span-3">
-                    <LocationAutocomplete
-                      value={location}
-                      onChange={setLocation}
-                      placeholder="Select City"
-                      className="h-12 md:h-12 border-4 border-gray-400 text-base"
-                    />
-                  </div>
-
-                  <div className="lg:col-span-6">
+                  <div className="lg:col-span-9">
                     <div className="relative" ref={searchInputRef}>
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 z-10" />
-                      <input
-                        type="text"
+                      <LocationAutocomplete
                         value={locality}
-                        onChange={(e) => setLocality(e.target.value)}
-                        onFocus={() => setShowSuggestions(true)}
-                        placeholder="Search localities or landmarks"
-                        className="w-full pl-10 pr-24 py-3 h-12 border-4 border-red-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-600 text-base relative z-0 font-medium"
+                        onChange={(value, localityId) => {
+                          setLocality(value)
+                          setLocalityId(localityId)
+                        }}
+                        placeholder="Type 3+ characters to search Vizag localities (e.g., Madhurawada, Gajuwaka)"
+                        className="h-12 border-4 border-red-600 text-base font-medium"
                       />
-                      <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">
-                        {isSupported && (
+                      <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10 pointer-events-none">
+                        <div className="pointer-events-auto">
+                          {isSupported && (
+                            <button
+                              onClick={handleVoiceToggle}
+                              className={`p-2 rounded-lg transition-all ${
+                                isListening
+                                  ? 'bg-red-600 text-white animate-pulse'
+                                  : 'text-gray-600 hover:bg-gray-200'
+                              }`}
+                              aria-label={isListening ? "Stop voice search" : "Start voice search"}
+                            >
+                              {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+                            </button>
+                          )}
+                        </div>
+                        <div className="pointer-events-auto">
                           <button
-                            onClick={handleVoiceToggle}
-                            className={`p-2 rounded-lg transition-all ${
-                              isListening
-                                ? 'bg-red-600 text-white animate-pulse'
-                                : 'text-gray-600 hover:bg-gray-200'
-                            }`}
-                            aria-label={isListening ? "Stop voice search" : "Start voice search"}
+                            onClick={() => openWhatsApp('Hi Vizag Property Experts, I am looking for a property in Vizag. Please assist.')}
+                            className="p-2 rounded-lg transition-all text-green-600 hover:bg-green-50"
+                            aria-label="Contact on WhatsApp"
                           >
-                            {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+                            <MessageCircle className="h-5 w-5" />
                           </button>
-                        )}
-                        <button
-                          onClick={() => openWhatsApp('Hi Vizag Property Experts, I am looking for a property in Vizag. Please assist.')}
-                          className="p-2 rounded-lg transition-all text-green-600 hover:bg-green-50"
-                          aria-label="Contact on WhatsApp"
-                        >
-                          <MessageCircle className="h-5 w-5" />
-                        </button>
+                        </div>
                       </div>
                       {showSuggestions && (
                         <AISearchSuggestions
