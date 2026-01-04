@@ -168,14 +168,16 @@ export function DashboardPage() {
                       {profile?.full_name}
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email
-                    </label>
-                    <div className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg">
-                      {user.email}
+                  {user.email && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Email
+                      </label>
+                      <div className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg">
+                        {user.email}
+                      </div>
                     </div>
-                  </div>
+                  )}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       User Type

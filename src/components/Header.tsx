@@ -116,9 +116,10 @@ export function Header() {
                   </a>
                   <button
                     onClick={handleSignOut}
-                    className="hidden md:flex text-white hover:text-red-300 transition-colors items-center space-x-1"
+                    className="hidden md:flex text-white hover:text-red-300 transition-colors items-center space-x-2 font-medium"
                   >
                     <LogOut className="h-4 w-4" />
+                    <span>Sign Out</span>
                   </button>
                   <button
                     onClick={() => setShowMenu(!showMenu)}

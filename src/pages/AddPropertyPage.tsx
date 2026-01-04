@@ -18,6 +18,7 @@ export function AddPropertyPage() {
   const [instagramLinks, setInstagramLinks] = useState<string[]>([''])
   const [showCamera, setShowCamera] = useState(false)
   const [localities, setLocalities] = useState<VizagLocality[]>([])
+  const [locality, setLocality] = useState('')
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
@@ -30,7 +31,6 @@ export function AddPropertyPage() {
     bedrooms: '2',
     bathrooms: '2',
     area_sqft: '',
-    locality_id: '',
     state: 'Andhra Pradesh',
     pincode: '',
     agent_name: profile?.full_name || '',
@@ -40,20 +40,22 @@ export function AddPropertyPage() {
   })
 
   useEffect(() => {
-    loadLocalities()
-  }, [])
+    const fetchLocalities = async () => {
+      const { data, error } = await supabase
+        .from('localities')
+        .select('id, name, slug')
+        .eq('city', 'Vizag')
+        .order('name', { ascending: true })
 
-  const loadLocalities = async () => {
-    const { data, error } = await supabase
-      .from('vizag_localities')
-      .select('*')
-      .eq('is_active', true)
-      .order('locality_name')
-
-    if (data && !error) {
-      setLocalities(data)
+      if (!error && data) {
+        setLocalities(data as any)
+      } else {
+        console.error('Failed to load localities', error)
+      }
     }
-  }
+
+    fetchLocalities()
+  }, [])
 
   const propertyTypes = [
     'apartment',
@@ -335,7 +337,7 @@ export function AddPropertyPage() {
       return
     }
 
-    if (!formData.locality_id) {
+    if (!locality) {
       alert('Please select a locality')
       return
     }
@@ -357,7 +359,7 @@ export function AddPropertyPage() {
           bedrooms: parseInt(formData.bedrooms),
           bathrooms: parseInt(formData.bathrooms),
           area_sqft: parseInt(formData.area_sqft),
-          locality_id: formData.locality_id,
+          locality_slug: locality,
           state: formData.state,
           pincode: formData.pincode || null,
           amenities: formData.amenities,
@@ -629,20 +631,23 @@ export function AddPropertyPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Locality <span className="text-red-500">*</span>
                 </label>
+
                 <select
+                  value={locality}
+                  onChange={(e) => setLocality(e.target.value)}
                   required
-                  value={formData.locality_id}
-                  onChange={(e) => setFormData({ ...formData, locality_id: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white text-gray-900"
                 >
                   <option value="">Select a locality in Vizag</option>
-                  {localities.map(locality => (
-                    <option key={locality.id} value={locality.id}>
-                      {locality.locality_name}
+
+                  {localities.map((loc) => (
+                    <option key={loc.id} value={(loc as any).slug}>
+                      {(loc as any).name}
                     </option>
                   ))}
                 </select>
-                <p className="text-xs text-gray-500 mt-1">
+
+                <p className="text-sm text-gray-500 mt-1">
                   All properties must be in Visakhapatnam (Vizag) area
                 </p>
               </div>
