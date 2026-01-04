@@ -14,7 +14,7 @@ export function Header() {
   const handleSignOut = async () => {
     try {
       await signOut()
-      setShowMenu(false)
+      window.location.href = '/'
     } catch (error) {
       console.error('Sign out error:', error)
     }

@@ -86,7 +86,7 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
           .from('localities')
           .select('id, name, slug')
           .eq('city', 'Visakhapatnam')
-          .ilike('name', `${searchTerm}%`)
+          .ilike('name', `%${searchTerm}%`)
           .order('name')
           .limit(10)
 
