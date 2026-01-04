@@ -14,6 +14,8 @@ export function Header() {
   const handleSignOut = async () => {
     try {
       await signOut()
+      // Small delay to ensure session is fully cleared
+      await new Promise(resolve => setTimeout(resolve, 100))
       window.location.href = '/'
     } catch (error) {
       console.error('Sign out error:', error)

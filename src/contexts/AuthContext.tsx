@@ -38,12 +38,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      (_event, session) => {
         setSession(session)
         setUser(session?.user ?? null)
 
         if (session?.user) {
-          await loadProfile(session.user.id)
+          (async () => {
+            await loadProfile(session.user.id)
+          })()
         } else {
           setProfile(null)
           setLoading(false)
@@ -128,8 +130,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut()
+    const { error } = await supabase.auth.signOut({ scope: 'global' })
     if (error) throw error
+
+    // Clear local state immediately
+    setUser(null)
+    setProfile(null)
+    setSession(null)
   }
 
   return (
