@@ -19,6 +19,9 @@ export function AddPropertyPage() {
   const [showCamera, setShowCamera] = useState(false)
   const [localities, setLocalities] = useState<VizagLocality[]>([])
   const [locality, setLocality] = useState('')
+  const [localitySlug, setLocalitySlug] = useState('')
+  const [showLocalityDropdown, setShowLocalityDropdown] = useState(false)
+  const localityDropdownRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
@@ -40,11 +43,13 @@ export function AddPropertyPage() {
   })
 
   useEffect(() => {
+    if (!user) return
+
     const fetchLocalities = async () => {
       const { data, error } = await supabase
         .from('localities')
         .select('id, name, slug')
-        .eq('city', 'Vizag')
+        .eq('city', 'Visakhapatnam')
         .order('name', { ascending: true })
 
       if (!error && data) {
@@ -55,6 +60,17 @@ export function AddPropertyPage() {
     }
 
     fetchLocalities()
+  }, [user])
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (localityDropdownRef.current && !localityDropdownRef.current.contains(event.target as Node)) {
+        setShowLocalityDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   const propertyTypes = [
@@ -337,8 +353,8 @@ export function AddPropertyPage() {
       return
     }
 
-    if (!locality) {
-      alert('Please select a locality')
+    if (!locality || !localitySlug) {
+      alert('Please select a locality from the dropdown')
       return
     }
 
@@ -359,7 +375,7 @@ export function AddPropertyPage() {
           bedrooms: parseInt(formData.bedrooms),
           bathrooms: parseInt(formData.bathrooms),
           area_sqft: parseInt(formData.area_sqft),
-          locality_slug: locality,
+          locality_slug: localitySlug,
           state: formData.state,
           pincode: formData.pincode || null,
           amenities: formData.amenities,
@@ -627,25 +643,53 @@ export function AddPropertyPage() {
                 />
               </div>
 
-              <div className="md:col-span-2">
+              <div className="md:col-span-2 relative" ref={localityDropdownRef}>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Locality <span className="text-red-500">*</span>
                 </label>
 
-                <select
+                <input
+                  type="text"
                   value={locality}
-                  onChange={(e) => setLocality(e.target.value)}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white text-gray-900"
-                >
-                  <option value="">Select a locality in Vizag</option>
+                  onChange={(e) => {
+                    setLocality(e.target.value)
+                    setLocalitySlug('')
+                    setShowLocalityDropdown(e.target.value.length >= 3)
+                  }}
+                  onFocus={() => setShowLocalityDropdown(locality.length >= 3)}
+                  placeholder="Start typing locality name (min 3 letters)"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  autoComplete="off"
+                />
 
-                  {localities.map((loc) => (
-                    <option key={loc.id} value={(loc as any).slug}>
-                      {(loc as any).name}
-                    </option>
-                  ))}
-                </select>
+                {showLocalityDropdown && locality.length >= 3 && (
+                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    {localities
+                      .filter(loc =>
+                        (loc as any).name.toLowerCase().startsWith(locality.toLowerCase())
+                      )
+                      .map(loc => (
+                        <div
+                          key={loc.id}
+                          onClick={() => {
+                            setLocality((loc as any).name)
+                            setLocalitySlug((loc as any).slug)
+                            setShowLocalityDropdown(false)
+                          }}
+                          className="px-4 py-3 hover:bg-primary-50 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0"
+                        >
+                          <div className="font-medium text-gray-900">{(loc as any).name}</div>
+                        </div>
+                      ))}
+                    {localities.filter(loc =>
+                      (loc as any).name.toLowerCase().startsWith(locality.toLowerCase())
+                    ).length === 0 && (
+                      <div className="px-4 py-3 text-gray-500 text-sm">
+                        No localities found starting with "{locality}"
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <p className="text-sm text-gray-500 mt-1">
                   All properties must be in Visakhapatnam (Vizag) area
