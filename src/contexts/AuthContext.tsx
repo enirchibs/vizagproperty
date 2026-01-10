@@ -8,6 +8,8 @@ interface AuthContextType {
   profile: UserProfile | null
   session: Session | null
   loading: boolean
+  showUsernamePrompt: boolean
+  setShowUsernamePrompt: (show: boolean) => void
   signInWithPhone: (phone: string) => Promise<void>
   verifyOtp: (
     phone: string,
@@ -29,6 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [showUsernamePrompt, setShowUsernamePrompt] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -54,14 +57,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               .eq('id', session.user.id)
               .maybeSingle()
 
-            if (!existingProfile && event === 'SIGNED_IN') {
-              await supabase.from('users').insert({
+            // Determine auth provider from user metadata or app metadata
+            const authProvider = session.user.phone ? 'phone'
+              : session.user.app_metadata?.provider === 'google' ? 'google'
+              : 'email'
+
+            if (!existingProfile && (event === 'SIGNED_IN' || event === 'USER_UPDATED')) {
+              // Get intent role from user metadata if available
+              const intentRole = session.user.user_metadata?.intent_role || 'buyer'
+
+              // Create new user row
+              const { error: insertError } = await supabase.from('users').insert({
                 id: session.user.id,
                 name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
                 email: session.user.email,
                 phone: session.user.phone,
-                role: 'buyer'
+                role: intentRole
               })
+
+              // Show username prompt only for email signups (not phone or Google)
+              if (!insertError && authProvider === 'email') {
+                setShowUsernamePrompt(true)
+              }
             }
 
             await loadProfile(session.user.id)
@@ -156,9 +173,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     password: string,
     intentRole: 'buyer' | 'owner' = 'buyer'
   ) => {
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
-      password
+      password,
+      options: {
+        data: {
+          intent_role: intentRole
+        }
+      }
     })
 
     if (error) {
@@ -166,14 +188,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw error
     }
 
-    if (data?.user) {
-      await supabase.from('users').insert({
-        id: data.user.id,
-        name: email.split('@')[0],
-        email: data.user.email,
-        role: intentRole
-      })
-    }
+    // User row will be created by onAuthStateChange handler
   }
 
   const signInWithEmail = async (email: string, password: string) => {
@@ -243,6 +258,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         profile,
         session,
         loading,
+        showUsernamePrompt,
+        setShowUsernamePrompt,
         signInWithPhone,
         verifyOtp,
         signInWithEmail,
