@@ -6,7 +6,7 @@ import { Property } from '../types'
 import { MapPin, Bed, Bath, Maximize, CheckCircle, XCircle, Clock, Shield } from 'lucide-react'
 
 export function AdminPropertiesPage() {
-  const { user, profile, loading: authLoading } = useAuth()
+  const { user, isAdmin, loading: authLoading } = useAuth()
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [actionId, setActionId] = useState<string | null>(null)
@@ -15,10 +15,10 @@ export function AdminPropertiesPage() {
   const [filter, setFilter] = useState<'pending' | 'all'>('pending')
 
   useEffect(() => {
-    if (user && profile?.role === 'admin') {
+    if (user && isAdmin) {
       loadProperties()
     }
-  }, [user, profile, filter])
+  }, [user, isAdmin, filter])
 
   const loadProperties = async () => {
     if (!user) return
@@ -87,11 +87,11 @@ export function AdminPropertiesPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'active':
+      case 'approved':
         return (
           <span className="flex items-center gap-1 bg-green-100 text-green-700 px-3 py-1.5 rounded-full text-xs font-semibold">
             <CheckCircle className="h-3 w-3" />
-            Active
+            Approved
           </span>
         )
       case 'pending':
@@ -124,7 +124,7 @@ export function AdminPropertiesPage() {
     )
   }
 
-  if (!profile || profile.role !== 'admin') {
+  if (!isAdmin) {
     return <Navigate to="/" />
   }
 
