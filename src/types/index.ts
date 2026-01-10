@@ -29,7 +29,7 @@ export interface Property {
   amenities: string[]
   images: string[]
   video_url?: string
-  status: 'active' | 'sold' | 'rented' | 'inactive'
+  status: 'active' | 'sold' | 'rented' | 'inactive' | 'pending' | 'rejected'
   featured: boolean
   verified: boolean
   owner_id?: string
@@ -49,7 +49,7 @@ export interface UserProfile {
   phone?: string
   email?: string
   avatar_url?: string
-  role: 'buyer' | 'owner' | 'agent'
+  role: 'buyer' | 'owner' | 'agent' | 'admin'
   auth_provider?: 'phone' | 'email' | 'google' | 'microsoft'
   preferences?: Record<string, any>
   created_at: string

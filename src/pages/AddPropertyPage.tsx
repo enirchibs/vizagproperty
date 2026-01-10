@@ -293,16 +293,16 @@ export function AddPropertyPage() {
           agent_whatsapp: formData.agent_whatsapp || null,
           owner_id: user.id,
           images: imageUrls,
-          status: 'active'
+          status: 'pending'
         })
 
       if (error) throw error
 
-      setSuccessMessage('Property listed successfully! Redirecting...')
+      setSuccessMessage('Property submitted for review! Our team will review and approve it shortly.')
       setErrorMessage('')
 
       setTimeout(() => {
-        window.location.href = '/?refresh=1'
+        window.location.href = '/my-listings'
       }, 2000)
     } catch (error: any) {
       console.error('Error adding property:', error)

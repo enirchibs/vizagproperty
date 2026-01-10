@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
-import { MapPin, Bed, Bath, Maximize, Edit, Trash2, AlertCircle } from 'lucide-react'
+import { MapPin, Bed, Bath, Maximize, Edit, Trash2, AlertCircle, Clock, CheckCircle, XCircle } from 'lucide-react'
 
 export function MyListingsPage() {
   const { user, profile, loading: authLoading } = useAuth()
@@ -68,6 +68,34 @@ export function MyListingsPage() {
       return `₹${(price / 100000).toFixed(2)} L`
     }
     return `₹${price.toLocaleString('en-IN')}`
+  }
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'active':
+        return (
+          <span className="flex items-center gap-1 bg-green-100 text-green-700 px-3 py-1.5 rounded-full text-xs font-semibold">
+            <CheckCircle className="h-3 w-3" />
+            Active
+          </span>
+        )
+      case 'pending':
+        return (
+          <span className="flex items-center gap-1 bg-yellow-100 text-yellow-700 px-3 py-1.5 rounded-full text-xs font-semibold">
+            <Clock className="h-3 w-3" />
+            Pending Review
+          </span>
+        )
+      case 'rejected':
+        return (
+          <span className="flex items-center gap-1 bg-red-100 text-red-700 px-3 py-1.5 rounded-full text-xs font-semibold">
+            <XCircle className="h-3 w-3" />
+            Rejected
+          </span>
+        )
+      default:
+        return null
+    }
   }
 
   if (authLoading || loading) {
@@ -138,10 +166,11 @@ export function MyListingsPage() {
                         alt={property.title}
                         className="w-full h-full object-cover"
                       />
-                      <div className="absolute top-3 left-3">
+                      <div className="absolute top-3 left-3 flex flex-wrap gap-2">
                         <span className="bg-white/90 backdrop-blur-sm text-gray-900 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg capitalize">
                           {property.listing_type}
                         </span>
+                        {getStatusBadge(property.status || 'pending')}
                       </div>
                     </div>
 
@@ -182,7 +211,7 @@ export function MyListingsPage() {
 
                       <div className="flex gap-2">
                         <a
-                          href={`/property/${property.id}`}
+                          href={`/edit-property/${property.id}`}
                           className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-all text-sm font-semibold"
                         >
                           <Edit className="h-4 w-4" />
