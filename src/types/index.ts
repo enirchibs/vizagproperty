@@ -39,6 +39,11 @@ export interface Property {
   views_count: number
   created_at: string
   updated_at: string
+  users?: {
+    email?: string
+    name?: string
+    phone?: string
+  }
 }
 
 export interface UserProfile {

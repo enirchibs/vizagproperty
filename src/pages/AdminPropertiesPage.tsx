@@ -30,7 +30,14 @@ export function AdminPropertiesPage() {
     try {
       let query = supabase
         .from('properties')
-        .select('*')
+        .select(`
+          *,
+          users!properties_owner_id_fkey (
+            email,
+            name,
+            phone
+          )
+        `)
         .order('created_at', { ascending: false })
 
       if (filter === 'pending') {
@@ -206,10 +213,17 @@ export function AdminPropertiesPage() {
                       {property.title}
                     </h3>
 
-                    <div className="flex items-center text-gray-600 text-sm mb-3">
+                    <div className="flex items-center text-gray-600 text-sm mb-2">
                       <MapPin className="h-4 w-4 mr-1.5 text-primary-500 flex-shrink-0" />
                       <span className="line-clamp-1">{property.location}, {property.city}</span>
                     </div>
+
+                    {property.users && (
+                      <div className="text-xs text-gray-500 mb-3 bg-gray-50 px-2 py-1.5 rounded border border-gray-200">
+                        <span className="font-medium">Owner: </span>
+                        {property.users.email || property.users.phone || property.users.name}
+                      </div>
+                    )}
 
                     <div className="flex items-center gap-4 text-gray-600 text-sm mb-3 pb-3 border-b border-gray-100">
                       {property.bedrooms > 0 && (
