@@ -42,6 +42,10 @@ export function HomePage() {
     if (params.get('login') === 'true' && !user) {
       setShowAuthModal(true)
     }
+    if (params.get('refresh') === '1') {
+      loadFeaturedProperties()
+      window.history.replaceState({}, '', '/')
+    }
   }, [user])
 
   useEffect(() => {
@@ -142,8 +146,7 @@ export function HomePage() {
       const { data, error } = await supabase
         .from('properties')
         .select('*')
-        .eq('status', 'available')
-        .eq('featured', true)
+        .eq('status', 'active')
         .order('created_at', { ascending: false })
         .limit(6)
 

@@ -15,6 +15,10 @@ interface AuthContextType {
     intentRole?: 'buyer' | 'owner',
     redirectTo?: string
   ) => Promise<void>
+  signInWithEmail: (email: string, password: string) => Promise<void>
+  signUpWithEmail: (email: string, password: string, intentRole?: 'buyer' | 'owner') => Promise<void>
+  signInWithGoogle: () => Promise<void>
+  updateUsername: (username: string) => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -38,12 +42,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
         setSession(session)
         setUser(session?.user ?? null)
 
         if (session?.user) {
           (async () => {
+            const { data: existingProfile } = await supabase
+              .from('users')
+              .select('*')
+              .eq('id', session.user.id)
+              .maybeSingle()
+
+            if (!existingProfile && event === 'SIGNED_IN') {
+              await supabase.from('users').insert({
+                id: session.user.id,
+                name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
+                email: session.user.email,
+                phone: session.user.phone,
+                role: 'buyer'
+              })
+            }
+
             await loadProfile(session.user.id)
           })()
         } else {
@@ -59,7 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loadProfile = async (userId: string) => {
     try {
       const { data, error } = await supabase
-        .from('user_profiles')
+        .from('users')
         .select('*')
         .eq('id', userId)
         .maybeSingle()
@@ -107,19 +127,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (data?.user) {
       const { data: existingProfile } = await supabase
-        .from('user_profiles')
+        .from('users')
         .select('*')
         .eq('id', data.user.id)
         .maybeSingle()
 
       if (!existingProfile) {
-        await supabase.from('user_profiles').insert({
+        await supabase.from('users').insert({
           id: data.user.id,
           name: data.user.phone || 'User',
           phone: data.user.phone,
-          role: intentRole,
-          auth_provider: 'phone',
-          user_type: intentRole === 'owner' ? 'seller' : 'buyer'
+          role: intentRole
         })
       }
 
@@ -127,6 +145,85 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         window.location.href = redirectTo
       }
     }
+  }
+
+  /* ======================================================
+     ✅ EMAIL + PASSWORD LOGIN
+     ====================================================== */
+
+  const signUpWithEmail = async (
+    email: string,
+    password: string,
+    intentRole: 'buyer' | 'owner' = 'buyer'
+  ) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password
+    })
+
+    if (error) {
+      console.error('Email signup error:', error.message)
+      throw error
+    }
+
+    if (data?.user) {
+      await supabase.from('users').insert({
+        id: data.user.id,
+        name: email.split('@')[0],
+        email: data.user.email,
+        role: intentRole
+      })
+    }
+  }
+
+  const signInWithEmail = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    })
+
+    if (error) {
+      console.error('Email signin error:', error.message)
+      throw error
+    }
+  }
+
+  /* ======================================================
+     ✅ GOOGLE OAUTH LOGIN
+     ====================================================== */
+
+  const signInWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/`
+      }
+    })
+
+    if (error) {
+      console.error('Google signin error:', error.message)
+      throw error
+    }
+  }
+
+  /* ======================================================
+     ✅ UPDATE USERNAME
+     ====================================================== */
+
+  const updateUsername = async (username: string) => {
+    if (!user) throw new Error('No user logged in')
+
+    const { error } = await supabase
+      .from('users')
+      .update({ username })
+      .eq('id', user.id)
+
+    if (error) {
+      console.error('Update username error:', error.message)
+      throw error
+    }
+
+    await loadProfile(user.id)
   }
 
   const signOut = async () => {
@@ -148,6 +245,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         signInWithPhone,
         verifyOtp,
+        signInWithEmail,
+        signUpWithEmail,
+        signInWithGoogle,
+        updateUsername,
         signOut
       }}
     >

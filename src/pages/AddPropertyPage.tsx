@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
-import { Home, Upload, X, Camera, Video, Youtube, Instagram, MessageCircle } from 'lucide-react'
+import { Home, Upload, X, Camera, MessageCircle } from 'lucide-react'
 import { VizagLocality } from '../types'
 import { AuthModal } from '../components/AuthModal'
 
@@ -12,15 +12,12 @@ export function AddPropertyPage() {
   const [uploadingImages, setUploadingImages] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [imagePreviews, setImagePreviews] = useState<string[]>([])
-  const [selectedVideos, setSelectedVideos] = useState<File[]>([])
-  const [videoPreviews, setVideoPreviews] = useState<string[]>([])
-  const [youtubeLinks, setYoutubeLinks] = useState<string[]>([''])
-  const [instagramLinks, setInstagramLinks] = useState<string[]>([''])
   const [showCamera, setShowCamera] = useState(false)
   const [localities, setLocalities] = useState<VizagLocality[]>([])
   const [locality, setLocality] = useState('')
-  const [localitySlug, setLocalitySlug] = useState('')
   const [showLocalityDropdown, setShowLocalityDropdown] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const localityDropdownRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -28,7 +25,7 @@ export function AddPropertyPage() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    property_type: 'apartment',
+    property_type: 'flat',
     listing_type: 'sale',
     price: '',
     bedrooms: '2',
@@ -48,7 +45,7 @@ export function AddPropertyPage() {
     const fetchLocalities = async () => {
       const { data, error } = await supabase
         .from('localities')
-        .select('id, name, slug')
+        .select('id, name, slug, pincode')
         .eq('city', 'Visakhapatnam')
         .order('name', { ascending: true })
 
@@ -73,21 +70,13 @@ export function AddPropertyPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const propertyTypes = [
-    'apartment',
-    'villa',
-    'plot',
-    'commercial',
-    'penthouse',
-    'farmhouse',
-    'pg',
-    'hostel',
-    'flatmates',
-    'office',
-    'shop',
-    'warehouse',
-    'coworking'
-  ]
+  const propertyTypes = ['flat', 'plot', 'villa', 'pg']
+  const propertyTypeLabels: Record<string, string> = {
+    'flat': 'Flat',
+    'plot': 'Plot',
+    'villa': 'Villa',
+    'pg': 'PG / Hostel'
+  }
   const commonAmenities = ['Parking', 'Gym', 'Swimming Pool', 'Security', 'Power Backup', 'Elevator', 'Garden', 'Club House', 'WiFi', 'Furnished']
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,16 +89,27 @@ export function AddPropertyPage() {
       return
     }
 
-    const maxSize = 10 * 1024 * 1024
-    const oversizedFiles = imageFiles.filter(file => file.size > maxSize)
-    if (oversizedFiles.length > 0) {
-      alert('Some files are too large. Maximum size is 10MB per image.')
+    const remainingSlots = 4 - selectedFiles.length
+    if (remainingSlots <= 0) {
+      alert('Maximum 4 images allowed per property')
       return
     }
 
-    setSelectedFiles(prev => [...prev, ...imageFiles])
+    const filesToAdd = imageFiles.slice(0, remainingSlots)
+    if (imageFiles.length > remainingSlots) {
+      alert(`Only ${remainingSlots} more image${remainingSlots > 1 ? 's' : ''} can be added. Maximum 4 images allowed.`)
+    }
 
-    imageFiles.forEach(file => {
+    const maxSize = 50 * 1024 * 1024
+    const oversizedFiles = filesToAdd.filter(file => file.size > maxSize)
+    if (oversizedFiles.length > 0) {
+      alert('Some files are too large. Maximum size is 50MB per image.')
+      return
+    }
+
+    setSelectedFiles(prev => [...prev, ...filesToAdd])
+
+    filesToAdd.forEach(file => {
       const reader = new FileReader()
       reader.onloadend = () => {
         setImagePreviews(prev => [...prev, reader.result as string])
@@ -149,6 +149,11 @@ export function AddPropertyPage() {
   }
 
   const capturePhoto = () => {
+    if (selectedFiles.length >= 4) {
+      alert('Maximum 4 images allowed per property')
+      return
+    }
+
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current
       const canvas = canvasRef.current
@@ -171,61 +176,6 @@ export function AddPropertyPage() {
         }, 'image/jpeg', 0.9)
       }
     }
-  }
-
-  const handleVideoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || [])
-    if (files.length === 0) return
-
-    const videoFiles = files.filter(file => file.type.startsWith('video/'))
-    if (videoFiles.length === 0) {
-      alert('Please select valid video files')
-      return
-    }
-
-    const maxSize = 100 * 1024 * 1024
-    const oversizedFiles = videoFiles.filter(file => file.size > maxSize)
-    if (oversizedFiles.length > 0) {
-      alert('Some videos are too large. Maximum size is 100MB per video.')
-      return
-    }
-
-    setSelectedVideos(prev => [...prev, ...videoFiles])
-
-    videoFiles.forEach(file => {
-      const url = URL.createObjectURL(file)
-      setVideoPreviews(prev => [...prev, url])
-    })
-  }
-
-  const removeVideo = (index: number) => {
-    URL.revokeObjectURL(videoPreviews[index])
-    setSelectedVideos(prev => prev.filter((_, i) => i !== index))
-    setVideoPreviews(prev => prev.filter((_, i) => i !== index))
-  }
-
-  const addYoutubeLink = () => {
-    setYoutubeLinks(prev => [...prev, ''])
-  }
-
-  const updateYoutubeLink = (index: number, value: string) => {
-    setYoutubeLinks(prev => prev.map((link, i) => i === index ? value : link))
-  }
-
-  const removeYoutubeLink = (index: number) => {
-    setYoutubeLinks(prev => prev.filter((_, i) => i !== index))
-  }
-
-  const addInstagramLink = () => {
-    setInstagramLinks(prev => [...prev, ''])
-  }
-
-  const updateInstagramLink = (index: number, value: string) => {
-    setInstagramLinks(prev => prev.map((link, i) => i === index ? value : link))
-  }
-
-  const removeInstagramLink = (index: number) => {
-    setInstagramLinks(prev => prev.filter((_, i) => i !== index))
   }
 
   const uploadImages = async (): Promise<string[]> => {
@@ -261,100 +211,29 @@ export function AddPropertyPage() {
     }
   }
 
-  const uploadVideos = async (propertyId: string): Promise<void> => {
-    if (selectedVideos.length === 0) return
-
-    try {
-      for (const file of selectedVideos) {
-        const fileExt = file.name.split('.').pop()
-        const fileName = `${user!.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
-
-        const { error: uploadError } = await supabase.storage
-          .from('property-videos')
-          .upload(fileName, file)
-
-        if (uploadError) throw uploadError
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('property-videos')
-          .getPublicUrl(fileName)
-
-        await supabase.from('property_videos').insert({
-          property_id: propertyId,
-          video_url: publicUrl
-        })
-      }
-    } catch (error: any) {
-      console.error('Error uploading videos:', error)
-      throw new Error('Failed to upload videos: ' + error.message)
-    }
-  }
-
-  const extractYoutubeId = (url: string): string | null => {
-    const patterns = [
-      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
-      /^([a-zA-Z0-9_-]{11})$/
-    ]
-    for (const pattern of patterns) {
-      const match = url.match(pattern)
-      if (match) return match[1]
-    }
-    return null
-  }
-
-  const extractInstagramCode = (url: string): string | null => {
-    const patterns = [
-      /instagram\.com\/(?:p|reel)\/([^\/\?]+)/,
-      /instagram\.com\/tv\/([^\/\?]+)/
-    ]
-    for (const pattern of patterns) {
-      const match = url.match(pattern)
-      if (match) return match[1]
-    }
-    return null
-  }
-
-  const saveSocialLinks = async (propertyId: string): Promise<void> => {
-    const validYoutubeLinks = youtubeLinks.filter(link => link.trim() !== '')
-    const validInstagramLinks = instagramLinks.filter(link => link.trim() !== '')
-
-    try {
-      for (const link of validYoutubeLinks) {
-        const embedCode = extractYoutubeId(link)
-        await supabase.from('property_social_links').insert({
-          property_id: propertyId,
-          platform: 'youtube',
-          link_url: link,
-          embed_code: embedCode
-        })
-      }
-
-      for (const link of validInstagramLinks) {
-        const embedCode = extractInstagramCode(link)
-        await supabase.from('property_social_links').insert({
-          property_id: propertyId,
-          platform: 'instagram',
-          link_url: link,
-          embed_code: embedCode
-        })
-      }
-    } catch (error: any) {
-      console.error('Error saving social links:', error)
-      throw new Error('Failed to save social media links: ' + error.message)
-    }
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!user) return
+
+    if (!user?.id) {
+      alert('Login required to post property')
+      return
+    }
 
     if (selectedFiles.length === 0) {
       alert('Please add at least one property image')
       return
     }
 
-    if (!locality || !localitySlug) {
-      alert('Please select a locality from the dropdown')
+    const matched = localities.find(l => (l as any).name === locality)
+
+    if (!matched) {
+      alert('Please select a locality from the list')
+      return
+    }
+
+    const allowedTypes = ['flat', 'plot', 'villa', 'pg']
+    if (!allowedTypes.includes(formData.property_type)) {
+      alert('Invalid property type selected')
       return
     }
 
@@ -364,7 +243,31 @@ export function AddPropertyPage() {
 
       const imageUrls = await uploadImages()
 
-      const { data: propertyData, error } = await supabase
+      // Ensure user exists in users table (required for FK constraint)
+      const { data: existingUser } = await supabase
+        .from('users')
+        .select('id')
+        .eq('id', user.id)
+        .maybeSingle()
+
+      if (!existingUser) {
+        const { error: userError } = await supabase
+          .from('users')
+          .insert({
+            id: user.id,
+            role: 'owner',
+            name: user.phone || user.email || 'Property Owner',
+            phone: user.phone,
+            email: user.email
+          })
+
+        if (userError) {
+          console.error('Error creating user profile:', userError)
+          throw new Error('Please complete your profile before posting properties')
+        }
+      }
+
+      const { error } = await supabase
         .from('properties')
         .insert({
           title: formData.title,
@@ -375,9 +278,9 @@ export function AddPropertyPage() {
           bedrooms: parseInt(formData.bedrooms),
           bathrooms: parseInt(formData.bathrooms),
           area_sqft: parseInt(formData.area_sqft),
-          locality_slug: localitySlug,
+          locality_id: matched.id,
           state: formData.state,
-          pincode: formData.pincode || null,
+          pincode: (matched as any).pincode || null,
           amenities: formData.amenities,
           agent_name: formData.agent_name,
           agent_phone: formData.agent_phone,
@@ -385,22 +288,19 @@ export function AddPropertyPage() {
           owner_id: user.id,
           images: imageUrls
         })
-        .select()
-        .single()
 
       if (error) throw error
 
-      if (propertyData) {
-        await uploadVideos(propertyData.id)
-        await saveSocialLinks(propertyData.id)
-      }
+      setSuccessMessage('Property listed successfully! Redirecting...')
+      setErrorMessage('')
 
-      alert('Property listed successfully!')
-      window.location.href = '/dashboard'
+      setTimeout(() => {
+        window.location.href = '/?refresh=1'
+      }, 2000)
     } catch (error: any) {
       console.error('Error adding property:', error)
-      alert(error.message || 'Failed to add property')
-    } finally {
+      setErrorMessage(error.message || 'Failed to add property')
+      setSuccessMessage('')
       setLoading(false)
     }
   }
@@ -495,6 +395,18 @@ export function AddPropertyPage() {
             <h1 className="text-3xl font-bold text-gray-900">List Your Property</h1>
           </div>
 
+          {successMessage && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-green-800 font-medium">{successMessage}</p>
+            </div>
+          )}
+
+          {errorMessage && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-800 font-medium">{errorMessage}</p>
+            </div>
+          )}
+
           <div className="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-200">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex-1">
@@ -564,9 +476,10 @@ export function AddPropertyPage() {
                   onChange={(e) => setFormData({ ...formData, property_type: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
+                  <option value="">Select Property Type</option>
                   {propertyTypes.map(type => (
-                    <option key={type} value={type} className="capitalize">
-                      {type}
+                    <option key={type} value={type}>
+                      {propertyTypeLabels[type]}
                     </option>
                   ))}
                 </select>
@@ -653,7 +566,7 @@ export function AddPropertyPage() {
                   value={locality}
                   onChange={(e) => {
                     setLocality(e.target.value)
-                    setLocalitySlug('')
+                    setFormData({ ...formData, pincode: '' })
                     setShowLocalityDropdown(e.target.value.length >= 3)
                   }}
                   onFocus={() => setShowLocalityDropdown(locality.length >= 3)}
@@ -673,12 +586,15 @@ export function AddPropertyPage() {
                           key={loc.id}
                           onClick={() => {
                             setLocality((loc as any).name)
-                            setLocalitySlug((loc as any).slug)
+                            setFormData({ ...formData, pincode: (loc as any).pincode || '' })
                             setShowLocalityDropdown(false)
                           }}
                           className="px-4 py-3 hover:bg-primary-50 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0"
                         >
                           <div className="font-medium text-gray-900">{(loc as any).name}</div>
+                          {(loc as any).pincode && (
+                            <div className="text-sm text-gray-500">Pincode: {(loc as any).pincode}</div>
+                          )}
                         </div>
                       ))}
                     {localities.filter(loc =>
@@ -703,9 +619,9 @@ export function AddPropertyPage() {
                 <input
                   type="text"
                   value={formData.pincode}
-                  onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="560066"
+                  readOnly
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+                  placeholder="Auto-filled from locality"
                 />
               </div>
 
@@ -773,21 +689,25 @@ export function AddPropertyPage() {
 
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Property Images
+                  Property Images <span className="text-red-500">*</span>
+                  <span className="text-xs font-normal text-gray-500 ml-2">(Maximum 4 images, 50MB each)</span>
                 </label>
                 <div className="space-y-4">
                   <div className="flex gap-2">
-                    <label className="flex-1 flex flex-col items-center justify-center h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                    <label className={`flex-1 flex flex-col items-center justify-center h-32 border-2 border-gray-300 border-dashed rounded-lg ${selectedFiles.length >= 4 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:bg-gray-100'} bg-gray-50 transition-colors`}>
                       <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <Upload className="h-10 w-10 text-gray-400 mb-2" />
-                        <p className="text-sm text-gray-500 font-semibold">Upload Images</p>
-                        <p className="text-xs text-gray-500">PNG, JPG (MAX. 10MB)</p>
+                        <p className="text-sm text-gray-500 font-semibold">
+                          {selectedFiles.length >= 4 ? 'Maximum reached' : 'Upload Images'}
+                        </p>
+                        <p className="text-xs text-gray-500">PNG, JPG (MAX 4 images, 50MB each)</p>
                       </div>
                       <input
                         type="file"
                         className="hidden"
                         accept="image/*"
                         multiple
+                        disabled={selectedFiles.length >= 4}
                         onChange={handleFileSelect}
                       />
                     </label>
@@ -851,135 +771,6 @@ export function AddPropertyPage() {
                       {selectedFiles.length} image{selectedFiles.length > 1 ? 's' : ''} selected
                     </p>
                   )}
-                </div>
-              </div>
-
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Property Videos (Optional)
-                </label>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-center w-full">
-                    <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        <Video className="h-10 w-10 text-gray-400 mb-2" />
-                        <p className="mb-2 text-sm text-gray-500">
-                          <span className="font-semibold">Click to upload videos</span>
-                        </p>
-                        <p className="text-xs text-gray-500">MP4, WebM, MOV (MAX. 100MB each)</p>
-                      </div>
-                      <input
-                        type="file"
-                        className="hidden"
-                        accept="video/*"
-                        multiple
-                        onChange={handleVideoSelect}
-                      />
-                    </label>
-                  </div>
-
-                  {videoPreviews.length > 0 && (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {videoPreviews.map((preview, index) => (
-                        <div key={index} className="relative group">
-                          <video
-                            src={preview}
-                            className="w-full h-32 object-cover rounded-lg border border-gray-200"
-                            controls
-                          />
-                          <button
-                            type="button"
-                            onClick={() => removeVideo(index)}
-                            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
-                          >
-                            <X className="h-4 w-4" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {selectedVideos.length > 0 && (
-                    <p className="text-sm text-gray-600">
-                      {selectedVideos.length} video{selectedVideos.length > 1 ? 's' : ''} selected
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  YouTube Videos (Optional)
-                </label>
-                <div className="space-y-2">
-                  {youtubeLinks.map((link, index) => (
-                    <div key={index} className="flex gap-2">
-                      <div className="flex-1 relative">
-                        <Youtube className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                        <input
-                          type="url"
-                          value={link}
-                          onChange={(e) => updateYoutubeLink(index, e.target.value)}
-                          placeholder="https://www.youtube.com/watch?v=..."
-                          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                        />
-                      </div>
-                      {youtubeLinks.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeYoutubeLink(index)}
-                          className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <X className="h-5 w-5" />
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={addYoutubeLink}
-                    className="text-sm text-primary-600 hover:text-primary-700 font-medium"
-                  >
-                    + Add another YouTube link
-                  </button>
-                </div>
-              </div>
-
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Instagram Videos (Optional)
-                </label>
-                <div className="space-y-2">
-                  {instagramLinks.map((link, index) => (
-                    <div key={index} className="flex gap-2">
-                      <div className="flex-1 relative">
-                        <Instagram className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                        <input
-                          type="url"
-                          value={link}
-                          onChange={(e) => updateInstagramLink(index, e.target.value)}
-                          placeholder="https://www.instagram.com/p/... or /reel/..."
-                          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                        />
-                      </div>
-                      {instagramLinks.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeInstagramLink(index)}
-                          className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <X className="h-5 w-5" />
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={addInstagramLink}
-                    className="text-sm text-primary-600 hover:text-primary-700 font-medium"
-                  >
-                    + Add another Instagram link
-                  </button>
                 </div>
               </div>
             </div>

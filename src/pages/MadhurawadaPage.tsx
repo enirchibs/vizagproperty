@@ -22,28 +22,12 @@ export function MadhurawadaPage() {
 
   const loadMadhurawadaProperties = async () => {
     try {
-      const { data: localityData } = await supabase
-        .from('vizag_localities')
-        .select('locality_slug')
-        .eq('locality_name', 'Madhurawada')
-        .eq('city', 'Vizag')
-        .eq('is_active', true)
-        .single()
-
-      if (!localityData) {
-        console.error('Madhurawada locality not found')
-        setLoading(false)
-        return
-      }
-
       const { data, error } = await supabase
         .from('properties')
         .select('*')
-        .eq('city', 'Vizag')
-        .eq('status', 'available')
-        .eq('locality_id', localityData.locality_slug)
+        .eq('status', 'active')
         .order('created_at', { ascending: false })
-        .limit(12)
+        .limit(50)
 
       if (error) throw error
       setProperties(data || [])

@@ -65,11 +65,9 @@ export default function GatedCommunityPlotsPage() {
       const { data, error } = await supabase
         .from('properties')
         .select('*')
-        .eq('property_type', 'Plot')
-        .eq('listing_type', 'sale')
-        .eq('status', 'available')
+        .eq('status', 'active')
         .order('created_at', { ascending: false })
-        .limit(12)
+        .limit(50)
 
       if (error) throw error
       setProperties(data || [])

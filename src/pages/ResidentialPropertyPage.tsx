@@ -67,10 +67,9 @@ export default function ResidentialPropertyPage() {
       const { data, error } = await supabase
         .from('properties')
         .select('*')
-        .in('property_type', ['House', 'Villa', 'Independent House'])
-        .eq('status', 'available')
+        .eq('status', 'active')
         .order('created_at', { ascending: false })
-        .limit(12)
+        .limit(50)
 
       if (error) throw error
       setProperties(data || [])

@@ -1,18 +1,31 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Heart, LogOut, Menu, X, Shield, Plus, MessageCircle } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { AuthModal } from './AuthModal'
+import { UsernameModal } from './UsernameModal'
 import { trackEvent } from '../lib/analytics'
 
 export function Header() {
-  const { user, signOut } = useAuth()
+  const { user, profile, loading, signOut } = useAuth()
   const [showAuthModal, setShowAuthModal] = useState(false)
+  const [showUsernameModal, setShowUsernameModal] = useState(false)
   const [authModalProps, setAuthModalProps] = useState<{ intentRole?: 'buyer' | 'owner'; redirectTo?: string }>({})
   const [showMenu, setShowMenu] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
 
+  useEffect(() => {
+    if (user && profile && !loading && !profile.username) {
+      const hasSeenUsernameModal = sessionStorage.getItem('hasSeenUsernameModal')
+      if (!hasSeenUsernameModal) {
+        setShowUsernameModal(true)
+        sessionStorage.setItem('hasSeenUsernameModal', 'true')
+      }
+    }
+  }, [user, profile, loading])
+
   const handleSignOut = async () => {
     try {
+      sessionStorage.removeItem('hasSeenUsernameModal')
       await signOut()
       // Small delay to ensure session is fully cleared
       await new Promise(resolve => setTimeout(resolve, 100))
@@ -298,6 +311,12 @@ export function Header() {
           }}
           intentRole={authModalProps.intentRole}
           redirectTo={authModalProps.redirectTo}
+        />
+      )}
+
+      {showUsernameModal && (
+        <UsernameModal
+          onClose={() => setShowUsernameModal(false)}
         />
       )}
     </>

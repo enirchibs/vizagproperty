@@ -29,7 +29,7 @@ export interface Property {
   amenities: string[]
   images: string[]
   video_url?: string
-  status: 'available' | 'sold' | 'rented' | 'inactive'
+  status: 'active' | 'sold' | 'rented' | 'inactive'
   featured: boolean
   verified: boolean
   owner_id?: string
@@ -45,6 +45,7 @@ export interface UserProfile {
   id: string
   full_name?: string
   name?: string
+  username?: string
   phone?: string
   email?: string
   avatar_url?: string

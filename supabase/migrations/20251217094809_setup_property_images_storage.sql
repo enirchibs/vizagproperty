@@ -20,16 +20,18 @@
   - Max file size enforced by client-side validation
 */
 
--- Create storage bucket for property images
+-- Create storage bucket for property images (Pro plan: 100GB total, 50MB per file)
 INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 VALUES (
   'property-images',
   'property-images',
   true,
-  10485760,
+  52428800,
   ARRAY['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 )
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE SET
+  file_size_limit = 52428800,
+  allowed_mime_types = ARRAY['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
 -- Allow public access to view images
 CREATE POLICY "Public Access"

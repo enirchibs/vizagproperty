@@ -71,10 +71,7 @@ export default function FlatsForSalePage() {
       let query = supabase
         .from('properties')
         .select('*')
-        .eq('city', 'Vizag')
-        .eq('status', 'available')
-        .in('property_type', ['apartment', 'flat'])
-        .eq('listing_type', 'sale')
+        .eq('status', 'active')
 
       if (selectedBudget) {
         const [min, max] = selectedBudget.split('-').map(v => v.replace('+', ''))
@@ -93,7 +90,7 @@ export default function FlatsForSalePage() {
         query = query.eq('bedrooms', parseInt(bhkNum))
       }
 
-      query = query.order('created_at', { ascending: false }).limit(12)
+      query = query.order('created_at', { ascending: false }).limit(50)
 
       const { data, error } = await query
 

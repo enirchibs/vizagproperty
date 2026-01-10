@@ -24,10 +24,9 @@ export function VizagPage() {
       const { data, error } = await supabase
         .from('properties')
         .select('*')
-        .eq('status', 'available')
-        .ilike('location', '%Visakhapatnam%')
+        .eq('status', 'active')
         .order('created_at', { ascending: false })
-        .limit(9)
+        .limit(50)
 
       if (error) throw error
       setProperties(data || [])
