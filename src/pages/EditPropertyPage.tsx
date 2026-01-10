@@ -20,8 +20,6 @@ export function EditPropertyPage() {
   const [showLocalityDropdown, setShowLocalityDropdown] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
-  const [canEdit, setCanEdit] = useState(true)
-  const [permissionMessage, setPermissionMessage] = useState('')
   const localityDropdownRef = useRef<HTMLDivElement>(null)
   const [formData, setFormData] = useState({
     title: '',
@@ -42,9 +40,7 @@ export function EditPropertyPage() {
 
   useEffect(() => {
     if (!user) {
-      setPermissionMessage('Please login to edit properties')
-      setCanEdit(false)
-      setInitialLoading(false)
+      navigate('/')
       return
     }
     loadProperty()
@@ -62,12 +58,7 @@ export function EditPropertyPage() {
   }, [])
 
   const loadProperty = async () => {
-    if (!id) {
-      setErrorMessage('Invalid property ID')
-      setCanEdit(false)
-      setInitialLoading(false)
-      return
-    }
+    if (!id) return
 
     try {
       const { data, error } = await supabase
@@ -76,39 +67,17 @@ export function EditPropertyPage() {
         .eq('id', id)
         .maybeSingle()
 
-      if (error) {
-        setErrorMessage('Failed to load property: ' + error.message)
-        setCanEdit(false)
-        setInitialLoading(false)
-        return
-      }
-
+      if (error) throw error
       if (!data) {
-        setErrorMessage('Property not found or you do not have permission to view it')
-        setCanEdit(false)
-        setInitialLoading(false)
+        alert('Property not found')
+        navigate('/my-listings')
         return
       }
 
-      // Check ownership
-      const isOwner = data.owner_id === user?.id
-      const isAdmin = profile?.role === 'admin'
-
-      if (!isOwner && !isAdmin) {
-        setPermissionMessage('You do not have permission to edit this property')
-        setCanEdit(false)
-        setProperty(data)
-        setInitialLoading(false)
+      if (data.owner_id !== user?.id && profile?.role !== 'admin') {
+        alert('You do not have permission to edit this property')
+        navigate('/my-listings')
         return
-      }
-
-      // Check if property is approved (only owner is restricted, admin can always edit)
-      if (data.status === 'approved' && isOwner && !isAdmin) {
-        setPermissionMessage('This property is already approved. Editing is disabled. Contact admin if you need to make changes.')
-        setCanEdit(false)
-      } else {
-        setCanEdit(true)
-        setPermissionMessage('')
       }
 
       setProperty(data)
@@ -141,8 +110,8 @@ export function EditPropertyPage() {
       }
     } catch (err) {
       console.error('Error loading property:', err)
-      setErrorMessage('Failed to load property. Please try again.')
-      setCanEdit(false)
+      alert('Failed to load property')
+      navigate('/my-listings')
     } finally {
       setInitialLoading(false)
     }
@@ -350,19 +319,11 @@ export function EditPropertyPage() {
           </div>
         )}
 
-        {permissionMessage && (
-          <div className="mb-6 p-6 bg-yellow-50 border-2 border-yellow-400 rounded-lg">
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 mt-1">
-                <svg className="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold text-yellow-800 mb-1">Editing Restricted</h3>
-                <p className="text-yellow-700">{permissionMessage}</p>
-              </div>
-            </div>
+        {property?.status === 'approved' && property?.owner_id === user?.id && profile?.role !== 'admin' && (
+          <div className="mb-6 p-4 bg-yellow-50 border border-yellow-300 rounded-lg">
+            <p className="text-yellow-800">
+              <strong>Note:</strong> Editing this property will send it for re-approval.
+            </p>
           </div>
         )}
 
@@ -376,10 +337,9 @@ export function EditPropertyPage() {
                 <input
                   type="text"
                   required
-                  disabled={!canEdit}
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
 
@@ -389,11 +349,10 @@ export function EditPropertyPage() {
                 </label>
                 <textarea
                   required
-                  disabled={!canEdit}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={4}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
 
@@ -403,10 +362,9 @@ export function EditPropertyPage() {
                 </label>
                 <select
                   required
-                  disabled={!canEdit}
                   value={formData.property_type}
                   onChange={(e) => setFormData({ ...formData, property_type: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   {propertyTypes.map(type => (
                     <option key={type} value={type}>
@@ -422,10 +380,9 @@ export function EditPropertyPage() {
                 </label>
                 <select
                   required
-                  disabled={!canEdit}
                   value={formData.listing_type}
                   onChange={(e) => setFormData({ ...formData, listing_type: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   <option value="sale">For Sale</option>
                   <option value="rent">For Rent</option>
@@ -439,10 +396,9 @@ export function EditPropertyPage() {
                 <input
                   type="number"
                   required
-                  disabled={!canEdit}
                   value={formData.price}
                   onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
 
@@ -453,10 +409,9 @@ export function EditPropertyPage() {
                 <input
                   type="number"
                   required
-                  disabled={!canEdit}
                   value={formData.area_sqft}
                   onChange={(e) => setFormData({ ...formData, area_sqft: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
 
@@ -467,10 +422,9 @@ export function EditPropertyPage() {
                 <input
                   type="number"
                   required
-                  disabled={!canEdit}
                   value={formData.bedrooms}
                   onChange={(e) => setFormData({ ...formData, bedrooms: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
 
@@ -481,10 +435,9 @@ export function EditPropertyPage() {
                 <input
                   type="number"
                   required
-                  disabled={!canEdit}
                   value={formData.bathrooms}
                   onChange={(e) => setFormData({ ...formData, bathrooms: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
 
@@ -495,14 +448,13 @@ export function EditPropertyPage() {
                 <input
                   type="text"
                   required
-                  disabled={!canEdit}
                   value={locality}
                   onChange={(e) => {
                     setLocality(e.target.value)
                     setShowLocalityDropdown(true)
                   }}
                   onFocus={() => setShowLocalityDropdown(true)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="Search locality..."
                 />
                 {showLocalityDropdown && filteredLocalities.length > 0 && (
@@ -531,10 +483,9 @@ export function EditPropertyPage() {
                 <input
                   type="text"
                   required
-                  disabled={!canEdit}
                   value={formData.agent_name}
                   onChange={(e) => setFormData({ ...formData, agent_name: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
 
@@ -545,10 +496,9 @@ export function EditPropertyPage() {
                 <input
                   type="tel"
                   required
-                  disabled={!canEdit}
                   value={formData.agent_phone}
                   onChange={(e) => setFormData({ ...formData, agent_phone: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
 
@@ -558,10 +508,9 @@ export function EditPropertyPage() {
                 </label>
                 <input
                   type="tel"
-                  disabled={!canEdit}
                   value={formData.agent_whatsapp}
                   onChange={(e) => setFormData({ ...formData, agent_whatsapp: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
 
@@ -574,7 +523,6 @@ export function EditPropertyPage() {
                     <label key={amenity} className="flex items-center space-x-2">
                       <input
                         type="checkbox"
-                        disabled={!canEdit}
                         checked={formData.amenities.includes(amenity)}
                         onChange={(e) => {
                           if (e.target.checked) {
@@ -583,9 +531,9 @@ export function EditPropertyPage() {
                             setFormData({ ...formData, amenities: formData.amenities.filter(a => a !== amenity) })
                           }
                         }}
-                        className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                       />
-                      <span className={`text-sm ${canEdit ? 'text-gray-700' : 'text-gray-500'}`}>{amenity}</span>
+                      <span className="text-sm text-gray-700">{amenity}</span>
                     </label>
                   ))}
                 </div>
@@ -603,19 +551,17 @@ export function EditPropertyPage() {
                         alt={`Preview ${index + 1}`}
                         className="w-full h-32 object-cover rounded-lg"
                       />
-                      {canEdit && (
-                        <button
-                          type="button"
-                          onClick={() => removeImage(index)}
-                          className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      )}
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
                     </div>
                   ))}
                 </div>
-                {imagePreviews.length < 4 && canEdit && (
+                {imagePreviews.length < 4 && (
                   <label className="flex items-center justify-center gap-2 px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-500 cursor-pointer transition-colors">
                     <Upload className="h-5 w-5 text-gray-400" />
                     <span className="text-sm text-gray-600">Add More Images</span>
@@ -638,24 +584,22 @@ export function EditPropertyPage() {
                 disabled={loading}
                 className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all font-semibold disabled:opacity-50"
               >
-                {canEdit ? 'Cancel' : 'Back to My Listings'}
+                Cancel
               </button>
-              {canEdit && (
-                <button
-                  type="submit"
-                  disabled={loading || uploadingImages}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg hover:shadow-lg transition-all font-semibold disabled:opacity-50 flex items-center justify-center gap-2"
-                >
-                  {loading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                      <span>Updating...</span>
-                    </>
-                  ) : (
-                    'Update Property'
-                  )}
-                </button>
-              )}
+              <button
+                type="submit"
+                disabled={loading || uploadingImages}
+                className="flex-1 px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg hover:shadow-lg transition-all font-semibold disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                    <span>Updating...</span>
+                  </>
+                ) : (
+                  'Update Property'
+                )}
+              </button>
             </div>
           </form>
         </div>
