@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Heart, LogOut, Menu, X, Shield, Plus, MessageCircle } from 'lucide-react'
+import { Heart, LogOut, Menu, X, Shield, Plus, MessageCircle, Building2 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { AuthModal } from './AuthModal'
 import { UsernameModal } from './UsernameModal'
@@ -123,6 +123,11 @@ export function Header() {
                       </div>
                     )}
                   </div>
+                  {profile?.role === 'owner' && (
+                    <a href="/my-listings" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors">
+                      <Building2 className="h-5 w-5" />
+                    </a>
+                  )}
                   <a href="/favorites" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors">
                     <Heart className="h-5 w-5" />
                   </a>
@@ -281,6 +286,12 @@ export function Header() {
 
               {user && (
                 <>
+                  {profile?.role === 'owner' && (
+                    <a href="/my-listings" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center space-x-2 border-t border-primary-500 mt-2" onClick={() => setShowMenu(false)}>
+                      <Building2 className="h-5 w-5" />
+                      <span>My Listings</span>
+                    </a>
+                  )}
                   <a href="/favorites" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center space-x-2 border-t border-primary-500 mt-2" onClick={() => setShowMenu(false)}>
                     <Heart className="h-5 w-5" />
                     <span>Favorites</span>

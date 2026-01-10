@@ -25,6 +25,7 @@ import VillasPage from './pages/VillasPage'
 import FlatsForRentPage from './pages/FlatsForRentPage'
 import PGHostelsPage from './pages/PGHostelsPage'
 import GatedCommunityPlotsPage from './pages/GatedCommunityPlotsPage'
+import { MyListingsPage } from './pages/MyListingsPage'
 
 function AppContent() {
   const { showUsernamePrompt, setShowUsernamePrompt } = useAuth()
@@ -59,6 +60,7 @@ function AppContent() {
           <Route path="/recommendations" element={<RecommendationsPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/favorites" element={<DashboardPage />} />
+          <Route path="/my-listings" element={<MyListingsPage />} />
           <Route path="/add-property" element={<AddPropertyPage />} />
         </Routes>
         <Footer />
