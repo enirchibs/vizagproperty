@@ -366,26 +366,6 @@ export function AddPropertyPage() {
     )
   }
 
-  if (profile && profile.role !== 'owner' && profile.role !== 'both') {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Upgrade Your Account</h2>
-          <p className="text-gray-600 mb-4">To post properties, you need to upgrade to an owner account</p>
-          <button
-            onClick={async () => {
-              await supabase.rpc('upgrade_user_role', { user_id: user!.id, new_role: 'owner' })
-              window.location.reload()
-            }}
-            className="bg-primary-600 text-white px-6 py-3 rounded-full hover:bg-primary-700 transition-colors font-semibold"
-          >
-            Upgrade to Owner Account
-          </button>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
