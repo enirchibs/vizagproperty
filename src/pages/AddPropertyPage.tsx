@@ -246,7 +246,7 @@ export function AddPropertyPage() {
       // Ensure user exists in users table (required for FK constraint)
       const { data: existingUser } = await supabase
         .from('users')
-        .select('id')
+        .select('id, role')
         .eq('id', user.id)
         .maybeSingle()
 
@@ -265,6 +265,12 @@ export function AddPropertyPage() {
           console.error('Error creating user profile:', userError)
           throw new Error('Please complete your profile before posting properties')
         }
+      } else if (existingUser.role !== 'owner') {
+        // Auto-convert user to owner role when posting first property (silently)
+        await supabase
+          .from('users')
+          .update({ role: 'owner' })
+          .eq('id', user.id)
       }
 
       const { error } = await supabase
@@ -286,7 +292,8 @@ export function AddPropertyPage() {
           agent_phone: formData.agent_phone,
           agent_whatsapp: formData.agent_whatsapp || null,
           owner_id: user.id,
-          images: imageUrls
+          images: imageUrls,
+          status: 'active'
         })
 
       if (error) throw error

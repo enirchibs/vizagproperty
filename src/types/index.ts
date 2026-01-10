@@ -49,8 +49,7 @@ export interface UserProfile {
   phone?: string
   email?: string
   avatar_url?: string
-  user_type: 'buyer' | 'seller' | 'agent'
-  role?: 'buyer' | 'owner' | 'both'
+  role: 'buyer' | 'owner' | 'agent'
   auth_provider?: 'phone' | 'email' | 'google' | 'microsoft'
   preferences?: Record<string, any>
   created_at: string
