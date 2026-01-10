@@ -39,10 +39,7 @@ export function EditPropertyPage() {
   })
 
   useEffect(() => {
-    if (!user) {
-      navigate('/')
-      return
-    }
+    if (!user) return
     loadProperty()
     loadLocalities()
   }, [user, id])
@@ -207,7 +204,7 @@ export function EditPropertyPage() {
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleUpdateProperty = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!user?.id || !property) {
@@ -259,7 +256,7 @@ export function EditPropertyPage() {
 
       if (error) throw error
 
-      setSuccessMessage('Property updated successfully! Redirecting...')
+      setSuccessMessage('Property updated and sent for re-approval! Redirecting...')
       setErrorMessage('')
 
       setTimeout(() => {
@@ -272,6 +269,19 @@ export function EditPropertyPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Please sign in</h2>
+          <a href="/" className="text-primary-600 hover:text-primary-700">
+            Go to home
+          </a>
+        </div>
+      </div>
+    )
   }
 
   if (initialLoading) {
@@ -328,7 +338,7 @@ export function EditPropertyPage() {
         )}
 
         <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleUpdateProperty} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
