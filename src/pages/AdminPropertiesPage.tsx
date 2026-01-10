@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
@@ -14,15 +15,10 @@ export function AdminPropertiesPage() {
   const [filter, setFilter] = useState<'pending' | 'all'>('pending')
 
   useEffect(() => {
-    if (!authLoading && (!user || profile?.role !== 'admin')) {
-      window.location.href = '/'
-      return
-    }
-
-    if (user) {
+    if (user && profile?.role === 'admin') {
       loadProperties()
     }
-  }, [user, profile, authLoading, filter])
+  }, [user, profile, filter])
 
   const loadProperties = async () => {
     if (!user) return
@@ -128,8 +124,8 @@ export function AdminPropertiesPage() {
     )
   }
 
-  if (!user || profile?.role !== 'admin') {
-    return null
+  if (!profile || profile.role !== 'admin') {
+    return <Navigate to="/" />
   }
 
   const pendingCount = properties.filter(p => p.status === 'pending').length

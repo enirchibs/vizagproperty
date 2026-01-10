@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
@@ -12,15 +13,10 @@ export function MyListingsPage() {
   const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
-    if (!authLoading && (!user || profile?.role !== 'owner')) {
-      window.location.href = '/'
-      return
-    }
-
-    if (user) {
+    if (user && profile?.role === 'owner') {
       loadMyProperties()
     }
-  }, [user, profile, authLoading])
+  }, [user, profile])
 
   const loadMyProperties = async () => {
     if (!user) return
@@ -109,8 +105,8 @@ export function MyListingsPage() {
     )
   }
 
-  if (!user || profile?.role !== 'owner') {
-    return null
+  if (!profile || profile.role !== 'owner') {
+    return <Navigate to="/" />
   }
 
   return (
