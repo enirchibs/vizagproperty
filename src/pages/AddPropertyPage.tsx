@@ -265,13 +265,14 @@ export function AddPropertyPage() {
           console.error('Error creating user profile:', userError)
           throw new Error('Please complete your profile before posting properties')
         }
-      } else if (existingUser.role !== 'owner') {
-        // Auto-convert user to owner role when posting first property (silently)
+      } else if (existingUser.role === 'buyer') {
+        // Auto-promote buyer to owner when posting property (silently)
         await supabase
           .from('users')
           .update({ role: 'owner' })
           .eq('id', user.id)
       }
+      // Note: admin and owner roles are preserved
 
       const { error } = await supabase
         .from('properties')
