@@ -81,7 +81,7 @@ export function PropertiesPage() {
         let query = supabase
           .from('properties')
           .select('*')
-          .eq('status', 'active')
+          .eq('status', 'approved')
 
         if (filters.city) {
           query = query.eq('city', filters.city)

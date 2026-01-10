@@ -6,7 +6,7 @@ import { UsernameModal } from './UsernameModal'
 import { trackEvent } from '../lib/analytics'
 
 export function Header() {
-  const { user, profile, loading, signOut } = useAuth()
+  const { user, profile, loading, isAdmin, signOut } = useAuth()
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [showUsernameModal, setShowUsernameModal] = useState(false)
   const [authModalProps, setAuthModalProps] = useState<{ intentRole?: 'buyer' | 'owner'; redirectTo?: string }>({})
@@ -27,9 +27,6 @@ export function Header() {
     try {
       sessionStorage.removeItem('hasSeenUsernameModal')
       await signOut()
-      // Small delay to ensure session is fully cleared
-      await new Promise(resolve => setTimeout(resolve, 100))
-      window.location.href = '/'
     } catch (error) {
       console.error('Sign out error:', error)
     }
@@ -123,7 +120,7 @@ export function Header() {
                       </div>
                     )}
                   </div>
-                  {profile?.role === 'admin' && (
+                  {isAdmin && (
                     <a href="/admin/properties" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors">
                       <Shield className="h-5 w-5" />
                     </a>
@@ -291,7 +288,7 @@ export function Header() {
 
               {user && (
                 <>
-                  {profile?.role === 'admin' && (
+                  {isAdmin && (
                     <a href="/admin/properties" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center space-x-2 border-t border-primary-500 mt-2" onClick={() => setShowMenu(false)}>
                       <Shield className="h-5 w-5" />
                       <span>Admin Dashboard</span>

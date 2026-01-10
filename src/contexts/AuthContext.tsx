@@ -8,6 +8,7 @@ interface AuthContextType {
   profile: UserProfile | null
   session: Session | null
   loading: boolean
+  isAdmin: boolean
   showUsernamePrompt: boolean
   setShowUsernamePrompt: (show: boolean) => void
   signInWithPhone: (phone: string) => Promise<void>
@@ -249,7 +250,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null)
     setProfile(null)
     setSession(null)
+
+    // Redirect to home page
+    window.location.href = '/'
   }
+
+  const isAdmin = profile?.role === 'admin'
 
   return (
     <AuthContext.Provider
@@ -258,6 +264,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         profile,
         session,
         loading,
+        isAdmin,
         showUsernamePrompt,
         setShowUsernamePrompt,
         signInWithPhone,

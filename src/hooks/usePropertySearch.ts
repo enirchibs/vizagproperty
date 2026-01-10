@@ -62,7 +62,7 @@ export function usePropertySearch(): UsePropertySearchReturn {
       let query = supabase
         .from('properties')
         .select('*, localities!inner(name, slug, city)', { count: 'exact' })
-        .eq('status', 'active')
+        .eq('status', 'approved')
 
       if (params.propertyType) {
         const types = PROPERTY_TYPE_MAP[params.propertyType] || [params.propertyType]

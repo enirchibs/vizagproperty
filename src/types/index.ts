@@ -29,7 +29,7 @@ export interface Property {
   amenities: string[]
   images: string[]
   video_url?: string
-  status: 'active' | 'sold' | 'rented' | 'inactive' | 'pending' | 'rejected'
+  status: 'pending' | 'approved' | 'rejected'
   featured: boolean
   verified: boolean
   owner_id?: string

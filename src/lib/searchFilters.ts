@@ -85,7 +85,7 @@ export interface StrictSearchFilters {
   max_price?: number
   min_area?: number
   max_area?: number
-  status?: 'active' | 'sold' | 'rented' | 'inactive'
+  status?: 'approved' | 'pending' | 'rejected'
 }
 
 // Immutable category filters - CANNOT be overridden by user
@@ -102,7 +102,7 @@ export const CATEGORY_CONTEXTS: Record<string, CategoryContext> = {
       city: 'Vizag',
       property_type: 'plot',
       listing_type: 'sale',
-      status: 'active'
+      status: 'approved'
     }
   },
   'flats-for-sale-in-vizag': {
@@ -111,7 +111,7 @@ export const CATEGORY_CONTEXTS: Record<string, CategoryContext> = {
       city: 'Vizag',
       property_type: 'flat',
       listing_type: 'sale',
-      status: 'active'
+      status: 'approved'
     }
   },
   'flats-for-rent-vizag': {
@@ -120,7 +120,7 @@ export const CATEGORY_CONTEXTS: Record<string, CategoryContext> = {
       city: 'Vizag',
       property_type: 'flat',
       listing_type: 'rent',
-      status: 'active'
+      status: 'approved'
     }
   },
   'villas-in-vizag': {
@@ -129,7 +129,7 @@ export const CATEGORY_CONTEXTS: Record<string, CategoryContext> = {
       city: 'Vizag',
       property_type: 'villa',
       listing_type: 'sale',
-      status: 'active'
+      status: 'approved'
     }
   },
   'pg-hostels-in-vizag': {
@@ -138,7 +138,7 @@ export const CATEGORY_CONTEXTS: Record<string, CategoryContext> = {
       city: 'Vizag',
       property_type: 'pg',
       listing_type: 'rent',
-      status: 'active'
+      status: 'approved'
     }
   },
   'gated-community-plots-vizag': {
@@ -147,7 +147,7 @@ export const CATEGORY_CONTEXTS: Record<string, CategoryContext> = {
       city: 'Vizag',
       property_type: 'plot',
       listing_type: 'sale',
-      status: 'active'
+      status: 'approved'
     }
   },
   'residential-property-in-vizag': {
@@ -155,7 +155,7 @@ export const CATEGORY_CONTEXTS: Record<string, CategoryContext> = {
     immutable_filters: {
       city: 'Vizag',
       listing_type: 'sale',
-      status: 'active'
+      status: 'approved'
     }
   }
 }
@@ -172,7 +172,7 @@ export async function getLocalityContextBySlug(slug: string): Promise<CategoryCo
     immutable_filters: {
       city: 'Visakhapatnam',
       locality_id: localityId,
-      status: 'active'
+      status: 'approved'
     }
   }
 }
@@ -183,7 +183,7 @@ export function getLocalityContextById(localityId: string): CategoryContext {
     immutable_filters: {
       city: 'Visakhapatnam',
       locality_id: localityId,
-      status: 'active'
+      status: 'approved'
     }
   }
 }

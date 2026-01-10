@@ -46,7 +46,7 @@ export function AIRecommendations() {
       let query = supabase
         .from('properties')
         .select('*')
-        .eq('status', 'active')
+        .eq('status', 'approved')
         .order('created_at', { ascending: false })
         .limit(7)
 

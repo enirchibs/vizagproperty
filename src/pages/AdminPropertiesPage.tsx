@@ -54,7 +54,7 @@ export function AdminPropertiesPage() {
   const handleAction = async (propertyId: string, action: 'approve' | 'reject') => {
     setProcessing(true)
     try {
-      const newStatus = action === 'approve' ? 'active' : 'rejected'
+      const newStatus = action === 'approve' ? 'approved' : 'rejected'
 
       const { error } = await supabase
         .from('properties')

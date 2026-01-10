@@ -146,7 +146,7 @@ export function HomePage() {
       const { data, error } = await supabase
         .from('properties')
         .select('*')
-        .eq('status', 'active')
+        .eq('status', 'approved')
         .order('created_at', { ascending: false })
         .limit(6)
 

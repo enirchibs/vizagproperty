@@ -71,7 +71,7 @@ export default function FlatsForSalePage() {
       let query = supabase
         .from('properties')
         .select('*')
-        .eq('status', 'active')
+        .eq('status', 'approved')
 
       if (selectedBudget) {
         const [min, max] = selectedBudget.split('-').map(v => v.replace('+', ''))
