@@ -9,15 +9,42 @@ export interface VizagLocality {
   created_at: string
 }
 
+export type PropertyCategory = 'residential' | 'commercial'
+
+export type ResidentialPropertyType =
+  | 'flat_apartment'
+  | 'independent_house_villa'
+  | 'plot_land'
+  | 'pg_hostel'
+  | 'farmhouse'
+  | 'serviced_apartment'
+  | 'other_residential'
+
+export type CommercialPropertyType =
+  | 'office'
+  | 'shop'
+  | 'showroom'
+  | 'warehouse'
+  | 'industrial_land'
+  | 'commercial_plot'
+  | 'commercial_farmhouse'
+  | 'coworking_space'
+  | 'other_commercial'
+
+export type PropertyType = ResidentialPropertyType | CommercialPropertyType
+
+export type ListingType = 'sale' | 'rent' | 'lease'
+
 export interface Property {
   id: string
   title: string
   description: string
-  property_type: 'apartment' | 'villa' | 'plot' | 'commercial' | 'penthouse' | 'farmhouse'
-  listing_type: 'sale' | 'rent'
+  category: PropertyCategory
+  property_type: PropertyType
+  listing_type: ListingType
   price: number
-  bedrooms: number
-  bathrooms: number
+  bedrooms?: number
+  bathrooms?: number
   area_sqft: number
   locality_id: string
   location?: string
@@ -44,6 +71,13 @@ export interface Property {
     name?: string
     phone?: string
   }
+}
+
+export interface PropertyDetail {
+  id: string
+  property_id: string
+  key: string
+  value: string
 }
 
 export interface UserProfile {

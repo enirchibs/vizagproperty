@@ -2,8 +2,12 @@ import { useState, useRef, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Home, Upload, X, Camera, MessageCircle } from 'lucide-react'
-import { VizagLocality } from '../types'
+import { VizagLocality, PropertyCategory, ResidentialPropertyType, CommercialPropertyType, PropertyType, ListingType } from '../types'
 import { AuthModal } from '../components/AuthModal'
+
+interface PropertyDetails {
+  [key: string]: string
+}
 
 export function AddPropertyPage() {
   const { user, profile } = useAuth()
@@ -22,14 +26,16 @@ export function AddPropertyPage() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    property_type: 'flat',
-    listing_type: 'sale',
+    category: '' as PropertyCategory | '',
+    property_type: '' as PropertyType | '',
+    listing_type: 'sale' as ListingType,
     price: '',
-    bedrooms: '2',
-    bathrooms: '2',
+    bedrooms: '',
+    bathrooms: '',
     area_sqft: '',
     state: 'Andhra Pradesh',
     pincode: '',
@@ -38,6 +44,51 @@ export function AddPropertyPage() {
     agent_whatsapp: '',
     amenities: [] as string[]
   })
+
+  const [propertyDetails, setPropertyDetails] = useState<PropertyDetails>({})
+
+  const residentialTypes: ResidentialPropertyType[] = [
+    'flat_apartment',
+    'independent_house_villa',
+    'plot_land',
+    'pg_hostel',
+    'farmhouse',
+    'serviced_apartment',
+    'other_residential'
+  ]
+
+  const commercialTypes: CommercialPropertyType[] = [
+    'office',
+    'shop',
+    'showroom',
+    'warehouse',
+    'industrial_land',
+    'commercial_plot',
+    'commercial_farmhouse',
+    'coworking_space',
+    'other_commercial'
+  ]
+
+  const propertyTypeLabels: Record<PropertyType, string> = {
+    'flat_apartment': 'Flat / Apartment',
+    'independent_house_villa': 'Independent House / Villa',
+    'plot_land': 'Plot / Land',
+    'pg_hostel': 'PG / Hostel',
+    'farmhouse': 'Farmhouse',
+    'serviced_apartment': 'Serviced Apartment',
+    'other_residential': 'Other Residential',
+    'office': 'Office',
+    'shop': 'Shop',
+    'showroom': 'Showroom',
+    'warehouse': 'Warehouse',
+    'industrial_land': 'Industrial Land',
+    'commercial_plot': 'Commercial Plot',
+    'commercial_farmhouse': 'Commercial Farmhouse',
+    'coworking_space': 'Co-working Space',
+    'other_commercial': 'Other Commercial'
+  }
+
+  const commonAmenities = ['Parking', 'Gym', 'Swimming Pool', 'Security', 'Power Backup', 'Elevator', 'Garden', 'Club House', 'WiFi', 'Furnished']
 
   useEffect(() => {
     if (!user) return
@@ -70,14 +121,31 @@ export function AddPropertyPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const propertyTypes = ['flat', 'plot', 'villa', 'pg']
-  const propertyTypeLabels: Record<string, string> = {
-    'flat': 'Flat',
-    'plot': 'Plot',
-    'villa': 'Villa',
-    'pg': 'PG / Hostel'
+  const getAvailablePropertyTypes = (): PropertyType[] => {
+    if (formData.category === 'residential') return residentialTypes
+    if (formData.category === 'commercial') return commercialTypes
+    return []
   }
-  const commonAmenities = ['Parking', 'Gym', 'Swimming Pool', 'Security', 'Power Backup', 'Elevator', 'Garden', 'Club House', 'WiFi', 'Furnished']
+
+  const shouldShowBedrooms = (): boolean => {
+    return ['flat_apartment', 'independent_house_villa', 'pg_hostel', 'serviced_apartment', 'farmhouse'].includes(formData.property_type)
+  }
+
+  const shouldShowBathrooms = (): boolean => {
+    return ['flat_apartment', 'independent_house_villa', 'pg_hostel', 'serviced_apartment', 'farmhouse'].includes(formData.property_type)
+  }
+
+  const shouldShowFloorDetails = (): boolean => {
+    return formData.property_type === 'flat_apartment'
+  }
+
+  const shouldShowPlotDetails = (): boolean => {
+    return ['plot_land', 'commercial_plot', 'industrial_land'].includes(formData.property_type)
+  }
+
+  const shouldShowCommercialFarmhouseDetails = (): boolean => {
+    return formData.property_type === 'commercial_farmhouse'
+  }
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
@@ -219,6 +287,16 @@ export function AddPropertyPage() {
       return
     }
 
+    if (!formData.category) {
+      alert('Please select a category')
+      return
+    }
+
+    if (!formData.property_type) {
+      alert('Please select a property type')
+      return
+    }
+
     if (selectedFiles.length === 0) {
       alert('Please add at least one property image')
       return
@@ -231,19 +309,12 @@ export function AddPropertyPage() {
       return
     }
 
-    const allowedTypes = ['flat', 'plot', 'villa', 'pg']
-    if (!allowedTypes.includes(formData.property_type)) {
-      alert('Invalid property type selected')
-      return
-    }
-
     setLoading(true)
     try {
       stopCamera()
 
       const imageUrls = await uploadImages()
 
-      // Ensure user exists in users table (required for FK constraint)
       const { data: existingUser } = await supabase
         .from('users')
         .select('id, role')
@@ -266,38 +337,62 @@ export function AddPropertyPage() {
           throw new Error('Please complete your profile before posting properties')
         }
       } else if (existingUser.role === 'buyer') {
-        // Auto-promote buyer to owner when posting property (silently)
         await supabase
           .from('users')
           .update({ role: 'owner' })
           .eq('id', user.id)
       }
-      // Note: admin and owner roles are preserved
 
-      const { error } = await supabase
+      const propertyData: any = {
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        property_type: formData.property_type,
+        listing_type: formData.listing_type,
+        price: parseFloat(formData.price),
+        area_sqft: parseInt(formData.area_sqft),
+        locality_id: matched.id,
+        state: formData.state,
+        pincode: (matched as any).pincode || null,
+        amenities: formData.amenities,
+        agent_name: formData.agent_name,
+        agent_phone: formData.agent_phone,
+        agent_whatsapp: formData.agent_whatsapp || null,
+        owner_id: user.id,
+        images: imageUrls,
+        status: 'pending'
+      }
+
+      if (formData.bedrooms) {
+        propertyData.bedrooms = parseInt(formData.bedrooms)
+      }
+      if (formData.bathrooms) {
+        propertyData.bathrooms = parseInt(formData.bathrooms)
+      }
+
+      const { data: insertedProperty, error } = await supabase
         .from('properties')
-        .insert({
-          title: formData.title,
-          description: formData.description,
-          property_type: formData.property_type,
-          listing_type: formData.listing_type,
-          price: parseFloat(formData.price),
-          bedrooms: parseInt(formData.bedrooms),
-          bathrooms: parseInt(formData.bathrooms),
-          area_sqft: parseInt(formData.area_sqft),
-          locality_id: matched.id,
-          state: formData.state,
-          pincode: (matched as any).pincode || null,
-          amenities: formData.amenities,
-          agent_name: formData.agent_name,
-          agent_phone: formData.agent_phone,
-          agent_whatsapp: formData.agent_whatsapp || null,
-          owner_id: user.id,
-          images: imageUrls,
-          status: 'pending'
-        })
+        .insert(propertyData)
+        .select('id')
+        .single()
 
       if (error) throw error
+
+      if (insertedProperty && Object.keys(propertyDetails).length > 0) {
+        const detailsToInsert = Object.entries(propertyDetails).map(([key, value]) => ({
+          property_id: insertedProperty.id,
+          key,
+          value
+        }))
+
+        const { error: detailsError } = await supabase
+          .from('property_details')
+          .insert(detailsToInsert)
+
+        if (detailsError) {
+          console.error('Error saving property details:', detailsError)
+        }
+      }
 
       setSuccessMessage('Property submitted for review! Our team will review and approve it shortly.')
       setErrorMessage('')
@@ -319,6 +414,13 @@ export function AddPropertyPage() {
       amenities: prev.amenities.includes(amenity)
         ? prev.amenities.filter(a => a !== amenity)
         : [...prev.amenities, amenity]
+    }))
+  }
+
+  const updatePropertyDetail = (key: string, value: string) => {
+    setPropertyDetails(prev => ({
+      ...prev,
+      [key]: value
     }))
   }
 
@@ -428,6 +530,68 @@ export function AddPropertyPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Property Category <span className="text-red-500">*</span>
+                </label>
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData({ ...formData, category: 'residential', property_type: '' })
+                      setPropertyDetails({})
+                    }}
+                    className={`px-6 py-4 rounded-lg border-2 transition-all ${
+                      formData.category === 'residential'
+                        ? 'bg-primary-600 text-white border-primary-600'
+                        : 'border-gray-300 text-gray-700 hover:border-primary-300'
+                    }`}
+                  >
+                    <div className="text-lg font-semibold">Residential</div>
+                    <div className="text-xs mt-1 opacity-80">Homes, Flats, Plots</div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData({ ...formData, category: 'commercial', property_type: '' })
+                      setPropertyDetails({})
+                    }}
+                    className={`px-6 py-4 rounded-lg border-2 transition-all ${
+                      formData.category === 'commercial'
+                        ? 'bg-primary-600 text-white border-primary-600'
+                        : 'border-gray-300 text-gray-700 hover:border-primary-300'
+                    }`}
+                  >
+                    <div className="text-lg font-semibold">Commercial</div>
+                    <div className="text-xs mt-1 opacity-80">Office, Shop, Warehouse</div>
+                  </button>
+                </div>
+              </div>
+
+              {formData.category && (
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Property Type <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    required
+                    value={formData.property_type}
+                    onChange={(e) => {
+                      setFormData({ ...formData, property_type: e.target.value as PropertyType })
+                      setPropertyDetails({})
+                    }}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  >
+                    <option value="">Select Property Type</option>
+                    {getAvailablePropertyTypes().map(type => (
+                      <option key={type} value={type}>
+                        {propertyTypeLabels[type]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Property Title
                 </label>
                 <input
@@ -436,7 +600,7 @@ export function AddPropertyPage() {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="e.g., Spacious 2BHK Apartment in Whitefield"
+                  placeholder="e.g., Spacious 2BHK Apartment in Madhurawada"
                 />
               </div>
 
@@ -456,35 +620,17 @@ export function AddPropertyPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Property Type
-                </label>
-                <select
-                  required
-                  value={formData.property_type}
-                  onChange={(e) => setFormData({ ...formData, property_type: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                >
-                  <option value="">Select Property Type</option>
-                  {propertyTypes.map(type => (
-                    <option key={type} value={type}>
-                      {propertyTypeLabels[type]}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Listing Type
                 </label>
                 <select
                   required
                   value={formData.listing_type}
-                  onChange={(e) => setFormData({ ...formData, listing_type: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, listing_type: e.target.value as ListingType })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   <option value="sale">Sale</option>
                   <option value="rent">Rent</option>
+                  <option value="lease">Lease</option>
                 </select>
               </div>
 
@@ -516,33 +662,163 @@ export function AddPropertyPage() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Bedrooms
-                </label>
-                <input
-                  type="number"
-                  required
-                  value={formData.bedrooms}
-                  onChange={(e) => setFormData({ ...formData, bedrooms: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  min="0"
-                />
-              </div>
+              {shouldShowBedrooms() && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Bedrooms
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.bedrooms}
+                    onChange={(e) => setFormData({ ...formData, bedrooms: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    min="0"
+                    placeholder="2"
+                  />
+                </div>
+              )}
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Bathrooms
-                </label>
-                <input
-                  type="number"
-                  required
-                  value={formData.bathrooms}
-                  onChange={(e) => setFormData({ ...formData, bathrooms: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  min="0"
-                />
-              </div>
+              {shouldShowBathrooms() && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Bathrooms
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.bathrooms}
+                    onChange={(e) => setFormData({ ...formData, bathrooms: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    min="0"
+                    placeholder="2"
+                  />
+                </div>
+              )}
+
+              {shouldShowFloorDetails() && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Floor Number
+                    </label>
+                    <input
+                      type="text"
+                      value={propertyDetails.floor_number || ''}
+                      onChange={(e) => updatePropertyDetail('floor_number', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      placeholder="e.g., 3rd Floor"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Total Floors
+                    </label>
+                    <input
+                      type="number"
+                      value={propertyDetails.total_floors || ''}
+                      onChange={(e) => updatePropertyDetail('total_floors', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      placeholder="10"
+                    />
+                  </div>
+                </>
+              )}
+
+              {shouldShowPlotDetails() && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Boundary Wall
+                    </label>
+                    <select
+                      value={propertyDetails.boundary_wall || ''}
+                      onChange={(e) => updatePropertyDetail('boundary_wall', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    >
+                      <option value="">Select</option>
+                      <option value="yes">Yes</option>
+                      <option value="no">No</option>
+                      <option value="partial">Partial</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Plot Facing
+                    </label>
+                    <select
+                      value={propertyDetails.plot_facing || ''}
+                      onChange={(e) => updatePropertyDetail('plot_facing', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    >
+                      <option value="">Select</option>
+                      <option value="north">North</option>
+                      <option value="south">South</option>
+                      <option value="east">East</option>
+                      <option value="west">West</option>
+                      <option value="north-east">North-East</option>
+                      <option value="north-west">North-West</option>
+                      <option value="south-east">South-East</option>
+                      <option value="south-west">South-West</option>
+                    </select>
+                  </div>
+                </>
+              )}
+
+              {shouldShowCommercialFarmhouseDetails() && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Number of Rooms
+                    </label>
+                    <input
+                      type="number"
+                      value={propertyDetails.rooms || ''}
+                      onChange={(e) => updatePropertyDetail('rooms', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      placeholder="6"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Events Allowed
+                    </label>
+                    <select
+                      value={propertyDetails.event_allowed || ''}
+                      onChange={(e) => updatePropertyDetail('event_allowed', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    >
+                      <option value="">Select</option>
+                      <option value="yes">Yes</option>
+                      <option value="no">No</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Swimming Pool
+                    </label>
+                    <select
+                      value={propertyDetails.swimming_pool || ''}
+                      onChange={(e) => updatePropertyDetail('swimming_pool', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    >
+                      <option value="">Select</option>
+                      <option value="yes">Yes</option>
+                      <option value="no">No</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Parking Capacity
+                    </label>
+                    <input
+                      type="number"
+                      value={propertyDetails.parking_capacity || ''}
+                      onChange={(e) => updatePropertyDetail('parking_capacity', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      placeholder="20"
+                    />
+                  </div>
+                </>
+              )}
 
               <div className="md:col-span-2 relative" ref={localityDropdownRef}>
                 <label className="block text-sm font-medium text-gray-700 mb-2">

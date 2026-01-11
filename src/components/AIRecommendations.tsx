@@ -115,7 +115,7 @@ export function AIRecommendations() {
       reasons.push('Great value for money')
     }
 
-    if (property.bedrooms >= 3) {
+    if (property.bedrooms && property.bedrooms >= 3) {
       reasons.push('Spacious for families')
     }
 
@@ -129,7 +129,7 @@ export function AIRecommendations() {
     if (property.verified) score += 10
     if (property.amenities.length >= 5) score += 10
     if (property.views_count > 50) score += 5
-    if (property.bedrooms >= 2 && property.bedrooms <= 3) score += 10
+    if (property.bedrooms && property.bedrooms >= 2 && property.bedrooms <= 3) score += 10
 
     return Math.min(score, 100)
   }
@@ -258,13 +258,13 @@ export function AIRecommendations() {
                 </div>
 
                 <div className="flex items-center gap-6 mb-4 text-gray-700">
-                  {rec.property.bedrooms > 0 && (
+                  {rec.property.bedrooms && rec.property.bedrooms > 0 && (
                     <div className="flex items-center gap-2">
                       <Bed className="h-5 w-5" />
                       <span className="font-medium">{rec.property.bedrooms} BHK</span>
                     </div>
                   )}
-                  {rec.property.bathrooms > 0 && (
+                  {rec.property.bathrooms && rec.property.bathrooms > 0 && (
                     <div className="flex items-center gap-2">
                       <Bath className="h-5 w-5" />
                       <span className="font-medium">{rec.property.bathrooms}</span>

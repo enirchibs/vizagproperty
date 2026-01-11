@@ -284,13 +284,13 @@ export function PropertyDetailsPage() {
               </div>
 
               <div className="flex flex-wrap items-center gap-4 md:gap-6 py-4 border-y border-gray-200 mb-4">
-                {property.bedrooms > 0 && (
+                {property.bedrooms && property.bedrooms > 0 && (
                   <div className="flex items-center">
                     <Bed className="h-5 w-5 mr-2 text-gray-600" />
                     <span className="text-gray-900 font-medium text-sm md:text-base">{property.bedrooms} BHK</span>
                   </div>
                 )}
-                {property.bathrooms > 0 && (
+                {property.bathrooms && property.bathrooms > 0 && (
                   <div className="flex items-center">
                     <Bath className="h-5 w-5 mr-2 text-gray-600" />
                     <span className="text-gray-900 font-medium text-sm md:text-base">{property.bathrooms} Bathrooms</span>
@@ -328,7 +328,7 @@ export function PropertyDetailsPage() {
               currentPrice={property.price}
               propertyType={property.property_type}
               location={property.location || property.city || 'Vizag'}
-              bedrooms={property.bedrooms}
+              bedrooms={property.bedrooms || 0}
             />
 
             <NegotiationCoach propertyId={property.id} currentPrice={property.price} />

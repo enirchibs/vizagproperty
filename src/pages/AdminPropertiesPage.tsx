@@ -222,13 +222,13 @@ export function AdminPropertiesPage() {
                     )}
 
                     <div className="flex items-center gap-4 text-gray-600 text-sm mb-3 pb-3 border-b border-gray-100">
-                      {property.bedrooms > 0 && (
+                      {property.bedrooms && property.bedrooms > 0 && (
                         <div className="flex items-center gap-1">
                           <Bed className="h-4 w-4 text-primary-500" />
                           <span className="font-medium">{property.bedrooms} BHK</span>
                         </div>
                       )}
-                      {property.bathrooms > 0 && (
+                      {property.bathrooms && property.bathrooms > 0 && (
                         <div className="flex items-center gap-1">
                           <Bath className="h-4 w-4 text-primary-500" />
                           <span className="font-medium">{property.bathrooms}</span>
