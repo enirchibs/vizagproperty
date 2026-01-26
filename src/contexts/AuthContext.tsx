@@ -76,6 +76,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 role: intentRole
               })
 
+              if (insertError) {
+                console.error('Failed to create user profile:', insertError)
+              }
+
               // Show username prompt only for email signups (not phone or Google)
               if (!insertError && authProvider === 'email') {
                 setShowUsernamePrompt(true)
@@ -151,12 +155,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .maybeSingle()
 
       if (!existingProfile) {
-        await supabase.from('users').insert({
+        const { error: insertError } = await supabase.from('users').insert({
           id: data.user.id,
           name: data.user.phone || 'User',
           phone: data.user.phone,
           role: intentRole
         })
+
+        if (insertError) {
+          console.error('Failed to create user profile during OTP verification:', insertError)
+        }
       }
 
       if (redirectTo) {

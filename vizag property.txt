@@ -1,0 +1,13 @@
+7207550499
+
+NEXT (OPTIONAL, BUT STRONG)
+
+Once this is stable, I can help you add:
+
+🔍 Type-ahead locality search (strict, 3-letter rule)
+
+📍 Auto-fill pincode from locality
+
+📊 Avg price per sqft per locality
+
+🤖 AI price suggestion banner

@@ -315,28 +315,14 @@ export function AddPropertyPage() {
 
       const imageUrls = await uploadImages()
 
+      // Profile is guaranteed by trigger - auto-upgrade buyer to owner
       const { data: existingUser } = await supabase
         .from('users')
         .select('id, role')
         .eq('id', user.id)
         .maybeSingle()
 
-      if (!existingUser) {
-        const { error: userError } = await supabase
-          .from('users')
-          .insert({
-            id: user.id,
-            role: 'owner',
-            name: user.phone || user.email || 'Property Owner',
-            phone: user.phone,
-            email: user.email
-          })
-
-        if (userError) {
-          console.error('Error creating user profile:', userError)
-          throw new Error('Please complete your profile before posting properties')
-        }
-      } else if (existingUser.role === 'buyer') {
+      if (existingUser?.role === 'buyer') {
         await supabase
           .from('users')
           .update({ role: 'owner' })
