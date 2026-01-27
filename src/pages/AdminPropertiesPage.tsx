@@ -3,7 +3,8 @@ import { Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
-import { MapPin, Bed, Bath, Maximize, CheckCircle, XCircle, Clock, Shield } from 'lucide-react'
+import { MapPin, Bed, Bath, Maximize, CheckCircle, XCircle, Clock, Shield, Star, Award, BarChart3 } from 'lucide-react'
+import { AdminAnalyticsDashboard } from '../components/AdminAnalyticsDashboard'
 
 export function AdminPropertiesPage() {
   const { user, isAdmin, loading: authLoading } = useAuth()
@@ -12,35 +13,34 @@ export function AdminPropertiesPage() {
   const [actionId, setActionId] = useState<string | null>(null)
   const [actionType, setActionType] = useState<'approve' | 'reject' | null>(null)
   const [processing, setProcessing] = useState(false)
-  const [filter, setFilter] = useState<'pending' | 'all'>('pending')
+  const [activeTab, setActiveTab] = useState<'analytics' | 'pending' | 'approved' | 'rejected'>('analytics')
+  const [rejectionReason, setRejectionReason] = useState('')
+  const [adminNotes, setAdminNotes] = useState('')
+  const [togglingTrustId, setTogglingTrustId] = useState<string | null>(null)
 
   useEffect(() => {
     if (user && isAdmin) {
       loadProperties()
     }
-  }, [user, isAdmin, filter])
+  }, [user, isAdmin])
 
   const loadProperties = async () => {
     if (!user) return
 
     try {
-      let query = supabase
+      const { data, error } = await supabase
         .from('properties')
         .select(`
           *,
           users!properties_owner_id_fkey (
+            id,
             email,
             name,
-            phone
+            phone,
+            trusted
           )
         `)
         .order('created_at', { ascending: false })
-
-      if (filter === 'pending') {
-        query = query.eq('status', 'pending')
-      }
-
-      const { data, error } = await query
 
       if (error) throw error
       setProperties(data || [])
@@ -51,23 +51,68 @@ export function AdminPropertiesPage() {
     }
   }
 
+  const toggleTrustedStatus = async (userId: string, currentStatus: boolean) => {
+    setTogglingTrustId(userId)
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({
+          trusted: !currentStatus,
+          trusted_at: !currentStatus ? new Date().toISOString() : null,
+          trusted_by: !currentStatus ? user?.id : null
+        })
+        .eq('id', userId)
+
+      if (error) throw error
+
+      setProperties(prev => prev.map(p => {
+        if (p.users && p.users.id === userId) {
+          return {
+            ...p,
+            users: { ...p.users, trusted: !currentStatus }
+          }
+        }
+        return p
+      }))
+    } catch (err) {
+      console.error('Error toggling trusted status:', err)
+      alert('Failed to update trusted status. Please try again.')
+    } finally {
+      setTogglingTrustId(null)
+    }
+  }
+
   const handleAction = async (propertyId: string, action: 'approve' | 'reject') => {
     setProcessing(true)
     try {
       const newStatus = action === 'approve' ? 'approved' : 'rejected'
+      const updateData: any = { status: newStatus }
+
+      if (action === 'approve') {
+        updateData.approved_at = new Date().toISOString()
+        updateData.rejection_reason = null
+      } else if (action === 'reject') {
+        updateData.rejection_reason = rejectionReason.trim() || null
+      }
+
+      if (adminNotes.trim()) {
+        updateData.admin_notes = adminNotes.trim()
+      }
 
       const { error } = await supabase
         .from('properties')
-        .update({ status: newStatus })
+        .update(updateData)
         .eq('id', propertyId)
 
       if (error) throw error
 
       setProperties(prev => prev.map(p =>
-        p.id === propertyId ? { ...p, status: newStatus } : p
+        p.id === propertyId ? { ...p, status: newStatus, approved_at: updateData.approved_at, rejection_reason: updateData.rejection_reason, admin_notes: updateData.admin_notes } : p
       ))
       setActionId(null)
       setActionType(null)
+      setRejectionReason('')
+      setAdminNotes('')
     } catch (err) {
       console.error('Error updating property:', err)
       alert('Failed to update property. Please try again.')
@@ -128,61 +173,122 @@ export function AdminPropertiesPage() {
     return <Navigate to="/" />
   }
 
+  const filteredProperties = activeTab === 'analytics' ? [] : properties.filter(p => p.status === activeTab)
   const pendingCount = properties.filter(p => p.status === 'pending').length
+  const approvedCount = properties.filter(p => p.status === 'approved').length
+  const rejectedCount = properties.filter(p => p.status === 'rejected').length
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <Shield className="h-8 w-8 text-primary-600" />
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Admin Dashboard</h1>
-          </div>
-          <p className="text-gray-600">Moderate property listings</p>
-        </div>
-
-        <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
-          <div className="flex gap-2">
-            <button
-              onClick={() => setFilter('pending')}
-              className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                filter === 'pending'
-                  ? 'bg-primary-600 text-white shadow-md'
-                  : 'bg-white text-gray-700 hover:bg-gray-50'
-              }`}
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <Shield className="h-8 w-8 text-primary-600" />
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Admin Dashboard</h1>
+              </div>
+              <p className="text-gray-600">Moderate property listings</p>
+            </div>
+            <a
+              href="/admin/dashboard"
+              className="hidden sm:flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-semibold shadow-md"
             >
-              Pending ({pendingCount})
-            </button>
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                filter === 'all'
-                  ? 'bg-primary-600 text-white shadow-md'
-                  : 'bg-white text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              All Properties ({properties.length})
-            </button>
+              <BarChart3 className="h-5 w-5" />
+              <span>View Analytics</span>
+            </a>
           </div>
         </div>
 
-        {properties.length === 0 ? (
+        <div className="mb-6 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="flex border-b border-gray-200">
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`flex-1 px-6 py-4 font-semibold transition-all border-b-2 ${
+                activeTab === 'analytics'
+                  ? 'border-blue-500 text-blue-700 bg-blue-50'
+                  : 'border-transparent text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <BarChart3 className="h-5 w-5" />
+                <span>Analytics</span>
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab('pending')}
+              className={`flex-1 px-6 py-4 font-semibold transition-all border-b-2 ${
+                activeTab === 'pending'
+                  ? 'border-yellow-500 text-yellow-700 bg-yellow-50'
+                  : 'border-transparent text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <Clock className="h-5 w-5" />
+                <span>Pending</span>
+                <span className="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full text-xs font-bold">
+                  {pendingCount}
+                </span>
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab('approved')}
+              className={`flex-1 px-6 py-4 font-semibold transition-all border-b-2 ${
+                activeTab === 'approved'
+                  ? 'border-green-500 text-green-700 bg-green-50'
+                  : 'border-transparent text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <CheckCircle className="h-5 w-5" />
+                <span>Approved</span>
+                <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-bold">
+                  {approvedCount}
+                </span>
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab('rejected')}
+              className={`flex-1 px-6 py-4 font-semibold transition-all border-b-2 ${
+                activeTab === 'rejected'
+                  ? 'border-red-500 text-red-700 bg-red-50'
+                  : 'border-transparent text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <XCircle className="h-5 w-5" />
+                <span>Rejected</span>
+                <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-xs font-bold">
+                  {rejectedCount}
+                </span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        {activeTab === 'analytics' ? (
+          <AdminAnalyticsDashboard />
+        ) : filteredProperties.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
             <div className="max-w-md mx-auto">
               <div className="bg-gray-100 rounded-full p-6 w-24 h-24 mx-auto mb-6 flex items-center justify-center">
                 <CheckCircle className="h-12 w-12 text-gray-400" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-3">All Caught Up!</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                {activeTab === 'pending' ? 'All Caught Up!' : `No ${activeTab} Properties`}
+              </h2>
               <p className="text-gray-600">
-                {filter === 'pending'
+                {activeTab === 'pending'
                   ? 'No pending properties to review.'
-                  : 'No properties found.'}
+                  : activeTab === 'approved'
+                  ? 'No approved properties yet.'
+                  : 'No rejected properties.'}
               </p>
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties.map((property) => {
+            {filteredProperties.map((property) => {
               const mainImage = property.images[0] || 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=800'
 
               return (
@@ -215,9 +321,60 @@ export function AdminPropertiesPage() {
                     </div>
 
                     {property.users && (
-                      <div className="text-xs text-gray-500 mb-3 bg-gray-50 px-2 py-1.5 rounded border border-gray-200">
-                        <span className="font-medium">Owner: </span>
-                        {property.users.email || property.users.phone || property.users.name}
+                      <div className="mb-3 space-y-2">
+                        <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1.5 rounded border border-gray-200">
+                          <span className="font-medium">Owner: </span>
+                          {property.users.email || property.users.phone || property.users.name}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {property.users.trusted ? (
+                            <div className="flex items-center gap-1 bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-700 px-2 py-1 rounded-lg text-xs font-semibold border border-amber-200">
+                              <Award className="h-3 w-3" />
+                              <span>Trusted Owner</span>
+                              <Star className="h-3 w-3 fill-amber-600" />
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-1 bg-gray-100 text-gray-600 px-2 py-1 rounded-lg text-xs">
+                              <Shield className="h-3 w-3" />
+                              <span>Standard User</span>
+                            </div>
+                          )}
+                          <button
+                            onClick={() => property.users && toggleTrustedStatus(property.users.id, property.users.trusted)}
+                            disabled={togglingTrustId === property.users?.id}
+                            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-all ${
+                              property.users.trusted
+                                ? 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'
+                                : 'bg-green-50 text-green-600 hover:bg-green-100 border border-green-200'
+                            } disabled:opacity-50`}
+                          >
+                            {togglingTrustId === property.users.id ? (
+                              <div className="animate-spin rounded-full h-3 w-3 border-2 border-current border-t-transparent"></div>
+                            ) : (
+                              <>
+                                {property.users.trusted ? (
+                                  <>
+                                    <XCircle className="h-3 w-3" />
+                                    <span>Remove Trust</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Star className="h-3 w-3" />
+                                    <span>Mark Trusted</span>
+                                  </>
+                                )}
+                              </>
+                            )}
+                          </button>
+                        </div>
+                        {property.users.trusted && property.status === 'pending' && (
+                          <div className="bg-amber-50 border border-amber-200 rounded-lg p-2">
+                            <p className="text-xs text-amber-700 flex items-center gap-1">
+                              <Award className="h-3 w-3" />
+                              This owner is trusted. Their future properties will be auto-approved.
+                            </p>
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -246,12 +403,30 @@ export function AdminPropertiesPage() {
                       </div>
                     </div>
 
+                    {property.status === 'rejected' && property.rejection_reason && (
+                      <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3">
+                        <p className="text-xs font-semibold text-red-900 mb-1">Rejection Reason:</p>
+                        <p className="text-sm text-red-700">{property.rejection_reason}</p>
+                      </div>
+                    )}
+
+                    {property.admin_notes && (
+                      <div className="mb-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <p className="text-xs font-semibold text-blue-900 mb-1 flex items-center gap-1">
+                          <Shield className="h-3 w-3" />
+                          Admin Notes (Internal Only)
+                        </p>
+                        <p className="text-sm text-blue-700 whitespace-pre-wrap">{property.admin_notes}</p>
+                      </div>
+                    )}
+
                     {property.status === 'pending' && (
                       <div className="flex gap-2">
                         <button
                           onClick={() => {
                             setActionId(property.id)
                             setActionType('approve')
+                            setAdminNotes(property.admin_notes || '')
                           }}
                           className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all text-sm font-semibold"
                         >
@@ -262,6 +437,7 @@ export function AdminPropertiesPage() {
                           onClick={() => {
                             setActionId(property.id)
                             setActionType('reject')
+                            setAdminNotes(property.admin_notes || '')
                           }}
                           className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all text-sm font-semibold border border-red-200"
                         >
@@ -302,16 +478,52 @@ export function AdminPropertiesPage() {
                 {actionType === 'approve' ? 'Approve Property?' : 'Reject Property?'}
               </h3>
             </div>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 mb-4">
               {actionType === 'approve'
                 ? 'This property will be published and visible to all users.'
                 : 'This property will be rejected and hidden from public view. The owner can still see it in their dashboard.'}
             </p>
+            {actionType === 'reject' && (
+              <div className="mb-6">
+                <label htmlFor="rejection-reason" className="block text-sm font-semibold text-gray-700 mb-2">
+                  Reason for Rejection (Optional)
+                </label>
+                <textarea
+                  id="rejection-reason"
+                  value={rejectionReason}
+                  onChange={(e) => setRejectionReason(e.target.value)}
+                  placeholder="e.g., Images are unclear, price seems incorrect, incomplete property details..."
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none text-sm"
+                  rows={3}
+                />
+                <p className="text-xs text-gray-500 mt-1">This will help the owner understand what needs to be fixed.</p>
+              </div>
+            )}
+            <div className="mb-6">
+              <label htmlFor="admin-notes" className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                <Shield className="h-4 w-4 text-blue-600" />
+                Admin Notes (Internal Only)
+              </label>
+              <textarea
+                id="admin-notes"
+                value={adminNotes}
+                onChange={(e) => setAdminNotes(e.target.value)}
+                placeholder="Internal notes about this property (not visible to owner)..."
+                className="w-full px-4 py-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm bg-blue-50/30"
+                rows={2}
+              />
+              <p className="text-xs text-blue-600 mt-1 flex items-center gap-1">
+                <Shield className="h-3 w-3" />
+                These notes are only visible to admins
+              </p>
+            </div>
             <div className="flex gap-3">
               <button
                 onClick={() => {
                   setActionId(null)
                   setActionType(null)
+                  setRejectionReason('')
+                  setAdminNotes('')
                 }}
                 disabled={processing}
                 className="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all font-semibold disabled:opacity-50"

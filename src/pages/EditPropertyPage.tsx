@@ -329,6 +329,18 @@ export function EditPropertyPage() {
           </div>
         )}
 
+        {property?.status === 'rejected' && property?.rejection_reason && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-300 rounded-lg">
+            <p className="text-red-900 font-semibold mb-2">Property Rejected</p>
+            <p className="text-red-700 text-sm mb-2">
+              <strong>Reason:</strong> {property.rejection_reason}
+            </p>
+            <p className="text-red-600 text-sm">
+              Please fix the issues mentioned above and save your changes to resubmit for approval.
+            </p>
+          </div>
+        )}
+
         {property?.status === 'approved' && property?.owner_id === user?.id && profile?.role !== 'admin' && (
           <div className="mb-6 p-4 bg-yellow-50 border border-yellow-300 rounded-lg">
             <p className="text-yellow-800">

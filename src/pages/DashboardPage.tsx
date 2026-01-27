@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
-import { Heart, User, History } from 'lucide-react'
+import { Heart, User, History, Bell } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { PropertyCard } from '../components/PropertyCard'
+import { NotificationsPanel } from '../components/NotificationsPanel'
 
 export function DashboardPage() {
   const { user, profile } = useAuth()
-  const [activeTab, setActiveTab] = useState<'favorites' | 'profile' | 'history'>('favorites')
+  const [activeTab, setActiveTab] = useState<'favorites' | 'profile' | 'history' | 'notifications'>('favorites')
   const [favorites, setFavorites] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -111,6 +112,17 @@ export function DashboardPage() {
                 <History className="h-5 w-5" />
                 <span>History</span>
               </button>
+              <button
+                onClick={() => setActiveTab('notifications')}
+                className={`flex items-center space-x-2 px-6 py-4 border-b-2 transition-colors ${
+                  activeTab === 'notifications'
+                    ? 'border-primary-600 text-primary-600'
+                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <Bell className="h-5 w-5" />
+                <span>Notifications</span>
+              </button>
             </nav>
           </div>
 
@@ -209,6 +221,12 @@ export function DashboardPage() {
                 <p className="text-gray-600">
                   Your recent searches will appear here
                 </p>
+              </div>
+            )}
+
+            {activeTab === 'notifications' && (
+              <div>
+                <NotificationsPanel />
               </div>
             )}
           </div>

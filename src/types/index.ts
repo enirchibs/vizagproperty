@@ -57,6 +57,9 @@ export interface Property {
   images: string[]
   video_url?: string
   status: 'pending' | 'approved' | 'rejected'
+  rejection_reason?: string
+  approved_at?: string
+  admin_notes?: string
   featured: boolean
   verified: boolean
   owner_id?: string
@@ -67,9 +70,11 @@ export interface Property {
   created_at: string
   updated_at: string
   users?: {
+    id: string
     email?: string
     name?: string
     phone?: string
+    trusted: boolean
   }
 }
 

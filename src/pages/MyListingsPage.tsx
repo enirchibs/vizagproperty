@@ -68,11 +68,11 @@ export function MyListingsPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'active':
+      case 'approved':
         return (
           <span className="flex items-center gap-1 bg-green-100 text-green-700 px-3 py-1.5 rounded-full text-xs font-semibold">
             <CheckCircle className="h-3 w-3" />
-            Active
+            Approved
           </span>
         )
       case 'pending':
@@ -204,6 +204,13 @@ export function MyListingsPage() {
                           {formatPrice(property.price)}
                         </div>
                       </div>
+
+                      {property.status === 'rejected' && property.rejection_reason && (
+                        <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3">
+                          <p className="text-xs font-semibold text-red-900 mb-1">Rejection Reason:</p>
+                          <p className="text-sm text-red-700">{property.rejection_reason}</p>
+                        </div>
+                      )}
 
                       <div className="flex gap-2">
                         <a

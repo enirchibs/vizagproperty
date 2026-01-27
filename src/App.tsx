@@ -27,6 +27,7 @@ import PGHostelsPage from './pages/PGHostelsPage'
 import GatedCommunityPlotsPage from './pages/GatedCommunityPlotsPage'
 import { MyListingsPage } from './pages/MyListingsPage'
 import { AdminPropertiesPage } from './pages/AdminPropertiesPage'
+import { AdminDashboardPage } from './pages/AdminDashboardPage'
 import { EditPropertyPage } from './pages/EditPropertyPage'
 
 function AppContent() {
@@ -63,6 +64,8 @@ function AppContent() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/favorites" element={<DashboardPage />} />
           <Route path="/my-listings" element={<MyListingsPage />} />
+          <Route path="/admin" element={<AdminPropertiesPage />} />
+          <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
           <Route path="/admin/properties" element={<AdminPropertiesPage />} />
           <Route path="/add-property" element={<AddPropertyPage />} />
           <Route path="/edit-property/:id" element={<EditPropertyPage />} />

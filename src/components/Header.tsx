@@ -121,7 +121,7 @@ export function Header() {
                     )}
                   </div>
                   {isAdmin && (
-                    <a href="/admin/properties" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors">
+                    <a href="/admin/dashboard" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors">
                       <Shield className="h-5 w-5" />
                     </a>
                   )}
@@ -289,7 +289,7 @@ export function Header() {
               {user && (
                 <>
                   {isAdmin && (
-                    <a href="/admin/properties" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center space-x-2 border-t border-primary-500 mt-2" onClick={() => setShowMenu(false)}>
+                    <a href="/admin/dashboard" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center space-x-2 border-t border-primary-500 mt-2" onClick={() => setShowMenu(false)}>
                       <Shield className="h-5 w-5" />
                       <span>Admin Dashboard</span>
                     </a>
