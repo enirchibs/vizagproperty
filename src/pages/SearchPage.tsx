@@ -145,17 +145,25 @@ export function SearchPage() {
                 Rent
               </button>
             </div>
-            <div className="flex rounded-xl bg-gray-100 p-0.5">
-              {(['residential', 'commercial'] as const).map((category) => (
-                <button
-                  key={category}
-                  onClick={() => handlePropertyCategoryChange(category)}
-                  data-active={propertyCategory === category}
-                  className="flex-1 py-1.5 text-xs md:text-sm font-medium rounded-lg transition-all data-[active=true]:bg-white data-[active=true]:shadow capitalize"
-                >
-                  {category}
-                </button>
-              ))}
+
+            <div className="flex gap-6 mb-3">
+              <label className="flex items-center gap-2 text-sm font-medium">
+                <input
+                  type="radio"
+                  checked={propertyCategory === 'residential'}
+                  onChange={() => handlePropertyCategoryChange('residential')}
+                />
+                Residential
+              </label>
+
+              <label className="flex items-center gap-2 text-sm font-medium">
+                <input
+                  type="radio"
+                  checked={propertyCategory === 'commercial'}
+                  onChange={() => handlePropertyCategoryChange('commercial')}
+                />
+                Commercial
+              </label>
             </div>
           </div>
 
