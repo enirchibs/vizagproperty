@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Search, SlidersHorizontal, ChevronLeft, MessageCircle, Plus, MapPin, X } from 'lucide-react'
+import { Search, SlidersHorizontal, ChevronLeft, MessageCircle, Plus, MapPin, Mic } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { PropertyCard } from '../components/PropertyCard'
 import { usePropertySearch } from '../hooks/usePropertySearch'
-import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { VIZAG_PROPERTY_PHONE_WITH_CODE } from '../config/contact'
 import { useSearch } from '../contexts/SearchContext'
@@ -40,22 +39,6 @@ export function SearchPage() {
   } = useSearch()
 
   const { properties, loading, error, search } = usePropertySearch()
-  const {
-    isListening,
-    transcript,
-    localityMatch,
-    noMatchMessage,
-    startListening,
-    stopListening,
-    resetTranscript,
-    isSupported
-  } = useVoiceSearch()
-
-  useEffect(() => {
-    if (transcript) {
-      setLocality(transcript)
-    }
-  }, [transcript])
 
   useEffect(() => {
     setListingType('buy')
@@ -63,19 +46,43 @@ export function SearchPage() {
     setPropertySubType('Flat / Apartment')
   }, [])
 
-  useEffect(() => {
-    if (localityMatch) {
-      setLocality(localityMatch.locality_name)
-      setLocalityId(undefined)
-    }
-  }, [localityMatch])
-
-  const handleVoiceToggle = () => {
-    if (isListening) {
-      stopListening()
+  const handleListingTypeChange = (type: 'buy' | 'rent' | 'commercial') => {
+    setListingType(type)
+    if (type === 'commercial') {
+      setPropertyCategory('commercial')
+      setPropertySubType(null)
     } else {
-      resetTranscript()
-      startListening()
+      setPropertyCategory('residential')
+      setPropertySubType(null)
+    }
+    setPropertyStatus('')
+    setBhkFilter('')
+    setNewBuilderProjects(false)
+  }
+
+  const startVoiceSearch = () => {
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+
+    if (!SpeechRecognition) {
+      alert('Voice search not supported on this device')
+      return
+    }
+
+    const recognition = new SpeechRecognition()
+    recognition.lang = 'en-IN'
+    recognition.interimResults = false
+    recognition.maxAlternatives = 1
+
+    recognition.start()
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript.trim()
+      setLocality(transcript)
+    }
+
+    recognition.onerror = () => {
+      recognition.stop()
     }
   }
 
@@ -91,8 +98,10 @@ export function SearchPage() {
 
     setHasSearched(true)
 
+    const actualListingType = listingType === 'commercial' ? 'sale' : listingType === 'rent' ? 'rent' : 'sale'
+
     const searchParams: any = {
-      listingType: listingType === 'rent' ? 'rent' : 'sale',
+      listingType: actualListingType,
       propertyType: getPropertyTypeForSearch(),
       localityId: localityId,
       localityName: !localityId ? locality : undefined,
@@ -123,56 +132,49 @@ export function SearchPage() {
             <h1 className="text-sm md:text-lg font-bold text-gray-900">Search Property</h1>
           </div>
 
-          <div className="space-y-1.5 mb-2">
-            <div className="flex rounded-xl bg-gray-100 p-1">
-              <button
-                onClick={() => {
-                  setListingType('buy');
-                  setPropertyCategory('residential');
-                  setPropertySubType(null);
-                }}
-                className={`flex-1 py-2 text-sm font-semibold rounded-lg transition
-                  ${listingType === 'buy'
-                    ? 'bg-blue-600 text-white shadow'
-                    : 'text-gray-600'}`}
-              >
-                Buy
-              </button>
-
-              <button
-                onClick={() => {
-                  setListingType('rent');
-                  setPropertyCategory('residential');
-                  setPropertySubType(null);
-                }}
-                className={`flex-1 py-2 text-sm font-semibold rounded-lg transition
-                  ${listingType === 'rent'
-                    ? 'bg-red-500 text-white shadow'
-                    : 'text-gray-600'}`}
-              >
-                Rent
-              </button>
+          <div className="space-y-3 mb-2">
+            <div className="flex rounded-xl overflow-hidden border border-gray-200">
+              {['buy', 'rent', 'commercial'].map((type) => (
+                <button
+                  key={type}
+                  onClick={() => handleListingTypeChange(type as 'buy' | 'rent' | 'commercial')}
+                  className={`flex-1 py-2.5 text-xs md:text-sm font-semibold transition-colors ${
+                    listingType === type
+                      ? type === 'buy'
+                        ? 'bg-blue-600 text-white'
+                        : type === 'rent'
+                        ? 'bg-red-500 text-white'
+                        : 'bg-purple-600 text-white'
+                      : 'bg-white text-gray-600'
+                  }`}
+                >
+                  {type.toUpperCase()}
+                </button>
+              ))}
             </div>
 
-            <div className="flex gap-6 mb-3">
-              <label className="flex items-center gap-2 text-sm font-medium">
-                <input
-                  type="radio"
-                  checked={propertyCategory === 'residential'}
-                  onChange={() => handlePropertyCategoryChange('residential')}
-                />
-                Residential
-              </label>
-
-              <label className="flex items-center gap-2 text-sm font-medium">
-                <input
-                  type="radio"
-                  checked={propertyCategory === 'commercial'}
-                  onChange={() => handlePropertyCategoryChange('commercial')}
-                />
-                Commercial
-              </label>
-            </div>
+            {listingType !== 'commercial' && (
+              <div className="flex gap-3">
+                {['residential', 'commercial'].map(cat => (
+                  <label
+                    key={cat}
+                    className={`flex-1 px-4 py-2 rounded-lg text-xs md:text-sm font-medium border cursor-pointer transition-colors text-center ${
+                      propertyCategory === cat
+                        ? 'bg-blue-50 border-blue-600 text-blue-700'
+                        : 'bg-white border-gray-300 text-gray-700'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      className="hidden"
+                      checked={propertyCategory === cat}
+                      onChange={() => handlePropertyCategoryChange(cat as 'residential' | 'commercial')}
+                    />
+                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                  </label>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="mb-2 relative">
@@ -183,56 +185,16 @@ export function SearchPage() {
                 setLocalityId(localityId)
               }}
               placeholder="Type 3+ characters to search Vizag localities"
-              className="h-10 md:h-12 pr-10 border-2 border-red-500 text-xs md:text-sm font-medium"
+              className="h-10 md:h-12 pr-20 border-2 border-red-500 text-xs md:text-sm font-medium"
             />
-            {isSupported && (
-              <button
-                onClick={handleVoiceToggle}
-                className={`absolute right-3 top-1/2 -translate-y-1/2 transition-all ${
-                  isListening
-                    ? 'animate-pulse'
-                    : 'text-gray-400'
-                }`}
-                aria-label={isListening ? "Stop voice search" : "Start voice search"}
-              >
-                <span className="text-lg">🎤</span>
-              </button>
-            )}
-            {localityMatch && (
-              <div className="absolute top-full left-0 right-0 mt-1.5 p-2 md:p-3 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between z-20">
-                <div className="flex items-center space-x-2">
-                  <MapPin className="h-4 w-4 md:h-5 md:w-5 text-green-600 flex-shrink-0" />
-                  <div>
-                    <div className="text-xs md:text-sm font-medium text-green-900">
-                      Found: {localityMatch.locality_name}
-                    </div>
-                    <div className="text-[10px] md:text-xs text-green-600">
-                      {localityMatch.confidence === 'exact' ? 'Exact match' : 'Similar match'}
-                    </div>
-                  </div>
-                </div>
-                <button
-                  onClick={() => resetTranscript()}
-                  className="text-green-600 hover:text-green-800"
-                >
-                  <X className="h-4 w-4 md:h-5 md:w-5" />
-                </button>
-              </div>
-            )}
-            {noMatchMessage && (
-              <div className="absolute top-full left-0 right-0 mt-1.5 p-2 md:p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center justify-between z-20">
-                <div className="flex items-center space-x-2">
-                  <MapPin className="h-4 w-4 md:h-5 md:w-5 text-yellow-600 flex-shrink-0" />
-                  <div className="text-xs md:text-sm font-medium text-yellow-900">{noMatchMessage}</div>
-                </div>
-                <button
-                  onClick={() => resetTranscript()}
-                  className="text-yellow-600 hover:text-yellow-800"
-                >
-                  <X className="h-4 w-4 md:h-5 md:w-5" />
-                </button>
-              </div>
-            )}
+            <button
+              type="button"
+              onClick={startVoiceSearch}
+              className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600 transition-colors"
+              aria-label="Voice search"
+            >
+              <Mic className="w-5 h-5" />
+            </button>
           </div>
 
           <div className="flex gap-1.5">
@@ -268,66 +230,81 @@ export function SearchPage() {
 
           <div className="space-y-3">
             {listingType === 'buy' && propertyCategory === 'residential' && (
-              <div className="flex flex-wrap gap-3 mb-4">
-                {[
-                  'Flat / Apartment',
-                  'Villa',
-                  'Full House',
-                  'Land / Plot'
-                ].map(opt => (
-                  <label
-                    key={opt}
-                    className="flex items-center gap-2 text-sm px-3 py-2 rounded-lg border bg-white"
-                  >
-                    <input
-                      type="radio"
-                      checked={propertySubType === opt}
-                      onChange={() => setPropertySubType(opt)}
-                    />
-                    {opt}
-                  </label>
-                ))}
+              <div>
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+                  Property Type
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    'Flat / Apartment',
+                    'Villa',
+                    'Full House',
+                    'Land / Plot'
+                  ].map(opt => (
+                    <label
+                      key={opt}
+                      className="flex items-center gap-2 text-xs md:text-sm px-3 py-2 rounded-lg border bg-white cursor-pointer hover:bg-gray-50"
+                    >
+                      <input
+                        type="radio"
+                        checked={propertySubType === opt}
+                        onChange={() => setPropertySubType(opt)}
+                      />
+                      {opt}
+                    </label>
+                  ))}
+                </div>
               </div>
             )}
 
             {listingType === 'rent' && propertyCategory === 'residential' && (
-              <div className="flex flex-wrap gap-3 mb-4">
-                {[
-                  'Flat / Apartment',
-                  'Villa',
-                  'Full House',
-                  'PG / Hostel',
-                  'Flatmates'
-                ].map(opt => (
-                  <label
-                    key={opt}
-                    className="flex items-center gap-2 text-sm px-3 py-2 rounded-lg border bg-white"
-                  >
-                    <input
-                      type="radio"
-                      name="subType"
-                      checked={propertySubType === opt}
-                      onChange={() => setPropertySubType(opt)}
-                    />
-                    {opt}
-                  </label>
-                ))}
+              <div>
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+                  Property Type
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    'Flat / Apartment',
+                    'Villa',
+                    'Full House',
+                    'PG / Hostel',
+                    'Flatmates'
+                  ].map(opt => (
+                    <label
+                      key={opt}
+                      className="flex items-center gap-2 text-xs md:text-sm px-3 py-2 rounded-lg border bg-white cursor-pointer hover:bg-gray-50"
+                    >
+                      <input
+                        type="radio"
+                        name="subType"
+                        checked={propertySubType === opt}
+                        onChange={() => setPropertySubType(opt)}
+                      />
+                      {opt}
+                    </label>
+                  ))}
+                </div>
               </div>
             )}
 
-            {propertyCategory === 'commercial' && (
-              <select
-                className="w-full rounded-lg border px-3 py-3 text-sm mb-4"
-                value={propertySubType || ''}
-                onChange={e => setPropertySubType(e.target.value)}
-              >
-                <option value="">Select Commercial Type</option>
-                <option>Office Space</option>
-                <option>Shop / Showroom</option>
-                <option>Warehouse</option>
-                <option>Farmhouse</option>
-                <option>Co-working Space</option>
-              </select>
+            {(propertyCategory === 'commercial' || listingType === 'commercial') && (
+              <div>
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+                  Commercial Property Type
+                </label>
+                <select
+                  className="w-full rounded-lg border px-3 py-2.5 text-xs md:text-sm"
+                  value={propertySubType || ''}
+                  onChange={e => setPropertySubType(e.target.value)}
+                >
+                  <option value="">Select Commercial Type</option>
+                  <option>Office Space</option>
+                  <option>Shop / Showroom</option>
+                  <option>Warehouse</option>
+                  <option>Farmhouse</option>
+                  <option>Co-working Space</option>
+                </select>
+              </div>
             )}
 
             {(propertySubType === 'Full House' || propertySubType === 'Flat / Apartment') && (
