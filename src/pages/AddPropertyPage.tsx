@@ -27,6 +27,7 @@ export function AddPropertyPage() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
+  const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const [formData, setFormData] = useState({
     title: '',
@@ -91,25 +92,27 @@ export function AddPropertyPage() {
 
   const commonAmenities = ['Parking', 'Gym', 'Swimming Pool', 'Security', 'Power Backup', 'Elevator', 'Garden', 'Club House', 'WiFi', 'Furnished']
 
-  useEffect(() => {
-    if (!user) return
-
-    const fetchLocalities = async () => {
-      const { data, error } = await supabase
-        .from('localities')
-        .select('id, name, slug, pincode')
-        .eq('city', 'Visakhapatnam')
-        .order('name', { ascending: true })
-
-      if (!error && data) {
-        setLocalities(data as any)
-      } else {
-        console.error('Failed to load localities', error)
-      }
+  const fetchLocalities = async (searchTerm: string) => {
+    if (!user || searchTerm.length < 3) {
+      setLocalities([])
+      return
     }
 
-    fetchLocalities()
-  }, [user])
+    const { data, error } = await supabase
+      .from('localities')
+      .select('id, name, slug, pincode')
+      .eq('city', 'Visakhapatnam')
+      .ilike('name', `%${searchTerm}%`)
+      .order('name', { ascending: true })
+      .limit(10)
+
+    if (!error && data) {
+      setLocalities(data as any)
+    } else {
+      console.error('Failed to load localities', error)
+      setLocalities([])
+    }
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -119,7 +122,12 @@ export function AddPropertyPage() {
     }
 
     document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      if (fetchTimeoutRef.current) {
+        clearTimeout(fetchTimeoutRef.current)
+      }
+    }
   }, [])
 
   const getAvailablePropertyTypes = (): PropertyType[] => {
@@ -814,23 +822,38 @@ export function AddPropertyPage() {
                   type="text"
                   value={locality}
                   onChange={(e) => {
-                    setLocality(e.target.value)
+                    const v = e.target.value
+                    setLocality(v)
                     setFormData({ ...formData, pincode: '' })
-                    setShowLocalityDropdown(e.target.value.length >= 3)
+
+                    if (fetchTimeoutRef.current) {
+                      clearTimeout(fetchTimeoutRef.current)
+                    }
+
+                    if (v.length >= 3) {
+                      fetchTimeoutRef.current = setTimeout(() => {
+                        fetchLocalities(v)
+                      }, 300)
+                      setShowLocalityDropdown(true)
+                    } else {
+                      setLocalities([])
+                      setShowLocalityDropdown(false)
+                    }
                   }}
-                  onFocus={() => setShowLocalityDropdown(locality.length >= 3)}
-                  placeholder="Start typing locality name (min 3 letters)"
+                  onFocus={() => {
+                    if (locality.length >= 3) {
+                      setShowLocalityDropdown(true)
+                    }
+                  }}
+                  placeholder="Type 3+ characters to search Vizag localities"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   autoComplete="off"
                 />
 
                 {showLocalityDropdown && locality.length >= 3 && (
                   <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                    {localities
-                      .filter(loc =>
-                        (loc as any).name.toLowerCase().startsWith(locality.toLowerCase())
-                      )
-                      .map(loc => (
+                    {localities.length > 0 ? (
+                      localities.map(loc => (
                         <div
                           key={loc.id}
                           onClick={() => {
@@ -845,12 +868,10 @@ export function AddPropertyPage() {
                             <div className="text-sm text-gray-500">Pincode: {(loc as any).pincode}</div>
                           )}
                         </div>
-                      ))}
-                    {localities.filter(loc =>
-                      (loc as any).name.toLowerCase().startsWith(locality.toLowerCase())
-                    ).length === 0 && (
+                      ))
+                    ) : (
                       <div className="px-4 py-3 text-gray-500 text-sm">
-                        No localities found starting with "{locality}"
+                        No localities found matching "{locality}"
                       </div>
                     )}
                   </div>

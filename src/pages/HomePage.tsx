@@ -14,19 +14,19 @@ import { StickySearchBar } from '../components/StickySearchBar'
 import { MobileActionCards } from '../components/MobileActionCards'
 import { MobileCategoryGrid } from '../components/MobileCategoryGrid'
 import { useAuth } from '../contexts/AuthContext'
+import { useSearch } from '../contexts/SearchContext'
 import { useSearchHistory } from '../hooks/useSearchHistory'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp } from '../lib/whatsapp'
 
-type TabType = 'buy' | 'rent' | 'commercial'
-type PropertyCategory = 'full_house' | 'land_plot' | 'pg_hostel' | 'flatmates'
+type PropertyCategory = 'full_house' | 'land_plot' | 'flat_apartment' | 'pg_hostel' | 'flatmates'
 
 export function HomePage() {
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { listingType, setListingType, propertyCategory: searchCategory, setPropertyCategory: setSearchCategory } = useSearch()
   const { lastSearch, saveSearch } = useSearchHistory()
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
-  const [activeTab, setActiveTab] = useState<TabType>('buy')
   const [propertyCategory, setPropertyCategory] = useState<PropertyCategory>('full_house')
   const [location, setLocation] = useState('Visakhapatnam')
   const [locality, setLocality] = useState('')
@@ -164,13 +164,15 @@ export function HomePage() {
   }
 
   const handleAdvancedSearch = async () => {
+    const searchType = searchCategory === 'commercial' ? 'commercial' : listingType
+
     if (user && locality) {
-      await saveSearch(location, locality, activeTab, locality)
+      await saveSearch(location, locality, searchType, locality)
     }
 
     const params = new URLSearchParams()
 
-    if (activeTab) params.append('type', activeTab)
+    if (searchType) params.append('type', searchType)
     if (location) params.append('location', location)
     if (localityId) {
       params.append('localityId', localityId)
@@ -189,22 +191,17 @@ export function HomePage() {
     if (lastSearch?.locality) {
       setLocality(lastSearch.locality)
       setLocation(lastSearch.location || 'Visakhapatnam')
-      setActiveTab(lastSearch.search_type as TabType || 'buy')
+      const searchType = lastSearch.search_type || 'buy'
+      if (searchType === 'commercial') {
+        setSearchCategory('commercial')
+      } else {
+        setSearchCategory('residential')
+        setListingType(searchType as 'buy' | 'rent')
+      }
       setShowWelcome(false)
       setTimeout(() => {
         handleAdvancedSearch()
       }, 100)
-    }
-  }
-
-  const handleTabChange = (tab: TabType) => {
-    setActiveTab(tab)
-    if (tab === 'buy') {
-      setPropertyCategory('full_house')
-    } else if (tab === 'rent') {
-      setPropertyCategory('full_house')
-    } else {
-      setPropertyCategory('full_house')
     }
   }
 
@@ -278,9 +275,13 @@ export function HomePage() {
             <div className="hidden md:block bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
               <div className="flex border-b border-gray-200">
                 <button
-                  onClick={() => handleTabChange('buy')}
+                  onClick={() => {
+                    setSearchCategory('residential')
+                    setListingType('buy')
+                    setPropertyCategory('full_house')
+                  }}
                   className={`flex-1 py-4 px-6 font-semibold text-center transition-all relative ${
-                    activeTab === 'buy'
+                    listingType === 'buy' && searchCategory === 'residential'
                       ? 'text-primary-600 bg-primary-50'
                       : 'text-gray-600 hover:bg-gray-50'
                   }`}
@@ -289,15 +290,19 @@ export function HomePage() {
                     <Home className="h-5 w-5" />
                     <span>Buy</span>
                   </div>
-                  {activeTab === 'buy' && (
+                  {listingType === 'buy' && searchCategory === 'residential' && (
                     <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary-600"></div>
                   )}
                 </button>
 
                 <button
-                  onClick={() => handleTabChange('rent')}
+                  onClick={() => {
+                    setSearchCategory('residential')
+                    setListingType('rent')
+                    setPropertyCategory('full_house')
+                  }}
                   className={`flex-1 py-4 px-6 font-semibold text-center transition-all relative ${
-                    activeTab === 'rent'
+                    listingType === 'rent' && searchCategory === 'residential'
                       ? 'text-rose-600 bg-rose-50'
                       : 'text-gray-600 hover:bg-gray-50'
                   }`}
@@ -306,15 +311,18 @@ export function HomePage() {
                     <Building2 className="h-5 w-5" />
                     <span>Rent</span>
                   </div>
-                  {activeTab === 'rent' && (
+                  {listingType === 'rent' && searchCategory === 'residential' && (
                     <div className="absolute bottom-0 left-0 right-0 h-1 bg-rose-600"></div>
                   )}
                 </button>
 
                 <button
-                  onClick={() => handleTabChange('commercial')}
+                  onClick={() => {
+                    setSearchCategory('commercial')
+                    setPropertyCategory('full_house')
+                  }}
                   className={`flex-1 py-4 px-6 font-semibold text-center transition-all relative ${
-                    activeTab === 'commercial'
+                    searchCategory === 'commercial'
                       ? 'text-orange-600 bg-orange-50'
                       : 'text-gray-600 hover:bg-gray-50'
                   }`}
@@ -323,7 +331,7 @@ export function HomePage() {
                     <Store className="h-5 w-5" />
                     <span>Commercial</span>
                   </div>
-                  {activeTab === 'commercial' && (
+                  {searchCategory === 'commercial' && (
                     <div className="absolute bottom-0 left-0 right-0 h-1 bg-orange-600"></div>
                   )}
                 </button>
@@ -415,13 +423,7 @@ export function HomePage() {
                   <div className="lg:col-span-3">
                     <button
                       onClick={handleAdvancedSearch}
-                      className={`w-full h-12 text-white px-6 py-3 rounded-full font-bold transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl ${
-                        activeTab === 'buy'
-                          ? 'bg-accent-500 hover:bg-accent-600'
-                          : activeTab === 'rent'
-                          ? 'bg-accent-500 hover:bg-accent-600'
-                          : 'bg-accent-500 hover:bg-accent-600'
-                      }`}
+                      className="w-full h-12 text-white px-6 py-3 rounded-full font-bold transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl bg-accent-500 hover:bg-accent-600"
                     >
                       <Search className="h-5 w-5" />
                       <span>Search</span>
@@ -429,10 +431,10 @@ export function HomePage() {
                   </div>
                 </div>
 
-                {activeTab === 'buy' && (
+                {listingType === 'buy' && searchCategory === 'residential' && (
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center gap-4">
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-3">
                         <label className="flex items-center gap-2 cursor-pointer group">
                           <input
                             type="radio"
@@ -440,9 +442,9 @@ export function HomePage() {
                             value="full_house"
                             checked={propertyCategory === 'full_house'}
                             onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
-                            className="w-5 h-5 text-primary-600"
+                            className="w-4 h-4 text-primary-600"
                           />
-                          <span className="font-medium text-gray-700 group-hover:text-primary-600 transition-colors">
+                          <span className="text-sm font-medium text-gray-700 group-hover:text-primary-600 transition-colors">
                             Full House
                           </span>
                         </label>
@@ -454,10 +456,24 @@ export function HomePage() {
                             value="land_plot"
                             checked={propertyCategory === 'land_plot'}
                             onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
-                            className="w-5 h-5 text-primary-600"
+                            className="w-4 h-4 text-primary-600"
                           />
-                          <span className="font-medium text-gray-700 group-hover:text-primary-600 transition-colors">
+                          <span className="text-sm font-medium text-gray-700 group-hover:text-primary-600 transition-colors">
                             Land/Plot
+                          </span>
+                        </label>
+
+                        <label className="flex items-center gap-2 cursor-pointer group">
+                          <input
+                            type="radio"
+                            name="propertyCategory"
+                            value="flat_apartment"
+                            checked={propertyCategory === 'flat_apartment'}
+                            onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
+                            className="w-4 h-4 text-primary-600"
+                          />
+                          <span className="text-sm font-medium text-gray-700 group-hover:text-primary-600 transition-colors">
+                            Flat/Apartment
                           </span>
                         </label>
                       </div>
@@ -489,23 +505,23 @@ export function HomePage() {
                         </select>
                       </div>
 
-                      <label className="flex items-center gap-2 cursor-pointer px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                      <label className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={newBuilderProjects}
                           onChange={(e) => setNewBuilderProjects(e.target.checked)}
                           className="w-4 h-4 text-primary-600 rounded"
                         />
-                        <span className="font-medium text-gray-700">New Builder Projects</span>
+                        <span className="text-sm font-medium text-gray-700">New Builder Projects</span>
                       </label>
                     </div>
                   </div>
                 )}
 
-                {activeTab === 'rent' && (
+                {listingType === 'rent' && searchCategory === 'residential' && (
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center gap-4">
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-3">
                         <label className="flex items-center gap-2 cursor-pointer group">
                           <input
                             type="radio"
@@ -513,9 +529,9 @@ export function HomePage() {
                             value="full_house"
                             checked={propertyCategory === 'full_house'}
                             onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
-                            className="w-5 h-5 text-rose-600"
+                            className="w-4 h-4 text-rose-600"
                           />
-                          <span className="font-medium text-gray-700 group-hover:text-rose-600 transition-colors">
+                          <span className="text-sm font-medium text-gray-700 group-hover:text-rose-600 transition-colors">
                             Full House
                           </span>
                         </label>
@@ -527,9 +543,9 @@ export function HomePage() {
                             value="pg_hostel"
                             checked={propertyCategory === 'pg_hostel'}
                             onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
-                            className="w-5 h-5 text-rose-600"
+                            className="w-4 h-4 text-rose-600"
                           />
-                          <span className="font-medium text-gray-700 group-hover:text-rose-600 transition-colors">
+                          <span className="text-sm font-medium text-gray-700 group-hover:text-rose-600 transition-colors">
                             PG/Hostel
                           </span>
                         </label>
@@ -541,15 +557,29 @@ export function HomePage() {
                             value="flatmates"
                             checked={propertyCategory === 'flatmates'}
                             onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
-                            className="w-5 h-5 text-rose-600"
+                            className="w-4 h-4 text-rose-600"
                           />
-                          <span className="font-medium text-gray-700 group-hover:text-rose-600 transition-colors">
+                          <span className="text-sm font-medium text-gray-700 group-hover:text-rose-600 transition-colors">
                             Flatmates
+                          </span>
+                        </label>
+
+                        <label className="flex items-center gap-2 cursor-pointer group">
+                          <input
+                            type="radio"
+                            name="propertyCategory"
+                            value="flat_apartment"
+                            checked={propertyCategory === 'flat_apartment'}
+                            onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
+                            className="w-4 h-4 text-rose-600"
+                          />
+                          <span className="text-sm font-medium text-gray-700 group-hover:text-rose-600 transition-colors">
+                            Flat/Apartment
                           </span>
                         </label>
                       </div>
 
-                      {propertyCategory === 'full_house' && (
+                      {(propertyCategory === 'full_house' || propertyCategory === 'flat_apartment') && (
                         <div className="flex-1 min-w-[200px]">
                           <select
                             value={bhkType}
@@ -569,20 +599,21 @@ export function HomePage() {
                   </div>
                 )}
 
-                {activeTab === 'commercial' && (
+                {searchCategory === 'commercial' && (
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center gap-4">
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-3">
                         <label className="flex items-center gap-2 cursor-pointer group">
                           <input
                             type="radio"
                             name="commercialType"
-                            value="rent"
-                            checked={true}
-                            className="w-5 h-5 text-orange-600"
+                            value="buy"
+                            checked={listingType === 'buy'}
+                            onChange={() => setListingType('buy')}
+                            className="w-4 h-4 text-orange-600"
                           />
-                          <span className="font-medium text-gray-700 group-hover:text-orange-600 transition-colors">
-                            Rent
+                          <span className="text-sm font-medium text-gray-700 group-hover:text-orange-600 transition-colors">
+                            Buy
                           </span>
                         </label>
 
@@ -590,23 +621,28 @@ export function HomePage() {
                           <input
                             type="radio"
                             name="commercialType"
-                            value="buy"
-                            className="w-5 h-5 text-orange-600"
+                            value="rent"
+                            checked={listingType === 'rent'}
+                            onChange={() => setListingType('rent')}
+                            className="w-4 h-4 text-orange-600"
                           />
-                          <span className="font-medium text-gray-700 group-hover:text-orange-600 transition-colors">
-                            Buy
+                          <span className="text-sm font-medium text-gray-700 group-hover:text-orange-600 transition-colors">
+                            Rent
                           </span>
                         </label>
                       </div>
 
                       <div className="flex-1 min-w-[200px]">
                         <select
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
+                          value={propertyCategory}
+                          onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-sm"
                         >
                           <option value="">Property Type</option>
                           <option value="office">Office Space</option>
-                          <option value="shop">Shop/Showroom</option>
+                          <option value="shop">Shop / Showroom</option>
                           <option value="warehouse">Warehouse</option>
+                          <option value="farmhouse">Farmhouse</option>
                           <option value="coworking">Co-working Space</option>
                         </select>
                       </div>
