@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Search, Mic, MicOff, TrendingUp, Shield, Zap, CheckCircle, PhoneOff, DollarSign, Home, Building2, Store, MapPin, Users, ArrowRight, Key, X, MessageCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
@@ -22,6 +22,7 @@ type TabType = 'buy' | 'rent' | 'commercial'
 type PropertyCategory = 'full_house' | 'land_plot' | 'pg_hostel' | 'flatmates'
 
 export function HomePage() {
+  const navigate = useNavigate()
   const { user } = useAuth()
   const { lastSearch, saveSearch } = useSearchHistory()
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
@@ -240,10 +241,7 @@ export function HomePage() {
       />
 
       <MobileActionCards
-        onSearchClick={() => {
-          const searchSection = document.getElementById('search-section')
-          searchSection?.scrollIntoView({ behavior: 'smooth' })
-        }}
+        onSearchClick={() => navigate('/search')}
         onPostClick={() => {
           window.location.href = '/add-property'
         }}

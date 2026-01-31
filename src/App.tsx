@@ -29,6 +29,7 @@ import { MyListingsPage } from './pages/MyListingsPage'
 import { AdminPropertiesPage } from './pages/AdminPropertiesPage'
 import { AdminDashboardPage } from './pages/AdminDashboardPage'
 import { EditPropertyPage } from './pages/EditPropertyPage'
+import { SearchPage } from './pages/SearchPage'
 
 function AppContent() {
   const { showUsernamePrompt, setShowUsernamePrompt } = useAuth()
@@ -39,6 +40,7 @@ function AppContent() {
         <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path="/vizag" element={<VizagPage />} />
           <Route path="/vmrda-plots" element={<VMRDAplotsPage />} />
           <Route path="/vmrda-approved-plots-vizag" element={<VMRDAApprovedPlotsPage />} />
