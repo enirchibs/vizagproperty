@@ -12,6 +12,7 @@ import { SmartAreaDiscovery } from '../components/SmartAreaDiscovery'
 import { PropertyShortlistMemory } from '../components/PropertyShortlistMemory'
 import { VisitPreparation } from '../components/VisitPreparation'
 import { MediaGallery } from '../components/MediaGallery'
+import { VIZAG_PROPERTY_PHONE } from '../config/contact'
 
 export function PropertyDetailsPage() {
   const { id } = useParams()
@@ -169,8 +170,7 @@ export function PropertyDetailsPage() {
   }
 
   const handleCall = () => {
-    if (!property) return
-    window.location.href = `tel:${property.agent_phone}`
+    window.location.href = `tel:${VIZAG_PROPERTY_PHONE}`
   }
 
   const handleShare = async () => {

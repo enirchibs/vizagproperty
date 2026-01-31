@@ -1,4 +1,6 @@
-const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_BUSINESS_NUMBER
+import { VIZAG_PROPERTY_PHONE_WITH_CODE } from '../config/contact'
+
+const WHATSAPP_NUMBER = VIZAG_PROPERTY_PHONE_WITH_CODE
 
 const DEFAULT_MESSAGE = 'Hi, I\'m interested in this property listed on VizagProperty. Please share more details.'
 

@@ -6,7 +6,7 @@ import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { supabase } from '../lib/supabase'
 import type { Property } from '../types'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
-import { openWhatsApp } from '../lib/whatsapp'
+import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 
 export default function ResidentialPropertyPage() {
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
@@ -611,7 +611,7 @@ export default function ResidentialPropertyPage() {
               Browse All Properties
             </Link>
             <a
-              href="https://wa.me/919182737473?text=Hi! I'm looking for residential property in Vizag"
+              href={getWhatsAppLink("Hi! I'm looking for residential property in Vizag")}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-colors"

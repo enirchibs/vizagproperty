@@ -5,7 +5,7 @@ import { Property } from '../types'
 import { PropertyCard } from '../components/PropertyCard'
 import { WhatsAppButton } from '../components/WhatsAppButton'
 import { buildStrictQuery, getLocalityContextBySlug } from '../lib/searchFilters'
-import { openWhatsApp } from '../lib/whatsapp'
+import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 
 export function YendadaPage() {
   const [properties, setProperties] = useState<Property[]>([])
@@ -337,7 +337,7 @@ export function YendadaPage() {
                     Get instant assistance via WhatsApp for property queries, site visits, and price negotiations.
                   </p>
                   <a
-                    href="https://wa.me/919876543210?text=Hi, I'm interested in properties in Yendada, Vizag"
+                    href={getWhatsAppLink("Hi, I'm interested in properties in Yendada, Vizag")}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block w-full bg-white text-blue-600 px-4 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all text-center"

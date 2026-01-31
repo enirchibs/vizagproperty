@@ -6,7 +6,7 @@ import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { supabase } from '../lib/supabase'
 import type { Property } from '../types'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
-import { openWhatsApp } from '../lib/whatsapp'
+import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 import { FixedWhatsAppCTA } from '../components/FixedWhatsAppCTA'
 import { ScrollWhatsAppIcon } from '../components/ScrollWhatsAppIcon'
 import { WhatsAppZeroResultsModal } from '../components/WhatsAppZeroResultsModal'
@@ -695,7 +695,7 @@ export default function FlatsForSalePage() {
               Browse All Flats
             </Link>
             <a
-              href="https://wa.me/919182737473?text=Hi! I'm looking to buy a flat in Vizag"
+              href={getWhatsAppLink("Hi! I'm looking to buy a flat in Vizag")}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-colors"

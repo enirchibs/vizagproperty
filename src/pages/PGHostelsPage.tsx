@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Search, MapPin, Users, CheckCircle2, Home, Wifi, Utensils, ShieldCheck, Building2, TrendingUp, Zap, DollarSign, Upload, Mic, MicOff, X } from 'lucide-react'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
+import { getWhatsAppLink } from '../lib/whatsapp'
 
 export default function PGHostelsPage() {
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
@@ -1095,7 +1096,7 @@ export default function PGHostelsPage() {
             </div>
             <p className="text-gray-700 mb-4">Tell us your budget & location for personalized recommendations!</p>
             <a
-              href="https://wa.me/919182737473?text=Hi! I'm looking for PG in Vizag. Can you help me find options?"
+              href={getWhatsAppLink("Hi! I'm looking for PG in Vizag. Can you help me find options?")}
               target="_blank"
               rel="noopener noreferrer"
               className="block text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-semibold transition-colors"

@@ -8,7 +8,7 @@ import { supabase } from '../lib/supabase'
 import type { Property } from '../types'
 import { buildStrictQuery, CATEGORY_CONTEXTS } from '../lib/searchFilters'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
-import { openWhatsApp } from '../lib/whatsapp'
+import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 
 export default function VillasPage() {
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
@@ -843,7 +843,7 @@ export default function VillasPage() {
               Browse All Villas
             </Link>
             <a
-              href="https://wa.me/919182737473?text=Hi! I'm interested in luxury villas in Vizag"
+              href={getWhatsAppLink("Hi! I'm interested in luxury villas in Vizag")}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-colors"
