@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Search, SlidersHorizontal, MapPin, ChevronLeft, Mic, MessageCircle, Plus } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { PropertyCard } from '../components/PropertyCard'
@@ -7,6 +7,7 @@ import { VIZAG_PROPERTY_PHONE_WITH_CODE } from '../config/contact'
 
 export function SearchPage() {
   const navigate = useNavigate()
+  const searchInputRef = useRef<HTMLInputElement>(null)
   const [activeTab, setActiveTab] = useState<'buy' | 'rent' | 'commercial'>('buy')
   const [showFilters, setShowFilters] = useState(false)
   const [searchInput, setSearchInput] = useState('')
@@ -15,6 +16,10 @@ export function SearchPage() {
   const [hasSearched, setHasSearched] = useState(false)
 
   const { properties, loading, error, search } = usePropertySearch()
+
+  useEffect(() => {
+    searchInputRef.current?.focus()
+  }, [])
 
   const handleSearch = () => {
     setHasSearched(true)
@@ -57,6 +62,7 @@ export function SearchPage() {
           <div className="flex items-center gap-2 border-2 border-red-500 rounded-xl px-3 py-3 bg-white mb-3">
             <MapPin className="w-5 h-5 text-gray-400 flex-shrink-0" />
             <input
+              ref={searchInputRef}
               type="text"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
