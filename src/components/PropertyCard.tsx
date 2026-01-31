@@ -3,7 +3,7 @@ import { Property } from '../types'
 import { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
-import { openWhatsApp } from '../utils/whatsapp'
+import { openWhatsApp } from '../lib/whatsapp'
 
 interface PropertyCardProps {
   property: Property

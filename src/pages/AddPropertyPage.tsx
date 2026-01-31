@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase'
 import { Home, Upload, X, Camera, MessageCircle } from 'lucide-react'
 import { VizagLocality, PropertyCategory, ResidentialPropertyType, CommercialPropertyType, PropertyType, ListingType } from '../types'
 import { AuthModal } from '../components/AuthModal'
-import { openWhatsApp } from '../utils/whatsapp'
+import { openWhatsApp } from '../lib/whatsapp'
 
 interface PropertyDetails {
   [key: string]: string

@@ -7,7 +7,7 @@ import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { useRadiusSearch } from '../hooks/useRadiusSearch'
 import MapRadiusToggle from '../components/MapRadiusToggle'
-import { openWhatsApp } from '../utils/whatsapp'
+import { openWhatsApp } from '../lib/whatsapp'
 
 export function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([])

@@ -1,5 +1,5 @@
 import { MessageCircle, X } from 'lucide-react'
-import { openWhatsApp } from '../utils/whatsapp'
+import { openWhatsApp } from '../lib/whatsapp'
 
 interface WhatsAppZeroResultsModalProps {
   isOpen: boolean

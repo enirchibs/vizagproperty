@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { AuthModal } from './AuthModal'
 import { UsernameModal } from './UsernameModal'
 import { trackEvent } from '../lib/analytics'
-import { openWhatsApp } from '../utils/whatsapp'
+import { openWhatsApp } from '../lib/whatsapp'
 
 export function Header() {
   const { user, profile, loading, isAdmin, signOut } = useAuth()

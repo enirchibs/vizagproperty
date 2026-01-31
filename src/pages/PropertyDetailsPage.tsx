@@ -4,7 +4,7 @@ import { MapPin, Bed, Bath, Maximize, Heart, Share2, Phone, MessageCircle, Check
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { useAuth } from '../contexts/AuthContext'
-import { openWhatsApp } from '../utils/whatsapp'
+import { openWhatsApp } from '../lib/whatsapp'
 import { GoodDealAnalysis } from '../components/GoodDealAnalysis'
 import { BudgetStretchAdvisor } from '../components/BudgetStretchAdvisor'
 import { NegotiationCoach } from '../components/NegotiationCoach'

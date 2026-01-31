@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { MessageCircle, X, Home, Building2, Key, Phone, Sparkles } from 'lucide-react'
-import { openWhatsApp } from '../utils/whatsapp'
+import { openWhatsApp } from '../lib/whatsapp'
 
 interface WhatsAppButtonProps {
   autoOpen?: boolean

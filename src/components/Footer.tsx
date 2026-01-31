@@ -1,5 +1,5 @@
 import { MapPin, Home, MessageCircle } from 'lucide-react'
-import { openWhatsApp } from '../utils/whatsapp'
+import { openWhatsApp } from '../lib/whatsapp'
 
 export function Footer() {
   const localities = [

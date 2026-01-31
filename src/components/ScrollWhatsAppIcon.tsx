@@ -1,6 +1,6 @@
 import { MessageCircle } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import { openWhatsApp } from '../utils/whatsapp'
+import { openWhatsApp } from '../lib/whatsapp'
 
 export function ScrollWhatsAppIcon() {
   const [isVisible, setIsVisible] = useState(false)

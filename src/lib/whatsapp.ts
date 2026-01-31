@@ -1,5 +1,7 @@
 const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_BUSINESS_NUMBER
 
+const DEFAULT_MESSAGE = 'Hi, I\'m interested in this property listed on VizagProperty. Please share more details.'
+
 const LOCALITY_MAP: Record<string, string> = {
   'madhurawada': 'Madhurawada',
   'yendada': 'Yendada',
@@ -25,10 +27,10 @@ function getDefaultMessage(): string {
   const locality = getLocalityFromUrl()
 
   if (locality) {
-    return `Hi Vizag Property Experts, I am looking for property in ${locality}, Vizag`
+    return `Hi, I'm interested in properties in ${locality}, Vizag listed on VizagProperty. Please share more details.`
   }
 
-  return 'Hi Vizag Property Experts, I am looking for property in Vizag'
+  return DEFAULT_MESSAGE
 }
 
 export function getWhatsAppLink(message?: string): string {

@@ -1,6 +1,6 @@
 import { MessageCircle, X } from 'lucide-react'
 import { useState } from 'react'
-import { openWhatsApp } from '../utils/whatsapp'
+import { openWhatsApp } from '../lib/whatsapp'
 
 export function FixedWhatsAppCTA() {
   const [isVisible, setIsVisible] = useState(true)
