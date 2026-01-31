@@ -74,11 +74,6 @@ export function SearchPage() {
     }
   }
 
-  const handleListingTypeChange = (type: 'buy' | 'rent') => {
-    setListingType(type)
-    setPropertySubType(getDefaultSubType(type, propertyCategory))
-  }
-
   const handlePropertyCategoryChange = (category: 'residential' | 'commercial') => {
     setPropertyCategory(category)
     setPropertySubType(getDefaultSubType(listingType, category))
@@ -121,17 +116,34 @@ export function SearchPage() {
           </div>
 
           <div className="space-y-1.5 mb-2">
-            <div className="flex rounded-xl bg-gray-100 p-0.5">
-              {(['buy', 'rent'] as const).map((type) => (
-                <button
-                  key={type}
-                  onClick={() => handleListingTypeChange(type)}
-                  data-active={listingType === type}
-                  className="flex-1 py-1.5 text-xs md:text-sm font-medium rounded-lg transition-all data-[active=true]:bg-white data-[active=true]:shadow capitalize"
-                >
-                  {type}
-                </button>
-              ))}
+            <div className="flex rounded-xl bg-gray-100 p-1">
+              <button
+                onClick={() => {
+                  setListingType('buy');
+                  setPropertyCategory('residential');
+                  setPropertySubType(null);
+                }}
+                className={`flex-1 py-2 text-sm font-semibold rounded-lg transition
+                  ${listingType === 'buy'
+                    ? 'bg-blue-600 text-white shadow'
+                    : 'text-gray-600'}`}
+              >
+                Buy
+              </button>
+
+              <button
+                onClick={() => {
+                  setListingType('rent');
+                  setPropertyCategory('residential');
+                  setPropertySubType(null);
+                }}
+                className={`flex-1 py-2 text-sm font-semibold rounded-lg transition
+                  ${listingType === 'rent'
+                    ? 'bg-red-500 text-white shadow'
+                    : 'text-gray-600'}`}
+              >
+                Rent
+              </button>
             </div>
             <div className="flex rounded-xl bg-gray-100 p-0.5">
               {(['residential', 'commercial'] as const).map((category) => (
