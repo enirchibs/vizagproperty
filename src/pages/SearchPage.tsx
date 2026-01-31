@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Search, SlidersHorizontal, ChevronLeft, Mic, MicOff, MessageCircle, Plus, MapPin, X } from 'lucide-react'
+import { Search, SlidersHorizontal, ChevronLeft, MessageCircle, Plus, MapPin, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { PropertyCard } from '../components/PropertyCard'
 import { usePropertySearch } from '../hooks/usePropertySearch'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
-import { openWhatsApp } from '../lib/whatsapp'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { VIZAG_PROPERTY_PHONE_WITH_CODE } from '../config/contact'
 import { useSearch } from '../contexts/SearchContext'
@@ -97,9 +96,6 @@ export function SearchPage() {
     })
   }
 
-  const handleWhatsAppClick = () => {
-    openWhatsApp('Hi Vizag Property Experts, I am looking for a property in Vizag. Please assist.')
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -175,30 +171,21 @@ export function SearchPage() {
                 setLocalityId(localityId)
               }}
               placeholder="Type 3+ characters to search Vizag localities"
-              className="h-10 md:h-12 pr-20 border-2 border-red-500 text-xs md:text-sm font-medium"
+              className="h-10 md:h-12 pr-10 border-2 border-red-500 text-xs md:text-sm font-medium"
             />
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5 z-10">
-              {isSupported && (
-                <button
-                  onClick={handleVoiceToggle}
-                  className={`p-1.5 md:p-2 rounded-lg transition-all ${
-                    isListening
-                      ? 'bg-red-600 text-white animate-pulse'
-                      : 'text-gray-600 hover:bg-gray-200'
-                  }`}
-                  aria-label={isListening ? "Stop voice search" : "Start voice search"}
-                >
-                  {isListening ? <MicOff className="h-4 w-4 md:h-5 md:w-5" /> : <Mic className="h-4 w-4 md:h-5 md:w-5" />}
-                </button>
-              )}
+            {isSupported && (
               <button
-                onClick={handleWhatsAppClick}
-                className="p-1.5 md:p-2 rounded-lg transition-all text-green-600 hover:bg-green-50"
-                aria-label="Contact on WhatsApp"
+                onClick={handleVoiceToggle}
+                className={`absolute right-3 top-1/2 -translate-y-1/2 transition-all ${
+                  isListening
+                    ? 'animate-pulse'
+                    : 'text-gray-400'
+                }`}
+                aria-label={isListening ? "Stop voice search" : "Start voice search"}
               >
-                <MessageCircle className="h-4 w-4 md:h-5 md:w-5" />
+                <span className="text-lg">🎤</span>
               </button>
-            </div>
+            )}
             {localityMatch && (
               <div className="absolute top-full left-0 right-0 mt-1.5 p-2 md:p-3 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between z-20">
                 <div className="flex items-center space-x-2">
@@ -300,50 +287,41 @@ export function SearchPage() {
               </div>
             )}
 
-            {propertyCategory === 'residential' && listingType === 'rent' && (
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5">
-                  Property Sub Type
-                </label>
-                <div className="flex flex-wrap gap-3 text-xs md:text-sm">
-                  <label className="flex items-center gap-1.5">
+            {listingType === 'rent' && propertyCategory === 'residential' && (
+              <div className="flex flex-wrap gap-3 mb-4">
+                {['Full House', 'PG / Hostel', 'Flatmates', 'Flat / Apartment'].map(opt => (
+                  <label
+                    key={opt}
+                    className="flex items-center gap-2 text-sm px-3 py-2 rounded-lg border bg-white"
+                  >
                     <input
                       type="radio"
-                      name="propertySubType"
-                      value="full_house"
-                      checked={propertySubType === 'full_house'}
-                      onChange={(e) => setPropertySubType(e.target.value)}
-                      className="accent-blue-600"
+                      name="subType"
+                      checked={propertySubType === opt}
+                      onChange={() => setPropertySubType(opt)}
                     />
-                    Full House
+                    {opt}
                   </label>
-                  <label className="flex items-center gap-1.5">
-                    <input
-                      type="radio"
-                      name="propertySubType"
-                      value="pg_hostel"
-                      checked={propertySubType === 'pg_hostel'}
-                      onChange={(e) => setPropertySubType(e.target.value)}
-                      className="accent-blue-600"
-                    />
-                    PG/Hostel
-                  </label>
-                  <label className="flex items-center gap-1.5">
-                    <input
-                      type="radio"
-                      name="propertySubType"
-                      value="flatmates"
-                      checked={propertySubType === 'flatmates'}
-                      onChange={(e) => setPropertySubType(e.target.value)}
-                      className="accent-blue-600"
-                    />
-                    Flatmates
-                  </label>
-                </div>
+                ))}
               </div>
             )}
 
-            {propertySubType === 'full_house' && (
+            {propertyCategory === 'commercial' && (
+              <select
+                className="w-full rounded-lg border px-3 py-3 text-sm mb-4"
+                value={propertySubType || ''}
+                onChange={e => setPropertySubType(e.target.value)}
+              >
+                <option value="">Select Commercial Type</option>
+                <option>Office Space</option>
+                <option>Shop / Showroom</option>
+                <option>Warehouse</option>
+                <option>Farmhouse</option>
+                <option>Co-working Space</option>
+              </select>
+            )}
+
+            {(propertySubType === 'Full House' || propertySubType === 'Flat / Apartment') && (
               <div>
                 <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5">
                   BHK Type
