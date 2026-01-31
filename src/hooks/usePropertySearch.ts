@@ -11,6 +11,7 @@ export interface PropertySearchParams {
   minPrice?: number
   maxPrice?: number
   bedrooms?: number
+  propertyStatus?: string
   radiusEnabled?: boolean
   radiusKm?: number
   centerLat?: number
@@ -91,6 +92,10 @@ export function usePropertySearch(): UsePropertySearchReturn {
 
       if (params.bedrooms) {
         query = query.eq('bedrooms', params.bedrooms)
+      }
+
+      if (params.propertyStatus) {
+        query = query.eq('property_status', params.propertyStatus)
       }
 
       if (params.keyword) {

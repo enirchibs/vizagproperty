@@ -58,6 +58,12 @@ export function SearchPage() {
   }, [transcript])
 
   useEffect(() => {
+    setListingType('buy')
+    setPropertyCategory('residential')
+    setPropertySubType('Flat / Apartment')
+  }, [])
+
+  useEffect(() => {
     if (localityMatch) {
       setLocality(localityMatch.locality_name)
       setLocalityId(undefined)
@@ -85,7 +91,7 @@ export function SearchPage() {
 
     setHasSearched(true)
 
-    search({
+    const searchParams: any = {
       listingType: listingType === 'rent' ? 'rent' : 'sale',
       propertyType: getPropertyTypeForSearch(),
       localityId: localityId,
@@ -93,7 +99,13 @@ export function SearchPage() {
       bedrooms: bhkFilter ? parseInt(bhkFilter) : undefined,
       minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
       maxPrice: priceRange[1] < 10000000 ? priceRange[1] : undefined,
-    })
+    }
+
+    if (propertySubType !== 'Land / Plot' && propertyStatus) {
+      searchParams.propertyStatus = propertyStatus
+    }
+
+    search(searchParams)
   }
 
 
@@ -255,41 +267,38 @@ export function SearchPage() {
           </div>
 
           <div className="space-y-3">
-            {propertyCategory === 'residential' && listingType === 'buy' && (
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5">
-                  Property Sub Type
-                </label>
-                <div className="flex gap-3 text-xs md:text-sm">
-                  <label className="flex items-center gap-1.5">
+            {listingType === 'buy' && propertyCategory === 'residential' && (
+              <div className="flex flex-wrap gap-3 mb-4">
+                {[
+                  'Flat / Apartment',
+                  'Villa',
+                  'Full House',
+                  'Land / Plot'
+                ].map(opt => (
+                  <label
+                    key={opt}
+                    className="flex items-center gap-2 text-sm px-3 py-2 rounded-lg border bg-white"
+                  >
                     <input
                       type="radio"
-                      name="propertySubType"
-                      value="full_house"
-                      checked={propertySubType === 'full_house'}
-                      onChange={(e) => setPropertySubType(e.target.value)}
-                      className="accent-blue-600"
+                      checked={propertySubType === opt}
+                      onChange={() => setPropertySubType(opt)}
                     />
-                    Full House
+                    {opt}
                   </label>
-                  <label className="flex items-center gap-1.5">
-                    <input
-                      type="radio"
-                      name="propertySubType"
-                      value="land_plot"
-                      checked={propertySubType === 'land_plot'}
-                      onChange={(e) => setPropertySubType(e.target.value)}
-                      className="accent-blue-600"
-                    />
-                    Land / Plot
-                  </label>
-                </div>
+                ))}
               </div>
             )}
 
             {listingType === 'rent' && propertyCategory === 'residential' && (
               <div className="flex flex-wrap gap-3 mb-4">
-                {['Full House', 'PG / Hostel', 'Flatmates', 'Flat / Apartment'].map(opt => (
+                {[
+                  'Flat / Apartment',
+                  'Villa',
+                  'Full House',
+                  'PG / Hostel',
+                  'Flatmates'
+                ].map(opt => (
                   <label
                     key={opt}
                     className="flex items-center gap-2 text-sm px-3 py-2 rounded-lg border bg-white"
@@ -343,20 +352,22 @@ export function SearchPage() {
 
             {listingType === 'buy' && propertyCategory === 'residential' && (
               <>
-                <div>
-                  <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5">
-                    Property Status
-                  </label>
-                  <select
-                    value={propertyStatus}
-                    onChange={(e) => setPropertyStatus(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-2.5 md:px-3 py-1.5 md:py-2 text-xs md:text-sm"
-                  >
-                    <option value="">All Status</option>
-                    <option value="ready_to_move">Ready to Move</option>
-                    <option value="under_construction">Under Construction</option>
-                  </select>
-                </div>
+                {propertySubType !== 'Land / Plot' && (
+                  <div>
+                    <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5">
+                      Property Status
+                    </label>
+                    <select
+                      value={propertyStatus}
+                      onChange={(e) => setPropertyStatus(e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg px-2.5 md:px-3 py-1.5 md:py-2 text-xs md:text-sm"
+                    >
+                      <option value="">All Status</option>
+                      <option value="ready_to_move">Ready to Move</option>
+                      <option value="under_construction">Under Construction</option>
+                    </select>
+                  </div>
+                )}
 
                 <div>
                   <label className="flex items-center gap-1.5 text-xs md:text-sm">
