@@ -1,4 +1,4 @@
-import { Heart, MapPin, Bed, Bath, Maximize, MessageCircle, CheckCircle } from 'lucide-react'
+import { Heart, MapPin, Bed, Maximize, MessageCircle, CheckCircle } from 'lucide-react'
 import { Property } from '../types'
 import { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
@@ -103,45 +103,39 @@ export function PropertyCard({ property, onFavoriteChange }: PropertyCardProps) 
           <h3 className="text-base md:text-lg font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition-colors">
             {property.title}
           </h3>
-          <span className="text-xs px-2.5 py-1 bg-gradient-to-r from-primary-50 to-primary-100 text-primary-700 rounded-full capitalize font-semibold border border-primary-200 whitespace-nowrap">
+          <span className="hidden md:inline-flex text-xs px-2.5 py-1 bg-gradient-to-r from-primary-50 to-primary-100 text-primary-700 rounded-full capitalize font-semibold border border-primary-200 whitespace-nowrap">
             {property.listing_type}
           </span>
         </div>
 
         <div className="flex items-center text-gray-600 text-sm mb-3">
           <MapPin className="h-4 w-4 mr-1.5 text-primary-500 flex-shrink-0" />
-          <span className="line-clamp-1">{property.location}, {property.city}</span>
+          <span className="line-clamp-1 font-medium">{property.location}</span>
         </div>
 
-        <div className="flex items-center gap-3 md:gap-4 text-gray-600 text-sm mb-3 pb-3 border-b border-gray-100 flex-wrap">
+        <div className="flex items-center gap-4 md:gap-4 text-gray-700 text-sm mb-4 pb-3 border-b border-gray-100">
           {property.bedrooms && property.bedrooms > 0 && (
             <div className="flex items-center gap-1">
               <Bed className="h-4 w-4 text-primary-500" />
-              <span className="font-medium">{property.bedrooms} BHK</span>
-            </div>
-          )}
-          {property.bathrooms && property.bathrooms > 0 && (
-            <div className="flex items-center gap-1">
-              <Bath className="h-4 w-4 text-primary-500" />
-              <span className="font-medium">{property.bathrooms}</span>
+              <span className="font-semibold">{property.bedrooms} BHK</span>
             </div>
           )}
           <div className="flex items-center gap-1">
             <Maximize className="h-4 w-4 text-primary-500" />
-            <span className="font-medium">{property.area_sqft} sqft</span>
+            <span className="font-semibold">{property.area_sqft} sqft</span>
           </div>
         </div>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
+          <div className="text-2xl md:text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
             {formatPrice(property.price)}
           </div>
           <button
             onClick={handleWhatsAppInquiry}
-            className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all text-sm font-semibold shadow-md hover:shadow-lg min-h-[44px]"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 transition-all text-base font-semibold shadow-md hover:shadow-lg min-h-[44px] active:scale-95"
           >
-            <MessageCircle className="h-4 w-4" />
-            <span>WhatsApp Now</span>
+            <MessageCircle className="h-5 w-5" />
+            <span>WhatsApp</span>
           </button>
         </div>
       </div>

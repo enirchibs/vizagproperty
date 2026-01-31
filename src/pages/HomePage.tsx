@@ -10,6 +10,9 @@ import { AITypingAnimation } from '../components/AITypingAnimation'
 import { AISearchSuggestions } from '../components/AISearchSuggestions'
 import { WelcomeMessage } from '../components/WelcomeMessage'
 import { AuthModal } from '../components/AuthModal'
+import { StickySearchBar } from '../components/StickySearchBar'
+import { MobileActionCards } from '../components/MobileActionCards'
+import { MobileCategoryGrid } from '../components/MobileCategoryGrid'
 import { useAuth } from '../contexts/AuthContext'
 import { useSearchHistory } from '../hooks/useSearchHistory'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
@@ -227,13 +230,34 @@ export function HomePage() {
           onSearch={handleWelcomeSearch}
         />
       )}
-      <section className="relative py-16 px-4">
+
+      <StickySearchBar
+        onSearch={(query) => {
+          setLocality(query)
+          handleAdvancedSearch()
+        }}
+        placeholder="Search locality (3+ letters)"
+      />
+
+      <MobileActionCards
+        onSearchClick={() => {
+          const searchSection = document.getElementById('search-section')
+          searchSection?.scrollIntoView({ behavior: 'smooth' })
+        }}
+        onPostClick={() => {
+          window.location.href = '/add-property'
+        }}
+      />
+
+      <MobileCategoryGrid />
+
+      <section id="search-section" className="relative py-8 md:py-16 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 leading-tight">
+          <div className="text-center mb-6 md:mb-10">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-3 md:mb-4 leading-tight">
               Vizag Real Estate: Buy, Sell & Rent Property
             </h1>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base md:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               Find vizag plots for sale, flats, villas & houses in Visakhapatnam with AI-powered search. Check vizag real estate prices and property listings across all localities.
             </p>
           </div>
@@ -241,7 +265,7 @@ export function HomePage() {
           <div className="max-w-6xl mx-auto mb-8">
             <AITypingAnimation />
 
-            <div className="mb-6 flex flex-col items-center justify-center gap-2">
+            <div className="mb-6 hidden md:flex flex-col items-center justify-center gap-2">
               <a
                 href="/add-property"
                 className="group bg-white text-primary-600 border-2 border-primary-600 px-8 py-3 rounded-full hover:bg-primary-50 transition-all font-bold text-base shadow-md hover:shadow-xl hover:scale-105 transform duration-200"
@@ -253,7 +277,7 @@ export function HomePage() {
               </p>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+            <div className="hidden md:block bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
               <div className="flex border-b border-gray-200">
                 <button
                   onClick={() => handleTabChange('buy')}

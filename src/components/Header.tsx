@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Heart, LogOut, Menu, X, Shield, Plus, MessageCircle, Building2 } from 'lucide-react'
+import { Heart, LogOut, Menu, X, Shield, MessageCircle, Building2 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { AuthModal } from './AuthModal'
 import { UsernameModal } from './UsernameModal'
@@ -12,7 +12,6 @@ export function Header() {
   const [showUsernameModal, setShowUsernameModal] = useState(false)
   const [authModalProps, setAuthModalProps] = useState<{ intentRole?: 'buyer' | 'owner'; redirectTo?: string }>({})
   const [showMenu, setShowMenu] = useState(false)
-  const [showTooltip, setShowTooltip] = useState(false)
 
   useEffect(() => {
     if (user && profile && !loading && !profile.username) {
@@ -100,25 +99,13 @@ export function Header() {
                   >
                     Post Property — Free
                   </a>
-                  <div className="relative sm:hidden">
-                    <a
-                      href="/add-property"
-                      className="w-10 h-10 bg-gradient-to-r from-[#f6b300] to-[#f39c12] text-[#0d1b3d] rounded-full hover:shadow-lg transition-all shadow-sm flex items-center justify-center"
-                      onMouseEnter={() => setShowTooltip(true)}
-                      onMouseLeave={() => setShowTooltip(false)}
-                      onTouchStart={() => setShowTooltip(true)}
-                      onTouchEnd={() => setTimeout(() => setShowTooltip(false), 2000)}
-                      aria-label="Post Property Free"
-                    >
-                      <Plus className="h-5 w-5" strokeWidth={3} />
-                    </a>
-                    {showTooltip && (
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap shadow-lg z-50">
-                        Post Property Free
-                        <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
-                      </div>
-                    )}
-                  </div>
+                  <button
+                    onClick={() => openWhatsApp('Hi, I want to know more about properties in Vizag')}
+                    className="md:hidden w-11 h-11 bg-green-600 text-white rounded-full hover:bg-green-700 transition-all shadow-md flex items-center justify-center"
+                    aria-label="Chat on WhatsApp"
+                  >
+                    <MessageCircle className="h-6 w-6" />
+                  </button>
                   {isAdmin && (
                     <a href="/admin/dashboard" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors">
                       <Shield className="h-5 w-5" />
@@ -158,25 +145,13 @@ export function Header() {
                   >
                     Post Property — Free
                   </button>
-                  <div className="relative sm:hidden">
-                    <button
-                      onClick={handlePostPropertyClick}
-                      className="w-10 h-10 bg-gradient-to-r from-[#f6b300] to-[#f39c12] text-[#0d1b3d] rounded-full hover:shadow-lg transition-all shadow-sm flex items-center justify-center"
-                      onMouseEnter={() => setShowTooltip(true)}
-                      onMouseLeave={() => setShowTooltip(false)}
-                      onTouchStart={() => setShowTooltip(true)}
-                      onTouchEnd={() => setTimeout(() => setShowTooltip(false), 2000)}
-                      aria-label="Post Property Free"
-                    >
-                      <Plus className="h-5 w-5" strokeWidth={3} />
-                    </button>
-                    {showTooltip && (
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap shadow-lg z-50">
-                        Post Property Free
-                        <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
-                      </div>
-                    )}
-                  </div>
+                  <button
+                    onClick={() => openWhatsApp('Hi, I want to know more about properties in Vizag')}
+                    className="md:hidden w-11 h-11 bg-green-600 text-white rounded-full hover:bg-green-700 transition-all shadow-md flex items-center justify-center"
+                    aria-label="Chat on WhatsApp"
+                  >
+                    <MessageCircle className="h-6 w-6" />
+                  </button>
                   <button
                     onClick={() => setShowMenu(!showMenu)}
                     className="md:hidden text-white p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
@@ -190,7 +165,7 @@ export function Header() {
           </div>
         </div>
 
-        <div className="bg-primary-700 border-t border-primary-500">
+        <div className="hidden md:block bg-primary-700 border-t border-primary-500">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center space-x-6 py-3 overflow-x-auto scrollbar-hide">
               <a
