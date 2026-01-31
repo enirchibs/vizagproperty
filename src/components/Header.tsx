@@ -50,13 +50,16 @@ export function Header() {
     <>
       <header className="bg-primary-600 sticky top-0 z-40 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 md:h-18">
+          <div className="flex justify-between items-center h-14 md:h-18">
             <a href="/" className="flex items-center py-2 flex-shrink-0">
               <img
                 src="/assets/logo/vizag-property-logo.png"
                 alt="Vizag Property Experts logo"
-                className="h-8 md:h-10 w-auto"
+                className="hidden md:block h-8 md:h-10 w-auto"
               />
+              <span className="md:hidden text-base font-semibold text-white">
+                VizagProperty
+              </span>
             </a>
 
             <nav className="hidden md:flex items-center space-x-3 md:space-x-4 lg:space-x-6 overflow-x-auto scrollbar-hide flex-1 mx-2 md:mx-4">
@@ -101,10 +104,10 @@ export function Header() {
                   </a>
                   <button
                     onClick={() => openWhatsApp('Hi, I want to know more about properties in Vizag')}
-                    className="md:hidden w-11 h-11 bg-green-600 text-white rounded-full hover:bg-green-700 transition-all shadow-md flex items-center justify-center"
+                    className="md:hidden w-10 h-10 bg-green-500 text-white rounded-full hover:bg-green-600 transition-all shadow flex items-center justify-center"
                     aria-label="Chat on WhatsApp"
                   >
-                    <MessageCircle className="h-6 w-6" />
+                    <MessageCircle className="h-5 w-5" />
                   </button>
                   {isAdmin && (
                     <a href="/admin/dashboard" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors">
@@ -147,10 +150,10 @@ export function Header() {
                   </button>
                   <button
                     onClick={() => openWhatsApp('Hi, I want to know more about properties in Vizag')}
-                    className="md:hidden w-11 h-11 bg-green-600 text-white rounded-full hover:bg-green-700 transition-all shadow-md flex items-center justify-center"
+                    className="md:hidden w-10 h-10 bg-green-500 text-white rounded-full hover:bg-green-600 transition-all shadow flex items-center justify-center"
                     aria-label="Chat on WhatsApp"
                   >
-                    <MessageCircle className="h-6 w-6" />
+                    <MessageCircle className="h-5 w-5" />
                   </button>
                   <button
                     onClick={() => setShowMenu(!showMenu)}

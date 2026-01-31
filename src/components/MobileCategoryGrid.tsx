@@ -43,30 +43,34 @@ const categories: Category[] = [
 export function MobileCategoryGrid() {
   return (
     <div className="px-4 py-6">
-      <h2 className="text-xl font-bold text-gray-900 mb-4">Property Categories</h2>
+      <h2 className="text-lg font-bold text-gray-900 mb-4 md:hidden">Property Categories</h2>
 
       <div className="grid grid-cols-2 gap-3 md:hidden">
-        {categories.map((category) => (
+        {categories.slice(0, 4).map((category) => (
           <a
             key={category.href}
             href={category.href}
-            className="bg-white border-2 border-gray-200 rounded-2xl p-4 hover:border-primary-500 hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center text-center gap-3"
+            className="bg-white border border-gray-300 rounded-xl p-4 hover:border-primary-500 hover:shadow-md transition-all active:scale-[0.98] text-center"
           >
-            <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center text-primary-600">
+            <div className="w-10 h-10 bg-primary-100 rounded-lg mx-auto mb-2 flex items-center justify-center text-primary-600">
               {category.icon}
             </div>
-            <div>
-              <h3 className="font-semibold text-sm text-gray-900 leading-tight">
-                {category.title}
-              </h3>
-              {category.description && (
-                <p className="text-xs text-gray-500 mt-1">
-                  {category.description}
-                </p>
-              )}
-            </div>
+            <h3 className="font-medium text-sm text-gray-900 leading-tight">
+              {category.title}
+            </h3>
           </a>
         ))}
+        <a
+          href={categories[4].href}
+          className="col-span-2 bg-white border border-gray-300 rounded-xl p-4 hover:border-primary-500 hover:shadow-md transition-all active:scale-[0.98] text-center"
+        >
+          <div className="w-10 h-10 bg-primary-100 rounded-lg mx-auto mb-2 flex items-center justify-center text-primary-600">
+            {categories[4].icon}
+          </div>
+          <h3 className="font-medium text-sm text-gray-900 leading-tight">
+            {categories[4].title}
+          </h3>
+        </a>
       </div>
 
       <div className="hidden md:flex flex-wrap gap-4 mt-6">

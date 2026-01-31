@@ -1,4 +1,4 @@
-import { Heart, MapPin, Bed, Maximize, MessageCircle, CheckCircle } from 'lucide-react'
+import { Heart, CheckCircle } from 'lucide-react'
 import { Property } from '../types'
 import { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
@@ -63,34 +63,33 @@ export function PropertyCard({ property, onFavoriteChange }: PropertyCardProps) 
   return (
     <a
       href={`/property/${property.id}`}
-      className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-primary-300 hover:-translate-y-1"
+      className="block bg-white rounded-2xl shadow hover:shadow-lg transition-shadow p-3"
     >
-      <div className="relative h-48 md:h-56 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+      <div className="relative">
         <img
           src={mainImage}
           alt={`${property.listing_type === 'rent' ? 'Flats for rent' : 'Property for sale'} in ${property.location} - ${property.title}`}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          className="rounded-xl h-40 md:h-48 w-full object-cover"
         />
         {user && (
           <button
             onClick={handleFavoriteToggle}
             disabled={loading}
-            className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm p-2.5 md:p-2 rounded-full shadow-lg hover:scale-110 transition-transform z-20 min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 flex items-center justify-center"
+            className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm p-2 rounded-full shadow hover:scale-110 transition-transform z-20 min-h-[40px] min-w-[40px] flex items-center justify-center"
           >
             <Heart
-              className={`h-5 w-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'}`}
+              className={`h-4 w-4 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'}`}
             />
           </button>
         )}
-        <div className="absolute top-3 left-3 flex flex-wrap gap-2 z-20">
+        <div className="absolute top-2 left-2 flex flex-wrap gap-1.5 z-20">
           {property.featured && (
-            <span className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-3 py-1.5 rounded-full text-xs md:text-xs font-semibold shadow-lg">
+            <span className="bg-yellow-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold shadow">
               Featured
             </span>
           )}
           {property.verified && (
-            <span className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1.5 rounded-full text-xs md:text-xs font-semibold shadow-lg flex items-center gap-1">
+            <span className="bg-green-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold shadow flex items-center gap-1">
               <CheckCircle className="h-3 w-3" />
               Verified
             </span>
@@ -98,44 +97,30 @@ export function PropertyCard({ property, onFavoriteChange }: PropertyCardProps) 
         </div>
       </div>
 
-      <div className="p-4 md:p-5">
-        <div className="flex items-start justify-between mb-2 gap-2">
-          <h3 className="text-base md:text-lg font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition-colors">
-            {property.title}
-          </h3>
-          <span className="hidden md:inline-flex text-xs px-2.5 py-1 bg-gradient-to-r from-primary-50 to-primary-100 text-primary-700 rounded-full capitalize font-semibold border border-primary-200 whitespace-nowrap">
-            {property.listing_type}
-          </span>
-        </div>
+      <div className="mt-3">
+        <p className="text-lg font-bold text-gray-900">
+          {formatPrice(property.price)}
+        </p>
+        <p className="text-sm text-gray-600 mt-0.5">{property.location}</p>
 
-        <div className="flex items-center text-gray-600 text-sm mb-3">
-          <MapPin className="h-4 w-4 mr-1.5 text-primary-500 flex-shrink-0" />
-          <span className="line-clamp-1 font-medium">{property.location}</span>
-        </div>
+        <p className="text-xs text-gray-500 mt-1">
+          {property.bedrooms && property.bedrooms > 0 ? `${property.bedrooms} BHK • ` : ''}{property.area_sqft} sqft
+        </p>
 
-        <div className="flex items-center gap-4 md:gap-4 text-gray-700 text-sm mb-4 pb-3 border-b border-gray-100">
-          {property.bedrooms && property.bedrooms > 0 && (
-            <div className="flex items-center gap-1">
-              <Bed className="h-4 w-4 text-primary-500" />
-              <span className="font-semibold">{property.bedrooms} BHK</span>
-            </div>
-          )}
-          <div className="flex items-center gap-1">
-            <Maximize className="h-4 w-4 text-primary-500" />
-            <span className="font-semibold">{property.area_sqft} sqft</span>
-          </div>
-        </div>
+        <div className="flex gap-2 mt-3">
+          <a
+            href="tel:7207550499"
+            onClick={(e) => e.stopPropagation()}
+            className="flex-1 border border-gray-300 rounded-lg py-2 text-center text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            Call
+          </a>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="text-2xl md:text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
-            {formatPrice(property.price)}
-          </div>
           <button
             onClick={handleWhatsAppInquiry}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 transition-all text-base font-semibold shadow-md hover:shadow-lg min-h-[44px] active:scale-95"
+            className="flex-1 bg-green-500 text-white rounded-lg py-2 text-center text-sm font-medium hover:bg-green-600 transition-colors"
           >
-            <MessageCircle className="h-5 w-5" />
-            <span>WhatsApp</span>
+            WhatsApp
           </button>
         </div>
       </div>
