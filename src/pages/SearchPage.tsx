@@ -1,35 +1,100 @@
-import { useState, useEffect, useRef } from 'react'
-import { Search, SlidersHorizontal, MapPin, ChevronLeft, Mic, MessageCircle, Plus } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Search, SlidersHorizontal, ChevronLeft, Mic, MicOff, MessageCircle, Plus, MapPin, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { PropertyCard } from '../components/PropertyCard'
 import { usePropertySearch } from '../hooks/usePropertySearch'
+import { useVoiceSearch } from '../hooks/useVoiceSearch'
+import { openWhatsApp } from '../lib/whatsapp'
+import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { VIZAG_PROPERTY_PHONE_WITH_CODE } from '../config/contact'
+
+type PropertyCategory = 'full_house' | 'land_plot' | 'pg_hostel' | 'flatmates'
 
 export function SearchPage() {
   const navigate = useNavigate()
-  const searchInputRef = useRef<HTMLInputElement>(null)
   const [activeTab, setActiveTab] = useState<'buy' | 'rent' | 'commercial'>('buy')
   const [showFilters, setShowFilters] = useState(false)
-  const [searchInput, setSearchInput] = useState('')
+  const [locality, setLocality] = useState('')
+  const [localityId, setLocalityId] = useState<string | undefined>()
+  const [propertyCategory, setPropertyCategory] = useState<PropertyCategory>('full_house')
   const [bhkFilter, setBhkFilter] = useState<string>('')
+  const [propertyStatus, setPropertyStatus] = useState<string>('')
+  const [newBuilderProjects, setNewBuilderProjects] = useState(false)
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000000])
   const [hasSearched, setHasSearched] = useState(false)
 
   const { properties, loading, error, search } = usePropertySearch()
+  const {
+    isListening,
+    transcript,
+    localityMatch,
+    noMatchMessage,
+    startListening,
+    stopListening,
+    resetTranscript,
+    isSupported
+  } = useVoiceSearch()
 
   useEffect(() => {
-    searchInputRef.current?.focus()
-  }, [])
+    if (transcript) {
+      setLocality(transcript)
+    }
+  }, [transcript])
+
+  useEffect(() => {
+    if (localityMatch) {
+      setLocality(localityMatch.locality_name)
+      setLocalityId(undefined)
+    }
+  }, [localityMatch])
+
+  const handleVoiceToggle = () => {
+    if (isListening) {
+      stopListening()
+    } else {
+      resetTranscript()
+      startListening()
+    }
+  }
+
+  const handleTabChange = (tab: 'buy' | 'rent' | 'commercial') => {
+    setActiveTab(tab)
+    if (tab === 'buy') {
+      setPropertyCategory('full_house')
+    } else if (tab === 'rent') {
+      setPropertyCategory('full_house')
+    }
+  }
+
+  const getPropertyTypeForSearch = (): 'flat' | 'plot' | 'villa' | 'pg' | 'commercial' | undefined => {
+    if (activeTab === 'commercial') return 'commercial'
+
+    if (propertyCategory === 'land_plot') return 'plot'
+    if (propertyCategory === 'pg_hostel') return 'pg'
+
+    return 'flat'
+  }
 
   const handleSearch = () => {
+    if (locality.trim().length < 3) {
+      return
+    }
+
     setHasSearched(true)
+
     search({
       listingType: activeTab === 'rent' ? 'rent' : 'sale',
-      localityName: searchInput || undefined,
+      propertyType: getPropertyTypeForSearch(),
+      localityId: localityId,
+      localityName: !localityId ? locality : undefined,
       bedrooms: bhkFilter ? parseInt(bhkFilter) : undefined,
-      minPrice: priceRange[0],
-      maxPrice: priceRange[1],
+      minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
+      maxPrice: priceRange[1] < 10000000 ? priceRange[1] : undefined,
     })
+  }
+
+  const handleWhatsAppClick = () => {
+    openWhatsApp('Hi Vizag Property Experts, I am looking for a property in Vizag. Please assist.')
   }
 
   return (
@@ -50,7 +115,7 @@ export function SearchPage() {
             {(['buy', 'rent', 'commercial'] as const).map((tab) => (
               <button
                 key={tab}
-                onClick={() => setActiveTab(tab)}
+                onClick={() => handleTabChange(tab)}
                 data-active={activeTab === tab}
                 className="flex-1 py-2 text-sm font-medium rounded-lg transition-all data-[active=true]:bg-white data-[active=true]:shadow capitalize"
               >
@@ -59,25 +124,80 @@ export function SearchPage() {
             ))}
           </div>
 
-          <div className="flex items-center gap-2 border-2 border-red-500 rounded-xl px-3 py-3 bg-white mb-3">
-            <MapPin className="w-5 h-5 text-gray-400 flex-shrink-0" />
-            <input
-              ref={searchInputRef}
-              type="text"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          <div className="mb-3 relative">
+            <LocationAutocomplete
+              value={locality}
+              onChange={(value, localityId) => {
+                setLocality(value)
+                setLocalityId(localityId)
+              }}
               placeholder="Type 3+ characters to search Vizag localities"
-              className="flex-1 text-sm outline-none placeholder:text-gray-400"
+              className="h-12 pr-20 border-2 border-red-500 text-sm font-medium"
             />
-            <Mic className="w-5 h-5 text-gray-400 flex-shrink-0" />
-            <MessageCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">
+              {isSupported && (
+                <button
+                  onClick={handleVoiceToggle}
+                  className={`p-2 rounded-lg transition-all ${
+                    isListening
+                      ? 'bg-red-600 text-white animate-pulse'
+                      : 'text-gray-600 hover:bg-gray-200'
+                  }`}
+                  aria-label={isListening ? "Stop voice search" : "Start voice search"}
+                >
+                  {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+                </button>
+              )}
+              <button
+                onClick={handleWhatsAppClick}
+                className="p-2 rounded-lg transition-all text-green-600 hover:bg-green-50"
+                aria-label="Contact on WhatsApp"
+              >
+                <MessageCircle className="h-5 w-5" />
+              </button>
+            </div>
+            {localityMatch && (
+              <div className="absolute top-full left-0 right-0 mt-2 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between z-20">
+                <div className="flex items-center space-x-2">
+                  <MapPin className="h-5 w-5 text-green-600 flex-shrink-0" />
+                  <div>
+                    <div className="text-sm font-medium text-green-900">
+                      Found: {localityMatch.locality_name}
+                    </div>
+                    <div className="text-xs text-green-600">
+                      {localityMatch.confidence === 'exact' ? 'Exact match' : 'Similar match'}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => resetTranscript()}
+                  className="text-green-600 hover:text-green-800"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            )}
+            {noMatchMessage && (
+              <div className="absolute top-full left-0 right-0 mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center justify-between z-20">
+                <div className="flex items-center space-x-2">
+                  <MapPin className="h-5 w-5 text-yellow-600 flex-shrink-0" />
+                  <div className="text-sm font-medium text-yellow-900">{noMatchMessage}</div>
+                </div>
+                <button
+                  onClick={() => resetTranscript()}
+                  className="text-yellow-600 hover:text-yellow-800"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="flex gap-2">
             <button
               onClick={handleSearch}
-              className="flex-1 bg-orange-500 text-white py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform hover:bg-orange-600"
+              disabled={locality.trim().length < 3}
+              className="flex-1 bg-orange-500 text-white py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Search className="w-4 h-4" />
               Search
@@ -98,7 +218,10 @@ export function SearchPage() {
             <h3 className="font-bold text-gray-900">Filters</h3>
             <button
               onClick={() => {
+                setPropertyCategory('full_house')
                 setBhkFilter('')
+                setPropertyStatus('')
+                setNewBuilderProjects(false)
                 setPriceRange([0, 10000000])
               }}
               className="text-sm text-red-500 font-medium"
@@ -108,48 +231,131 @@ export function SearchPage() {
           </div>
 
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Property Type
-              </label>
-              <div className="flex gap-4 text-sm">
-                <label className="flex items-center gap-2">
-                  <input type="radio" name="propertyType" className="accent-blue-600" defaultChecked />
-                  Full House
+            {activeTab === 'buy' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Property Category
                 </label>
-                <label className="flex items-center gap-2">
-                  <input type="radio" name="propertyType" className="accent-blue-600" />
-                  Land / Plot
-                </label>
+                <div className="flex gap-4 text-sm">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="propertyCategory"
+                      value="full_house"
+                      checked={propertyCategory === 'full_house'}
+                      onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
+                      className="accent-blue-600"
+                    />
+                    Full House
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="propertyCategory"
+                      value="land_plot"
+                      checked={propertyCategory === 'land_plot'}
+                      onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
+                      className="accent-blue-600"
+                    />
+                    Land / Plot
+                  </label>
+                </div>
               </div>
-            </div>
+            )}
 
-            <div>
-              <select className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                <option>BHK Type</option>
-                <option>1 BHK</option>
-                <option>2 BHK</option>
-                <option>3 BHK</option>
-                <option>4 BHK</option>
-                <option>5+ BHK</option>
-              </select>
-            </div>
+            {activeTab === 'rent' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Property Category
+                </label>
+                <div className="flex flex-wrap gap-4 text-sm">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="propertyCategory"
+                      value="full_house"
+                      checked={propertyCategory === 'full_house'}
+                      onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
+                      className="accent-blue-600"
+                    />
+                    Full House
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="propertyCategory"
+                      value="pg_hostel"
+                      checked={propertyCategory === 'pg_hostel'}
+                      onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
+                      className="accent-blue-600"
+                    />
+                    PG/Hostel
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="propertyCategory"
+                      value="flatmates"
+                      checked={propertyCategory === 'flatmates'}
+                      onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
+                      className="accent-blue-600"
+                    />
+                    Flatmates
+                  </label>
+                </div>
+              </div>
+            )}
 
-            <div>
-              <select className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                <option>Property Status</option>
-                <option>Ready to Move</option>
-                <option>Under Construction</option>
-                <option>New Launch</option>
-              </select>
-            </div>
+            {propertyCategory === 'full_house' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  BHK Type
+                </label>
+                <select
+                  value={bhkFilter}
+                  onChange={(e) => setBhkFilter(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                >
+                  <option value="">All BHK Types</option>
+                  <option value="1">1 BHK</option>
+                  <option value="2">2 BHK</option>
+                  <option value="3">3 BHK</option>
+                  <option value="4">4 BHK</option>
+                  <option value="5">5+ BHK</option>
+                </select>
+              </div>
+            )}
 
-            <div>
-              <label className="flex items-center gap-2 text-sm">
-                <input type="checkbox" className="accent-blue-600" />
-                New Builder Projects
-              </label>
-            </div>
+            {activeTab === 'buy' && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Property Status
+                  </label>
+                  <select
+                    value={propertyStatus}
+                    onChange={(e) => setPropertyStatus(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                  >
+                    <option value="">All Status</option>
+                    <option value="ready_to_move">Ready to Move</option>
+                    <option value="under_construction">Under Construction</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={newBuilderProjects}
+                      onChange={(e) => setNewBuilderProjects(e.target.checked)}
+                      className="accent-blue-600"
+                    />
+                    New Builder Projects
+                  </label>
+                </div>
+              </>
+            )}
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -159,14 +365,14 @@ export function SearchPage() {
                 <input
                   type="number"
                   placeholder="Min Price"
-                  value={priceRange[0]}
+                  value={priceRange[0] || ''}
                   onChange={(e) => setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])}
                   className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
                 />
                 <input
                   type="number"
                   placeholder="Max Price"
-                  value={priceRange[1]}
+                  value={priceRange[1] >= 10000000 ? '' : priceRange[1]}
                   onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 10000000])}
                   className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
                 />
@@ -174,7 +380,10 @@ export function SearchPage() {
             </div>
 
             <button
-              onClick={() => setShowFilters(false)}
+              onClick={() => {
+                setShowFilters(false)
+                handleSearch()
+              }}
               className="w-full bg-orange-500 text-white py-2.5 rounded-lg font-semibold text-sm hover:bg-orange-600 transition-colors"
             >
               Apply Filters
@@ -235,12 +444,12 @@ export function SearchPage() {
             <h3 className="text-sm font-semibold text-gray-700 mb-3">Browse by Category</h3>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { name: 'VMRDA Approved Plots', path: '/vmrda-approved-plots' },
-                { name: 'Flats for Sale', path: '/flats-for-sale' },
-                { name: 'Villas', path: '/villas' },
-                { name: 'PG & Hostels', path: '/pg-hostels' },
-                { name: 'Gated Community', path: '/gated-community-plots' },
-                { name: 'Flats for Rent', path: '/flats-for-rent' },
+                { name: 'VMRDA Approved Plots', path: '/vmrda-approved-plots-vizag' },
+                { name: 'Flats for Sale', path: '/flats-for-sale-in-vizag' },
+                { name: 'Villas', path: '/villas-for-sale-vizag' },
+                { name: 'PG & Hostels', path: '/pg-hostels-in-vizag' },
+                { name: 'Gated Community', path: '/gated-community-plots-vizag' },
+                { name: 'Flats for Rent', path: '/flats-for-rent-vizag' },
               ].map((item) => (
                 <button
                   key={item.name}
