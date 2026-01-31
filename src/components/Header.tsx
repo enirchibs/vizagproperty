@@ -49,15 +49,25 @@ export function Header() {
   return (
     <>
       <header className="bg-primary-600 sticky top-0 z-40 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14 md:h-18">
-            <a href="/" className="flex items-center py-2 flex-shrink-0">
+            <a href="/" className="flex items-center gap-2 py-2 flex-shrink-0">
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  setShowMenu(!showMenu)
+                }}
+                className="md:hidden text-white text-xl p-0 min-h-0 min-w-0"
+                aria-label="Toggle menu"
+              >
+                {showMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
               <img
                 src="/assets/logo/vizag-property-logo.png"
                 alt="Vizag Property Experts logo"
                 className="hidden md:block h-8 md:h-10 w-auto"
               />
-              <span className="md:hidden text-base font-semibold text-white">
+              <span className="text-base md:text-lg font-bold text-white">
                 VizagProperty
               </span>
             </a>
@@ -93,7 +103,7 @@ export function Header() {
               )}
             </nav>
 
-            <div className="flex items-center space-x-2 md:space-x-3 flex-shrink-0">
+            <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
               {user ? (
                 <>
                   <a
@@ -102,13 +112,19 @@ export function Header() {
                   >
                     Post Property — Free
                   </a>
-                  <button
-                    onClick={() => openWhatsApp('Hi, I want to know more about properties in Vizag')}
-                    className="md:hidden w-10 h-10 bg-green-500 text-white rounded-full hover:bg-green-600 transition-all shadow flex items-center justify-center"
-                    aria-label="Chat on WhatsApp"
+                  <a
+                    href="https://wa.me/917207550499"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="md:hidden relative"
                   >
-                    <MessageCircle className="h-5 w-5" />
-                  </button>
+                    <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-all shadow">
+                      <MessageCircle className="h-5 w-5 text-white" />
+                    </div>
+                    <span className="absolute -top-2 -right-2 text-yellow-300 text-xs animate-bounce">
+                      &#x1F446;
+                    </span>
+                  </a>
                   {isAdmin && (
                     <a href="/admin/dashboard" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors">
                       <Shield className="h-5 w-5" />
@@ -132,13 +148,6 @@ export function Header() {
                     <LogOut className="h-4 w-4" />
                     <span>Sign Out</span>
                   </button>
-                  <button
-                    onClick={() => setShowMenu(!showMenu)}
-                    className="md:hidden text-white p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
-                    aria-label={showMenu ? "Close menu" : "Open menu"}
-                  >
-                    {showMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-                  </button>
                 </>
               ) : (
                 <>
@@ -149,19 +158,24 @@ export function Header() {
                     Post Property — Free
                   </button>
                   <button
-                    onClick={() => openWhatsApp('Hi, I want to know more about properties in Vizag')}
-                    className="md:hidden w-10 h-10 bg-green-500 text-white rounded-full hover:bg-green-600 transition-all shadow flex items-center justify-center"
-                    aria-label="Chat on WhatsApp"
+                    onClick={() => setShowAuthModal(true)}
+                    className="md:hidden bg-green-500 text-white text-xs font-semibold px-3 py-2 rounded-md whitespace-nowrap hover:bg-green-600 transition-colors"
                   >
-                    <MessageCircle className="h-5 w-5" />
+                    Login / Sign up
                   </button>
-                  <button
-                    onClick={() => setShowMenu(!showMenu)}
-                    className="md:hidden text-white p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
-                    aria-label={showMenu ? "Close menu" : "Open menu"}
+                  <a
+                    href="https://wa.me/917207550499"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="md:hidden relative"
                   >
-                    {showMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-                  </button>
+                    <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-all shadow">
+                      <MessageCircle className="h-5 w-5 text-white" />
+                    </div>
+                    <span className="absolute -top-2 -right-2 text-yellow-300 text-xs animate-bounce">
+                      &#x1F446;
+                    </span>
+                  </a>
                 </>
               )}
             </div>
