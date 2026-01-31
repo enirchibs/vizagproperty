@@ -1,4 +1,5 @@
 import { MessageCircle } from 'lucide-react'
+import { openWhatsApp } from '../utils/whatsapp'
 
 interface NoResultsWhatsAppProps {
   searchQuery: string
@@ -6,10 +7,7 @@ interface NoResultsWhatsAppProps {
 
 export function NoResultsWhatsApp({ searchQuery }: NoResultsWhatsAppProps) {
   const handleWhatsAppClick = () => {
-    const message = encodeURIComponent(
-      `Hi Vizag Property Experts, I could not find results for ${searchQuery}. Please assist.`
-    )
-    window.open(`https://wa.me/917207550499?text=${message}`, '_blank')
+    openWhatsApp(`Hi, I could not find results for ${searchQuery} listed on VizagProperty. Please assist.`)
   }
 
   return (

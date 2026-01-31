@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase'
 import { Home, Upload, X, Camera, MessageCircle } from 'lucide-react'
 import { VizagLocality, PropertyCategory, ResidentialPropertyType, CommercialPropertyType, PropertyType, ListingType } from '../types'
 import { AuthModal } from '../components/AuthModal'
+import { openWhatsApp } from '../utils/whatsapp'
 
 interface PropertyDetails {
   [key: string]: string
@@ -489,15 +490,13 @@ export function AddPropertyPage() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Prefer WhatsApp? List via WhatsApp!</h3>
                 <p className="text-sm text-gray-600">Share property details directly on WhatsApp and our team will list it for you within 24 hours.</p>
               </div>
-              <a
-                href="https://wa.me/917207550499?text=Hi%20Vizag%20Property%20Experts%2C%20I%20want%20to%20post%20my%20property%20in%20Vizag."
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => openWhatsApp('Hi, I want to post my property in Vizag listed on VizagProperty. Please share more details.')}
                 className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-full hover:bg-green-700 transition-all font-semibold shadow-lg whitespace-nowrap"
               >
                 <MessageCircle className="h-5 w-5" />
                 <span>Post Property via WhatsApp</span>
-              </a>
+              </button>
             </div>
           </div>
 

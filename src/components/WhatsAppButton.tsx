@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { MessageCircle, X, Home, Building2, Key, Phone, Sparkles } from 'lucide-react'
-import { openWhatsApp } from '../lib/whatsapp'
+import { openWhatsApp } from '../utils/whatsapp'
 
 interface WhatsAppButtonProps {
   autoOpen?: boolean
@@ -37,7 +37,7 @@ export function WhatsAppButton({ autoOpen = false, message, showVillaOption = fa
   }
 
   const handleWhatsAppClick = (message?: string) => {
-    openWhatsApp(message)
+    openWhatsApp(message || 'Hi, I am looking for property in Vizag listed on VizagProperty. Please share more details.')
     setShowPopup(false)
   }
 

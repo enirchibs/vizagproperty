@@ -1,10 +1,15 @@
 import { MessageCircle, X } from 'lucide-react'
 import { useState } from 'react'
+import { openWhatsApp } from '../utils/whatsapp'
 
 export function FixedWhatsAppCTA() {
   const [isVisible, setIsVisible] = useState(true)
 
   if (!isVisible) return null
+
+  const handleWhatsAppClick = () => {
+    openWhatsApp('Hi, I am looking for properties in Vizag listed on VizagProperty. Please share more details.')
+  }
 
   return (
     <div className="fixed bottom-24 right-4 z-40 max-w-sm">
@@ -27,15 +32,13 @@ export function FixedWhatsAppCTA() {
             <p className="text-xs text-gray-600 mb-3">
               Chat on WhatsApp
             </p>
-            <a
-              href="https://wa.me/917207550499?text=Hi%20I%20am%20looking%20for%20properties%20in%20Vizag"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={handleWhatsAppClick}
               className="inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-all text-sm font-semibold shadow-md"
             >
               <MessageCircle className="h-4 w-4" />
               Chat Now
-            </a>
+            </button>
           </div>
         </div>
       </div>

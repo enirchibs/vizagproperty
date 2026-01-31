@@ -1,4 +1,5 @@
 import { MapPin, Home, MessageCircle } from 'lucide-react'
+import { openWhatsApp } from '../utils/whatsapp'
 
 export function Footer() {
   const localities = [
@@ -89,15 +90,13 @@ export function Footer() {
 
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col items-center gap-4 mb-6">
-            <a
-              href="https://wa.me/917207550499?text=Hi%20Vizag%20Property%20Experts%2C%20I%20want%20to%20list%20my%20property%20in%20Vizag.%20Please%20guide%20me."
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => openWhatsApp('Hi, I want to list my property in Vizag listed on VizagProperty. Please share more details.')}
               className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-full hover:bg-green-700 transition-all font-semibold shadow-lg"
             >
               <MessageCircle className="h-5 w-5" />
               <span>Post Property via WhatsApp</span>
-            </a>
+            </button>
             <p className="text-xs text-gray-400">List your property for free and reach genuine buyers</p>
           </div>
           <p className="text-center text-sm text-gray-400">

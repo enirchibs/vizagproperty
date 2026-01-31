@@ -1,4 +1,5 @@
 import { MessageCircle, X } from 'lucide-react'
+import { openWhatsApp } from '../utils/whatsapp'
 
 interface WhatsAppZeroResultsModalProps {
   isOpen: boolean
@@ -7,6 +8,11 @@ interface WhatsAppZeroResultsModalProps {
 
 export function WhatsAppZeroResultsModal({ isOpen, onClose }: WhatsAppZeroResultsModalProps) {
   if (!isOpen) return null
+
+  const handleWhatsAppClick = () => {
+    openWhatsApp('Hi, I searched but did not find results for properties in Vizag listed on VizagProperty. Please share more details.')
+    onClose()
+  }
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
@@ -32,16 +38,13 @@ export function WhatsAppZeroResultsModal({ isOpen, onClose }: WhatsAppZeroResult
             Get live listings on WhatsApp
           </p>
 
-          <a
-            href="https://wa.me/917207550499?text=Hi%20I%20searched%20but%20did%20not%20find%20results%20for%20Vizag"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={handleWhatsAppClick}
             className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-all font-semibold shadow-lg w-full justify-center"
-            onClick={onClose}
           >
             <MessageCircle className="h-5 w-5" />
             Get Properties on WhatsApp
-          </a>
+          </button>
 
           <button
             onClick={onClose}

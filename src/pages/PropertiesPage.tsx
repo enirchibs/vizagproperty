@@ -7,6 +7,7 @@ import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { useRadiusSearch } from '../hooks/useRadiusSearch'
 import MapRadiusToggle from '../components/MapRadiusToggle'
+import { openWhatsApp } from '../utils/whatsapp'
 
 export function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([])
@@ -181,8 +182,7 @@ export function PropertiesPage() {
                 )}
                 <button
                   onClick={() => {
-                    const message = encodeURIComponent('Hi Vizag Property Experts, I am looking for a property in Vizag. Please assist.')
-                    window.open(`https://wa.me/917207550499?text=${message}`, '_blank')
+                    openWhatsApp('Hi, I am looking for a property in Vizag listed on VizagProperty. Please share more details.')
                   }}
                   className="p-2 rounded-lg transition-all text-green-600 hover:bg-green-50 min-h-[36px] min-w-[36px] flex items-center justify-center"
                   aria-label="Contact on WhatsApp"
@@ -411,8 +411,7 @@ export function PropertiesPage() {
                 if (filters.bedrooms) filterText.push(`(${filters.bedrooms} BHK)`)
                 if (filters.locality_id) filterText.push(`in ${filters.locality_id}`)
                 const searchText = filterText.length > 0 ? filterText.join(' ') : searchQuery || 'properties'
-                const message = encodeURIComponent(`Hi Vizag Property Experts, I could not find results for ${searchText}. Please assist.`)
-                window.open(`https://wa.me/917207550499?text=${message}`, '_blank')
+                openWhatsApp(`Hi, I could not find results for ${searchText} listed on VizagProperty. Please assist.`)
               }}
               className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-all"
             >

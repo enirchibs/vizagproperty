@@ -1,9 +1,9 @@
 import { MessageCircle } from 'lucide-react'
+import { openWhatsApp } from '../utils/whatsapp'
 
 export function FloatingWhatsAppButton() {
   const handleClick = () => {
-    const message = encodeURIComponent('Hi Vizag Property Experts, I am looking for property in Vizag')
-    window.open(`https://wa.me/917207550499?text=${message}`, '_blank')
+    openWhatsApp('Hi, I am looking for property in Vizag listed on VizagProperty. Please share more details.')
   }
 
   return (

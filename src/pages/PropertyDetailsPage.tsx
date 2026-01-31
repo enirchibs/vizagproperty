@@ -4,7 +4,7 @@ import { MapPin, Bed, Bath, Maximize, Heart, Share2, Phone, MessageCircle, Check
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { useAuth } from '../contexts/AuthContext'
-import { openWhatsApp } from '../lib/whatsapp'
+import { openWhatsApp } from '../utils/whatsapp'
 import { GoodDealAnalysis } from '../components/GoodDealAnalysis'
 import { BudgetStretchAdvisor } from '../components/BudgetStretchAdvisor'
 import { NegotiationCoach } from '../components/NegotiationCoach'
@@ -163,11 +163,9 @@ export function PropertyDetailsPage() {
 
   const handleWhatsApp = () => {
     if (!property) return
-    const phone = property.agent_whatsapp || property.agent_phone
-    const message = encodeURIComponent(
+    openWhatsApp(
       `Hi, I'm interested in ${property.title} listed on VizagProperty. Can you provide more details?`
     )
-    window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${message}`, '_blank')
   }
 
   const handleCall = () => {

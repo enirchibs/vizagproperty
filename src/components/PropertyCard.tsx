@@ -3,6 +3,7 @@ import { Property } from '../types'
 import { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
+import { openWhatsApp } from '../utils/whatsapp'
 
 interface PropertyCardProps {
   property: Property
@@ -52,10 +53,9 @@ export function PropertyCard({ property, onFavoriteChange }: PropertyCardProps) 
 
   const handleWhatsAppInquiry = (e: React.MouseEvent) => {
     e.preventDefault()
-    const message = encodeURIComponent(
-      `Hi Vizag Property Experts, I am interested in this property in ${property.location}, Vizag.`
+    openWhatsApp(
+      `Hi, I'm interested in this ${property.property_type} in ${property.location}, Vizag listed on VizagProperty. Please share more details.`
     )
-    window.open(`https://wa.me/917207550499?text=${message}`, '_blank')
   }
 
   const mainImage = property.images[0] || 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=800'
