@@ -15,8 +15,14 @@ export function WhatsAppZeroResultsModal({ isOpen, onClose }: WhatsAppZeroResult
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative animate-slide-up">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 bg-black/50 flex items-end md:items-center justify-center z-50 md:px-4 animate-fadeIn"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-t-2xl md:rounded-2xl shadow-2xl max-w-md w-full p-6 relative animate-slideUpMobile md:animate-slide-up max-h-[95vh] overflow-y-auto"
+      >
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"

@@ -40,6 +40,7 @@ export function Header() {
     if (user) {
       window.location.href = '/add-property'
     } else {
+      localStorage.setItem('auth_redirect', 'post-property')
       setAuthModalProps({ intentRole: 'owner', redirectTo: '/add-property' })
       setShowAuthModal(true)
       setShowMenu(false)

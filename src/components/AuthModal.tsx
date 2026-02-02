@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Home } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -15,7 +15,8 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
   const [phoneNumber, setPhoneNumber] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [otp, setOtp] = useState('')
+  const [otpDigits, setOtpDigits] = useState<string[]>(['', '', '', '', '', ''])
+  const otpInputRefs = useRef<(HTMLInputElement | null)[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [otpSent, setOtpSent] = useState(false)
@@ -25,9 +26,22 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
   useEffect(() => {
     if (user) {
       onClose()
-      if (redirectTo) {
+
+      const authRedirect = localStorage.getItem('auth_redirect')
+      const googleRedirect = localStorage.getItem('google_auth_redirect')
+
+      localStorage.removeItem('auth_redirect')
+      localStorage.removeItem('google_auth_redirect')
+
+      const finalRedirect = authRedirect || googleRedirect || redirectTo
+
+      if (finalRedirect === 'post-property') {
         setTimeout(() => {
-          window.location.href = redirectTo
+          window.location.href = '/add-property'
+        }, 100)
+      } else if (finalRedirect) {
+        setTimeout(() => {
+          window.location.href = finalRedirect
         }, 100)
       }
     }
@@ -45,6 +59,14 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
       return () => clearInterval(interval)
     }
   }, [resendTimer])
+
+  useEffect(() => {
+    if (otpSent) {
+      setTimeout(() => {
+        otpInputRefs.current[0]?.focus()
+      }, 100)
+    }
+  }, [otpSent])
 
   const validatePhoneNumber = (phone: string) => {
     const cleaned = phone.replace(/\D/g, '')
@@ -80,11 +102,45 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
     }
   }
 
+  const handleOtpDigitChange = (index: number, value: string) => {
+    if (!/^\d*$/.test(value)) return
+
+    const newOtpDigits = [...otpDigits]
+    newOtpDigits[index] = value.slice(-1)
+    setOtpDigits(newOtpDigits)
+
+    if (value && index < 5) {
+      otpInputRefs.current[index + 1]?.focus()
+    }
+  }
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace' && !otpDigits[index] && index > 0) {
+      otpInputRefs.current[index - 1]?.focus()
+    }
+  }
+
+  const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
+    const newOtpDigits = [...otpDigits]
+
+    for (let i = 0; i < pastedData.length; i++) {
+      newOtpDigits[i] = pastedData[i]
+    }
+
+    setOtpDigits(newOtpDigits)
+
+    const nextEmptyIndex = pastedData.length < 6 ? pastedData.length : 5
+    otpInputRefs.current[nextEmptyIndex]?.focus()
+  }
+
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
 
-    if (otp.length !== 6) {
+    const otpValue = otpDigits.join('')
+    if (otpValue.length !== 6) {
       setError('Please enter a valid 6-digit OTP')
       return
     }
@@ -93,7 +149,7 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
 
     try {
       const fullPhone = `${countryCode}${phoneNumber}`
-      await verifyOtp(fullPhone, otp, intentRole, redirectTo)
+      await verifyOtp(fullPhone, otpValue, intentRole, redirectTo)
       onClose()
     } catch (err: any) {
       setError(err.message || 'Invalid OTP. Please try again.')
@@ -104,7 +160,7 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
 
   const handleResendOtp = async () => {
     if (resendTimer > 0 || resendAttempts >= 3) return
-    setOtp('')
+    setOtpDigits(['', '', '', '', '', ''])
     await handleSendOtp(new Event('submit') as any)
   }
 
@@ -134,16 +190,8 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
           throw loginError
         }
       }
-
-      onClose()
-      if (redirectTo) {
-        setTimeout(() => {
-          window.location.href = redirectTo
-        }, 100)
-      }
     } catch (err: any) {
       setError(err.message || 'Authentication failed. Please try again.')
-    } finally {
       setLoading(false)
     }
   }
@@ -151,6 +199,13 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
   const handleGoogleAuth = async () => {
     setError('')
     setLoading(true)
+
+    const authRedirect = localStorage.getItem('auth_redirect')
+    if (authRedirect && !redirectTo) {
+      localStorage.setItem('google_auth_redirect', authRedirect)
+    } else if (redirectTo) {
+      localStorage.setItem('google_auth_redirect', redirectTo)
+    }
 
     try {
       await signInWithGoogle()
@@ -166,8 +221,14 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
   }
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-end md:items-center justify-center z-50">
-      <div className="bg-white w-full md:max-w-4xl md:mx-4 rounded-t-2xl md:rounded-2xl overflow-hidden shadow-2xl animate-slide-up max-h-[95vh] md:max-h-[90vh] overflow-y-auto relative md:flex">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 bg-black/40 flex items-end md:items-center justify-center z-50 animate-fadeIn"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white w-full md:max-w-4xl md:mx-4 rounded-t-2xl md:rounded-2xl overflow-hidden shadow-2xl animate-slideUpMobile md:animate-slide-up max-h-[95vh] md:max-h-[90vh] overflow-y-auto relative md:flex"
+      >
         <div className="hidden md:flex md:w-1/2 bg-gradient-to-b from-[#2F4DA0] to-[#1E3A8A] text-white p-8 flex-col justify-center">
           <div className="space-y-6">
             <h3 className="text-2xl font-bold">Login / Sign up</h3>
@@ -341,20 +402,17 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
           ) : (
             <>
               <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <Home className="h-5 w-5 text-primary-600" />
-                  <h2 className="text-lg font-semibold text-gray-900">Verify OTP</h2>
-                </div>
                 <button
                   onClick={onClose}
-                  className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
+                  className="text-gray-500 hover:text-gray-700 text-2xl leading-none ml-auto"
                 >
                   ✕
                 </button>
               </div>
 
-              <p className="text-sm text-gray-600 text-center mb-6">
-                Enter OTP sent to {countryCode} {maskPhoneNumber(phoneNumber)}
+              <h2 className="text-lg font-semibold mb-2">Verify Mobile</h2>
+              <p className="text-sm text-gray-500 mb-4">
+                Enter the 6-digit OTP sent to <b>{countryCode} {maskPhoneNumber(phoneNumber)}</b>
               </p>
 
               {error && (
@@ -364,50 +422,51 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
               )}
 
               <form onSubmit={handleVerifyOtp} className="space-y-4">
-                <div>
-                  <label className="block text-sm text-gray-600 mb-2">
-                    Enter OTP
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                    className="w-full h-14 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2F4DA0] focus:border-transparent text-center text-2xl tracking-[0.5em] font-bold"
-                    placeholder="000000"
-                    maxLength={6}
-                  />
+                <div className="flex justify-between gap-2 mb-4">
+                  {[...Array(6)].map((_, i) => (
+                    <input
+                      key={i}
+                      ref={(el) => (otpInputRefs.current[i] = el)}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      value={otpDigits[i]}
+                      onChange={(e) => handleOtpDigitChange(i, e.target.value)}
+                      onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                      onPaste={handleOtpPaste}
+                      className="w-11 h-12 text-center text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2F4DA0] focus:border-[#2F4DA0]"
+                    />
+                  ))}
                 </div>
 
                 <button
                   type="submit"
-                  disabled={loading || otp.length !== 6}
-                  className="w-full h-11 mt-4 bg-[#2F4DA0] text-white rounded-lg font-semibold hover:bg-[#253a7a] transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
+                  disabled={loading || otpDigits.join('').length !== 6}
+                  className="w-full h-11 bg-[#2F4DA0] text-white rounded-lg font-semibold hover:bg-[#253a7a] transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
                 >
-                  {loading ? 'Verifying...' : 'Verify OTP'}
+                  {loading ? 'Verifying...' : 'Verify & Continue'}
                 </button>
               </form>
 
-              <div className="mt-6 text-center">
+              <p className="text-sm text-center mt-3 text-gray-500">
+                Didn't receive OTP?
                 {resendTimer > 0 ? (
-                  <p className="text-gray-600 text-sm font-medium">
-                    Resend OTP in {resendTimer}s
-                  </p>
+                  <span className="text-gray-600 ml-1 font-medium">Resend in {resendTimer}s</span>
                 ) : (
                   <button
                     onClick={handleResendOtp}
                     disabled={resendAttempts >= 3}
-                    className="text-[#2F4DA0] hover:text-[#253a7a] text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="text-[#2F4DA0] ml-1 font-medium hover:text-[#253a7a] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Resend OTP
+                    Resend
                   </button>
                 )}
-              </div>
+              </p>
 
               <button
                 onClick={() => {
                   setOtpSent(false)
-                  setOtp('')
+                  setOtpDigits(['', '', '', '', '', ''])
                   setError('')
                 }}
                 className="mt-6 text-gray-600 hover:text-gray-800 text-sm font-semibold text-center w-full"

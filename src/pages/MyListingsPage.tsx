@@ -238,8 +238,14 @@ export function MyListingsPage() {
       </div>
 
       {deleteId && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+        <div
+          onClick={() => setDeleteId(null)}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end md:items-center justify-center z-50 md:p-4 animate-fadeIn"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-t-2xl md:rounded-2xl shadow-2xl max-w-md w-full p-6 animate-slideUpMobile md:animate-slide-up"
+          >
             <div className="flex items-center gap-3 mb-4">
               <div className="bg-red-100 rounded-full p-3">
                 <AlertCircle className="h-6 w-6 text-red-600" />
