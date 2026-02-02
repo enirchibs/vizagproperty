@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Heart, LogOut, Menu, X, Shield, MessageCircle, Building2 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
-import { AuthModal } from './AuthModal'
 import { UsernameModal } from './UsernameModal'
 import { trackEvent } from '../lib/analytics'
 import { openWhatsApp } from '../lib/whatsapp'
 
 export function Header() {
+  const navigate = useNavigate()
   const { user, profile, loading, isAdmin, signOut } = useAuth()
-  const [showAuthModal, setShowAuthModal] = useState(false)
   const [showUsernameModal, setShowUsernameModal] = useState(false)
-  const [authModalProps, setAuthModalProps] = useState<{ intentRole?: 'buyer' | 'owner'; redirectTo?: string }>({})
   const [showMenu, setShowMenu] = useState(false)
 
   useEffect(() => {
@@ -38,13 +37,16 @@ export function Header() {
       category: 'CTA',
     })
     if (user) {
-      window.location.href = '/add-property'
+      navigate('/add-property')
     } else {
-      localStorage.setItem('auth_redirect', 'post-property')
-      setAuthModalProps({ intentRole: 'owner', redirectTo: '/add-property' })
-      setShowAuthModal(true)
-      setShowMenu(false)
+      navigate('/login?redirect=/add-property')
     }
+    setShowMenu(false)
+  }
+
+  const handleLoginClick = () => {
+    navigate('/login')
+    setShowMenu(false)
   }
 
   return (
@@ -96,7 +98,7 @@ export function Header() {
               </button>
               {!user && (
                 <button
-                  onClick={() => setShowAuthModal(true)}
+                  onClick={handleLoginClick}
                   className="bg-gradient-to-r from-[#16a34a] to-[#22c55e] text-white px-4 md:px-6 py-2 md:py-2.5 rounded-full hover:shadow-lg transition-all font-semibold shadow-sm text-xs md:text-sm lg:text-base whitespace-nowrap"
                 >
                   Login / Sign up
@@ -159,7 +161,7 @@ export function Header() {
                     Post Property — Free
                   </button>
                   <button
-                    onClick={() => setShowAuthModal(true)}
+                    onClick={handleLoginClick}
                     className="md:hidden bg-green-500 text-white text-xs font-semibold px-3 py-2 rounded-md whitespace-nowrap hover:bg-green-600 transition-colors"
                   >
                     Login / Sign up
@@ -267,10 +269,7 @@ export function Header() {
 
               {!user && (
                 <button
-                  onClick={() => {
-                    setShowAuthModal(true)
-                    setShowMenu(false)
-                  }}
+                  onClick={handleLoginClick}
                   className="bg-gradient-to-r from-[#16a34a] to-[#22c55e] text-white px-4 py-2.5 rounded-full hover:shadow-lg transition-all font-semibold shadow-sm my-2"
                 >
                   Login / Sign up
@@ -313,17 +312,6 @@ export function Header() {
           </div>
         )}
       </header>
-
-      {showAuthModal && (
-        <AuthModal
-          onClose={() => {
-            setShowAuthModal(false)
-            setAuthModalProps({})
-          }}
-          intentRole={authModalProps.intentRole}
-          redirectTo={authModalProps.redirectTo}
-        />
-      )}
 
       {showUsernameModal && (
         <UsernameModal

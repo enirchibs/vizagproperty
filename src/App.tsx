@@ -7,6 +7,7 @@ import { ChatBot } from './components/ChatBot'
 import { FloatingWhatsAppButton } from './components/FloatingWhatsAppButton'
 import { UsernameModal } from './components/UsernameModal'
 import { HomePage } from './pages/HomePage'
+import { LoginPage } from './pages/LoginPage'
 import { PropertiesPage } from './pages/PropertiesPage'
 import { PropertyDetailsPage } from './pages/PropertyDetailsPage'
 import { DashboardPage } from './pages/DashboardPage'
@@ -41,6 +42,7 @@ function AppContent() {
         <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/vizag" element={<VizagPage />} />
           <Route path="/vmrda-plots" element={<VMRDAplotsPage />} />
@@ -71,6 +73,7 @@ function AppContent() {
           <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
           <Route path="/admin/properties" element={<AdminPropertiesPage />} />
           <Route path="/add-property" element={<AddPropertyPage />} />
+          <Route path="/post-property" element={<AddPropertyPage />} />
           <Route path="/edit-property/:id" element={<EditPropertyPage />} />
         </Routes>
         <Footer />
