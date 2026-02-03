@@ -8,7 +8,8 @@ export function LoginPage() {
   const location = useLocation()
   const { user, loading, signInWithPhone, verifyOtp, signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth()
 
-  const [authMode, setAuthMode] = useState<'phone' | 'email'>('phone')
+  const lastMethod = (localStorage.getItem('lastLogin') || 'phone') as 'phone' | 'email'
+  const [authMode, setAuthMode] = useState<'phone' | 'email'>(lastMethod)
   const [isSignUp, setIsSignUp] = useState(false)
   const [phoneNumber, setPhoneNumber] = useState('')
   const [otp, setOtp] = useState('')
@@ -19,6 +20,9 @@ export function LoginPage() {
   const [error, setError] = useState('')
   const intentRole: 'buyer' | 'owner' = 'buyer'
   const [countryCode] = useState('+91')
+  const [otpSecondsLeft, setOtpSecondsLeft] = useState(60)
+  const [canResendOtp, setCanResendOtp] = useState(false)
+  const [shakeError, setShakeError] = useState(false)
 
   const phoneInputRef = useRef<HTMLInputElement>(null)
   const emailInputRef = useRef<HTMLInputElement>(null)
@@ -48,6 +52,21 @@ export function LoginPage() {
     }
   }, [authMode, showOtpInput])
 
+  useEffect(() => {
+    if (!showOtpInput) return
+
+    if (otpSecondsLeft === 0) {
+      setCanResendOtp(true)
+      return
+    }
+
+    const timer = setInterval(() => {
+      setOtpSecondsLeft((s) => s - 1)
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [otpSecondsLeft, showOtpInput])
+
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
@@ -57,9 +76,31 @@ export function LoginPage() {
       const formattedPhone = phoneNumber.startsWith('+91') ? phoneNumber : `+91${phoneNumber}`
       await signInWithPhone(formattedPhone)
       setShowOtpInput(true)
+      setOtpSecondsLeft(60)
+      setCanResendOtp(false)
       setError('')
     } catch (err: any) {
       setError(err.message || 'Failed to send OTP. Please try again.')
+    } finally {
+      setAuthLoading(false)
+    }
+  }
+
+  const handleResendOtp = async () => {
+    if (!canResendOtp || authLoading) return
+
+    setError('')
+    setAuthLoading(true)
+
+    try {
+      const formattedPhone = phoneNumber.startsWith('+91') ? phoneNumber : `+91${phoneNumber}`
+      await signInWithPhone(formattedPhone)
+      setOtpSecondsLeft(60)
+      setCanResendOtp(false)
+      setOtp('')
+      setError('OTP sent successfully')
+    } catch (err: any) {
+      setError(err.message || 'Failed to resend OTP. Please try again.')
     } finally {
       setAuthLoading(false)
     }
@@ -73,9 +114,12 @@ export function LoginPage() {
     try {
       const formattedPhone = phoneNumber.startsWith('+91') ? phoneNumber : `+91${phoneNumber}`
       await verifyOtp(formattedPhone, otp, intentRole, redirectParam)
-      localStorage.setItem('last_login_method', 'phone')
+      localStorage.setItem('lastLogin', 'phone')
     } catch (err: any) {
       setError(err.message || 'Invalid OTP. Please try again.')
+      setShakeError(true)
+      setTimeout(() => setShakeError(false), 300)
+      setOtp('')
     } finally {
       setAuthLoading(false)
     }
@@ -93,7 +137,7 @@ export function LoginPage() {
       } else {
         await signInWithEmail(email, password)
       }
-      localStorage.setItem('last_login_method', 'email')
+      localStorage.setItem('lastLogin', 'email')
     } catch (err: any) {
       setError(err.message || 'Authentication failed. Please try again.')
     } finally {
@@ -106,7 +150,7 @@ export function LoginPage() {
     setAuthLoading(true)
     try {
       await signInWithGoogle()
-      localStorage.setItem('last_login_method', 'phone')
+      localStorage.setItem('lastLogin', 'phone')
     } catch (err: any) {
       setError(err.message || 'Google sign in failed.')
       setAuthLoading(false)
@@ -207,10 +251,12 @@ export function LoginPage() {
                       ref={phoneInputRef}
                       type="tel"
                       inputMode="numeric"
+                      pattern="[0-9]*"
+                      autoFocus
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
                       placeholder="Enter Mobile Number"
-                      className="w-full border-2 border-gray-200 rounded-xl p-4 text-lg focus:border-indigo-600 focus:outline-none transition-colors"
+                      className="w-full border-2 border-gray-200 rounded-xl p-4 text-lg focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 focus:outline-none transition-all"
                       maxLength={10}
                       required
                     />
@@ -234,12 +280,20 @@ export function LoginPage() {
                     </label>
                     <input
                       ref={otpInputRef}
-                      type="text"
+                      type="tel"
                       inputMode="numeric"
+                      pattern="[0-9]*"
+                      autoFocus
                       value={otp}
-                      onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, '')
+                        setOtp(value)
+                        if (value.length === 6) {
+                          handleOtpSubmit(e as any)
+                        }
+                      }}
                       placeholder="Enter 6-digit OTP"
-                      className="w-full border-2 border-gray-200 rounded-xl p-4 text-center text-2xl tracking-[0.5em] focus:border-indigo-600 focus:outline-none transition-colors"
+                      className={`w-full border-2 border-gray-200 rounded-xl p-4 text-center text-2xl tracking-widest focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 focus:outline-none transition-all ${shakeError ? 'animate-shake border-red-500' : ''}`}
                       maxLength={6}
                       required
                     />
@@ -266,6 +320,20 @@ export function LoginPage() {
                   >
                     Change Phone Number
                   </button>
+
+                  <div className="text-center mt-4 text-sm text-gray-600">
+                    {!canResendOtp ? (
+                      <>Resend OTP in <span className="font-semibold">{otpSecondsLeft}s</span></>
+                    ) : (
+                      <button
+                        onClick={handleResendOtp}
+                        disabled={authLoading}
+                        className="text-blue-600 font-semibold hover:underline disabled:opacity-50"
+                      >
+                        Resend OTP
+                      </button>
+                    )}
+                  </div>
                 </form>
               )}
             </>
@@ -278,6 +346,7 @@ export function LoginPage() {
                 <input
                   ref={emailInputRef}
                   type="email"
+                  autoFocus
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"

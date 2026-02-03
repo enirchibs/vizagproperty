@@ -84,6 +84,10 @@ body {
     animation: slideDown 0.5s ease-out;
   }
 
+  .animate-shake {
+    animation: shake 0.3s ease-in-out;
+  }
+
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -126,5 +130,13 @@ body {
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    50% { transform: translateX(8px); }
+    75% { transform: translateX(-8px); }
+    100% { transform: translateX(0); }
   }
 }
