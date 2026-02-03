@@ -3,10 +3,11 @@ import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 
 export interface PropertySearchParams {
-  propertyType?: 'flat' | 'plot' | 'villa' | 'pg' | 'commercial'
-  listingType?: 'sale' | 'rent'
+  propertyType: 'flat' | 'plot' | 'villa' | 'pg' | 'commercial'
+  listingType: 'sale' | 'rent'
   localityId?: string
   localityName?: string
+  includeNearby?: boolean
   keyword?: string
   minPrice?: number
   maxPrice?: number
@@ -26,12 +27,12 @@ interface UsePropertySearchReturn {
   totalCount: number
 }
 
-const PROPERTY_TYPE_MAP = {
-  flat: ['apartment', 'flat'],
-  plot: ['plot'],
-  villa: ['villa'],
-  pg: ['pg_hostel'],
-  commercial: ['commercial']
+const PROPERTY_TYPE_MAP: Record<string, string> = {
+  flat: 'flat',
+  plot: 'plot',
+  villa: 'villa',
+  pg: 'pg_hostel',
+  commercial: 'commercial'
 }
 
 export function usePropertySearch(): UsePropertySearchReturn {
@@ -45,18 +46,53 @@ export function usePropertySearch(): UsePropertySearchReturn {
     setError(null)
 
     try {
+      if (!params.localityId && !params.localityName) {
+        throw new Error('Location is required')
+      }
+
       let localityIdToUse = params.localityId
+      let localityLat: number | null = null
+      let localityLng: number | null = null
+      let nearbyLocalityIds: string[] = []
 
       if (!localityIdToUse && params.localityName) {
         const { data: localities } = await supabase
           .from('localities')
-          .select('id')
+          .select('id, latitude, longitude')
           .eq('city', 'Visakhapatnam')
           .ilike('name', params.localityName)
           .maybeSingle()
 
         if (localities) {
           localityIdToUse = localities.id
+          localityLat = localities.latitude
+          localityLng = localities.longitude
+        }
+      } else if (localityIdToUse) {
+        const { data: localities } = await supabase
+          .from('localities')
+          .select('latitude, longitude')
+          .eq('id', localityIdToUse)
+          .maybeSingle()
+
+        if (localities) {
+          localityLat = localities.latitude
+          localityLng = localities.longitude
+        }
+      }
+
+      if (localityLat && localityLng && params.includeNearby !== false) {
+        const { data: nearbyLocalities, error: nearbyError } = await supabase.rpc('get_nearby_localities', {
+          center_lat: localityLat,
+          center_lng: localityLng,
+          radius_km: 5,
+          p_city: 'Visakhapatnam'
+        })
+
+        if (nearbyError) {
+          console.error('Error fetching nearby localities:', nearbyError)
+        } else if (nearbyLocalities && nearbyLocalities.length > 0) {
+          nearbyLocalityIds = nearbyLocalities.map((loc: any) => loc.locality_id)
         }
       }
 
@@ -66,19 +102,17 @@ export function usePropertySearch(): UsePropertySearchReturn {
         .eq('status', 'approved')
 
       if (params.propertyType) {
-        const types = PROPERTY_TYPE_MAP[params.propertyType] || [params.propertyType]
-        if (types.length === 1) {
-          query = query.eq('property_type', types[0])
-        } else {
-          query = query.in('property_type', types)
-        }
+        const dbPropertyType = PROPERTY_TYPE_MAP[params.propertyType] || params.propertyType
+        query = query.eq('property_type', dbPropertyType)
       }
 
       if (params.listingType) {
         query = query.eq('listing_type', params.listingType)
       }
 
-      if (localityIdToUse) {
+      if (nearbyLocalityIds.length > 0) {
+        query = query.in('locality_id', nearbyLocalityIds)
+      } else if (localityIdToUse) {
         query = query.eq('locality_id', localityIdToUse)
       }
 

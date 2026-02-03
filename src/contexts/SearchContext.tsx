@@ -29,6 +29,8 @@ interface SearchContextType {
   setNewBuilderProjects: (value: boolean) => void
   priceRange: [number, number]
   setPriceRange: (range: [number, number]) => void
+  includeNearby: boolean
+  setIncludeNearby: (value: boolean) => void
 
   // Search state
   hasSearched: boolean
@@ -45,27 +47,32 @@ const SearchContext = createContext<SearchContextType | undefined>(undefined)
 export function SearchProvider({ children }: { children: ReactNode }) {
   const [listingType, setListingType] = useState<ListingType>('buy')
   const [propertyCategory, setPropertyCategory] = useState<PropertyCategory>('residential')
-  const [propertySubType, setPropertySubType] = useState<string | null>('full_house')
+  const [propertySubType, setPropertySubType] = useState<string | null>('Flat / Apartment')
   const [locality, setLocality] = useState('')
   const [localityId, setLocalityId] = useState<string | undefined>()
   const [bhkFilter, setBhkFilter] = useState<string>('')
   const [propertyStatus, setPropertyStatus] = useState<string>('')
   const [newBuilderProjects, setNewBuilderProjects] = useState(false)
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000000])
+  const [includeNearby, setIncludeNearby] = useState(true)
   const [hasSearched, setHasSearched] = useState(false)
 
   const getDefaultSubType = (_listing: ListingType, category: PropertyCategory): string | null => {
     if (category === 'commercial') return null
-    return 'full_house'
+    return 'Flat / Apartment'
   }
 
   const getPropertyTypeForSearch = (): 'flat' | 'plot' | 'villa' | 'pg' | 'commercial' | undefined => {
     if (propertyCategory === 'commercial') return 'commercial'
 
-    if (propertySubType === 'land_plot') return 'plot'
-    if (propertySubType === 'pg_hostel') return 'pg'
+    if (!propertySubType) return undefined
 
-    return 'flat'
+    if (propertySubType === 'Land / Plot') return 'plot'
+    if (propertySubType === 'Villa') return 'villa'
+    if (propertySubType === 'PG / Hostel' || propertySubType === 'Flatmates') return 'pg'
+    if (propertySubType === 'Flat / Apartment' || propertySubType === 'Full House') return 'flat'
+
+    return undefined
   }
 
   const resetFilters = () => {
@@ -95,6 +102,8 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     setNewBuilderProjects,
     priceRange,
     setPriceRange,
+    includeNearby,
+    setIncludeNearby,
     hasSearched,
     setHasSearched,
     resetFilters,

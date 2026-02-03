@@ -31,6 +31,8 @@ export function SearchPage() {
     setNewBuilderProjects,
     priceRange,
     setPriceRange,
+    includeNearby,
+    setIncludeNearby,
     hasSearched,
     setHasSearched,
     resetFilters,
@@ -96,15 +98,21 @@ export function SearchPage() {
       return
     }
 
+    const propertyType = getPropertyTypeForSearch()
+    if (!propertyType) {
+      return
+    }
+
     setHasSearched(true)
 
     const actualListingType = listingType === 'commercial' ? 'sale' : listingType === 'rent' ? 'rent' : 'sale'
 
     const searchParams: any = {
       listingType: actualListingType,
-      propertyType: getPropertyTypeForSearch(),
+      propertyType: propertyType,
       localityId: localityId,
       localityName: !localityId ? locality : undefined,
+      includeNearby: includeNearby,
       bedrooms: bhkFilter ? parseInt(bhkFilter) : undefined,
       minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
       maxPrice: priceRange[1] < 10000000 ? priceRange[1] : undefined,
@@ -115,6 +123,30 @@ export function SearchPage() {
     }
 
     search(searchParams)
+  }
+
+  const isSearchDisabled = () => {
+    if (locality.trim().length < 3) return true
+    if (!listingType) return true
+    const propertyType = getPropertyTypeForSearch()
+    if (!propertyType) return true
+    return false
+  }
+
+  const getEmptyStateMessage = () => {
+    const propertyType = getPropertyTypeForSearch()
+    const propertyTypeName =
+      propertyType === 'flat' ? 'Flats' :
+      propertyType === 'plot' ? 'Plots' :
+      propertyType === 'villa' ? 'Villas' :
+      propertyType === 'pg' ? 'PG/Hostels' :
+      propertyType === 'commercial' ? 'Commercial Properties' :
+      'Properties'
+
+    const listingTypeName = listingType === 'rent' ? 'for Rent' : 'for Sale'
+    const radiusText = includeNearby ? ' within 5 km' : ''
+
+    return `No ${propertyTypeName} ${listingTypeName} found in ${locality}${radiusText}.`
   }
 
 
@@ -197,10 +229,22 @@ export function SearchPage() {
             </button>
           </div>
 
+          <div className="mb-2">
+            <label className="flex items-center gap-2 text-xs md:text-sm text-gray-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={includeNearby}
+                onChange={(e) => setIncludeNearby(e.target.checked)}
+                className="w-4 h-4 accent-orange-500 cursor-pointer"
+              />
+              <span>Include nearby areas (5 km radius)</span>
+            </label>
+          </div>
+
           <div className="flex gap-1.5">
             <button
               onClick={handleSearch}
-              disabled={locality.trim().length < 3}
+              disabled={isSearchDisabled()}
               className="flex-1 bg-orange-500 text-white py-2 md:py-3 rounded-xl font-semibold text-xs md:text-sm flex items-center justify-center gap-1.5 active:scale-95 transition-transform hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Search className="w-3.5 h-3.5 md:w-4 md:h-4" />
@@ -414,7 +458,7 @@ export function SearchPage() {
             <div className="text-center py-8 md:py-12">
               <MapPin className="h-10 w-10 md:h-12 md:w-12 text-gray-400 mx-auto mb-3 md:mb-4" />
               <h3 className="text-sm md:text-lg font-bold text-gray-900 mb-1.5 md:mb-2">No properties found</h3>
-              <p className="text-xs md:text-sm text-gray-600">Try adjusting your search or filters</p>
+              <p className="text-xs md:text-sm text-gray-600">{getEmptyStateMessage()}</p>
             </div>
           )}
 

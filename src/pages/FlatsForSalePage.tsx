@@ -72,6 +72,8 @@ export default function FlatsForSalePage() {
         .from('properties')
         .select('*')
         .eq('status', 'approved')
+        .eq('property_type', 'flat')
+        .eq('listing_type', 'sale')
 
       if (selectedBudget) {
         const [min, max] = selectedBudget.split('-').map(v => v.replace('+', ''))

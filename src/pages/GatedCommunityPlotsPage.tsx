@@ -66,6 +66,8 @@ export default function GatedCommunityPlotsPage() {
         .from('properties')
         .select('*')
         .eq('status', 'approved')
+        .eq('property_type', 'plot')
+        .eq('listing_type', 'sale')
         .order('created_at', { ascending: false })
         .limit(50)
 
