@@ -10,13 +10,15 @@ interface AuthModalProps {
 
 export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthModalProps) {
   const { user, signInWithPhone, verifyOtp, signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth()
-  const [authMethod, setAuthMethod] = useState<'phone' | 'email'>('phone')
+  const lastMethod = (localStorage.getItem('last_login_method') || 'phone') as 'phone' | 'email'
+  const [authMethod, setAuthMethod] = useState<'phone' | 'email'>(lastMethod)
   const [countryCode, setCountryCode] = useState('+91')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [otpDigits, setOtpDigits] = useState<string[]>(['', '', '', '', '', ''])
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([])
+  const phoneInputRef = useRef<HTMLInputElement>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [otpSent, setOtpSent] = useState(false)
@@ -67,6 +69,14 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
       }, 100)
     }
   }, [otpSent])
+
+  useEffect(() => {
+    if (authMethod === 'phone' && !otpSent) {
+      setTimeout(() => {
+        phoneInputRef.current?.focus()
+      }, 300)
+    }
+  }, [authMethod, otpSent])
 
   const validatePhoneNumber = (phone: string) => {
     const cleaned = phone.replace(/\D/g, '')
@@ -150,6 +160,7 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
     try {
       const fullPhone = `${countryCode}${phoneNumber}`
       await verifyOtp(fullPhone, otpValue, intentRole, redirectTo)
+      localStorage.setItem('last_login_method', 'phone')
       onClose()
     } catch (err: any) {
       setError(err.message || 'Invalid OTP. Please try again.')
@@ -190,6 +201,7 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
           throw loginError
         }
       }
+      localStorage.setItem('last_login_method', 'email')
     } catch (err: any) {
       setError(err.message || 'Authentication failed. Please try again.')
       setLoading(false)
@@ -209,6 +221,7 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
 
     try {
       await signInWithGoogle()
+      localStorage.setItem('last_login_method', 'phone')
     } catch (err: any) {
       setError(err.message || 'Google sign-in failed. Please try again.')
       setLoading(false)
@@ -319,7 +332,9 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
                       Mobile Number
                     </label>
                     <input
+                      ref={phoneInputRef}
                       type="tel"
+                      inputMode="numeric"
                       required
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, '').slice(0, 10))}

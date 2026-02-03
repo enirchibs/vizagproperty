@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { Chrome, Home, ArrowLeft } from 'lucide-react'
+import { Chrome, X } from 'lucide-react'
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -20,6 +20,10 @@ export function LoginPage() {
   const intentRole: 'buyer' | 'owner' = 'buyer'
   const [countryCode] = useState('+91')
 
+  const phoneInputRef = useRef<HTMLInputElement>(null)
+  const emailInputRef = useRef<HTMLInputElement>(null)
+  const otpInputRef = useRef<HTMLInputElement>(null)
+
   const redirectParam = new URLSearchParams(location.search).get('redirect') || '/'
 
   useEffect(() => {
@@ -27,6 +31,22 @@ export function LoginPage() {
       navigate(redirectParam)
     }
   }, [user, loading, navigate, redirectParam])
+
+  useEffect(() => {
+    if (showOtpInput) {
+      setTimeout(() => {
+        otpInputRef.current?.focus()
+      }, 100)
+    } else if (authMode === 'phone') {
+      setTimeout(() => {
+        phoneInputRef.current?.focus()
+      }, 300)
+    } else if (authMode === 'email') {
+      setTimeout(() => {
+        emailInputRef.current?.focus()
+      }, 300)
+    }
+  }, [authMode, showOtpInput])
 
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,6 +73,7 @@ export function LoginPage() {
     try {
       const formattedPhone = phoneNumber.startsWith('+91') ? phoneNumber : `+91${phoneNumber}`
       await verifyOtp(formattedPhone, otp, intentRole, redirectParam)
+      localStorage.setItem('last_login_method', 'phone')
     } catch (err: any) {
       setError(err.message || 'Invalid OTP. Please try again.')
     } finally {
@@ -72,6 +93,7 @@ export function LoginPage() {
       } else {
         await signInWithEmail(email, password)
       }
+      localStorage.setItem('last_login_method', 'email')
     } catch (err: any) {
       setError(err.message || 'Authentication failed. Please try again.')
     } finally {
@@ -84,6 +106,7 @@ export function LoginPage() {
     setAuthLoading(true)
     try {
       await signInWithGoogle()
+      localStorage.setItem('last_login_method', 'phone')
     } catch (err: any) {
       setError(err.message || 'Google sign in failed.')
       setAuthLoading(false)
@@ -92,68 +115,59 @@ export function LoginPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-black/40">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
-      <div className="hidden md:flex w-1/2 bg-indigo-700 text-white p-10 flex-col justify-center">
-        <div className="max-w-md">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-2xl mb-6">
-            <Home className="h-8 w-8 text-white" />
-          </div>
-          <h1 className="text-4xl font-bold mb-4">Welcome to VizagProperty</h1>
-          <p className="text-indigo-200 text-lg leading-relaxed">
-            Find your dream property in Visakhapatnam. Connect with verified owners, explore thousands of listings, and make informed decisions.
-          </p>
-          <div className="mt-8 space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 bg-indigo-500 rounded-full flex items-center justify-center text-sm">✓</div>
-              <span className="text-indigo-100">Verified Properties</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 bg-indigo-500 rounded-full flex items-center justify-center text-sm">✓</div>
-              <span className="text-indigo-100">Direct Owner Contact</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 bg-indigo-500 rounded-full flex items-center justify-center text-sm">✓</div>
-              <span className="text-indigo-100">Zero Brokerage</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="w-full md:w-1/2 p-6 flex flex-col justify-center">
-        <div className="max-w-md w-full mx-auto">
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 transition-colors"
-          >
-            <ArrowLeft className="h-5 w-5" />
-            <span>Back to Home</span>
-          </button>
-
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              {showOtpInput ? 'Verify OTP' : isSignUp ? 'Create Account' : 'Sign In'}
+    <div className="fixed inset-0 z-50 bg-black/40 flex items-end animate-fade-in">
+      <div className="w-full bg-white rounded-t-3xl animate-slide-up-modal max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div className="p-6 pb-8">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-bold text-gray-900">
+              {showOtpInput ? 'Verify OTP' : 'Login / Sign up'}
             </h2>
-            <p className="text-gray-600">
-              {showOtpInput
-                ? `Enter the code sent to ${countryCode} ${phoneNumber}`
-                : 'Continue to your account'}
-            </p>
+            <button
+              onClick={() => navigate(-1)}
+              className="text-gray-500 hover:text-gray-700 transition-colors p-1"
+              aria-label="Close"
+            >
+              <X className="h-6 w-6" />
+            </button>
           </div>
+
+          {showOtpInput && (
+            <p className="text-gray-600 text-sm mb-6">
+              Enter the code sent to {countryCode} {phoneNumber}
+            </p>
+          )}
 
           {!showOtpInput && (
-            <div className="flex bg-gray-100 rounded-lg p-1 mb-4">
+            <ul className="text-sm text-gray-600 space-y-2 mb-6 bg-gray-50 p-4 rounded-xl">
+              <li className="flex items-center gap-2">
+                <span className="text-green-600 font-bold">✓</span>
+                Zero brokerage
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-600 font-bold">✓</span>
+                No spam calls
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-600 font-bold">✓</span>
+                WhatsApp + AI support
+              </li>
+            </ul>
+          )}
+
+          {!showOtpInput && (
+            <div className="flex bg-gray-100 rounded-xl p-1 mb-6">
               <button
                 onClick={() => setAuthMode('phone')}
-                className={`flex-1 py-2 rounded-md ${
+                className={`flex-1 py-3 rounded-lg font-medium transition-all ${
                   authMode === 'phone'
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-indigo-600 text-white shadow-sm'
                     : 'text-gray-700'
                 }`}
               >
@@ -161,9 +175,9 @@ export function LoginPage() {
               </button>
               <button
                 onClick={() => setAuthMode('email')}
-                className={`flex-1 py-2 rounded-md ${
+                className={`flex-1 py-3 rounded-lg font-medium transition-all ${
                   authMode === 'email'
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-indigo-600 text-white shadow-sm'
                     : 'text-gray-700'
                 }`}
               >
@@ -175,49 +189,68 @@ export function LoginPage() {
           {authMode === 'phone' ? (
             <>
               {!showOtpInput ? (
-                <form onSubmit={handlePhoneSubmit}>
-                  <select className="w-full border rounded-lg p-3 mb-3">
-                    <option>India {countryCode}</option>
-                  </select>
+                <form onSubmit={handlePhoneSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Country Code
+                    </label>
+                    <select className="w-full border-2 border-gray-200 rounded-xl p-4 text-lg focus:border-indigo-600 focus:outline-none transition-colors">
+                      <option>India {countryCode}</option>
+                    </select>
+                  </div>
 
-                  <input
-                    type="tel"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
-                    placeholder="Enter Mobile Number"
-                    className="w-full border rounded-lg p-3 mb-4"
-                    maxLength={10}
-                    required
-                  />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Mobile Number
+                    </label>
+                    <input
+                      ref={phoneInputRef}
+                      type="tel"
+                      inputMode="numeric"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
+                      placeholder="Enter Mobile Number"
+                      className="w-full border-2 border-gray-200 rounded-xl p-4 text-lg focus:border-indigo-600 focus:outline-none transition-colors"
+                      maxLength={10}
+                      required
+                    />
+                  </div>
 
-                  {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+                  {error && <p className="text-red-600 text-sm">{error}</p>}
 
                   <button
                     type="submit"
                     disabled={authLoading || phoneNumber.length !== 10}
-                    className="w-full bg-indigo-500 text-white py-3 rounded-lg disabled:opacity-50"
+                    className="w-full bg-indigo-600 text-white text-lg py-4 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg"
                   >
                     {authLoading ? 'Sending OTP...' : 'Continue'}
                   </button>
                 </form>
               ) : (
-                <form onSubmit={handleOtpSubmit}>
-                  <input
-                    type="text"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                    placeholder="Enter 6-digit OTP"
-                    className="w-full border rounded-lg p-3 mb-4 text-center text-2xl tracking-widest"
-                    maxLength={6}
-                    required
-                  />
+                <form onSubmit={handleOtpSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Enter OTP
+                    </label>
+                    <input
+                      ref={otpInputRef}
+                      type="text"
+                      inputMode="numeric"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                      placeholder="Enter 6-digit OTP"
+                      className="w-full border-2 border-gray-200 rounded-xl p-4 text-center text-2xl tracking-[0.5em] focus:border-indigo-600 focus:outline-none transition-colors"
+                      maxLength={6}
+                      required
+                    />
+                  </div>
 
-                  {error && <p className="text-red-600 text-sm mb-4 text-center">{error}</p>}
+                  {error && <p className="text-red-600 text-sm text-center">{error}</p>}
 
                   <button
                     type="submit"
                     disabled={authLoading || otp.length !== 6}
-                    className="w-full bg-indigo-500 text-white py-3 rounded-lg mb-3 disabled:opacity-50"
+                    className="w-full bg-indigo-600 text-white text-lg py-4 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg"
                   >
                     {authLoading ? 'Verifying...' : 'Verify OTP'}
                   </button>
@@ -229,7 +262,7 @@ export function LoginPage() {
                       setOtp('')
                       setError('')
                     }}
-                    className="w-full text-indigo-600 text-sm"
+                    className="w-full text-indigo-600 text-sm font-medium hover:text-indigo-700"
                   >
                     Change Phone Number
                   </button>
@@ -237,32 +270,43 @@ export function LoginPage() {
               )}
             </>
           ) : (
-            <form onSubmit={handleEmailAuth}>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email Address"
-                className="w-full border rounded-lg p-3 mb-3"
-                required
-              />
+            <form onSubmit={handleEmailAuth} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address
+                </label>
+                <input
+                  ref={emailInputRef}
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="w-full border-2 border-gray-200 rounded-xl p-4 text-lg focus:border-indigo-600 focus:outline-none transition-colors"
+                  required
+                />
+              </div>
 
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                className="w-full border rounded-lg p-3 mb-4"
-                required
-                minLength={6}
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  className="w-full border-2 border-gray-200 rounded-xl p-4 text-lg focus:border-indigo-600 focus:outline-none transition-colors"
+                  required
+                  minLength={6}
+                />
+              </div>
 
-              {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+              {error && <p className="text-red-600 text-sm">{error}</p>}
 
               <button
                 type="submit"
                 disabled={authLoading}
-                className="w-full bg-indigo-500 text-white py-3 rounded-lg mb-3 disabled:opacity-50"
+                className="w-full bg-indigo-600 text-white text-lg py-4 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg"
               >
                 {authLoading ? (isSignUp ? 'Creating Account...' : 'Signing In...') : (isSignUp ? 'Sign Up' : 'Sign In')}
               </button>
@@ -273,27 +317,31 @@ export function LoginPage() {
                   setIsSignUp(!isSignUp)
                   setError('')
                 }}
-                className="w-full text-indigo-600 text-sm"
+                className="w-full text-indigo-600 text-sm font-medium hover:text-indigo-700"
               >
                 {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
               </button>
             </form>
           )}
 
-          <div className="flex items-center my-6">
-            <div className="flex-grow border-t"></div>
-            <span className="mx-3 text-gray-400 text-sm">Or continue with</span>
-            <div className="flex-grow border-t"></div>
-          </div>
+          {!showOtpInput && (
+            <>
+              <div className="flex items-center my-6">
+                <div className="flex-grow border-t border-gray-200"></div>
+                <span className="mx-4 text-gray-400 text-sm">Or continue with</span>
+                <div className="flex-grow border-t border-gray-200"></div>
+              </div>
 
-          <button
-            onClick={handleGoogleSignIn}
-            disabled={authLoading}
-            className="w-full border py-3 rounded-lg flex items-center justify-center gap-2 disabled:opacity-50"
-          >
-            <Chrome className="h-5" />
-            Sign in with Google
-          </button>
+              <button
+                onClick={handleGoogleSignIn}
+                disabled={authLoading}
+                className="w-full border-2 border-gray-200 py-4 rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 hover:bg-gray-50 active:scale-[0.98] transition-all font-medium"
+              >
+                <Chrome className="h-5 w-5" />
+                Sign in with Google
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
