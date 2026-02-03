@@ -18,6 +18,9 @@ import { useSearch } from '../contexts/SearchContext'
 import { useSearchHistory } from '../hooks/useSearchHistory'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp } from '../lib/whatsapp'
+import { getLastSearch } from '../lib/searchMemory'
+import RestoredSearchBanner from '../components/RestoredSearchBanner'
+import PropertiesNearYou from '../components/PropertiesNearYou'
 
 type PropertyCategory = 'full_house' | 'land_plot' | 'flat_apartment' | 'pg_hostel' | 'flatmates'
 
@@ -39,6 +42,11 @@ export function HomePage() {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [showWelcome, setShowWelcome] = useState(false)
   const [showAuthModal, setShowAuthModal] = useState(false)
+  const [showRestoredBanner, setShowRestoredBanner] = useState(false)
+  const [restoredSearchData, setRestoredSearchData] = useState<{
+    localityName: string
+    radiusKm: number
+  } | null>(null)
   const searchInputRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -57,6 +65,18 @@ export function HomePage() {
       setShowWelcome(true)
     }
   }, [user, lastSearch])
+
+  useEffect(() => {
+    const lastSearch = getLastSearch()
+    if (lastSearch) {
+      setRestoredSearchData({
+        localityName: lastSearch.localityName,
+        radiusKm: lastSearch.radiusKm
+      })
+      setShowRestoredBanner(true)
+      loadRestoredSearchProperties(lastSearch)
+    }
+  }, [])
 
   useEffect(() => {
     if (transcript) {
@@ -144,6 +164,51 @@ export function HomePage() {
 
     loadFeaturedProperties()
   }, [])
+
+  const loadRestoredSearchProperties = async (searchData: {
+    localityId: string
+    radiusKm: 1 | 3 | 5
+    propertyType: string
+    listingType: string
+  }) => {
+    try {
+      setLoading(true)
+
+      const { data: nearbyLocalities } = await supabase.rpc('get_nearby_localities_cached', {
+        center_locality_id: searchData.localityId,
+        radius_km: searchData.radiusKm,
+        p_city: 'Visakhapatnam'
+      })
+
+      const localityIds = nearbyLocalities?.map((loc: any) => loc.locality_id) || [searchData.localityId]
+
+      const propertyTypeMap: Record<string, string> = {
+        flat: 'flat',
+        plot: 'plot',
+        villa: 'villa',
+        pg: 'pg_hostel',
+        commercial: 'commercial'
+      }
+
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*, localities!inner(name, slug, city)')
+        .eq('status', 'approved')
+        .eq('property_type', propertyTypeMap[searchData.propertyType] || searchData.propertyType)
+        .eq('listing_type', searchData.listingType)
+        .in('locality_id', localityIds)
+        .order('created_at', { ascending: false })
+        .limit(6)
+
+      if (error) throw error
+      setFeaturedProperties(data || [])
+    } catch (error) {
+      console.error('Error loading restored search:', error)
+      loadFeaturedProperties()
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const loadFeaturedProperties = async () => {
     try {
@@ -1040,14 +1105,26 @@ export function HomePage() {
             </div>
           </div>
 
+          {showRestoredBanner && restoredSearchData && (
+            <RestoredSearchBanner
+              localityName={restoredSearchData.localityName}
+              radiusKm={restoredSearchData.radiusKm}
+              onDismiss={() => setShowRestoredBanner(false)}
+            />
+          )}
+
+          <PropertiesNearYou />
+
           {featuredProperties.length > 0 && (
             <>
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
                 <div>
                   <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
-                    Featured Properties
+                    {showRestoredBanner ? 'Matching Properties' : 'Featured Properties'}
                   </h2>
-                  <p className="text-gray-600">Handpicked properties just for you</p>
+                  <p className="text-gray-600">
+                    {showRestoredBanner ? 'Based on your last search' : 'Handpicked properties just for you'}
+                  </p>
                 </div>
                 <a
                   href="/properties"

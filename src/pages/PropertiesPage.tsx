@@ -17,7 +17,7 @@ export function PropertiesPage() {
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState<SearchFilters>({})
   const [radiusEnabled, setRadiusEnabled] = useState(false)
-  const [radiusKm, setRadiusKm] = useState(3)
+  const [radiusKm, setRadiusKm] = useState<1 | 3 | 5>(3)
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
   const { searchByRadius } = useRadiusSearch()
 

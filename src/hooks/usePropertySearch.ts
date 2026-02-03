@@ -51,41 +51,26 @@ export function usePropertySearch(): UsePropertySearchReturn {
       }
 
       let localityIdToUse = params.localityId
-      let localityLat: number | null = null
-      let localityLng: number | null = null
       let nearbyLocalityIds: string[] = []
 
       if (!localityIdToUse && params.localityName) {
         const { data: localities } = await supabase
           .from('localities')
-          .select('id, latitude, longitude')
+          .select('id')
           .eq('city', 'Visakhapatnam')
           .ilike('name', params.localityName)
           .maybeSingle()
 
         if (localities) {
           localityIdToUse = localities.id
-          localityLat = localities.latitude
-          localityLng = localities.longitude
-        }
-      } else if (localityIdToUse) {
-        const { data: localities } = await supabase
-          .from('localities')
-          .select('latitude, longitude')
-          .eq('id', localityIdToUse)
-          .maybeSingle()
-
-        if (localities) {
-          localityLat = localities.latitude
-          localityLng = localities.longitude
         }
       }
 
-      if (localityLat && localityLng && params.includeNearby !== false) {
-        const { data: nearbyLocalities, error: nearbyError } = await supabase.rpc('get_nearby_localities', {
-          center_lat: localityLat,
-          center_lng: localityLng,
-          radius_km: 5,
+      if (localityIdToUse && params.includeNearby !== false) {
+        const radiusToUse = params.radiusKm || 3
+        const { data: nearbyLocalities, error: nearbyError } = await supabase.rpc('get_nearby_localities_cached', {
+          center_locality_id: localityIdToUse,
+          radius_km: radiusToUse,
           p_city: 'Visakhapatnam'
         })
 

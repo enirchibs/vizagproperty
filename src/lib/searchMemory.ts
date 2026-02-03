@@ -1,0 +1,52 @@
+interface LastSearchData {
+  localityId: string
+  localityName: string
+  radiusKm: 1 | 3 | 5
+  propertyType: string
+  listingType: 'sale' | 'rent'
+  savedAt: number
+}
+
+const STORAGE_KEY = 'vizag_last_search'
+const EXPIRY_DAYS = 7
+
+export const saveLastSearch = (data: Omit<LastSearchData, 'savedAt'>) => {
+  try {
+    const searchData: LastSearchData = {
+      ...data,
+      savedAt: Date.now()
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(searchData))
+  } catch (error) {
+    console.error('Failed to save last search:', error)
+  }
+}
+
+export const getLastSearch = (): Omit<LastSearchData, 'savedAt'> | null => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return null
+
+    const data: LastSearchData = JSON.parse(raw)
+
+    const expiryTime = EXPIRY_DAYS * 24 * 60 * 60 * 1000
+    if (Date.now() - data.savedAt > expiryTime) {
+      localStorage.removeItem(STORAGE_KEY)
+      return null
+    }
+
+    const { savedAt, ...searchData } = data
+    return searchData
+  } catch (error) {
+    console.error('Failed to retrieve last search:', error)
+    return null
+  }
+}
+
+export const clearLastSearch = () => {
+  try {
+    localStorage.removeItem(STORAGE_KEY)
+  } catch (error) {
+    console.error('Failed to clear last search:', error)
+  }
+}

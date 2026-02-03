@@ -6,6 +6,8 @@ import { usePropertySearch } from '../hooks/usePropertySearch'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { VIZAG_PROPERTY_PHONE_WITH_CODE } from '../config/contact'
 import { useSearch } from '../contexts/SearchContext'
+import MapRadiusToggle from '../components/MapRadiusToggle'
+import { saveLastSearch } from '../lib/searchMemory'
 
 export function SearchPage() {
   const navigate = useNavigate()
@@ -33,6 +35,8 @@ export function SearchPage() {
     setPriceRange,
     includeNearby,
     setIncludeNearby,
+    radiusKm,
+    setRadiusKm,
     hasSearched,
     setHasSearched,
     resetFilters,
@@ -93,7 +97,7 @@ export function SearchPage() {
     setPropertySubType(getDefaultSubType(listingType, category))
   }
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (locality.trim().length < 3) {
       return
     }
@@ -113,6 +117,7 @@ export function SearchPage() {
       localityId: localityId,
       localityName: !localityId ? locality : undefined,
       includeNearby: includeNearby,
+      radiusKm: radiusKm,
       bedrooms: bhkFilter ? parseInt(bhkFilter) : undefined,
       minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
       maxPrice: priceRange[1] < 10000000 ? priceRange[1] : undefined,
@@ -122,7 +127,17 @@ export function SearchPage() {
       searchParams.propertyStatus = propertyStatus
     }
 
-    search(searchParams)
+    await search(searchParams)
+
+    if (localityId && includeNearby) {
+      saveLastSearch({
+        localityId,
+        localityName: locality,
+        radiusKm,
+        propertyType,
+        listingType: actualListingType
+      })
+    }
   }
 
   const isSearchDisabled = () => {
@@ -144,7 +159,7 @@ export function SearchPage() {
       'Properties'
 
     const listingTypeName = listingType === 'rent' ? 'for Rent' : 'for Sale'
-    const radiusText = includeNearby ? ' within 5 km' : ''
+    const radiusText = includeNearby ? ` within ${radiusKm} km` : ''
 
     return `No ${propertyTypeName} ${listingTypeName} found in ${locality}${radiusText}.`
   }
@@ -229,16 +244,14 @@ export function SearchPage() {
             </button>
           </div>
 
-          <div className="mb-2">
-            <label className="flex items-center gap-2 text-xs md:text-sm text-gray-700 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={includeNearby}
-                onChange={(e) => setIncludeNearby(e.target.checked)}
-                className="w-4 h-4 accent-orange-500 cursor-pointer"
-              />
-              <span>Include nearby areas (5 km radius)</span>
-            </label>
+          <div className="mb-3">
+            <MapRadiusToggle
+              isEnabled={includeNearby}
+              radiusKm={radiusKm}
+              onToggle={setIncludeNearby}
+              onRadiusChange={setRadiusKm}
+              localityName={locality}
+            />
           </div>
 
           <div className="flex gap-1.5">
