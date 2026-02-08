@@ -107,13 +107,22 @@ export function SearchPage() {
     const actualListingType = listingType === 'commercial' ? 'sale' : listingType === 'rent' ? 'rent' : 'sale'
 
     const searchParams: any = {
-      listingType: actualListingType,
       propertyType: propertyType,
+      listingType: actualListingType,
       localityId: localityId,
       localityName: !localityId ? locality : undefined,
-      bedrooms: bhkFilter ? parseInt(bhkFilter) : undefined,
-      minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
-      maxPrice: priceRange[1] < 10000000 ? priceRange[1] : undefined,
+    }
+
+    if (bhkFilter) {
+      searchParams.bedrooms = parseInt(bhkFilter)
+    }
+
+    if (priceRange[0] > 0) {
+      searchParams.minPrice = priceRange[0]
+    }
+
+    if (priceRange[1] < 10000000) {
+      searchParams.maxPrice = priceRange[1]
     }
 
     if (propertySubType !== 'Land / Plot' && propertyStatus) {

@@ -249,6 +249,69 @@ export function buildStrictQuery(
   return query.order('created_at', { ascending: false })
 }
 
+// Property type mapping for search consistency
+export const DB_PROPERTY_TYPE_MAP: Record<string, string> = {
+  flat: 'flat',
+  plot: 'plot',
+  villa: 'villa',
+  pg: 'pg_hostel',
+  commercial: 'commercial'
+}
+
+export interface UnifiedSearchParams {
+  propertyType: 'flat' | 'plot' | 'villa' | 'pg' | 'commercial'
+  listingType?: 'sale' | 'rent'
+  localityId?: string
+  localityName?: string
+  bedrooms?: number
+  minPrice?: number
+  maxPrice?: number
+  propertyStatus?: string
+  keyword?: string
+}
+
+export function buildUnifiedPropertyQuery(params: UnifiedSearchParams) {
+  let query = supabase
+    .from('properties')
+    .select('*, localities!inner(name, slug, city)', { count: 'exact' })
+
+  query = query.eq('localities.city', 'Visakhapatnam')
+  query = query.eq('status', 'approved')
+
+  const dbPropertyType = DB_PROPERTY_TYPE_MAP[params.propertyType] || params.propertyType
+  query = query.eq('property_type', dbPropertyType)
+
+  if (params.listingType) {
+    query = query.eq('listing_type', params.listingType)
+  }
+
+  if (params.localityId) {
+    query = query.eq('locality_id', params.localityId)
+  }
+
+  if (params.bedrooms) {
+    query = query.eq('bedrooms', params.bedrooms)
+  }
+
+  if (params.minPrice !== undefined && params.minPrice > 0) {
+    query = query.gte('price', params.minPrice)
+  }
+
+  if (params.maxPrice !== undefined && params.maxPrice < 10000000) {
+    query = query.lte('price', params.maxPrice)
+  }
+
+  if (params.propertyStatus) {
+    query = query.eq('property_status', params.propertyStatus)
+  }
+
+  if (params.keyword) {
+    query = query.or(`title.ilike.%${params.keyword}%,description.ilike.%${params.keyword}%`)
+  }
+
+  return query.order('created_at', { ascending: false })
+}
+
 export async function extractFiltersFromURL(): Promise<StrictSearchFilters> {
   const params = new URLSearchParams(window.location.search)
   const filters: StrictSearchFilters = {}

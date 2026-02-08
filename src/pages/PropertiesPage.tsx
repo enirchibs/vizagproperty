@@ -64,40 +64,53 @@ export function PropertiesPage() {
   const loadProperties = async () => {
     setLoading(true)
     try {
-      let query = supabase
-        .from('properties')
-        .select('*')
-        .eq('status', 'approved')
+      if (!filters.property_type) {
+        const { data, error } = await supabase
+          .from('properties')
+          .select('*, localities!inner(name, slug, city)')
+          .eq('localities.city', 'Visakhapatnam')
+          .eq('status', 'approved')
+          .order('created_at', { ascending: false })
+          .limit(50)
 
-        if (filters.city) {
-          query = query.eq('city', filters.city)
-        }
-        if (filters.property_type) {
-          query = query.eq('property_type', filters.property_type)
-        }
-        if (filters.listing_type) {
-          query = query.eq('listing_type', filters.listing_type)
-        }
-        if (filters.locality_id) {
-          query = query.eq('locality_id', filters.locality_id)
-        }
-        if (filters.min_price) {
-          query = query.gte('price', filters.min_price)
-        }
-        if (filters.max_price) {
-          query = query.lte('price', filters.max_price)
-        }
-        if (filters.bedrooms) {
-          query = query.eq('bedrooms', filters.bedrooms)
-        }
+        if (error) throw error
+        setProperties(data || [])
+        setLoading(false)
+        return
+      }
 
-        if (searchQuery) {
-          query = query.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`)
-        }
+      const { buildUnifiedPropertyQuery } = await import('../lib/searchFilters')
 
-      query = query.order('created_at', { ascending: false }).limit(50)
+      const searchParams: any = {
+        propertyType: filters.property_type as 'flat' | 'plot' | 'villa' | 'pg' | 'commercial'
+      }
 
-      const { data, error } = await query
+      if (filters.listing_type) {
+        searchParams.listingType = filters.listing_type as 'sale' | 'rent'
+      }
+
+      if (filters.locality_id) {
+        searchParams.localityId = filters.locality_id
+      }
+
+      if (filters.bedrooms) {
+        searchParams.bedrooms = filters.bedrooms
+      }
+
+      if (filters.min_price) {
+        searchParams.minPrice = filters.min_price
+      }
+
+      if (filters.max_price) {
+        searchParams.maxPrice = filters.max_price
+      }
+
+      if (searchQuery) {
+        searchParams.keyword = searchQuery
+      }
+
+      const query = buildUnifiedPropertyQuery(searchParams)
+      const { data, error } = await query.limit(50)
 
       if (error) throw error
       setProperties(data || [])

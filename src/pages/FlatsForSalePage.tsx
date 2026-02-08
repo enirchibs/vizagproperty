@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { Search, MapPin, Building2, CheckCircle2, ArrowRight, Phone, Mic, MicOff, X, MessageCircle } from 'lucide-react'
 import { PropertyCard } from '../components/PropertyCard'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
-import { supabase } from '../lib/supabase'
 import type { Property } from '../types'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
@@ -68,33 +67,34 @@ export default function FlatsForSalePage() {
 
   const loadProperties = async () => {
     try {
-      let query = supabase
-        .from('properties')
-        .select('*')
-        .eq('status', 'approved')
-        .eq('property_type', 'flat')
-        .eq('listing_type', 'sale')
+      const { buildUnifiedPropertyQuery } = await import('../lib/searchFilters')
+
+      const searchParams: any = {
+        propertyType: 'flat' as const,
+        listingType: 'sale' as const
+      }
+
+      if (localityId) {
+        searchParams.localityId = localityId
+      }
 
       if (selectedBudget) {
         const [min, max] = selectedBudget.split('-').map(v => v.replace('+', ''))
         if (min) {
-          const minPrice = parseInt(min) * 100000
-          query = query.gte('price', minPrice)
+          searchParams.minPrice = parseInt(min) * 100000
         }
         if (max) {
-          const maxPrice = parseInt(max) * 100000
-          query = query.lte('price', maxPrice)
+          searchParams.maxPrice = parseInt(max) * 100000
         }
       }
 
       if (selectedBHK) {
         const bhkNum = selectedBHK.replace('BHK', '').trim()
-        query = query.eq('bedrooms', parseInt(bhkNum))
+        searchParams.bedrooms = parseInt(bhkNum)
       }
 
-      query = query.order('created_at', { ascending: false }).limit(50)
-
-      const { data, error } = await query
+      const query = buildUnifiedPropertyQuery(searchParams)
+      const { data, error } = await query.limit(50)
 
       if (error) throw error
       setProperties(data || [])

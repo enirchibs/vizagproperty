@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, MapPin, Building2, CheckCircle2, ArrowRight, Phone, Shield, Zap, Users, TrendingUp, Mic, MicOff, X, MessageCircle } from 'lucide-react'
 import { PropertyCard } from '../components/PropertyCard'
-import { supabase } from '../lib/supabase'
 import type { Property } from '../types'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
@@ -62,14 +61,14 @@ export default function GatedCommunityPlotsPage() {
 
   const loadProperties = async () => {
     try {
-      const { data, error } = await supabase
-        .from('properties')
-        .select('*')
-        .eq('status', 'approved')
-        .eq('property_type', 'plot')
-        .eq('listing_type', 'sale')
-        .order('created_at', { ascending: false })
-        .limit(50)
+      const { buildUnifiedPropertyQuery } = await import('../lib/searchFilters')
+
+      const query = buildUnifiedPropertyQuery({
+        propertyType: 'plot',
+        listingType: 'sale'
+      })
+
+      const { data, error } = await query.limit(50)
 
       if (error) throw error
       setProperties(data || [])

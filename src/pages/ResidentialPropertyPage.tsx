@@ -66,7 +66,8 @@ export default function ResidentialPropertyPage() {
     try {
       const { data, error } = await supabase
         .from('properties')
-        .select('*')
+        .select('*, localities!inner(name, slug, city)')
+        .eq('localities.city', 'Visakhapatnam')
         .eq('status', 'approved')
         .order('created_at', { ascending: false })
         .limit(50)

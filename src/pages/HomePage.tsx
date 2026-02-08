@@ -171,23 +171,15 @@ export function HomePage() {
     try {
       setLoading(true)
 
-      const propertyTypeMap: Record<string, string> = {
-        flat: 'flat',
-        plot: 'plot',
-        villa: 'villa',
-        pg: 'pg_hostel',
-        commercial: 'commercial'
-      }
+      const { buildUnifiedPropertyQuery } = await import('../lib/searchFilters')
 
-      const { data, error } = await supabase
-        .from('properties')
-        .select('*, localities!inner(name, slug, city)')
-        .eq('status', 'approved')
-        .eq('locality_id', searchData.localityId)
-        .eq('property_type', propertyTypeMap[searchData.propertyType] || searchData.propertyType)
-        .eq('listing_type', searchData.listingType)
-        .order('created_at', { ascending: false })
-        .limit(6)
+      const query = buildUnifiedPropertyQuery({
+        propertyType: searchData.propertyType as 'flat' | 'plot' | 'villa' | 'pg' | 'commercial',
+        listingType: searchData.listingType as 'sale' | 'rent',
+        localityId: searchData.localityId
+      })
+
+      const { data, error } = await query.limit(6)
 
       if (error) throw error
       setFeaturedProperties(data || [])
