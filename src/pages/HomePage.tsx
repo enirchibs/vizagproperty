@@ -45,7 +45,6 @@ export function HomePage() {
   const [showRestoredBanner, setShowRestoredBanner] = useState(false)
   const [restoredSearchData, setRestoredSearchData] = useState<{
     localityName: string
-    radiusKm: number
   } | null>(null)
   const searchInputRef = useRef<HTMLDivElement>(null)
 
@@ -70,8 +69,7 @@ export function HomePage() {
     const lastSearch = getLastSearch()
     if (lastSearch) {
       setRestoredSearchData({
-        localityName: lastSearch.localityName,
-        radiusKm: lastSearch.radiusKm
+        localityName: lastSearch.localityName
       })
       setShowRestoredBanner(true)
       loadRestoredSearchProperties(lastSearch)
@@ -167,20 +165,11 @@ export function HomePage() {
 
   const loadRestoredSearchProperties = async (searchData: {
     localityId: string
-    radiusKm: 1 | 3 | 5
     propertyType: string
     listingType: string
   }) => {
     try {
       setLoading(true)
-
-      const { data: nearbyLocalities } = await supabase.rpc('get_nearby_localities_cached', {
-        center_locality_id: searchData.localityId,
-        radius_km: searchData.radiusKm,
-        p_city: 'Visakhapatnam'
-      })
-
-      const localityIds = nearbyLocalities?.map((loc: any) => loc.locality_id) || [searchData.localityId]
 
       const propertyTypeMap: Record<string, string> = {
         flat: 'flat',
@@ -194,9 +183,9 @@ export function HomePage() {
         .from('properties')
         .select('*, localities!inner(name, slug, city)')
         .eq('status', 'approved')
+        .eq('locality_id', searchData.localityId)
         .eq('property_type', propertyTypeMap[searchData.propertyType] || searchData.propertyType)
         .eq('listing_type', searchData.listingType)
-        .in('locality_id', localityIds)
         .order('created_at', { ascending: false })
         .limit(6)
 
@@ -1108,7 +1097,6 @@ export function HomePage() {
           {showRestoredBanner && restoredSearchData && (
             <RestoredSearchBanner
               localityName={restoredSearchData.localityName}
-              radiusKm={restoredSearchData.radiusKm}
               onDismiss={() => setShowRestoredBanner(false)}
             />
           )}

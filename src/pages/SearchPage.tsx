@@ -6,7 +6,6 @@ import { usePropertySearch } from '../hooks/usePropertySearch'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { VIZAG_PROPERTY_PHONE_WITH_CODE } from '../config/contact'
 import { useSearch } from '../contexts/SearchContext'
-import MapRadiusToggle from '../components/MapRadiusToggle'
 import { saveLastSearch } from '../lib/searchMemory'
 
 export function SearchPage() {
@@ -33,10 +32,6 @@ export function SearchPage() {
     setNewBuilderProjects,
     priceRange,
     setPriceRange,
-    includeNearby,
-    setIncludeNearby,
-    radiusKm,
-    setRadiusKm,
     hasSearched,
     setHasSearched,
     resetFilters,
@@ -116,8 +111,6 @@ export function SearchPage() {
       propertyType: propertyType,
       localityId: localityId,
       localityName: !localityId ? locality : undefined,
-      includeNearby: includeNearby,
-      radiusKm: radiusKm,
       bedrooms: bhkFilter ? parseInt(bhkFilter) : undefined,
       minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
       maxPrice: priceRange[1] < 10000000 ? priceRange[1] : undefined,
@@ -129,11 +122,10 @@ export function SearchPage() {
 
     await search(searchParams)
 
-    if (localityId && includeNearby) {
+    if (localityId) {
       saveLastSearch({
         localityId,
         localityName: locality,
-        radiusKm,
         propertyType,
         listingType: actualListingType
       })
@@ -159,9 +151,8 @@ export function SearchPage() {
       'Properties'
 
     const listingTypeName = listingType === 'rent' ? 'for Rent' : 'for Sale'
-    const radiusText = includeNearby ? ` within ${radiusKm} km` : ''
 
-    return `No ${propertyTypeName} ${listingTypeName} found in ${locality}${radiusText}.`
+    return `No ${propertyTypeName} ${listingTypeName} found in ${locality}.`
   }
 
 
@@ -244,17 +235,7 @@ export function SearchPage() {
             </button>
           </div>
 
-          <div className="mb-3">
-            <MapRadiusToggle
-              isEnabled={includeNearby}
-              radiusKm={radiusKm}
-              onToggle={setIncludeNearby}
-              onRadiusChange={setRadiusKm}
-              localityName={locality}
-            />
-          </div>
-
-          <div className="flex gap-1.5">
+          <div className="flex gap-1.5 mt-3">
             <button
               onClick={handleSearch}
               disabled={isSearchDisabled()}

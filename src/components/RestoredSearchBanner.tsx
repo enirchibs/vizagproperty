@@ -2,13 +2,11 @@ import { X, MapPin } from 'lucide-react'
 
 interface RestoredSearchBannerProps {
   localityName: string
-  radiusKm: number
   onDismiss: () => void
 }
 
 export default function RestoredSearchBanner({
   localityName,
-  radiusKm,
   onDismiss
 }: RestoredSearchBannerProps) {
   return (
@@ -23,8 +21,7 @@ export default function RestoredSearchBanner({
               Showing saved search
             </h3>
             <p className="text-xs sm:text-sm text-blue-800">
-              Results near <span className="font-medium">{localityName}</span>
-              {' '}({radiusKm} km radius)
+              Results in <span className="font-medium">{localityName}</span>
             </p>
           </div>
         </div>

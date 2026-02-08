@@ -7,16 +7,11 @@ export interface PropertySearchParams {
   listingType: 'sale' | 'rent'
   localityId?: string
   localityName?: string
-  includeNearby?: boolean
   keyword?: string
   minPrice?: number
   maxPrice?: number
   bedrooms?: number
   propertyStatus?: string
-  radiusEnabled?: boolean
-  radiusKm?: number
-  centerLat?: number
-  centerLng?: number
 }
 
 interface UsePropertySearchReturn {
@@ -51,7 +46,6 @@ export function usePropertySearch(): UsePropertySearchReturn {
       }
 
       let localityIdToUse = params.localityId
-      let nearbyLocalityIds: string[] = []
 
       if (!localityIdToUse && params.localityName) {
         const { data: localities } = await supabase
@@ -63,21 +57,6 @@ export function usePropertySearch(): UsePropertySearchReturn {
 
         if (localities) {
           localityIdToUse = localities.id
-        }
-      }
-
-      if (localityIdToUse && params.includeNearby !== false) {
-        const radiusToUse = params.radiusKm || 3
-        const { data: nearbyLocalities, error: nearbyError } = await supabase.rpc('get_nearby_localities_cached', {
-          center_locality_id: localityIdToUse,
-          radius_km: radiusToUse,
-          p_city: 'Visakhapatnam'
-        })
-
-        if (nearbyError) {
-          console.error('Error fetching nearby localities:', nearbyError)
-        } else if (nearbyLocalities && nearbyLocalities.length > 0) {
-          nearbyLocalityIds = nearbyLocalities.map((loc: any) => loc.locality_id)
         }
       }
 
@@ -95,9 +74,7 @@ export function usePropertySearch(): UsePropertySearchReturn {
         query = query.eq('listing_type', params.listingType)
       }
 
-      if (nearbyLocalityIds.length > 0) {
-        query = query.in('locality_id', nearbyLocalityIds)
-      } else if (localityIdToUse) {
+      if (localityIdToUse) {
         query = query.eq('locality_id', localityIdToUse)
       }
 
@@ -119,15 +96,6 @@ export function usePropertySearch(): UsePropertySearchReturn {
 
       if (params.keyword) {
         query = query.or(`title.ilike.%${params.keyword}%,description.ilike.%${params.keyword}%`)
-      }
-
-      if (params.radiusEnabled && params.centerLat && params.centerLng && params.radiusKm && !localityIdToUse) {
-        query = query.not('latitude', 'is', null)
-          .not('longitude', 'is', null)
-          .gte('latitude', params.centerLat - (params.radiusKm / 111))
-          .lte('latitude', params.centerLat + (params.radiusKm / 111))
-          .gte('longitude', params.centerLng - (params.radiusKm / 111))
-          .lte('longitude', params.centerLng + (params.radiusKm / 111))
       }
 
       query = query.order('created_at', { ascending: false }).limit(50)

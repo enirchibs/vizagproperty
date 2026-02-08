@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Heart, LogOut, Menu, X, Shield, MessageCircle, Building2 } from 'lucide-react'
+import { Heart, LogOut, Menu, X, Shield, MessageCircle, Building2, Bell } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { UsernameModal } from './UsernameModal'
 import { trackEvent } from '../lib/analytics'
 import { openWhatsApp } from '../lib/whatsapp'
+import { useNotifications } from '../hooks/useNotifications'
 
 export function Header() {
   const navigate = useNavigate()
   const { user, profile, loading, isAdmin, signOut } = useAuth()
+  const { unreadCount } = useNotifications()
   const [showUsernameModal, setShowUsernameModal] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
 
@@ -138,11 +140,16 @@ export function Header() {
                       <Building2 className="h-5 w-5" />
                     </a>
                   )}
+                  <a href="/dashboard" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors relative">
+                    <Bell className="h-5 w-5" />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        {unreadCount > 9 ? '9+' : unreadCount}
+                      </span>
+                    )}
+                  </a>
                   <a href="/favorites" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors">
                     <Heart className="h-5 w-5" />
-                  </a>
-                  <a href="/dashboard" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors">
-                    <Shield className="h-5 w-5" />
                   </a>
                   <button
                     onClick={handleSignOut}
@@ -291,13 +298,20 @@ export function Header() {
                       <span>My Listings</span>
                     </a>
                   )}
-                  <a href="/favorites" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center space-x-2 border-t border-primary-500 mt-2" onClick={() => setShowMenu(false)}>
+                  <a href="/dashboard" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center justify-between border-t border-primary-500 mt-2" onClick={() => setShowMenu(false)}>
+                    <div className="flex items-center space-x-2">
+                      <Bell className="h-5 w-5" />
+                      <span>Notifications</span>
+                    </div>
+                    {unreadCount > 0 && (
+                      <span className="bg-red-500 text-white text-xs font-bold rounded-full px-2 py-0.5">
+                        {unreadCount > 9 ? '9+' : unreadCount}
+                      </span>
+                    )}
+                  </a>
+                  <a href="/favorites" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center space-x-2" onClick={() => setShowMenu(false)}>
                     <Heart className="h-5 w-5" />
                     <span>Favorites</span>
-                  </a>
-                  <a href="/dashboard" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center space-x-2" onClick={() => setShowMenu(false)}>
-                    <Shield className="h-5 w-5" />
-                    <span>Dashboard</span>
                   </a>
                   <button
                     onClick={handleSignOut}

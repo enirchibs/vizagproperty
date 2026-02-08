@@ -7,7 +7,6 @@ interface LocationSource {
   type: 'last_search' | 'geolocation' | 'default'
   localityId: string
   localityName: string
-  radiusKm: number
 }
 
 export function useNearbyProperties() {
@@ -30,10 +29,9 @@ export function useNearbyProperties() {
         setLocationSource({
           type: 'last_search',
           localityId: lastSearch.localityId,
-          localityName: lastSearch.localityName,
-          radiusKm: lastSearch.radiusKm
+          localityName: lastSearch.localityName
         })
-        await loadPropertiesNearLocality(lastSearch.localityId, lastSearch.radiusKm)
+        await loadPropertiesInLocality(lastSearch.localityId)
         return
       }
 
@@ -44,10 +42,9 @@ export function useNearbyProperties() {
           setLocationSource({
             type: 'geolocation',
             localityId: nearestLocality.id,
-            localityName: nearestLocality.name,
-            radiusKm: 3
+            localityName: nearestLocality.name
           })
-          await loadPropertiesNearLocality(nearestLocality.id, 3)
+          await loadPropertiesInLocality(nearestLocality.id)
           return
         }
       }
@@ -57,10 +54,9 @@ export function useNearbyProperties() {
         setLocationSource({
           type: 'default',
           localityId: vizagCenter.id,
-          localityName: vizagCenter.name,
-          radiusKm: 5
+          localityName: vizagCenter.name
         })
-        await loadPropertiesNearLocality(vizagCenter.id, 5)
+        await loadPropertiesInLocality(vizagCenter.id)
       }
     } catch (err) {
       console.error('Error detecting location:', err)
@@ -163,28 +159,20 @@ export function useNearbyProperties() {
     }
   }
 
-  const loadPropertiesNearLocality = async (localityId: string, radiusKm: number) => {
+  const loadPropertiesInLocality = async (localityId: string) => {
     try {
-      const { data: nearbyLocalities } = await supabase.rpc('get_nearby_localities_cached', {
-        center_locality_id: localityId,
-        radius_km: radiusKm,
-        p_city: 'Visakhapatnam'
-      })
-
-      const localityIds = nearbyLocalities?.map((loc: any) => loc.locality_id) || [localityId]
-
       const { data, error } = await supabase
         .from('properties')
         .select('*')
         .eq('status', 'approved')
-        .in('locality_id', localityIds)
+        .eq('locality_id', localityId)
         .order('created_at', { ascending: false })
         .limit(12)
 
       if (error) throw error
       setProperties(data || [])
     } catch (error) {
-      console.error('Error loading nearby properties:', error)
+      console.error('Error loading properties:', error)
       throw error
     }
   }

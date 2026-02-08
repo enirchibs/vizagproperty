@@ -29,10 +29,6 @@ interface SearchContextType {
   setNewBuilderProjects: (value: boolean) => void
   priceRange: [number, number]
   setPriceRange: (range: [number, number]) => void
-  includeNearby: boolean
-  setIncludeNearby: (value: boolean) => void
-  radiusKm: 1 | 3 | 5
-  setRadiusKm: (radius: 1 | 3 | 5) => void
 
   // Search state
   hasSearched: boolean
@@ -56,8 +52,6 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   const [propertyStatus, setPropertyStatus] = useState<string>('')
   const [newBuilderProjects, setNewBuilderProjects] = useState(false)
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000000])
-  const [includeNearby, setIncludeNearby] = useState(true)
-  const [radiusKm, setRadiusKm] = useState<1 | 3 | 5>(3)
   const [hasSearched, setHasSearched] = useState(false)
 
   const getDefaultSubType = (_listing: ListingType, category: PropertyCategory): string | null => {
@@ -105,10 +99,6 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     setNewBuilderProjects,
     priceRange,
     setPriceRange,
-    includeNearby,
-    setIncludeNearby,
-    radiusKm,
-    setRadiusKm,
     hasSearched,
     setHasSearched,
     resetFilters,

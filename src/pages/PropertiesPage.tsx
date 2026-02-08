@@ -5,8 +5,6 @@ import { Property, SearchFilters } from '../types'
 import { PropertyCard } from '../components/PropertyCard'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
-import { useRadiusSearch } from '../hooks/useRadiusSearch'
-import MapRadiusToggle from '../components/MapRadiusToggle'
 import { openWhatsApp } from '../lib/whatsapp'
 
 export function PropertiesPage() {
@@ -16,10 +14,7 @@ export function PropertiesPage() {
   const [localityName, setLocalityName] = useState('')
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState<SearchFilters>({})
-  const [radiusEnabled, setRadiusEnabled] = useState(false)
-  const [radiusKm, setRadiusKm] = useState<1 | 3 | 5>(3)
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
-  const { searchByRadius } = useRadiusSearch()
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -64,25 +59,15 @@ export function PropertiesPage() {
 
   useEffect(() => {
     loadProperties()
-  }, [radiusEnabled, radiusKm, filters])
+  }, [filters])
 
   const loadProperties = async () => {
     setLoading(true)
     try {
-      if (radiusEnabled && filters.center_latitude && filters.center_longitude) {
-        const results = await searchByRadius({
-          latitude: filters.center_latitude,
-          longitude: filters.center_longitude,
-          radiusKm: radiusKm,
-          propertyType: filters.property_type,
-          listingType: filters.listing_type
-        })
-        setProperties(results)
-      } else {
-        let query = supabase
-          .from('properties')
-          .select('*')
-          .eq('status', 'approved')
+      let query = supabase
+        .from('properties')
+        .select('*')
+        .eq('status', 'approved')
 
         if (filters.city) {
           query = query.eq('city', filters.city)
@@ -110,13 +95,12 @@ export function PropertiesPage() {
           query = query.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`)
         }
 
-        query = query.order('created_at', { ascending: false }).limit(50)
+      query = query.order('created_at', { ascending: false }).limit(50)
 
-        const { data, error } = await query
+      const { data, error } = await query
 
-        if (error) throw error
-        setProperties(data || [])
-      }
+      if (error) throw error
+      setProperties(data || [])
     } catch (error) {
       console.error('Error loading properties:', error)
     } finally {
@@ -141,8 +125,6 @@ export function PropertiesPage() {
     setFilters({})
     setSearchQuery('')
     setLocalityName('')
-    setRadiusEnabled(false)
-    setRadiusKm(3)
     loadProperties()
   }
 
@@ -246,32 +228,6 @@ export function PropertiesPage() {
 
           {showFilters && (
             <div className="mt-3 md:mt-4 p-3 md:p-4 bg-gray-50 rounded-lg border border-gray-200 animate-slide-up">
-              <MapRadiusToggle
-                isEnabled={radiusEnabled}
-                radiusKm={radiusKm}
-                onToggle={(enabled) => {
-                  setRadiusEnabled(enabled)
-                  if (enabled && !filters.center_latitude) {
-                    if (navigator.geolocation) {
-                      navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                          setFilters({
-                            ...filters,
-                            center_latitude: position.coords.latitude,
-                            center_longitude: position.coords.longitude
-                          })
-                        },
-                        (error) => {
-                          console.error('Geolocation error:', error)
-                          setRadiusEnabled(false)
-                        }
-                      )
-                    }
-                  }
-                }}
-                onRadiusChange={setRadiusKm}
-                className="mb-4"
-              />
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">

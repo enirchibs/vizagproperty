@@ -1,7 +1,8 @@
+import { supabase } from './supabase'
+
 interface LastSearchData {
   localityId: string
   localityName: string
-  radiusKm: 1 | 3 | 5
   propertyType: string
   listingType: 'sale' | 'rent'
   savedAt: number
@@ -10,13 +11,29 @@ interface LastSearchData {
 const STORAGE_KEY = 'vizag_last_search'
 const EXPIRY_DAYS = 7
 
-export const saveLastSearch = (data: Omit<LastSearchData, 'savedAt'>) => {
+export const saveLastSearch = async (data: Omit<LastSearchData, 'savedAt'>) => {
   try {
     const searchData: LastSearchData = {
       ...data,
       savedAt: Date.now()
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(searchData))
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      await supabase
+        .from('user_last_search')
+        .upsert({
+          user_id: user.id,
+          locality_id: data.localityId,
+          locality_name: data.localityName,
+          property_type: data.propertyType,
+          listing_type: data.listingType,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id'
+        })
+    }
   } catch (error) {
     console.error('Failed to save last search:', error)
   }

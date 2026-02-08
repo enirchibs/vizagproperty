@@ -36,7 +36,7 @@ export default function PropertiesNearYou() {
       return 'Based on your last search'
     }
     if (locationSource.type === 'geolocation') {
-      return `Within ${locationSource.radiusKm} km of your location`
+      return `Near your location in ${locationSource.localityName}`
     }
     return `Popular properties in Visakhapatnam`
   }
