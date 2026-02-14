@@ -13,6 +13,7 @@ import { PropertyShortlistMemory } from '../components/PropertyShortlistMemory'
 import { VisitPreparation } from '../components/VisitPreparation'
 import { MediaGallery } from '../components/MediaGallery'
 import { VIZAG_PROPERTY_PHONE } from '../config/contact'
+import PropertyDisclaimer from '../components/PropertyDisclaimer'
 
 export function PropertyDetailsPage() {
   const { id } = useParams()
@@ -303,6 +304,7 @@ export function PropertyDetailsPage() {
               <div className="mb-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-3">Description</h2>
                 <p className="text-gray-600 leading-relaxed whitespace-pre-line">{property.description}</p>
+                <PropertyDisclaimer />
               </div>
 
               {property.amenities.length > 0 && (

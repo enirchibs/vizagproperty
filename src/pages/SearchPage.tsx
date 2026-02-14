@@ -104,19 +104,33 @@ export function SearchPage() {
 
     setHasSearched(true)
 
-    const actualListingType = listingType === 'commercial' ? 'sale' : listingType === 'rent' ? 'rent' : 'sale'
-
+    // Build search params - only include values that exist
     const searchParams: any = {
       propertyType: propertyType,
-      listingType: actualListingType,
-      localityId: localityId,
-      localityName: !localityId ? locality : undefined,
     }
 
-    if (bhkFilter) {
-      searchParams.bedrooms = parseInt(bhkFilter)
+    // OPTIONAL: Only add listing_type if explicitly set
+    const actualListingType = listingType === 'commercial' ? 'sale' : listingType === 'rent' ? 'rent' : 'sale'
+    if (actualListingType) {
+      searchParams.listingType = actualListingType
     }
 
+    // OPTIONAL: Only add locality if provided
+    if (localityId) {
+      searchParams.localityId = localityId
+    } else if (locality && locality.trim().length >= 3) {
+      searchParams.localityName = locality.trim()
+    }
+
+    // OPTIONAL: Only add bedrooms if selected
+    if (bhkFilter && bhkFilter !== '') {
+      const bedroomsNum = parseInt(bhkFilter)
+      if (!isNaN(bedroomsNum) && bedroomsNum > 0) {
+        searchParams.bedrooms = bedroomsNum
+      }
+    }
+
+    // OPTIONAL: Only add price filters if specified
     if (priceRange[0] > 0) {
       searchParams.minPrice = priceRange[0]
     }
@@ -125,7 +139,8 @@ export function SearchPage() {
       searchParams.maxPrice = priceRange[1]
     }
 
-    if (propertySubType !== 'Land / Plot' && propertyStatus) {
+    // OPTIONAL: Only add property status if selected (and not for plots)
+    if (propertySubType !== 'Land / Plot' && propertyStatus && propertyStatus !== '') {
       searchParams.propertyStatus = propertyStatus
     }
 

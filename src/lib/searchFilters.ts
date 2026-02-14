@@ -251,9 +251,9 @@ export function buildStrictQuery(
 
 // Property type mapping for search consistency
 export const DB_PROPERTY_TYPE_MAP: Record<string, string> = {
-  flat: 'flat',
-  plot: 'plot',
-  villa: 'villa',
+  flat: 'flat_apartment',
+  plot: 'plot_land',
+  villa: 'independent_house_villa',
   pg: 'pg_hostel',
   commercial: 'commercial'
 }
@@ -270,17 +270,36 @@ export interface UnifiedSearchParams {
   keyword?: string
 }
 
+/**
+ * Unified query builder for property search
+ *
+ * MANDATORY FILTERS (always applied):
+ * - city = 'Visakhapatnam'
+ * - status = 'approved'
+ * - property_type = params.propertyType
+ *
+ * OPTIONAL FILTERS (applied ONLY if value exists):
+ * - listing_type (only if provided)
+ * - locality_id (only if provided)
+ * - bedrooms (only if provided and > 0)
+ * - min_price (only if provided and > 0)
+ * - max_price (only if provided and < 10000000)
+ * - property_status (only if provided)
+ * - keyword (only if provided)
+ */
 export function buildUnifiedPropertyQuery(params: UnifiedSearchParams) {
   let query = supabase
     .from('properties')
     .select('*, localities!inner(name, slug, city)', { count: 'exact' })
 
+  // MANDATORY FILTERS - Always applied
   query = query.eq('localities.city', 'Visakhapatnam')
   query = query.eq('status', 'approved')
 
   const dbPropertyType = DB_PROPERTY_TYPE_MAP[params.propertyType] || params.propertyType
   query = query.eq('property_type', dbPropertyType)
 
+  // OPTIONAL FILTERS - Only applied if value exists
   if (params.listingType) {
     query = query.eq('listing_type', params.listingType)
   }
@@ -289,7 +308,7 @@ export function buildUnifiedPropertyQuery(params: UnifiedSearchParams) {
     query = query.eq('locality_id', params.localityId)
   }
 
-  if (params.bedrooms) {
+  if (params.bedrooms && params.bedrooms > 0) {
     query = query.eq('bedrooms', params.bedrooms)
   }
 

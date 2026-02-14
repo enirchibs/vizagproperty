@@ -64,6 +64,7 @@ export function PropertiesPage() {
   const loadProperties = async () => {
     setLoading(true)
     try {
+      // If no property_type, show all approved properties (browse mode)
       if (!filters.property_type) {
         const { data, error } = await supabase
           .from('properties')
@@ -79,12 +80,14 @@ export function PropertiesPage() {
         return
       }
 
+      // Use unified query builder for filtered search
       const { buildUnifiedPropertyQuery } = await import('../lib/searchFilters')
 
       const searchParams: any = {
         propertyType: filters.property_type as 'flat' | 'plot' | 'villa' | 'pg' | 'commercial'
       }
 
+      // OPTIONAL: Only add if value exists
       if (filters.listing_type) {
         searchParams.listingType = filters.listing_type as 'sale' | 'rent'
       }
@@ -93,20 +96,20 @@ export function PropertiesPage() {
         searchParams.localityId = filters.locality_id
       }
 
-      if (filters.bedrooms) {
+      if (filters.bedrooms && filters.bedrooms > 0) {
         searchParams.bedrooms = filters.bedrooms
       }
 
-      if (filters.min_price) {
+      if (filters.min_price && filters.min_price > 0) {
         searchParams.minPrice = filters.min_price
       }
 
-      if (filters.max_price) {
+      if (filters.max_price && filters.max_price < 10000000) {
         searchParams.maxPrice = filters.max_price
       }
 
-      if (searchQuery) {
-        searchParams.keyword = searchQuery
+      if (searchQuery && searchQuery.trim().length > 0) {
+        searchParams.keyword = searchQuery.trim()
       }
 
       const query = buildUnifiedPropertyQuery(searchParams)

@@ -123,6 +123,10 @@ export function PropertyCard({ property, onFavoriteChange }: PropertyCardProps) 
             WhatsApp
           </button>
         </div>
+
+        <div className="text-[10px] text-gray-400 mt-2">
+          Disclaimer: Information is deemed reliable but not guaranteed.
+        </div>
       </div>
     </a>
   )

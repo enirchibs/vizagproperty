@@ -218,17 +218,33 @@ export function HomePage() {
 
     const params = new URLSearchParams()
 
+    // MANDATORY: property type based on category selection
+    if (propertyCategory) params.append('category', propertyCategory)
+
+    // OPTIONAL: Only add if explicitly set
     if (searchType) params.append('type', searchType)
-    if (location) params.append('location', location)
+
+    // OPTIONAL: Only add location/locality if provided
     if (localityId) {
       params.append('localityId', localityId)
-    } else if (locality) {
-      params.append('locality', locality)
+    } else if (locality && locality.trim().length >= 3) {
+      params.append('locality', locality.trim())
     }
-    if (bhkType) params.append('bhk', bhkType)
-    if (propertyStatus) params.append('status', propertyStatus)
-    if (propertyCategory) params.append('category', propertyCategory)
-    if (newBuilderProjects) params.append('new_builder', 'true')
+
+    // OPTIONAL: Only add BHK filter if selected
+    if (bhkType && bhkType !== '') {
+      params.append('bhk', bhkType)
+    }
+
+    // OPTIONAL: Only add property status if selected
+    if (propertyStatus && propertyStatus !== '') {
+      params.append('status', propertyStatus)
+    }
+
+    // OPTIONAL: Only add new builder flag if checked
+    if (newBuilderProjects) {
+      params.append('new_builder', 'true')
+    }
 
     window.location.href = `/properties?${params.toString()}`
   }
