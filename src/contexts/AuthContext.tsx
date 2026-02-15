@@ -11,7 +11,7 @@ interface AuthContextType {
   isAdmin: boolean
   showUsernamePrompt: boolean
   setShowUsernamePrompt: (show: boolean) => void
-  signInWithPhone: (phone: string) => Promise<void>
+  signInWithPhone: (phone: string, intentRole?: 'buyer' | 'owner') => Promise<void>
   verifyOtp: (
     phone: string,
     otp: string,
@@ -64,13 +64,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               : 'email'
 
             if (!existingProfile && (event === 'SIGNED_IN' || event === 'USER_UPDATED')) {
-              // Get intent role from user metadata if available
+              // Get intent role from user metadata if available (works for all auth methods)
               const intentRole = session.user.user_metadata?.intent_role || 'buyer'
 
               // Create new user row
               const { error: insertError } = await supabase.from('users').insert({
                 id: session.user.id,
-                name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
+                name: session.user.user_metadata?.full_name || session.user.phone || session.user.email?.split('@')[0] || 'User',
                 email: session.user.email,
                 phone: session.user.phone,
                 role: intentRole
@@ -119,11 +119,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
      ✅ MOBILE + OTP LOGIN (TWILIO VERIFY COMPATIBLE)
      ====================================================== */
 
-  const signInWithPhone = async (phone: string) => {
+  const signInWithPhone = async (phone: string, intentRole?: 'buyer' | 'owner') => {
     const { error } = await supabase.auth.signInWithOtp({
       phone, // MUST be +91XXXXXXXXXX
       options: {
-        shouldCreateUser: true
+        shouldCreateUser: true,
+        data: {
+          intent_role: intentRole || 'buyer'
+        }
       }
     })
 
@@ -136,7 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const verifyOtp = async (
     phone: string,
     otp: string,
-    intentRole: 'buyer' | 'owner' = 'buyer',
+    _intentRole?: 'buyer' | 'owner',
     redirectTo?: string
   ) => {
     const { data, error } = await supabase.auth.verifyOtp({
@@ -150,29 +153,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw error
     }
 
-    if (data?.user) {
-      const { data: existingProfile } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', data.user.id)
-        .maybeSingle()
-
-      if (!existingProfile) {
-        const { error: insertError } = await supabase.from('users').insert({
-          id: data.user.id,
-          name: data.user.phone || 'User',
-          phone: data.user.phone,
-          role: intentRole
-        })
-
-        if (insertError) {
-          console.error('Failed to create user profile during OTP verification:', insertError)
-        }
-      }
-
-      if (redirectTo) {
-        window.location.href = redirectTo
-      }
+    // Let onAuthStateChange handler create the user profile
+    // This avoids race conditions with session token setup
+    if (data?.session && redirectTo) {
+      window.location.href = redirectTo
     }
   }
 

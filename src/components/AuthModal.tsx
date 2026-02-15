@@ -104,7 +104,7 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
 
     try {
       const fullPhone = `${countryCode}${phoneNumber}`
-      await signInWithPhone(fullPhone)
+      await signInWithPhone(fullPhone, intentRole)
       setOtpPhoneNumber(fullPhone) // Store the exact phone number used for OTP
       setOtpSent(true)
       setResendTimer(30)
