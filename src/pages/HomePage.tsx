@@ -11,7 +11,6 @@ import { AISearchSuggestions } from '../components/AISearchSuggestions'
 import { WelcomeMessage } from '../components/WelcomeMessage'
 import { AuthModal } from '../components/AuthModal'
 import { StickySearchBar } from '../components/StickySearchBar'
-import { MobileActionCards } from '../components/MobileActionCards'
 import { MobileCategoryGrid } from '../components/MobileCategoryGrid'
 import { useAuth } from '../contexts/AuthContext'
 import { useSearch } from '../contexts/SearchContext'
@@ -299,6 +298,28 @@ export function HomePage() {
         placeholder="Search locality (3+ letters)"
       />
 
+      <div className="md:hidden px-4 py-4 bg-gray-50">
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            onClick={() => navigate('/mobile-search')}
+            className="rounded-2xl bg-gradient-to-br from-red-500 to-red-600 text-white p-5 shadow-lg hover:shadow-xl transition-all active:scale-[0.98] text-left"
+          >
+            <Search className="h-6 w-6 mb-2" />
+            <h3 className="text-base font-bold mb-1">Search Property</h3>
+            <p className="text-xs opacity-90">Buy & Rent easily</p>
+          </button>
+
+          <button
+            onClick={() => navigate('/add-property')}
+            className="rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white p-5 shadow-lg hover:shadow-xl transition-all active:scale-[0.98] text-left"
+          >
+            <Home className="h-6 w-6 mb-2" />
+            <h3 className="text-base font-bold mb-1">Post Property</h3>
+            <p className="text-xs opacity-90">100% Free</p>
+          </button>
+        </div>
+      </div>
+
       <MobileCategoryGrid />
 
       <section id="search-section" className="relative py-8 md:py-16 px-4">
@@ -326,13 +347,6 @@ export function HomePage() {
                 Get instant buyers & tenants in Vizag
               </p>
             </div>
-
-            <MobileActionCards
-              onSearchClick={() => navigate('/mobile-search')}
-              onPostClick={() => {
-                window.location.href = '/add-property'
-              }}
-            />
 
             <div className="hidden md:block bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
               <div className="flex border-b border-gray-200">
@@ -497,47 +511,44 @@ export function HomePage() {
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center gap-4">
                       <div className="flex items-center gap-3">
-                        <label className="flex items-center gap-2 cursor-pointer group">
-                          <input
-                            type="radio"
-                            name="propertyCategory"
-                            value="full_house"
-                            checked={propertyCategory === 'full_house'}
-                            onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
-                            className="w-4 h-4 text-primary-600"
-                          />
-                          <span className="text-sm font-medium text-gray-700 group-hover:text-primary-600 transition-colors">
-                            Full House
-                          </span>
-                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setPropertyCategory('full_house')}
+                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
+                            propertyCategory === 'full_house'
+                              ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          <Home className="h-4 w-4 inline-block mr-1.5" />
+                          Full House
+                        </button>
 
-                        <label className="flex items-center gap-2 cursor-pointer group">
-                          <input
-                            type="radio"
-                            name="propertyCategory"
-                            value="land_plot"
-                            checked={propertyCategory === 'land_plot'}
-                            onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
-                            className="w-4 h-4 text-primary-600"
-                          />
-                          <span className="text-sm font-medium text-gray-700 group-hover:text-primary-600 transition-colors">
-                            Land/Plot
-                          </span>
-                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setPropertyCategory('land_plot')}
+                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
+                            propertyCategory === 'land_plot'
+                              ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          <Building2 className="h-4 w-4 inline-block mr-1.5" />
+                          Land/Plot
+                        </button>
 
-                        <label className="flex items-center gap-2 cursor-pointer group">
-                          <input
-                            type="radio"
-                            name="propertyCategory"
-                            value="flat_apartment"
-                            checked={propertyCategory === 'flat_apartment'}
-                            onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
-                            className="w-4 h-4 text-primary-600"
-                          />
-                          <span className="text-sm font-medium text-gray-700 group-hover:text-primary-600 transition-colors">
-                            Flat/Apartment
-                          </span>
-                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setPropertyCategory('flat_apartment')}
+                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
+                            propertyCategory === 'flat_apartment'
+                              ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          <Building2 className="h-4 w-4 inline-block mr-1.5" />
+                          Flat/Apartment
+                        </button>
                       </div>
 
                       <div className="flex-1 min-w-[200px]">
@@ -584,61 +595,57 @@ export function HomePage() {
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center gap-4">
                       <div className="flex items-center gap-3">
-                        <label className="flex items-center gap-2 cursor-pointer group">
-                          <input
-                            type="radio"
-                            name="propertyCategory"
-                            value="full_house"
-                            checked={propertyCategory === 'full_house'}
-                            onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
-                            className="w-4 h-4 text-rose-600"
-                          />
-                          <span className="text-sm font-medium text-gray-700 group-hover:text-rose-600 transition-colors">
-                            Full House
-                          </span>
-                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setPropertyCategory('full_house')}
+                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
+                            propertyCategory === 'full_house'
+                              ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          <Home className="h-4 w-4 inline-block mr-1.5" />
+                          Full House
+                        </button>
 
-                        <label className="flex items-center gap-2 cursor-pointer group">
-                          <input
-                            type="radio"
-                            name="propertyCategory"
-                            value="pg_hostel"
-                            checked={propertyCategory === 'pg_hostel'}
-                            onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
-                            className="w-4 h-4 text-rose-600"
-                          />
-                          <span className="text-sm font-medium text-gray-700 group-hover:text-rose-600 transition-colors">
-                            PG/Hostel
-                          </span>
-                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setPropertyCategory('pg_hostel')}
+                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
+                            propertyCategory === 'pg_hostel'
+                              ? 'bg-gradient-to-r from-violet-500 to-purple-500 text-white shadow-lg'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          <Users className="h-4 w-4 inline-block mr-1.5" />
+                          PG/Hostel
+                        </button>
 
-                        <label className="flex items-center gap-2 cursor-pointer group">
-                          <input
-                            type="radio"
-                            name="propertyCategory"
-                            value="flatmates"
-                            checked={propertyCategory === 'flatmates'}
-                            onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
-                            className="w-4 h-4 text-rose-600"
-                          />
-                          <span className="text-sm font-medium text-gray-700 group-hover:text-rose-600 transition-colors">
-                            Flatmates
-                          </span>
-                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setPropertyCategory('flatmates')}
+                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
+                            propertyCategory === 'flatmates'
+                              ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          <Users className="h-4 w-4 inline-block mr-1.5" />
+                          Flatmates
+                        </button>
 
-                        <label className="flex items-center gap-2 cursor-pointer group">
-                          <input
-                            type="radio"
-                            name="propertyCategory"
-                            value="flat_apartment"
-                            checked={propertyCategory === 'flat_apartment'}
-                            onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
-                            className="w-4 h-4 text-rose-600"
-                          />
-                          <span className="text-sm font-medium text-gray-700 group-hover:text-rose-600 transition-colors">
-                            Flat/Apartment
-                          </span>
-                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setPropertyCategory('flat_apartment')}
+                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
+                            propertyCategory === 'flat_apartment'
+                              ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          <Building2 className="h-4 w-4 inline-block mr-1.5" />
+                          Flat/Apartment
+                        </button>
                       </div>
 
                       {(propertyCategory === 'full_house' || propertyCategory === 'flat_apartment') && (
