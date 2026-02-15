@@ -130,11 +130,13 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
   const handleOtpDigitChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return
 
-    const newOtpDigits = [...otpDigits]
-    newOtpDigits[index] = value.slice(-1)
-    setOtpDigits(newOtpDigits)
+    const digit = value.slice(-1)
 
-    if (value && index < 5) {
+    const newOtp = [...otpDigits]
+    newOtp[index] = digit
+    setOtpDigits(newOtp)
+
+    if (digit && index < 5) {
       otpInputRefs.current[index + 1]?.focus()
     }
   }
@@ -147,17 +149,25 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
 
   const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault()
-    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
-    const newOtpDigits = [...otpDigits]
 
-    for (let i = 0; i < pastedData.length; i++) {
-      newOtpDigits[i] = pastedData[i]
+    const pasted = e.clipboardData
+      .getData('text')
+      .replace(/\D/g, '')
+      .slice(0, 6)
+
+    if (!pasted) return
+
+    const newOtp = [...otpDigits]
+
+    for (let i = 0; i < pasted.length; i++) {
+      newOtp[i] = pasted[i]
     }
 
-    setOtpDigits(newOtpDigits)
+    setOtpDigits(newOtp)
 
-    const nextEmptyIndex = pastedData.length < 6 ? pastedData.length : 5
-    otpInputRefs.current[nextEmptyIndex]?.focus()
+    // Move focus to last filled box
+    const lastIndex = Math.min(pasted.length - 1, 5)
+    otpInputRefs.current[lastIndex]?.focus()
   }
 
   const handleVerifyOtp = async (e?: React.FormEvent) => {
@@ -470,11 +480,12 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
                       ref={(el) => (otpInputRefs.current[i] = el)}
                       type="text"
                       inputMode="numeric"
+                      autoComplete={i === 0 ? "one-time-code" : "off"}
                       maxLength={1}
                       value={otpDigits[i]}
                       onChange={(e) => handleOtpDigitChange(i, e.target.value)}
                       onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                      onPaste={handleOtpPaste}
+                      onPaste={i === 0 ? handleOtpPaste : undefined}
                       className="w-11 h-12 text-center text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2F4DA0] focus:border-[#2F4DA0]"
                     />
                   ))}
