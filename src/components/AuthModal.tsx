@@ -128,15 +128,41 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
   }
 
   const handleOtpDigitChange = (index: number, value: string) => {
-    if (!/^\d*$/.test(value)) return
+    if (!value) {
+      const newOtp = [...otpDigits]
+      newOtp[index] = ''
+      setOtpDigits(newOtp)
+      return
+    }
 
-    const digit = value.slice(-1)
+    // Handle Chrome Autofill (full OTP injected into single input)
+    if (value.length > 1) {
+      const cleaned = value.replace(/\D/g, '').slice(0, 6)
+
+      if (!cleaned) return
+
+      const newOtp = [...otpDigits]
+
+      for (let i = 0; i < cleaned.length; i++) {
+        newOtp[i] = cleaned[i]
+      }
+
+      setOtpDigits(newOtp)
+
+      const lastIndex = Math.min(cleaned.length - 1, 5)
+      otpInputRefs.current[lastIndex]?.focus()
+
+      return
+    }
+
+    // Normal single digit entry
+    if (!/^\d$/.test(value)) return
 
     const newOtp = [...otpDigits]
-    newOtp[index] = digit
+    newOtp[index] = value
     setOtpDigits(newOtp)
 
-    if (digit && index < 5) {
+    if (index < 5) {
       otpInputRefs.current[index + 1]?.focus()
     }
   }
@@ -473,29 +499,6 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
               )}
 
               <form onSubmit={handleVerifyOtp} className="space-y-4">
-                {/* Hidden input for browser OTP autofill */}
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, '').slice(0, 6)
-                    if (value.length > 0) {
-                      const newOtp = [...otpDigits]
-                      for (let i = 0; i < value.length; i++) {
-                        newOtp[i] = value[i]
-                      }
-                      setOtpDigits(newOtp)
-                      // Focus the last filled digit or the next empty one
-                      const focusIndex = Math.min(value.length, 5)
-                      otpInputRefs.current[focusIndex]?.focus()
-                    }
-                  }}
-                  className="absolute opacity-0 pointer-events-none"
-                  tabIndex={-1}
-                  aria-hidden="true"
-                />
-
                 <div className="flex justify-between gap-2 mb-4">
                   {[...Array(6)].map((_, i) => (
                     <input
@@ -503,7 +506,7 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
                       ref={(el) => (otpInputRefs.current[i] = el)}
                       type="text"
                       inputMode="numeric"
-                      autoComplete="off"
+                      autoComplete={i === 0 ? "one-time-code" : "off"}
                       maxLength={1}
                       value={otpDigits[i]}
                       onChange={(e) => handleOtpDigitChange(i, e.target.value)}
