@@ -542,12 +542,31 @@ export function HomePage() {
                 </div>
 
                 {listingType === 'buy' && searchCategory === 'residential' && (
-                  <div className="space-y-4 border-t border-gray-200 pt-4">
-                    <div className="overflow-x-auto pb-2 -mx-4 px-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                      <div className="flex gap-4 min-w-max">
+                  <div className="space-y-3 border-t-2 border-gray-200 pt-4 mt-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h2 className="text-base font-bold text-gray-800">Filters</h2>
+                      <button
+                        onClick={() => {
+                          setSelectedBedrooms([])
+                          setPossessionStatus([])
+                          setMinArea('')
+                          setMaxArea('')
+                          setAreaUnit('sqft')
+                          setSaleType([])
+                          setPostedBy([])
+                          setFurnishingStatus([])
+                          setAmenities([])
+                        }}
+                        className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                      >
+                        Clear All
+                      </button>
+                    </div>
+                    <div className="overflow-x-auto pb-3 -mx-4 px-4" style={{ scrollbarWidth: 'thin', scrollbarColor: '#cbd5e0 #f1f5f9' }}>
+                      <div className="flex gap-6 min-w-max">
                         {/* Property Type */}
-                        <div className="flex-shrink-0">
-                          <h3 className="text-sm font-semibold text-gray-700 mb-2">Property Type</h3>
+                        <div className="flex-shrink-0 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                          <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wide">Property Type</h3>
                           <div className="flex gap-2">
                             <button
                               type="button"
@@ -590,8 +609,8 @@ export function HomePage() {
 
                         {/* No. of Bedrooms - Only for Flat/House */}
                         {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
-                          <div className="flex-shrink-0">
-                            <h3 className="text-sm font-semibold text-gray-700 mb-2">No. of Bedrooms</h3>
+                          <div className="flex-shrink-0 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                            <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wide">No. of Bedrooms</h3>
                             <div className="flex gap-2">
                               {['1', '2', '3', '4'].map((bhk) => (
                                 <button
@@ -619,8 +638,8 @@ export function HomePage() {
 
                         {/* Possession Status - Only for Flat/House */}
                         {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
-                          <div className="flex-shrink-0">
-                            <h3 className="text-sm font-semibold text-gray-700 mb-2">Possession Status</h3>
+                          <div className="flex-shrink-0 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                            <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wide">Possession Status</h3>
                             <div className="flex gap-2">
                               <button
                                 type="button"
@@ -661,8 +680,8 @@ export function HomePage() {
                         )}
 
                         {/* Covered Area */}
-                        <div className="flex-shrink-0">
-                          <h3 className="text-sm font-semibold text-gray-700 mb-2">Covered Area</h3>
+                        <div className="flex-shrink-0 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                          <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wide">Covered Area</h3>
                           <div className="flex gap-2 items-center">
                             <input
                               type="text"
@@ -695,8 +714,8 @@ export function HomePage() {
 
                         {/* Sale Type - Only for Flat/House */}
                         {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
-                          <div className="flex-shrink-0">
-                            <h3 className="text-sm font-semibold text-gray-700 mb-2">Sale Type</h3>
+                          <div className="flex-shrink-0 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                            <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wide">Sale Type</h3>
                             <div className="flex gap-2">
                               <button
                                 type="button"
@@ -737,8 +756,8 @@ export function HomePage() {
                         )}
 
                         {/* Posted By */}
-                        <div className="flex-shrink-0">
-                          <h3 className="text-sm font-semibold text-gray-700 mb-2">Posted By</h3>
+                        <div className="flex-shrink-0 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                          <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wide">Posted By</h3>
                           <div className="flex gap-2">
                             {['Agent', 'Owner', 'Builder'].map((type) => (
                               <button
@@ -766,8 +785,8 @@ export function HomePage() {
 
                         {/* Furnishing Status - Only for Flat/House */}
                         {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
-                          <div className="flex-shrink-0">
-                            <h3 className="text-sm font-semibold text-gray-700 mb-2">Furnishing Status</h3>
+                          <div className="flex-shrink-0 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                            <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wide">Furnishing Status</h3>
                             <div className="flex gap-2">
                               {['Furnished', 'Semi-Furnished', 'Unfurnished'].map((status) => (
                                 <button
@@ -796,8 +815,8 @@ export function HomePage() {
 
                         {/* Amenities - Only for Flat/House */}
                         {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
-                          <div className="flex-shrink-0">
-                            <h3 className="text-sm font-semibold text-gray-700 mb-2">Amenities</h3>
+                          <div className="flex-shrink-0 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                            <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wide">Amenities</h3>
                             <div className="flex gap-2">
                               {['Parking', 'Gym', 'Swimming Pool', 'Security'].map((amenity) => (
                                 <button
