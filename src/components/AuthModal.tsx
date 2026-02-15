@@ -20,6 +20,8 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
   const [otpDigits, setOtpDigits] = useState<string[]>(['', '', '', '', '', ''])
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([])
   const phoneInputRef = useRef<HTMLInputElement>(null)
+  const phoneRef = useRef<string>('')
+  const verifyingRef = useRef(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [otpSent, setOtpSent] = useState(false)
@@ -79,24 +81,29 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
     }
   }, [authMethod, otpSent])
 
+  useEffect(() => {
+    if (otpDigits.join('').length === 6 && !loading) {
+      handleVerifyOtp()
+    }
+  }, [otpDigits])
+
   const validatePhoneNumber = (phone: string) => {
     const cleaned = phone.replace(/\D/g, '')
     return cleaned.length === 10 && /^[6-9]\d{9}$/.test(cleaned)
   }
 
   const handleSendOtp = async (e?: React.FormEvent) => {
-    if (e) {
-      e.preventDefault()
-    }
+    if (e) e.preventDefault()
+
     setError('')
 
     if (!validatePhoneNumber(phoneNumber)) {
-      alert('Enter valid 10-digit Indian mobile number')
+      setError('Enter valid 10-digit Indian mobile number')
       return
     }
 
     if (resendAttempts >= 3) {
-      setError('Maximum resend attempts reached. Please try again later.')
+      setError('Maximum attempts reached. Try again later.')
       return
     }
 
@@ -104,13 +111,17 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
 
     try {
       const fullPhone = `${countryCode}${phoneNumber}`
+
       await signInWithPhone(fullPhone, intentRole)
-      setOtpPhoneNumber(fullPhone) // Store the exact phone number used for OTP
+
+      phoneRef.current = fullPhone
+      setOtpPhoneNumber(fullPhone)
       setOtpSent(true)
       setResendTimer(30)
       setResendAttempts((prev) => prev + 1)
+
     } catch (err: any) {
-      setError(err.message || 'Failed to send OTP. Please try again.')
+      setError(err.message || 'Failed to send OTP')
     } finally {
       setLoading(false)
     }
@@ -149,43 +160,49 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
     otpInputRefs.current[nextEmptyIndex]?.focus()
   }
 
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
+  const handleVerifyOtp = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
+
+    if (verifyingRef.current) return
 
     const otpValue = otpDigits.join('')
+
     if (otpValue.length !== 6) {
-      setError('Please enter a valid 6-digit OTP')
+      setError('Enter valid 6-digit OTP')
       return
     }
 
-    if (!otpPhoneNumber) {
-      setError('Session expired. Please request OTP again.')
+    if (!phoneRef.current) {
+      setError('Session expired. Please resend OTP.')
       return
     }
 
+    verifyingRef.current = true
     setLoading(true)
+    setError('')
 
     try {
-      // Use the stored phone number from when OTP was sent
-      await verifyOtp(otpPhoneNumber, otpValue)
+      await verifyOtp(phoneRef.current, otpValue)
+
       localStorage.setItem('last_login_method', 'phone')
       onClose()
+
     } catch (err: any) {
-      setError(err.message || 'Invalid OTP. Please try again.')
+      setError(err.message || 'Invalid or expired OTP')
     } finally {
+      verifyingRef.current = false
       setLoading(false)
     }
   }
 
   const handleResendOtp = async () => {
-    if (resendTimer > 0 || resendAttempts >= 3) return
+    if (resendTimer > 0) return
 
-    // Clear old OTP
     setOtpDigits(['', '', '', '', '', ''])
     setError('')
+    setOtpSent(false)
+    verifyingRef.current = false
 
-    // Send new OTP without fake event
     await handleSendOtp()
   }
 
@@ -492,6 +509,8 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
                   setOtpSent(false)
                   setOtpDigits(['', '', '', '', '', ''])
                   setOtpPhoneNumber('')
+                  phoneRef.current = ''
+                  verifyingRef.current = false
                   setError('')
                   setResendTimer(0)
                   setResendAttempts(0)

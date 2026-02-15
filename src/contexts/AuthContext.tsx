@@ -111,12 +111,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   /* ======================================================
-     ✅ MOBILE + OTP LOGIN (TWILIO VERIFY COMPATIBLE)
+     ✅ PRODUCTION MOBILE OTP LOGIN
      ====================================================== */
 
   const signInWithPhone = async (phone: string, intentRole?: 'buyer' | 'owner') => {
     const { error } = await supabase.auth.signInWithOtp({
-      phone, // MUST be +91XXXXXXXXXX
+      phone,
       options: {
         shouldCreateUser: true,
         data: {
@@ -127,11 +127,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (error) {
       console.error('OTP send error:', error.message)
-      throw error
+      throw new Error(error.message)
     }
   }
 
   const verifyOtp = async (phone: string, otp: string) => {
+    if (!phone || !otp) {
+      throw new Error('Session expired. Please request OTP again.')
+    }
+
     const { error } = await supabase.auth.verifyOtp({
       phone,
       token: otp,
@@ -140,11 +144,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (error) {
       console.error('OTP verify error:', error.message)
-      throw error
+      throw new Error('Invalid or expired OTP')
     }
-
-    // Do NOT redirect here.
-    // onAuthStateChange will handle session + profile creation.
   }
 
   /* ======================================================
