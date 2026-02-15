@@ -328,7 +328,7 @@ export function HomePage() {
             </div>
 
             <MobileActionCards
-              onSearchClick={() => navigate('/search')}
+              onSearchClick={() => navigate('/mobile-search')}
               onPostClick={() => {
                 window.location.href = '/add-property'
               }}
