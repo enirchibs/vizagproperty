@@ -129,41 +129,53 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
 
   const handleOtpDigitChange = (index: number, value: string) => {
     if (!value) {
-      const newOtp = [...otpDigits]
-      newOtp[index] = ''
-      setOtpDigits(newOtp)
+      const updated = [...otpDigits]
+      updated[index] = ''
+      setOtpDigits(updated)
       return
     }
 
-    // Handle Chrome Autofill (full OTP injected into single input)
+    // Handle Chrome Autofill (full OTP injected)
     if (value.length > 1) {
       const cleaned = value.replace(/\D/g, '').slice(0, 6)
-
       if (!cleaned) return
 
-      const newOtp = [...otpDigits]
+      const updated = ['', '', '', '', '', '']
 
       for (let i = 0; i < cleaned.length; i++) {
-        newOtp[i] = cleaned[i]
+        updated[i] = cleaned[i]
       }
 
-      setOtpDigits(newOtp)
+      setOtpDigits(updated)
 
-      const lastIndex = Math.min(cleaned.length - 1, 5)
-      otpInputRefs.current[lastIndex]?.focus()
+      // Auto focus last filled digit
+      otpInputRefs.current[Math.min(cleaned.length - 1, 5)]?.focus()
+
+      // Auto submit if 6 digits
+      if (cleaned.length === 6) {
+        setTimeout(() => {
+          handleVerifyOtp(new Event('submit') as any)
+        }, 100)
+      }
 
       return
     }
 
-    // Normal single digit entry
     if (!/^\d$/.test(value)) return
 
-    const newOtp = [...otpDigits]
-    newOtp[index] = value
-    setOtpDigits(newOtp)
+    const updated = [...otpDigits]
+    updated[index] = value
+    setOtpDigits(updated)
 
     if (index < 5) {
       otpInputRefs.current[index + 1]?.focus()
+    }
+
+    // Auto submit when all filled manually
+    if (updated.join('').length === 6) {
+      setTimeout(() => {
+        handleVerifyOtp(new Event('submit') as any)
+      }, 100)
     }
   }
 
@@ -171,29 +183,6 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
     if (e.key === 'Backspace' && !otpDigits[index] && index > 0) {
       otpInputRefs.current[index - 1]?.focus()
     }
-  }
-
-  const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault()
-
-    const pasted = e.clipboardData
-      .getData('text')
-      .replace(/\D/g, '')
-      .slice(0, 6)
-
-    if (!pasted) return
-
-    const newOtp = [...otpDigits]
-
-    for (let i = 0; i < pasted.length; i++) {
-      newOtp[i] = pasted[i]
-    }
-
-    setOtpDigits(newOtp)
-
-    // Move focus to last filled box
-    const lastIndex = Math.min(pasted.length - 1, 5)
-    otpInputRefs.current[lastIndex]?.focus()
   }
 
   const handleVerifyOtp = async (e?: React.FormEvent) => {
@@ -499,19 +488,25 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
               )}
 
               <form onSubmit={handleVerifyOtp} className="space-y-4">
-                <div className="flex justify-between gap-2 mb-4">
+                <div className="flex justify-between gap-2 mb-4 relative">
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    className="absolute opacity-0 pointer-events-none"
+                    onChange={(e) => handleOtpDigitChange(0, e.target.value)}
+                  />
                   {[...Array(6)].map((_, i) => (
                     <input
                       key={i}
                       ref={(el) => (otpInputRefs.current[i] = el)}
-                      type="text"
+                      type="tel"
                       inputMode="numeric"
                       autoComplete={i === 0 ? "one-time-code" : "off"}
-                      maxLength={1}
+                      maxLength={6}
                       value={otpDigits[i]}
                       onChange={(e) => handleOtpDigitChange(i, e.target.value)}
                       onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                      onPaste={i === 0 ? handleOtpPaste : undefined}
                       className="w-11 h-12 text-center text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2F4DA0] focus:border-[#2F4DA0]"
                     />
                   ))}
