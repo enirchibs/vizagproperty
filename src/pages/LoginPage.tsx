@@ -113,7 +113,7 @@ export function LoginPage() {
 
     try {
       const formattedPhone = phoneNumber.startsWith('+91') ? phoneNumber : `+91${phoneNumber}`
-      await verifyOtp(formattedPhone, otp, intentRole, redirectParam)
+      await verifyOtp(formattedPhone, otp)
       localStorage.setItem('lastLogin', 'phone')
     } catch (err: any) {
       setError(err.message || 'Invalid OTP. Please try again.')

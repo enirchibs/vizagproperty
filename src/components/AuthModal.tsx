@@ -159,11 +159,16 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
       return
     }
 
+    if (!otpPhoneNumber) {
+      setError('Session expired. Please request OTP again.')
+      return
+    }
+
     setLoading(true)
 
     try {
       // Use the stored phone number from when OTP was sent
-      await verifyOtp(otpPhoneNumber, otpValue, intentRole, redirectTo)
+      await verifyOtp(otpPhoneNumber, otpValue)
       localStorage.setItem('last_login_method', 'phone')
       onClose()
     } catch (err: any) {

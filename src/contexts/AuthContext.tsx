@@ -12,12 +12,7 @@ interface AuthContextType {
   showUsernamePrompt: boolean
   setShowUsernamePrompt: (show: boolean) => void
   signInWithPhone: (phone: string, intentRole?: 'buyer' | 'owner') => Promise<void>
-  verifyOtp: (
-    phone: string,
-    otp: string,
-    intentRole?: 'buyer' | 'owner',
-    redirectTo?: string
-  ) => Promise<void>
+  verifyOtp: (phone: string, otp: string) => Promise<void>
   signInWithEmail: (email: string, password: string) => Promise<void>
   signUpWithEmail: (email: string, password: string, intentRole?: 'buyer' | 'owner') => Promise<void>
   signInWithGoogle: () => Promise<void>
@@ -136,13 +131,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const verifyOtp = async (
-    phone: string,
-    otp: string,
-    _intentRole?: 'buyer' | 'owner',
-    redirectTo?: string
-  ) => {
-    const { data, error } = await supabase.auth.verifyOtp({
+  const verifyOtp = async (phone: string, otp: string) => {
+    const { error } = await supabase.auth.verifyOtp({
       phone,
       token: otp,
       type: 'sms'
@@ -153,11 +143,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw error
     }
 
-    // Let onAuthStateChange handler create the user profile
-    // This avoids race conditions with session token setup
-    if (data?.session && redirectTo) {
-      window.location.href = redirectTo
-    }
+    // Do NOT redirect here.
+    // onAuthStateChange will handle session + profile creation.
   }
 
   /* ======================================================
