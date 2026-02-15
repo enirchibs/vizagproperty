@@ -299,13 +299,6 @@ export function HomePage() {
         placeholder="Search locality (3+ letters)"
       />
 
-      <MobileActionCards
-        onSearchClick={() => navigate('/search')}
-        onPostClick={() => {
-          window.location.href = '/add-property'
-        }}
-      />
-
       <MobileCategoryGrid />
 
       <section id="search-section" className="relative py-8 md:py-16 px-4">
@@ -333,6 +326,13 @@ export function HomePage() {
                 Get instant buyers & tenants in Vizag
               </p>
             </div>
+
+            <MobileActionCards
+              onSearchClick={() => navigate('/search')}
+              onPostClick={() => {
+                window.location.href = '/add-property'
+              }}
+            />
 
             <div className="hidden md:block bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
               <div className="flex border-b border-gray-200">
