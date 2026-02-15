@@ -14,6 +14,7 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
   const [authMethod, setAuthMethod] = useState<'phone' | 'email'>(lastMethod)
   const [countryCode, setCountryCode] = useState('+91')
   const [phoneNumber, setPhoneNumber] = useState('')
+  const [otpPhoneNumber, setOtpPhoneNumber] = useState('') // Store the phone used for OTP
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [otpDigits, setOtpDigits] = useState<string[]>(['', '', '', '', '', ''])
@@ -83,12 +84,14 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
     return cleaned.length === 10 && /^[6-9]\d{9}$/.test(cleaned)
   }
 
-  const handleSendOtp = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSendOtp = async (e?: React.FormEvent) => {
+    if (e) {
+      e.preventDefault()
+    }
     setError('')
 
     if (!validatePhoneNumber(phoneNumber)) {
-      setError('Please enter a valid 10-digit mobile number')
+      alert('Enter valid 10-digit Indian mobile number')
       return
     }
 
@@ -102,6 +105,7 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
     try {
       const fullPhone = `${countryCode}${phoneNumber}`
       await signInWithPhone(fullPhone)
+      setOtpPhoneNumber(fullPhone) // Store the exact phone number used for OTP
       setOtpSent(true)
       setResendTimer(30)
       setResendAttempts((prev) => prev + 1)
@@ -158,8 +162,8 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
     setLoading(true)
 
     try {
-      const fullPhone = `${countryCode}${phoneNumber}`
-      await verifyOtp(fullPhone, otpValue, intentRole, redirectTo)
+      // Use the stored phone number from when OTP was sent
+      await verifyOtp(otpPhoneNumber, otpValue, intentRole, redirectTo)
       localStorage.setItem('last_login_method', 'phone')
       onClose()
     } catch (err: any) {
@@ -171,8 +175,13 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
 
   const handleResendOtp = async () => {
     if (resendTimer > 0 || resendAttempts >= 3) return
+
+    // Clear old OTP
     setOtpDigits(['', '', '', '', '', ''])
-    await handleSendOtp(new Event('submit') as any)
+    setError('')
+
+    // Send new OTP without fake event
+    await handleSendOtp()
   }
 
   const handleEmailAuth = async (e: React.FormEvent) => {
@@ -226,11 +235,6 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
       setError(err.message || 'Google sign-in failed. Please try again.')
       setLoading(false)
     }
-  }
-
-  const maskPhoneNumber = (phone: string) => {
-    if (phone.length < 10) return phone
-    return `XXXXXXX${phone.slice(-3)}`
   }
 
   return (
@@ -427,7 +431,7 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
 
               <h2 className="text-lg font-semibold mb-2">Verify Mobile</h2>
               <p className="text-sm text-gray-500 mb-4">
-                Enter the 6-digit OTP sent to <b>{countryCode} {maskPhoneNumber(phoneNumber)}</b>
+                Enter the 6-digit OTP sent to <b>{otpPhoneNumber}</b>
               </p>
 
               {error && (
@@ -482,7 +486,10 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
                 onClick={() => {
                   setOtpSent(false)
                   setOtpDigits(['', '', '', '', '', ''])
+                  setOtpPhoneNumber('')
                   setError('')
+                  setResendTimer(0)
+                  setResendAttempts(0)
                 }}
                 className="mt-6 text-gray-600 hover:text-gray-800 text-sm font-semibold text-center w-full"
               >

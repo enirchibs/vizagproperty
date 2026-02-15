@@ -121,7 +121,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signInWithPhone = async (phone: string) => {
     const { error } = await supabase.auth.signInWithOtp({
-      phone // MUST be +91XXXXXXXXXX
+      phone, // MUST be +91XXXXXXXXXX
+      options: {
+        shouldCreateUser: true
+      }
     })
 
     if (error) {
