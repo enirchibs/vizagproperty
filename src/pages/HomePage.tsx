@@ -33,9 +33,6 @@ export function HomePage() {
   const [location, setLocation] = useState('Visakhapatnam')
   const [locality, setLocality] = useState('')
   const [localityId, setLocalityId] = useState<string | undefined>()
-  const [bhkType, setBhkType] = useState('')
-  const [propertyStatus, setPropertyStatus] = useState('')
-  const [newBuilderProjects, setNewBuilderProjects] = useState(false)
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -46,6 +43,17 @@ export function HomePage() {
     localityName: string
   } | null>(null)
   const searchInputRef = useRef<HTMLDivElement>(null)
+
+  // Additional filter states
+  const [minArea, setMinArea] = useState('')
+  const [maxArea, setMaxArea] = useState('')
+  const [areaUnit, setAreaUnit] = useState('sqft')
+  const [saleType, setSaleType] = useState<string[]>([])
+  const [postedBy, setPostedBy] = useState<string[]>([])
+  const [furnishingStatus, setFurnishingStatus] = useState<string[]>([])
+  const [amenities, setAmenities] = useState<string[]>([])
+  const [selectedBedrooms, setSelectedBedrooms] = useState<string[]>([])
+  const [possessionStatus, setPossessionStatus] = useState<string[]>([])
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -231,18 +239,44 @@ export function HomePage() {
     }
 
     // OPTIONAL: Only add BHK filter if selected
-    if (bhkType && bhkType !== '') {
-      params.append('bhk', bhkType)
+    if (selectedBedrooms.length > 0) {
+      params.append('bhk', selectedBedrooms.join(','))
     }
 
     // OPTIONAL: Only add property status if selected
-    if (propertyStatus && propertyStatus !== '') {
-      params.append('status', propertyStatus)
+    if (possessionStatus.length > 0) {
+      params.append('status', possessionStatus.join(','))
     }
 
-    // OPTIONAL: Only add new builder flag if checked
-    if (newBuilderProjects) {
-      params.append('new_builder', 'true')
+    // OPTIONAL: Only add area filters if set
+    if (minArea) {
+      params.append('minArea', minArea)
+    }
+    if (maxArea) {
+      params.append('maxArea', maxArea)
+    }
+    if (areaUnit) {
+      params.append('areaUnit', areaUnit)
+    }
+
+    // OPTIONAL: Add sale type filter
+    if (saleType.length > 0) {
+      params.append('saleType', saleType.join(','))
+    }
+
+    // OPTIONAL: Add posted by filter
+    if (postedBy.length > 0) {
+      params.append('postedBy', postedBy.join(','))
+    }
+
+    // OPTIONAL: Add furnishing status filter
+    if (furnishingStatus.length > 0) {
+      params.append('furnishing', furnishingStatus.join(','))
+    }
+
+    // OPTIONAL: Add amenities filter
+    if (amenities.length > 0) {
+      params.append('amenities', amenities.join(','))
     }
 
     window.location.href = `/properties?${params.toString()}`
@@ -508,85 +542,288 @@ export function HomePage() {
                 </div>
 
                 {listingType === 'buy' && searchCategory === 'residential' && (
-                  <div className="space-y-4">
-                    <div className="flex flex-wrap items-center gap-4">
-                      <div className="flex items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => setPropertyCategory('full_house')}
-                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
-                            propertyCategory === 'full_house'
-                              ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          <Home className="h-4 w-4 inline-block mr-1.5" />
-                          Full House
-                        </button>
+                  <div className="space-y-4 border-t border-gray-200 pt-4">
+                    <div className="overflow-x-auto pb-2 -mx-4 px-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                      <div className="flex gap-4 min-w-max">
+                        {/* Property Type */}
+                        <div className="flex-shrink-0">
+                          <h3 className="text-sm font-semibold text-gray-700 mb-2">Property Type</h3>
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setPropertyCategory('flat_apartment')}
+                              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
+                                propertyCategory === 'flat_apartment'
+                                  ? 'bg-primary-600 text-white shadow-md'
+                                  : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                              }`}
+                            >
+                              <Building2 className="h-4 w-4" />
+                              Flat
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setPropertyCategory('full_house')}
+                              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
+                                propertyCategory === 'full_house'
+                                  ? 'bg-primary-600 text-white shadow-md'
+                                  : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                              }`}
+                            >
+                              <Home className="h-4 w-4" />
+                              House/Villa
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setPropertyCategory('land_plot')}
+                              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
+                                propertyCategory === 'land_plot'
+                                  ? 'bg-primary-600 text-white shadow-md'
+                                  : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                              }`}
+                            >
+                              <Building2 className="h-4 w-4" />
+                              Plot
+                            </button>
+                          </div>
+                        </div>
 
-                        <button
-                          type="button"
-                          onClick={() => setPropertyCategory('land_plot')}
-                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
-                            propertyCategory === 'land_plot'
-                              ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          <Building2 className="h-4 w-4 inline-block mr-1.5" />
-                          Land/Plot
-                        </button>
+                        {/* No. of Bedrooms - Only for Flat/House */}
+                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
+                          <div className="flex-shrink-0">
+                            <h3 className="text-sm font-semibold text-gray-700 mb-2">No. of Bedrooms</h3>
+                            <div className="flex gap-2">
+                              {['1', '2', '3', '4'].map((bhk) => (
+                                <button
+                                  key={bhk}
+                                  type="button"
+                                  onClick={() => {
+                                    if (selectedBedrooms.includes(bhk)) {
+                                      setSelectedBedrooms(selectedBedrooms.filter(b => b !== bhk))
+                                    } else {
+                                      setSelectedBedrooms([...selectedBedrooms, bhk])
+                                    }
+                                  }}
+                                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                    selectedBedrooms.includes(bhk)
+                                      ? 'bg-primary-600 text-white shadow-md'
+                                      : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                                  }`}
+                                >
+                                  {bhk} BHK
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
 
-                        <button
-                          type="button"
-                          onClick={() => setPropertyCategory('flat_apartment')}
-                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
-                            propertyCategory === 'flat_apartment'
-                              ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          <Building2 className="h-4 w-4 inline-block mr-1.5" />
-                          Flat/Apartment
-                        </button>
+                        {/* Possession Status - Only for Flat/House */}
+                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
+                          <div className="flex-shrink-0">
+                            <h3 className="text-sm font-semibold text-gray-700 mb-2">Possession Status</h3>
+                            <div className="flex gap-2">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (possessionStatus.includes('under_construction')) {
+                                    setPossessionStatus(possessionStatus.filter(s => s !== 'under_construction'))
+                                  } else {
+                                    setPossessionStatus([...possessionStatus, 'under_construction'])
+                                  }
+                                }}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                  possessionStatus.includes('under_construction')
+                                    ? 'bg-primary-600 text-white shadow-md'
+                                    : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                                }`}
+                              >
+                                + Under Construction
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (possessionStatus.includes('ready_to_move')) {
+                                    setPossessionStatus(possessionStatus.filter(s => s !== 'ready_to_move'))
+                                  } else {
+                                    setPossessionStatus([...possessionStatus, 'ready_to_move'])
+                                  }
+                                }}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                  possessionStatus.includes('ready_to_move')
+                                    ? 'bg-primary-600 text-white shadow-md'
+                                    : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                                }`}
+                              >
+                                Ready to Move
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Covered Area */}
+                        <div className="flex-shrink-0">
+                          <h3 className="text-sm font-semibold text-gray-700 mb-2">Covered Area</h3>
+                          <div className="flex gap-2 items-center">
+                            <input
+                              type="text"
+                              placeholder="Min"
+                              value={minArea}
+                              onChange={(e) => setMinArea(e.target.value)}
+                              className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            />
+                            <span className="text-gray-500">to</span>
+                            <input
+                              type="text"
+                              placeholder="Max"
+                              value={maxArea}
+                              onChange={(e) => setMaxArea(e.target.value)}
+                              className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            />
+                            <select
+                              value={areaUnit}
+                              onChange={(e) => setAreaUnit(e.target.value)}
+                              className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            >
+                              <option value="sqft">Sqft</option>
+                              <option value="sqyd">Sq.yd</option>
+                              <option value="sqm">Sq.m</option>
+                              <option value="acre">Acre</option>
+                              <option value="cents">Cents</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* Sale Type - Only for Flat/House */}
+                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
+                          <div className="flex-shrink-0">
+                            <h3 className="text-sm font-semibold text-gray-700 mb-2">Sale Type</h3>
+                            <div className="flex gap-2">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (saleType.includes('new')) {
+                                    setSaleType(saleType.filter(t => t !== 'new'))
+                                  } else {
+                                    setSaleType([...saleType, 'new'])
+                                  }
+                                }}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                  saleType.includes('new')
+                                    ? 'bg-primary-600 text-white shadow-md'
+                                    : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                                }`}
+                              >
+                                + New
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (saleType.includes('resale')) {
+                                    setSaleType(saleType.filter(t => t !== 'resale'))
+                                  } else {
+                                    setSaleType([...saleType, 'resale'])
+                                  }
+                                }}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                  saleType.includes('resale')
+                                    ? 'bg-primary-600 text-white shadow-md'
+                                    : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                                }`}
+                              >
+                                + Resale
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Posted By */}
+                        <div className="flex-shrink-0">
+                          <h3 className="text-sm font-semibold text-gray-700 mb-2">Posted By</h3>
+                          <div className="flex gap-2">
+                            {['Agent', 'Owner', 'Builder'].map((type) => (
+                              <button
+                                key={type}
+                                type="button"
+                                onClick={() => {
+                                  const lowerType = type.toLowerCase()
+                                  if (postedBy.includes(lowerType)) {
+                                    setPostedBy(postedBy.filter(p => p !== lowerType))
+                                  } else {
+                                    setPostedBy([...postedBy, lowerType])
+                                  }
+                                }}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                  postedBy.includes(type.toLowerCase())
+                                    ? 'bg-primary-600 text-white shadow-md'
+                                    : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                                }`}
+                              >
+                                + {type}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Furnishing Status - Only for Flat/House */}
+                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
+                          <div className="flex-shrink-0">
+                            <h3 className="text-sm font-semibold text-gray-700 mb-2">Furnishing Status</h3>
+                            <div className="flex gap-2">
+                              {['Furnished', 'Semi-Furnished', 'Unfurnished'].map((status) => (
+                                <button
+                                  key={status}
+                                  type="button"
+                                  onClick={() => {
+                                    const lowerStatus = status.toLowerCase().replace('-', '_')
+                                    if (furnishingStatus.includes(lowerStatus)) {
+                                      setFurnishingStatus(furnishingStatus.filter(f => f !== lowerStatus))
+                                    } else {
+                                      setFurnishingStatus([...furnishingStatus, lowerStatus])
+                                    }
+                                  }}
+                                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                    furnishingStatus.includes(status.toLowerCase().replace('-', '_'))
+                                      ? 'bg-primary-600 text-white shadow-md'
+                                      : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                                  }`}
+                                >
+                                  + {status}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Amenities - Only for Flat/House */}
+                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
+                          <div className="flex-shrink-0">
+                            <h3 className="text-sm font-semibold text-gray-700 mb-2">Amenities</h3>
+                            <div className="flex gap-2">
+                              {['Parking', 'Gym', 'Swimming Pool', 'Security'].map((amenity) => (
+                                <button
+                                  key={amenity}
+                                  type="button"
+                                  onClick={() => {
+                                    const lowerAmenity = amenity.toLowerCase().replace(' ', '_')
+                                    if (amenities.includes(lowerAmenity)) {
+                                      setAmenities(amenities.filter(a => a !== lowerAmenity))
+                                    } else {
+                                      setAmenities([...amenities, lowerAmenity])
+                                    }
+                                  }}
+                                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                    amenities.includes(amenity.toLowerCase().replace(' ', '_'))
+                                      ? 'bg-primary-600 text-white shadow-md'
+                                      : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                                  }`}
+                                >
+                                  + {amenity}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
-
-                      <div className="flex-1 min-w-[200px]">
-                        <select
-                          value={bhkType}
-                          onChange={(e) => setBhkType(e.target.value)}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
-                        >
-                          <option value="">BHK Type</option>
-                          <option value="1">1 BHK</option>
-                          <option value="2">2 BHK</option>
-                          <option value="3">3 BHK</option>
-                          <option value="4">4 BHK</option>
-                          <option value="5+">5+ BHK</option>
-                        </select>
-                      </div>
-
-                      <div className="flex-1 min-w-[200px]">
-                        <select
-                          value={propertyStatus}
-                          onChange={(e) => setPropertyStatus(e.target.value)}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
-                        >
-                          <option value="">Property Status</option>
-                          <option value="ready_to_move">Ready to Move</option>
-                          <option value="under_construction">Under Construction</option>
-                        </select>
-                      </div>
-
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={newBuilderProjects}
-                          onChange={(e) => setNewBuilderProjects(e.target.checked)}
-                          className="w-4 h-4 text-primary-600 rounded"
-                        />
-                        <span className="text-sm font-medium text-gray-700">New Builder Projects</span>
-                      </label>
                     </div>
                   </div>
                 )}
@@ -647,23 +884,6 @@ export function HomePage() {
                           Flat/Apartment
                         </button>
                       </div>
-
-                      {(propertyCategory === 'full_house' || propertyCategory === 'flat_apartment') && (
-                        <div className="flex-1 min-w-[200px]">
-                          <select
-                            value={bhkType}
-                            onChange={(e) => setBhkType(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent bg-white"
-                          >
-                            <option value="">BHK Type</option>
-                            <option value="1">1 BHK</option>
-                            <option value="2">2 BHK</option>
-                            <option value="3">3 BHK</option>
-                            <option value="4">4 BHK</option>
-                            <option value="5+">5+ BHK</option>
-                          </select>
-                        </div>
-                      )}
                     </div>
                   </div>
                 )}
