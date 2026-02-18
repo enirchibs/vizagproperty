@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Search, Mic, MicOff, Filter, X, MapPin, MessageCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property, SearchFilters } from '../types'
-import { PropertyCard } from '../components/PropertyCard'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp } from '../lib/whatsapp'
@@ -19,27 +18,74 @@ export function PropertiesPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const query = params.get('keyword') || params.get('q')
-    const propertyType = params.get('propertyType')
-    const listingType = params.get('listingType')
+    const propertyTypeRaw = params.get('propertyType') || params.get('category')
+    const listingType = params.get('listingType') || params.get('type')
     const localityId = params.get('localityId')
     const localityName = params.get('locality')
+    const bhk = params.get('bhk')
+    const status = params.get('status')
+    const minPrice = params.get('minPrice')
+    const maxPrice = params.get('maxPrice')
 
     if (query) {
       setSearchQuery(query)
     }
 
-    if (propertyType) {
-      setFilters(prev => ({ ...prev, property_type: propertyType }))
+    // Map mobile category names to search API property types
+    const categoryMap: Record<string, string> = {
+      'full_house': 'villa',
+      'flat_apartment': 'flat',
+      'land_plot': 'plot',
+      'pg_hostel': 'pg',
+      'flatmates': 'pg',
+      'commercial': 'commercial',
+      // Already mapped types
+      'villa': 'villa',
+      'flat': 'flat',
+      'plot': 'plot',
+      'pg': 'pg'
+    }
+
+    if (propertyTypeRaw) {
+      const mappedType = categoryMap[propertyTypeRaw] || propertyTypeRaw
+      setFilters(prev => ({ ...prev, property_type: mappedType }))
     }
 
     if (listingType) {
-      setFilters(prev => ({ ...prev, listing_type: listingType }))
+      // Map 'buy' and 'commercial' to 'sale'
+      const mappedListingType = listingType === 'buy' || listingType === 'commercial' ? 'sale' : listingType
+      setFilters(prev => ({ ...prev, listing_type: mappedListingType }))
     }
 
     if (localityId) {
       setFilters(prev => ({ ...prev, locality_id: localityId }))
     } else if (localityName) {
       setFilters(prev => ({ ...prev, locality_id: localityName }))
+    }
+
+    if (bhk) {
+      const bedroomsNum = parseInt(bhk.replace('+', ''))
+      if (!isNaN(bedroomsNum)) {
+        setFilters(prev => ({ ...prev, bedrooms: bedroomsNum }))
+      }
+    }
+
+    if (status) {
+      setFilters(prev => ({ ...prev, property_status: status }))
+    }
+
+    if (minPrice) {
+      const minPriceNum = parseInt(minPrice)
+      if (!isNaN(minPriceNum)) {
+        setFilters(prev => ({ ...prev, min_price: minPriceNum }))
+      }
+    }
+
+    if (maxPrice) {
+      const maxPriceNum = parseInt(maxPrice)
+      if (!isNaN(maxPriceNum)) {
+        setFilters(prev => ({ ...prev, max_price: maxPriceNum }))
+      }
     }
 
     loadProperties()
@@ -106,6 +152,10 @@ export function PropertiesPage() {
 
       if (filters.max_price && filters.max_price < 10000000) {
         searchParams.maxPrice = filters.max_price
+      }
+
+      if (filters.property_status && filters.property_status !== '') {
+        searchParams.propertyStatus = filters.property_status
       }
 
       if (searchQuery && searchQuery.trim().length > 0) {
@@ -394,7 +444,11 @@ export function PropertiesPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {properties.map((property) => (
-              <PropertyCard key={property.id} property={property} onFavoriteChange={loadProperties} />
+              <div key={property.id} className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
+                <h3 className="font-bold text-lg mb-2">{property.title}</h3>
+                <p className="text-gray-600 text-sm mb-2">{property.description}</p>
+                <p className="text-primary-600 font-bold">₹{property.price?.toLocaleString()}</p>
+              </div>
             ))}
           </div>
         )}

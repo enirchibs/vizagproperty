@@ -268,6 +268,14 @@ export interface UnifiedSearchParams {
   maxPrice?: number
   propertyStatus?: string
   keyword?: string
+  possessionStatus?: string[]
+  saleType?: string[]
+  postedBy?: string[]
+  furnishingStatus?: string[]
+  amenities?: string[]
+  minArea?: number
+  maxArea?: number
+  areaUnit?: string
 }
 
 /**
@@ -326,6 +334,34 @@ export function buildUnifiedPropertyQuery(params: UnifiedSearchParams) {
 
   if (params.keyword) {
     query = query.or(`title.ilike.%${params.keyword}%,description.ilike.%${params.keyword}%`)
+  }
+
+  if (params.possessionStatus?.length) {
+    query = query.in('possession_status', params.possessionStatus)
+  }
+
+  if (params.saleType?.length) {
+    query = query.in('sale_type', params.saleType)
+  }
+
+  if (params.postedBy?.length) {
+    query = query.in('posted_by', params.postedBy)
+  }
+
+  if (params.furnishingStatus?.length) {
+    query = query.in('furnishing_status', params.furnishingStatus)
+  }
+
+  if (params.amenities?.length) {
+    query = query.contains('amenities', params.amenities)
+  }
+
+  if (params.minArea !== undefined && params.minArea > 0) {
+    query = query.gte('area_sqft', params.minArea)
+  }
+
+  if (params.maxArea !== undefined && params.maxArea < 10000) {
+    query = query.lte('area_sqft', params.maxArea)
   }
 
   return query.order('created_at', { ascending: false })

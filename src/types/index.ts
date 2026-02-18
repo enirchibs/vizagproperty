@@ -128,6 +128,7 @@ export interface SearchFilters {
   bathrooms?: number
   min_area?: number
   max_area?: number
+  property_status?: string
   amenities?: string[]
   radius_enabled?: boolean
   radius_km?: number
