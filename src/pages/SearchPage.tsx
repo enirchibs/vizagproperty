@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Search, SlidersHorizontal, ChevronLeft, MessageCircle, Plus, MapPin, Mic, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { PropertyCard } from '../components/PropertyCard'
 import { FiltersPanel } from '../components/FiltersPanel'
 import { usePropertySearch } from '../hooks/usePropertySearch'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
@@ -30,13 +31,6 @@ export function SearchPage() {
     propertyStatus,
     setPropertyStatus,
     setNewBuilderProjects,
-    possessionStatus,
-    saleType,
-    postedBy,
-    furnishingStatus,
-    amenities,
-    coveredArea,
-    areaUnit,
     hasSearched,
     setHasSearched,
     getDefaultSubType,
@@ -147,36 +141,6 @@ export function SearchPage() {
     if (propertySubType !== 'Land / Plot' && propertyStatus && propertyStatus !== '') {
       searchParams.propertyStatus = propertyStatus
     }
-
-    if (possessionStatus.length > 0) {
-      searchParams.possessionStatus = possessionStatus
-    }
-
-    if (saleType.length > 0) {
-      searchParams.saleType = saleType
-    }
-
-    if (postedBy.length > 0) {
-      searchParams.postedBy = postedBy
-    }
-
-    if (furnishingStatus.length > 0) {
-      searchParams.furnishingStatus = furnishingStatus
-    }
-
-    if (amenities.length > 0) {
-      searchParams.amenities = amenities
-    }
-
-    if (coveredArea[0] > 0) {
-      searchParams.minArea = coveredArea[0]
-    }
-
-    if (coveredArea[1] < 10000) {
-      searchParams.maxArea = coveredArea[1]
-    }
-
-    searchParams.areaUnit = areaUnit
 
     await search(searchParams)
 
@@ -366,11 +330,7 @@ export function SearchPage() {
                   </div>
                   <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                     {properties.map((property) => (
-                      <div key={property.id} className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
-                        <h3 className="font-bold text-lg mb-2">{property.title}</h3>
-                        <p className="text-gray-600 text-sm mb-2">{property.description}</p>
-                        <p className="text-primary-600 font-bold">₹{property.price?.toLocaleString()}</p>
-                      </div>
+                      <PropertyCard key={property.id} property={property} />
                     ))}
                   </div>
                 </>

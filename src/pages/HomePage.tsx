@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Search, Mic, MicOff, TrendingUp, Shield, Zap, CheckCircle, PhoneOff, DollarSign, Home, Building2, Store, MapPin, Users, ArrowRight, Key, X, MessageCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
+import { PropertyCard } from '../components/PropertyCard'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { ChatBot } from '../components/ChatBot'
 import { AITypingAnimation } from '../components/AITypingAnimation'
@@ -11,7 +12,6 @@ import { WelcomeMessage } from '../components/WelcomeMessage'
 import { AuthModal } from '../components/AuthModal'
 import { StickySearchBar } from '../components/StickySearchBar'
 import { MobileCategoryGrid } from '../components/MobileCategoryGrid'
-import { MagicBricksSearchCard } from '../components/MagicBricksSearchCard'
 import { useAuth } from '../contexts/AuthContext'
 import { useSearch } from '../contexts/SearchContext'
 import { useSearchHistory } from '../hooks/useSearchHistory'
@@ -24,6 +24,7 @@ import PropertiesNearYou from '../components/PropertiesNearYou'
 type PropertyCategory = 'full_house' | 'land_plot' | 'flat_apartment' | 'pg_hostel' | 'flatmates'
 
 export function HomePage() {
+  const navigate = useNavigate()
   const { user } = useAuth()
   const { listingType, setListingType, propertyCategory: searchCategory, setPropertyCategory: setSearchCategory } = useSearch()
   const { lastSearch, saveSearch } = useSearchHistory()
@@ -353,7 +354,27 @@ export function HomePage() {
         placeholder="Search locality (3+ letters)"
       />
 
-      <MagicBricksSearchCard />
+      <div className="md:hidden px-4 py-4 bg-gray-50">
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            onClick={() => navigate('/mobile-search')}
+            className="rounded-2xl bg-gradient-to-br from-red-500 to-red-600 text-white p-5 shadow-lg hover:shadow-xl transition-all active:scale-[0.98] text-left"
+          >
+            <Search className="h-6 w-6 mb-2" />
+            <h3 className="text-base font-bold mb-1">Search Property</h3>
+            <p className="text-xs opacity-90">Buy & Rent easily</p>
+          </button>
+
+          <button
+            onClick={() => navigate('/add-property')}
+            className="rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white p-5 shadow-lg hover:shadow-xl transition-all active:scale-[0.98] text-left"
+          >
+            <Home className="h-6 w-6 mb-2" />
+            <h3 className="text-base font-bold mb-1">Post Property</h3>
+            <p className="text-xs opacity-90">100% Free</p>
+          </button>
+        </div>
+      </div>
 
       <MobileCategoryGrid />
 
@@ -1352,11 +1373,7 @@ export function HomePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                   {featuredProperties.map((property) => (
                     <div key={property.id} className="animate-slide-up">
-                      <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
-                        <h3 className="font-bold text-lg mb-2">{property.title}</h3>
-                        <p className="text-gray-600 text-sm mb-2">{property.description}</p>
-                        <p className="text-primary-600 font-bold">₹{property.price?.toLocaleString()}</p>
-                      </div>
+                      <PropertyCard property={property} />
                     </div>
                   ))}
                 </div>
