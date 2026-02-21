@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import { Search, Mic, MicOff, Filter, X, MapPin, MessageCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property, SearchFilters } from '../types'
-import { PropertyCard } from '../components/PropertyCard'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
+import { PropertyCard } from '../components/PropertyCard'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp } from '../lib/whatsapp'
 
@@ -443,9 +443,9 @@ export function PropertiesPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {properties.map((property) => (
-              <PropertyCard key={property.id} property={property} onFavoriteChange={loadProperties} />
+              <PropertyCard key={property.id} property={property} />
             ))}
           </div>
         )}

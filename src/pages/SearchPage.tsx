@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Search, SlidersHorizontal, ChevronLeft, MessageCircle, Plus, MapPin, Mic, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { PropertyCard } from '../components/PropertyCard'
 import { FiltersPanel } from '../components/FiltersPanel'
+import { PropertyCard } from '../components/PropertyCard'
 import { usePropertySearch } from '../hooks/usePropertySearch'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { VIZAG_PROPERTY_PHONE_WITH_CODE } from '../config/contact'
@@ -31,6 +31,13 @@ export function SearchPage() {
     propertyStatus,
     setPropertyStatus,
     setNewBuilderProjects,
+    possessionStatus,
+    saleType,
+    postedBy,
+    furnishingStatus,
+    amenities,
+    coveredArea,
+    areaUnit,
     hasSearched,
     setHasSearched,
     getDefaultSubType,
@@ -141,6 +148,36 @@ export function SearchPage() {
     if (propertySubType !== 'Land / Plot' && propertyStatus && propertyStatus !== '') {
       searchParams.propertyStatus = propertyStatus
     }
+
+    if (possessionStatus.length > 0) {
+      searchParams.possessionStatus = possessionStatus
+    }
+
+    if (saleType.length > 0) {
+      searchParams.saleType = saleType
+    }
+
+    if (postedBy.length > 0) {
+      searchParams.postedBy = postedBy
+    }
+
+    if (furnishingStatus.length > 0) {
+      searchParams.furnishingStatus = furnishingStatus
+    }
+
+    if (amenities.length > 0) {
+      searchParams.amenities = amenities
+    }
+
+    if (coveredArea[0] > 0) {
+      searchParams.minArea = coveredArea[0]
+    }
+
+    if (coveredArea[1] < 10000) {
+      searchParams.maxArea = coveredArea[1]
+    }
+
+    searchParams.areaUnit = areaUnit
 
     await search(searchParams)
 
@@ -328,7 +365,7 @@ export function SearchPage() {
                       {properties.length} Properties
                     </h2>
                   </div>
-                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {properties.map((property) => (
                       <PropertyCard key={property.id} property={property} />
                     ))}

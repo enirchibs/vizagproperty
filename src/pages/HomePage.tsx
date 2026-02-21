@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect, useRef, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { Search, Mic, MicOff, TrendingUp, Shield, Zap, CheckCircle, PhoneOff, DollarSign, Home, Building2, Store, MapPin, Users, ArrowRight, Key, X, MessageCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
-import { PropertyCard } from '../components/PropertyCard'
+import { AdvancedFilters } from '../types/filters'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { ChatBot } from '../components/ChatBot'
 import { AITypingAnimation } from '../components/AITypingAnimation'
@@ -12,6 +12,9 @@ import { WelcomeMessage } from '../components/WelcomeMessage'
 import { AuthModal } from '../components/AuthModal'
 import { StickySearchBar } from '../components/StickySearchBar'
 import { MobileCategoryGrid } from '../components/MobileCategoryGrid'
+import { MagicBricksSearchCard } from '../components/MagicBricksSearchCard'
+import { PropertyActionCards } from '../components/PropertyActionCards'
+import { FilterModal } from '../components/FilterModal'
 import { useAuth } from '../contexts/AuthContext'
 import { useSearch } from '../contexts/SearchContext'
 import { useSearchHistory } from '../hooks/useSearchHistory'
@@ -24,7 +27,6 @@ import PropertiesNearYou from '../components/PropertiesNearYou'
 type PropertyCategory = 'full_house' | 'land_plot' | 'flat_apartment' | 'pg_hostel' | 'flatmates'
 
 export function HomePage() {
-  const navigate = useNavigate()
   const { user } = useAuth()
   const { listingType, setListingType, propertyCategory: searchCategory, setPropertyCategory: setSearchCategory } = useSearch()
   const { lastSearch, saveSearch } = useSearchHistory()
@@ -54,6 +56,13 @@ export function HomePage() {
   const [amenities, setAmenities] = useState<string[]>([])
   const [selectedBedrooms, setSelectedBedrooms] = useState<string[]>([])
   const [possessionStatus, setPossessionStatus] = useState<string[]>([])
+  const [showFilterModal, setShowFilterModal] = useState(false)
+  const [filterCategory, setFilterCategory] = useState<'buy' | 'rent' | 'projects' | 'commercial'>('buy')
+  const [filterCount, setFilterCount] = useState(0)
+  const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilters>({})
+  const [propertySubType, setPropertySubType] = useState<'residential' | 'plot' | 'pg'>('residential')
+
+  const memoizedFilters = useMemo(() => advancedFilters, [advancedFilters])
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -337,6 +346,138 @@ export function HomePage() {
     }
   }
 
+  const handleSearchCardClick = () => {
+    setShowFilterModal(true)
+  }
+
+  const handlePostCardClick = () => {
+    window.location.href = '/add-property'
+  }
+
+  const handleResetFilters = () => {
+    setFilterCount(0)
+    setAdvancedFilters({})
+  }
+
+  const handleApplyFilters = (
+    filters: AdvancedFilters,
+    category: 'buy' | 'rent' | 'projects' | 'commercial',
+    subType: 'residential' | 'plot' | 'pg'
+  ) => {
+    setAdvancedFilters(filters)
+    setPropertySubType(subType)
+
+    const params = new URLSearchParams()
+
+    if (category === 'buy' || category === 'projects') {
+      params.append('type', 'sale')
+    } else if (category === 'rent') {
+      params.append('type', 'rent')
+    } else if (category === 'commercial') {
+      params.append('category', 'commercial')
+    }
+
+    if (subType === 'residential' && filters.propertyType) {
+      params.append('propertyType', filters.propertyType)
+    } else if (subType === 'plot') {
+      params.append('propertyType', 'plot')
+    } else if (subType === 'pg') {
+      params.append('propertyType', 'pg')
+    }
+
+    if (localityId) {
+      params.append('localityId', localityId)
+    } else if (locality && locality.trim().length >= 3) {
+      params.append('locality', locality.trim())
+    }
+
+    if (filters.bedrooms && Array.isArray(filters.bedrooms) && filters.bedrooms.length > 0) {
+      params.append('bedrooms', filters.bedrooms.join(','))
+    }
+
+    if (filters.bathrooms && Array.isArray(filters.bathrooms) && filters.bathrooms.length > 0) {
+      params.append('bathrooms', filters.bathrooms.join(','))
+    }
+
+    if (filters.furnishing && filters.furnishing.length > 0) {
+      params.append('furnishing', filters.furnishing.join(','))
+    }
+
+    if (filters.possession && filters.possession.length > 0) {
+      params.append('possession', filters.possession.join(','))
+    }
+
+    if (filters.saleType && filters.saleType.length > 0) {
+      params.append('saleType', filters.saleType.join(','))
+    }
+
+    if (filters.amenities && filters.amenities.length > 0) {
+      params.append('amenities', filters.amenities.join(','))
+    }
+
+    if (filters.coveredAreaMin) {
+      params.append('minArea', filters.coveredAreaMin.toString())
+    }
+
+    if (filters.coveredAreaMax) {
+      params.append('maxArea', filters.coveredAreaMax.toString())
+    }
+
+    if (filters.areaUnit) {
+      params.append('areaUnit', filters.areaUnit)
+    }
+
+    if (filters.commercialType) {
+      params.append('commercialType', filters.commercialType)
+    }
+
+    if (filters.facing && filters.facing.length > 0) {
+      params.append('facing', filters.facing.join(','))
+    }
+
+    if (filters.boundaryWall !== undefined) {
+      params.append('boundaryWall', filters.boundaryWall.toString())
+    }
+
+    if (filters.cornerPlot !== undefined) {
+      params.append('cornerPlot', filters.cornerPlot.toString())
+    }
+
+    if (filters.tenantPreference && filters.tenantPreference.length > 0) {
+      params.append('tenantPreference', filters.tenantPreference.join(','))
+    }
+
+    if (filters.availableFrom) {
+      params.append('availableFrom', filters.availableFrom)
+    }
+
+    if (filters.roomType) {
+      params.append('roomType', filters.roomType)
+    }
+
+    if (filters.foodIncluded !== undefined) {
+      params.append('foodIncluded', filters.foodIncluded.toString())
+    }
+
+    if (filters.gender) {
+      params.append('gender', filters.gender)
+    }
+
+    if (filters.attachedBathroom !== undefined) {
+      params.append('attachedBathroom', filters.attachedBathroom.toString())
+    }
+
+    if (filters.parking !== undefined) {
+      params.append('parking', filters.parking.toString())
+    }
+
+    if (filters.washroom !== undefined) {
+      params.append('washroom', filters.washroom.toString())
+    }
+
+    window.location.href = `/properties?${params.toString()}`
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {showWelcome && lastSearch?.locality && (
@@ -354,27 +495,7 @@ export function HomePage() {
         placeholder="Search locality (3+ letters)"
       />
 
-      <div className="md:hidden px-4 py-4 bg-gray-50">
-        <div className="grid grid-cols-2 gap-3">
-          <button
-            onClick={() => navigate('/mobile-search')}
-            className="rounded-2xl bg-gradient-to-br from-red-500 to-red-600 text-white p-5 shadow-lg hover:shadow-xl transition-all active:scale-[0.98] text-left"
-          >
-            <Search className="h-6 w-6 mb-2" />
-            <h3 className="text-base font-bold mb-1">Search Property</h3>
-            <p className="text-xs opacity-90">Buy & Rent easily</p>
-          </button>
-
-          <button
-            onClick={() => navigate('/add-property')}
-            className="rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white p-5 shadow-lg hover:shadow-xl transition-all active:scale-[0.98] text-left"
-          >
-            <Home className="h-6 w-6 mb-2" />
-            <h3 className="text-base font-bold mb-1">Post Property</h3>
-            <p className="text-xs opacity-90">100% Free</p>
-          </button>
-        </div>
-      </div>
+      <MagicBricksSearchCard />
 
       <MobileCategoryGrid />
 
@@ -388,6 +509,11 @@ export function HomePage() {
               Find vizag plots for sale, flats, villas & houses in Visakhapatnam with AI-powered search. Check vizag real estate prices and property listings across all localities.
             </p>
           </div>
+
+          <PropertyActionCards
+            onSearchClick={handleSearchCardClick}
+            onPostClick={handlePostCardClick}
+          />
 
           <div className="max-w-6xl mx-auto mb-8">
             <AITypingAnimation />
@@ -1373,7 +1499,11 @@ export function HomePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                   {featuredProperties.map((property) => (
                     <div key={property.id} className="animate-slide-up">
-                      <PropertyCard property={property} />
+                      <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
+                        <h3 className="font-bold text-lg mb-2">{property.title}</h3>
+                        <p className="text-gray-600 text-sm mb-2">{property.description}</p>
+                        <p className="text-primary-600 font-bold">₹{property.price?.toLocaleString()}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -1387,6 +1517,17 @@ export function HomePage() {
       {showAuthModal && (
         <AuthModal onClose={() => setShowAuthModal(false)} />
       )}
+      <FilterModal
+        isOpen={showFilterModal}
+        onClose={() => setShowFilterModal(false)}
+        selectedCategory={filterCategory}
+        onCategoryChange={setFilterCategory}
+        filterCount={filterCount}
+        onReset={handleResetFilters}
+        onApply={handleApplyFilters}
+        initialFilters={memoizedFilters}
+        initialSubType={propertySubType}
+      />
     </div>
   )
 }

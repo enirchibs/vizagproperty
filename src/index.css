@@ -179,4 +179,21 @@ body {
     75% { transform: translateX(-8px); }
     100% { transform: translateX(0); }
   }
+
+  .animate-fade-in {
+    animation: fadeIn 0.2s ease-in;
+  }
+
+  @keyframes slideRight {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  .animate-slide-right {
+    animation: slideRight 0.3s ease-out;
+  }
 }

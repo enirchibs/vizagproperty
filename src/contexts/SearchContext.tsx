@@ -30,6 +30,22 @@ interface SearchContextType {
   priceRange: [number, number]
   setPriceRange: (range: [number, number]) => void
 
+  // Advanced filters
+  possessionStatus: string[]
+  setPossessionStatus: (v: string[]) => void
+  saleType: string[]
+  setSaleType: (v: string[]) => void
+  postedBy: string[]
+  setPostedBy: (v: string[]) => void
+  furnishingStatus: string[]
+  setFurnishingStatus: (v: string[]) => void
+  amenities: string[]
+  setAmenities: (v: string[]) => void
+  coveredArea: [number, number]
+  setCoveredArea: (v: [number, number]) => void
+  areaUnit: string
+  setAreaUnit: (v: string) => void
+
   // Search state
   hasSearched: boolean
   setHasSearched: (value: boolean) => void
@@ -53,6 +69,15 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   const [newBuilderProjects, setNewBuilderProjects] = useState(false)
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000000])
   const [hasSearched, setHasSearched] = useState(false)
+
+  // Advanced filters
+  const [possessionStatus, setPossessionStatus] = useState<string[]>([])
+  const [saleType, setSaleType] = useState<string[]>([])
+  const [postedBy, setPostedBy] = useState<string[]>([])
+  const [furnishingStatus, setFurnishingStatus] = useState<string[]>([])
+  const [amenities, setAmenities] = useState<string[]>([])
+  const [coveredArea, setCoveredArea] = useState<[number, number]>([0, 10000])
+  const [areaUnit, setAreaUnit] = useState<string>('sqft')
 
   const getDefaultSubType = (_listing: ListingType, category: PropertyCategory): string | null => {
     if (category === 'commercial') return null
@@ -78,6 +103,13 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     setPropertyStatus('')
     setNewBuilderProjects(false)
     setPriceRange([0, 10000000])
+    setPossessionStatus([])
+    setSaleType([])
+    setPostedBy([])
+    setFurnishingStatus([])
+    setAmenities([])
+    setCoveredArea([0, 10000])
+    setAreaUnit('sqft')
   }
 
   const value: SearchContextType = {
@@ -99,6 +131,20 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     setNewBuilderProjects,
     priceRange,
     setPriceRange,
+    possessionStatus,
+    setPossessionStatus,
+    saleType,
+    setSaleType,
+    postedBy,
+    setPostedBy,
+    furnishingStatus,
+    setFurnishingStatus,
+    amenities,
+    setAmenities,
+    coveredArea,
+    setCoveredArea,
+    areaUnit,
+    setAreaUnit,
     hasSearched,
     setHasSearched,
     resetFilters,
