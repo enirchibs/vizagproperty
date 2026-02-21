@@ -318,12 +318,14 @@ export function AddPropertyPage() {
     }
 
     setLoading(true)
+    setErrorMessage('')
+    setSuccessMessage('')
+
     try {
       stopCamera()
 
       const imageUrls = await uploadImages()
 
-      // Profile is guaranteed by trigger - auto-upgrade buyer to owner
       const { data: existingUser } = await supabase
         .from('users')
         .select('id, role')
@@ -389,15 +391,13 @@ export function AddPropertyPage() {
       }
 
       setSuccessMessage('Property submitted for review! Our team will review and approve it shortly.')
-      setErrorMessage('')
 
       setTimeout(() => {
         window.location.href = '/my-listings'
       }, 2000)
     } catch (error: any) {
-      console.error('Error adding property:', error)
       setErrorMessage(error.message || 'Failed to add property')
-      setSuccessMessage('')
+    } finally {
       setLoading(false)
     }
   }
