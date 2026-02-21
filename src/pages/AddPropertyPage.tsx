@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Home, Upload, X, Camera, MessageCircle } from 'lucide-react'
@@ -12,7 +11,6 @@ interface PropertyDetails {
 }
 
 export function AddPropertyPage() {
-  const navigate = useNavigate()
   const { user, profile } = useAuth()
   const [loading, setLoading] = useState(false)
   const [uploadingImages, setUploadingImages] = useState(false)
@@ -114,12 +112,6 @@ export function AddPropertyPage() {
       setLocalities([])
     }
   }
-
-  useEffect(() => {
-    if (!user) {
-      navigate('/login?redirect=/post-property')
-    }
-  }, [user, navigate])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -427,7 +419,7 @@ export function AddPropertyPage() {
   }
 
   return (
-    <AuthGuard redirectTo="/add-property">
+    <AuthGuard>
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">

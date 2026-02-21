@@ -30,59 +30,58 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [showUsernamePrompt, setShowUsernamePrompt] = useState(false)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        loadProfile(session.user.id)
-      } else {
-        setLoading(false)
+    let mounted = true
+
+    const getSession = async () => {
+      const { data } = await supabase.auth.getSession()
+      if (mounted) {
+        setSession(data.session)
+        setUser(data.session?.user ?? null)
+        if (data.session?.user) {
+          loadProfile(data.session.user.id)
+        } else {
+          setLoading(false)
+        }
       }
-    })
+    }
+
+    getSession()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
+        if (!mounted) return
+
         setSession(session)
         setUser(session?.user ?? null)
 
         if (session?.user) {
-          (async () => {
-            const { data: existingProfile } = await supabase
-              .from('users')
-              .select('*')
-              .eq('id', session.user.id)
-              .maybeSingle()
+          const { data: existingProfile } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', session.user.id)
+            .maybeSingle()
 
-            // Determine auth provider from user metadata or app metadata
-            const authProvider = session.user.phone ? 'phone'
-              : session.user.app_metadata?.provider === 'google' ? 'google'
-              : 'email'
+          const authProvider = session.user.phone ? 'phone'
+            : session.user.app_metadata?.provider === 'google' ? 'google'
+            : 'email'
 
-            if (!existingProfile && (event === 'SIGNED_IN' || event === 'USER_UPDATED')) {
-              // Get intent role from user metadata if available (works for all auth methods)
-              const intentRole = session.user.user_metadata?.intent_role || 'buyer'
+          if (!existingProfile && (event === 'SIGNED_IN' || event === 'USER_UPDATED')) {
+            const intentRole = session.user.user_metadata?.intent_role || 'buyer'
 
-              // Create new user row
-              const { error: insertError } = await supabase.from('users').insert({
-                id: session.user.id,
-                name: session.user.user_metadata?.full_name || session.user.phone || session.user.email?.split('@')[0] || 'User',
-                email: session.user.email,
-                phone: session.user.phone,
-                role: intentRole
-              })
+            const { error: insertError } = await supabase.from('users').insert({
+              id: session.user.id,
+              name: session.user.user_metadata?.full_name || session.user.phone || session.user.email?.split('@')[0] || 'User',
+              email: session.user.email,
+              phone: session.user.phone,
+              role: intentRole
+            })
 
-              if (insertError) {
-                console.error('Failed to create user profile:', insertError)
-              }
-
-              // Show username prompt only for email signups (not phone or Google)
-              if (!insertError && authProvider === 'email') {
-                setShowUsernamePrompt(true)
-              }
+            if (!insertError && authProvider === 'email') {
+              setShowUsernamePrompt(true)
             }
+          }
 
-            await loadProfile(session.user.id)
-          })()
+          await loadProfile(session.user.id)
         } else {
           setProfile(null)
           setLoading(false)
@@ -90,7 +89,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     )
 
-    return () => subscription.unsubscribe()
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
   }, [])
 
   const loadProfile = async (userId: string) => {
