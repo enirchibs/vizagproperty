@@ -160,12 +160,13 @@ export function EditPropertyPage() {
   }
 
   const removeImage = (index: number) => {
-    const isExistingImage = index < (property?.images.length || 0)
+    const existingImagesLength = property?.images?.length || 0
+    const isExistingImage = index < existingImagesLength
 
     if (isExistingImage) {
       setImagePreviews(prev => prev.filter((_, i) => i !== index))
     } else {
-      const fileIndex = index - (property?.images.length || 0)
+      const fileIndex = index - existingImagesLength
       setSelectedFiles(prev => prev.filter((_, i) => i !== fileIndex))
       setImagePreviews(prev => prev.filter((_, i) => i !== index))
     }
