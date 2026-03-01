@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Home, TrendingUp, MapPin, DollarSign, Building2, Landmark, CheckCircle, Search } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
-import { PropertyCard } from '../components/PropertyCard'
 import { WhatsAppButton } from '../components/WhatsAppButton'
 
 export function VizagPage() {
@@ -341,7 +340,11 @@ export function VizagPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {properties.map((property) => (
-                    <PropertyCard key={property.id} property={property} />
+                    <div key={property.id} className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
+                      <h3 className="font-bold text-lg mb-2">{property.title}</h3>
+                      <p className="text-gray-600 text-sm mb-2">{property.description}</p>
+                      <p className="text-primary-600 font-bold">₹{property.price?.toLocaleString()}</p>
+                    </div>
                   ))}
                 </div>
               )}

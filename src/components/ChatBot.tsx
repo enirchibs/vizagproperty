@@ -247,7 +247,7 @@ export function ChatBot({ externalTrigger }: ChatBotProps = {}) {
                         <div className="flex">
                           <div className="relative w-24 h-24">
                             <img
-                              src={property.images[0] || 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg'}
+                              src={property.images?.[0] || 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg'}
                               alt={`Property for sale in ${property.location} - ${property.title}`}
                               className="w-full h-full object-cover"
                             />

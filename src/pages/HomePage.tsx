@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect, useRef, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { Search, Mic, MicOff, TrendingUp, Shield, Zap, CheckCircle, PhoneOff, DollarSign, Home, Building2, Store, MapPin, Users, ArrowRight, Key, X, MessageCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
-import { PropertyCard } from '../components/PropertyCard'
+import { AdvancedFilters } from '../types/filters'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { ChatBot } from '../components/ChatBot'
 import { AITypingAnimation } from '../components/AITypingAnimation'
@@ -12,6 +12,9 @@ import { WelcomeMessage } from '../components/WelcomeMessage'
 import { AuthModal } from '../components/AuthModal'
 import { StickySearchBar } from '../components/StickySearchBar'
 import { MobileCategoryGrid } from '../components/MobileCategoryGrid'
+import { MagicBricksSearchCard } from '../components/MagicBricksSearchCard'
+import { PropertyActionCards } from '../components/PropertyActionCards'
+import { FilterModal } from '../components/FilterModal'
 import { useAuth } from '../contexts/AuthContext'
 import { useSearch } from '../contexts/SearchContext'
 import { useSearchHistory } from '../hooks/useSearchHistory'
@@ -24,7 +27,6 @@ import PropertiesNearYou from '../components/PropertiesNearYou'
 type PropertyCategory = 'full_house' | 'land_plot' | 'flat_apartment' | 'pg_hostel' | 'flatmates'
 
 export function HomePage() {
-  const navigate = useNavigate()
   const { user } = useAuth()
   const { listingType, setListingType, propertyCategory: searchCategory, setPropertyCategory: setSearchCategory } = useSearch()
   const { lastSearch, saveSearch } = useSearchHistory()
@@ -33,9 +35,6 @@ export function HomePage() {
   const [location, setLocation] = useState('Visakhapatnam')
   const [locality, setLocality] = useState('')
   const [localityId, setLocalityId] = useState<string | undefined>()
-  const [bhkType, setBhkType] = useState('')
-  const [propertyStatus, setPropertyStatus] = useState('')
-  const [newBuilderProjects, setNewBuilderProjects] = useState(false)
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -46,6 +45,24 @@ export function HomePage() {
     localityName: string
   } | null>(null)
   const searchInputRef = useRef<HTMLDivElement>(null)
+
+  // Additional filter states
+  const [minArea, setMinArea] = useState('')
+  const [maxArea, setMaxArea] = useState('')
+  const [areaUnit, setAreaUnit] = useState('sqft')
+  const [saleType, setSaleType] = useState<string[]>([])
+  const [postedBy, setPostedBy] = useState<string[]>([])
+  const [furnishingStatus, setFurnishingStatus] = useState<string[]>([])
+  const [amenities, setAmenities] = useState<string[]>([])
+  const [selectedBedrooms, setSelectedBedrooms] = useState<string[]>([])
+  const [possessionStatus, setPossessionStatus] = useState<string[]>([])
+  const [showFilterModal, setShowFilterModal] = useState(false)
+  const [filterCategory, setFilterCategory] = useState<'buy' | 'rent' | 'projects' | 'commercial'>('buy')
+  const [filterCount, setFilterCount] = useState(0)
+  const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilters>({})
+  const [propertySubType, setPropertySubType] = useState<'residential' | 'plot' | 'pg'>('residential')
+
+  const memoizedFilters = useMemo(() => advancedFilters, [advancedFilters])
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -208,6 +225,28 @@ export function HomePage() {
     }
   }
 
+  const toggleBedroom = (bhk: number) => {
+    const bhkStr = String(bhk)
+    if (selectedBedrooms.includes(bhkStr)) {
+      setSelectedBedrooms(selectedBedrooms.filter(b => b !== bhkStr))
+    } else {
+      setSelectedBedrooms([...selectedBedrooms, bhkStr])
+    }
+  }
+
+  const togglePossession = (status: string) => {
+    const statusMap: { [key: string]: string } = {
+      'Under Construction': 'under_construction',
+      'Ready to Move': 'ready_to_move'
+    }
+    const dbValue = statusMap[status] || status
+    if (possessionStatus.includes(dbValue)) {
+      setPossessionStatus(possessionStatus.filter(s => s !== dbValue))
+    } else {
+      setPossessionStatus([...possessionStatus, dbValue])
+    }
+  }
+
   const handleAdvancedSearch = async () => {
     const searchType = searchCategory === 'commercial' ? 'commercial' : listingType
 
@@ -231,18 +270,44 @@ export function HomePage() {
     }
 
     // OPTIONAL: Only add BHK filter if selected
-    if (bhkType && bhkType !== '') {
-      params.append('bhk', bhkType)
+    if (selectedBedrooms.length > 0) {
+      params.append('bhk', selectedBedrooms.join(','))
     }
 
     // OPTIONAL: Only add property status if selected
-    if (propertyStatus && propertyStatus !== '') {
-      params.append('status', propertyStatus)
+    if (possessionStatus.length > 0) {
+      params.append('status', possessionStatus.join(','))
     }
 
-    // OPTIONAL: Only add new builder flag if checked
-    if (newBuilderProjects) {
-      params.append('new_builder', 'true')
+    // OPTIONAL: Only add area filters if set
+    if (minArea) {
+      params.append('minArea', minArea)
+    }
+    if (maxArea) {
+      params.append('maxArea', maxArea)
+    }
+    if (areaUnit) {
+      params.append('areaUnit', areaUnit)
+    }
+
+    // OPTIONAL: Add sale type filter
+    if (saleType.length > 0) {
+      params.append('saleType', saleType.join(','))
+    }
+
+    // OPTIONAL: Add posted by filter
+    if (postedBy.length > 0) {
+      params.append('postedBy', postedBy.join(','))
+    }
+
+    // OPTIONAL: Add furnishing status filter
+    if (furnishingStatus.length > 0) {
+      params.append('furnishing', furnishingStatus.join(','))
+    }
+
+    // OPTIONAL: Add amenities filter
+    if (amenities.length > 0) {
+      params.append('amenities', amenities.join(','))
     }
 
     window.location.href = `/properties?${params.toString()}`
@@ -281,6 +346,138 @@ export function HomePage() {
     }
   }
 
+  const handleSearchCardClick = () => {
+    setShowFilterModal(true)
+  }
+
+  const handlePostCardClick = () => {
+    window.location.href = '/add-property'
+  }
+
+  const handleResetFilters = () => {
+    setFilterCount(0)
+    setAdvancedFilters({})
+  }
+
+  const handleApplyFilters = (
+    filters: AdvancedFilters,
+    category: 'buy' | 'rent' | 'projects' | 'commercial',
+    subType: 'residential' | 'plot' | 'pg'
+  ) => {
+    setAdvancedFilters(filters)
+    setPropertySubType(subType)
+
+    const params = new URLSearchParams()
+
+    if (category === 'buy' || category === 'projects') {
+      params.append('type', 'sale')
+    } else if (category === 'rent') {
+      params.append('type', 'rent')
+    } else if (category === 'commercial') {
+      params.append('category', 'commercial')
+    }
+
+    if (subType === 'residential' && filters.propertyType) {
+      params.append('propertyType', filters.propertyType)
+    } else if (subType === 'plot') {
+      params.append('propertyType', 'plot')
+    } else if (subType === 'pg') {
+      params.append('propertyType', 'pg')
+    }
+
+    if (localityId) {
+      params.append('localityId', localityId)
+    } else if (locality && locality.trim().length >= 3) {
+      params.append('locality', locality.trim())
+    }
+
+    if (filters.bedrooms && Array.isArray(filters.bedrooms) && filters.bedrooms.length > 0) {
+      params.append('bedrooms', filters.bedrooms.join(','))
+    }
+
+    if (filters.bathrooms && Array.isArray(filters.bathrooms) && filters.bathrooms.length > 0) {
+      params.append('bathrooms', filters.bathrooms.join(','))
+    }
+
+    if (filters.furnishing && filters.furnishing.length > 0) {
+      params.append('furnishing', filters.furnishing.join(','))
+    }
+
+    if (filters.possession && filters.possession.length > 0) {
+      params.append('possession', filters.possession.join(','))
+    }
+
+    if (filters.saleType && filters.saleType.length > 0) {
+      params.append('saleType', filters.saleType.join(','))
+    }
+
+    if (filters.amenities && filters.amenities.length > 0) {
+      params.append('amenities', filters.amenities.join(','))
+    }
+
+    if (filters.coveredAreaMin) {
+      params.append('minArea', filters.coveredAreaMin.toString())
+    }
+
+    if (filters.coveredAreaMax) {
+      params.append('maxArea', filters.coveredAreaMax.toString())
+    }
+
+    if (filters.areaUnit) {
+      params.append('areaUnit', filters.areaUnit)
+    }
+
+    if (filters.commercialType) {
+      params.append('commercialType', filters.commercialType)
+    }
+
+    if (filters.facing && filters.facing.length > 0) {
+      params.append('facing', filters.facing.join(','))
+    }
+
+    if (filters.boundaryWall !== undefined) {
+      params.append('boundaryWall', filters.boundaryWall.toString())
+    }
+
+    if (filters.cornerPlot !== undefined) {
+      params.append('cornerPlot', filters.cornerPlot.toString())
+    }
+
+    if (filters.tenantPreference && filters.tenantPreference.length > 0) {
+      params.append('tenantPreference', filters.tenantPreference.join(','))
+    }
+
+    if (filters.availableFrom) {
+      params.append('availableFrom', filters.availableFrom)
+    }
+
+    if (filters.roomType) {
+      params.append('roomType', filters.roomType)
+    }
+
+    if (filters.foodIncluded !== undefined) {
+      params.append('foodIncluded', filters.foodIncluded.toString())
+    }
+
+    if (filters.gender) {
+      params.append('gender', filters.gender)
+    }
+
+    if (filters.attachedBathroom !== undefined) {
+      params.append('attachedBathroom', filters.attachedBathroom.toString())
+    }
+
+    if (filters.parking !== undefined) {
+      params.append('parking', filters.parking.toString())
+    }
+
+    if (filters.washroom !== undefined) {
+      params.append('washroom', filters.washroom.toString())
+    }
+
+    window.location.href = `/properties?${params.toString()}`
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {showWelcome && lastSearch?.locality && (
@@ -298,27 +495,7 @@ export function HomePage() {
         placeholder="Search locality (3+ letters)"
       />
 
-      <div className="md:hidden px-4 py-4 bg-gray-50">
-        <div className="grid grid-cols-2 gap-3">
-          <button
-            onClick={() => navigate('/mobile-search')}
-            className="rounded-2xl bg-gradient-to-br from-red-500 to-red-600 text-white p-5 shadow-lg hover:shadow-xl transition-all active:scale-[0.98] text-left"
-          >
-            <Search className="h-6 w-6 mb-2" />
-            <h3 className="text-base font-bold mb-1">Search Property</h3>
-            <p className="text-xs opacity-90">Buy & Rent easily</p>
-          </button>
-
-          <button
-            onClick={() => navigate('/add-property')}
-            className="rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white p-5 shadow-lg hover:shadow-xl transition-all active:scale-[0.98] text-left"
-          >
-            <Home className="h-6 w-6 mb-2" />
-            <h3 className="text-base font-bold mb-1">Post Property</h3>
-            <p className="text-xs opacity-90">100% Free</p>
-          </button>
-        </div>
-      </div>
+      <MagicBricksSearchCard />
 
       <MobileCategoryGrid />
 
@@ -332,6 +509,11 @@ export function HomePage() {
               Find vizag plots for sale, flats, villas & houses in Visakhapatnam with AI-powered search. Check vizag real estate prices and property listings across all localities.
             </p>
           </div>
+
+          <PropertyActionCards
+            onSearchClick={handleSearchCardClick}
+            onPostClick={handlePostCardClick}
+          />
 
           <div className="max-w-6xl mx-auto mb-8">
             <AITypingAnimation />
@@ -508,85 +690,271 @@ export function HomePage() {
                 </div>
 
                 {listingType === 'buy' && searchCategory === 'residential' && (
-                  <div className="space-y-4">
-                    <div className="flex flex-wrap items-center gap-4">
-                      <div className="flex items-center gap-3">
+                  <div className="space-y-3 border-t-2 border-gray-200 pt-4 mt-4">
+                    <div className="bg-white rounded-2xl p-4 space-y-6">
+                      <div className="flex items-center justify-between">
+                        <h2 className="text-lg font-semibold">Filters</h2>
                         <button
-                          type="button"
-                          onClick={() => setPropertyCategory('full_house')}
-                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
-                            propertyCategory === 'full_house'
-                              ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
+                          onClick={() => {
+                            setSelectedBedrooms([])
+                            setPossessionStatus([])
+                            setMinArea('')
+                            setMaxArea('')
+                            setAreaUnit('sqft')
+                            setSaleType([])
+                            setPostedBy([])
+                            setFurnishingStatus([])
+                            setAmenities([])
+                          }}
+                          className="text-sm text-red-600 font-medium"
                         >
-                          <Home className="h-4 w-4 inline-block mr-1.5" />
-                          Full House
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setPropertyCategory('land_plot')}
-                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
-                            propertyCategory === 'land_plot'
-                              ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          <Building2 className="h-4 w-4 inline-block mr-1.5" />
-                          Land/Plot
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setPropertyCategory('flat_apartment')}
-                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
-                            propertyCategory === 'flat_apartment'
-                              ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          <Building2 className="h-4 w-4 inline-block mr-1.5" />
-                          Flat/Apartment
+                          Reset
                         </button>
                       </div>
+                        {/* Property Type */}
+                        <div>
+                          <label className="block text-sm font-semibold mb-3">Property Type</label>
 
-                      <div className="flex-1 min-w-[200px]">
-                        <select
-                          value={bhkType}
-                          onChange={(e) => setBhkType(e.target.value)}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
-                        >
-                          <option value="">BHK Type</option>
-                          <option value="1">1 BHK</option>
-                          <option value="2">2 BHK</option>
-                          <option value="3">3 BHK</option>
-                          <option value="4">4 BHK</option>
-                          <option value="5+">5+ BHK</option>
-                        </select>
-                      </div>
+                          <div className="grid grid-cols-3 gap-3">
+                            {[
+                              { label: 'Flat', value: 'flat_apartment' },
+                              { label: 'House/Villa', value: 'full_house' },
+                              { label: 'Plot', value: 'land_plot' }
+                            ].map(type => (
+                              <button
+                                key={type.value}
+                                onClick={() => setPropertyCategory(type.value as PropertyCategory)}
+                                className={`p-4 rounded-xl border text-sm font-medium transition
+                                ${propertyCategory === type.value
+                                  ? 'border-blue-600 bg-blue-50 text-blue-600'
+                                  : 'border-gray-200 bg-white text-gray-700'
+                                }`}
+                              >
+                                {type.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
 
-                      <div className="flex-1 min-w-[200px]">
-                        <select
-                          value={propertyStatus}
-                          onChange={(e) => setPropertyStatus(e.target.value)}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
-                        >
-                          <option value="">Property Status</option>
-                          <option value="ready_to_move">Ready to Move</option>
-                          <option value="under_construction">Under Construction</option>
-                        </select>
-                      </div>
+                        {/* No. of Bedrooms - Only for Flat/House */}
+                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
+                          <div>
+                            <label className="block text-sm font-semibold mb-3">No. of Bedrooms</label>
 
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={newBuilderProjects}
-                          onChange={(e) => setNewBuilderProjects(e.target.checked)}
-                          className="w-4 h-4 text-primary-600 rounded"
-                        />
-                        <span className="text-sm font-medium text-gray-700">New Builder Projects</span>
-                      </label>
+                            <div className="flex flex-wrap gap-2">
+                              {[1, 2, 3, 4].map(bhk => (
+                                <button
+                                  key={bhk}
+                                  onClick={() => toggleBedroom(bhk)}
+                                  className={`px-4 py-2 rounded-full text-sm border
+                                  ${selectedBedrooms.includes(String(bhk))
+                                    ? 'bg-blue-50 border-blue-600 text-blue-600'
+                                    : 'border-gray-300 text-gray-700'
+                                  }`}
+                                >
+                                  {bhk} BHK
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Possession Status - Only for Flat/House */}
+                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
+                          <div>
+                            <label className="block text-sm font-semibold mb-3">Possession Status</label>
+
+                            <div className="flex flex-wrap gap-2">
+                              {['Under Construction', 'Ready to Move'].map(status => (
+                                <button
+                                  key={status}
+                                  onClick={() => togglePossession(status)}
+                                  className={`px-4 py-2 rounded-full border text-sm
+                                  ${possessionStatus.includes(status === 'Under Construction' ? 'under_construction' : 'ready_to_move')
+                                    ? 'bg-blue-50 border-blue-600 text-blue-600'
+                                    : 'border-gray-300 text-gray-700'
+                                  }`}
+                                >
+                                  {status}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Covered Area */}
+                        <div>
+                          <label className="block text-sm font-semibold mb-3">Covered Area</label>
+
+                          <div className="grid grid-cols-2 gap-3">
+                            <input
+                              type="number"
+                              placeholder="Min"
+                              value={minArea}
+                              onChange={(e) => setMinArea(e.target.value)}
+                              className="border rounded-lg px-3 py-2"
+                            />
+                            <input
+                              type="number"
+                              placeholder="Max"
+                              value={maxArea}
+                              onChange={(e) => setMaxArea(e.target.value)}
+                              className="border rounded-lg px-3 py-2"
+                            />
+                          </div>
+
+                          <select
+                            value={areaUnit}
+                            onChange={(e) => setAreaUnit(e.target.value)}
+                            className="mt-3 w-full border rounded-lg px-3 py-2 bg-white"
+                          >
+                            <option value="sqft">Sqft</option>
+                            <option value="sqyd">Sq.yd</option>
+                            <option value="sqm">Sq.m</option>
+                            <option value="acre">Acre</option>
+                            <option value="cents">Cents</option>
+                          </select>
+                        </div>
+
+                        {/* Sale Type - Only for Flat/House */}
+                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
+                          <div>
+                            <label className="block text-sm font-semibold mb-3">Sale Type</label>
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (saleType.includes('new')) {
+                                    setSaleType(saleType.filter(t => t !== 'new'))
+                                  } else {
+                                    setSaleType([...saleType, 'new'])
+                                  }
+                                }}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                  saleType.includes('new')
+                                    ? 'bg-primary-600 text-white shadow-md'
+                                    : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                                }`}
+                              >
+                                + New
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (saleType.includes('resale')) {
+                                    setSaleType(saleType.filter(t => t !== 'resale'))
+                                  } else {
+                                    setSaleType([...saleType, 'resale'])
+                                  }
+                                }}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                  saleType.includes('resale')
+                                    ? 'bg-primary-600 text-white shadow-md'
+                                    : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                                }`}
+                              >
+                                + Resale
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Posted By */}
+                        <div>
+                          <label className="block text-sm font-semibold mb-3">Posted By</label>
+                          <div className="flex flex-wrap gap-2">
+                            {['Agent', 'Owner', 'Builder'].map((type) => (
+                              <button
+                                key={type}
+                                type="button"
+                                onClick={() => {
+                                  const lowerType = type.toLowerCase()
+                                  if (postedBy.includes(lowerType)) {
+                                    setPostedBy(postedBy.filter(p => p !== lowerType))
+                                  } else {
+                                    setPostedBy([...postedBy, lowerType])
+                                  }
+                                }}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                  postedBy.includes(type.toLowerCase())
+                                    ? 'bg-primary-600 text-white shadow-md'
+                                    : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                                }`}
+                              >
+                                + {type}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Furnishing Status - Only for Flat/House */}
+                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
+                          <div>
+                            <label className="block text-sm font-semibold mb-3">Furnishing Status</label>
+                            <div className="flex flex-wrap gap-2">
+                              {['Furnished', 'Semi-Furnished', 'Unfurnished'].map((status) => (
+                                <button
+                                  key={status}
+                                  type="button"
+                                  onClick={() => {
+                                    const lowerStatus = status.toLowerCase().replace('-', '_')
+                                    if (furnishingStatus.includes(lowerStatus)) {
+                                      setFurnishingStatus(furnishingStatus.filter(f => f !== lowerStatus))
+                                    } else {
+                                      setFurnishingStatus([...furnishingStatus, lowerStatus])
+                                    }
+                                  }}
+                                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                    furnishingStatus.includes(status.toLowerCase().replace('-', '_'))
+                                      ? 'bg-primary-600 text-white shadow-md'
+                                      : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                                  }`}
+                                >
+                                  + {status}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Amenities - Only for Flat/House */}
+                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
+                          <div>
+                            <label className="block text-sm font-semibold mb-3">Amenities</label>
+                            <div className="flex flex-wrap gap-2">
+                              {['Parking', 'Gym', 'Swimming Pool', 'Security'].map((amenity) => (
+                                <button
+                                  key={amenity}
+                                  type="button"
+                                  onClick={() => {
+                                    const lowerAmenity = amenity.toLowerCase().replace(' ', '_')
+                                    if (amenities.includes(lowerAmenity)) {
+                                      setAmenities(amenities.filter(a => a !== lowerAmenity))
+                                    } else {
+                                      setAmenities([...amenities, lowerAmenity])
+                                    }
+                                  }}
+                                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                    amenities.includes(amenity.toLowerCase().replace(' ', '_'))
+                                      ? 'bg-primary-600 text-white shadow-md'
+                                      : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                                  }`}
+                                >
+                                  + {amenity}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                    </div>
+
+                    <div className="sticky bottom-0 bg-white pt-4 pb-2">
+                      <button
+                        onClick={handleAdvancedSearch}
+                        className="w-full bg-red-600 text-white py-4 rounded-full font-semibold text-base"
+                      >
+                        View Properties
+                      </button>
                     </div>
                   </div>
                 )}
@@ -647,23 +1015,6 @@ export function HomePage() {
                           Flat/Apartment
                         </button>
                       </div>
-
-                      {(propertyCategory === 'full_house' || propertyCategory === 'flat_apartment') && (
-                        <div className="flex-1 min-w-[200px]">
-                          <select
-                            value={bhkType}
-                            onChange={(e) => setBhkType(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent bg-white"
-                          >
-                            <option value="">BHK Type</option>
-                            <option value="1">1 BHK</option>
-                            <option value="2">2 BHK</option>
-                            <option value="3">3 BHK</option>
-                            <option value="4">4 BHK</option>
-                            <option value="5+">5+ BHK</option>
-                          </select>
-                        </div>
-                      )}
                     </div>
                   </div>
                 )}
@@ -1148,7 +1499,11 @@ export function HomePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                   {featuredProperties.map((property) => (
                     <div key={property.id} className="animate-slide-up">
-                      <PropertyCard property={property} />
+                      <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
+                        <h3 className="font-bold text-lg mb-2">{property.title}</h3>
+                        <p className="text-gray-600 text-sm mb-2">{property.description}</p>
+                        <p className="text-primary-600 font-bold">₹{property.price?.toLocaleString()}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -1162,6 +1517,17 @@ export function HomePage() {
       {showAuthModal && (
         <AuthModal onClose={() => setShowAuthModal(false)} />
       )}
+      <FilterModal
+        isOpen={showFilterModal}
+        onClose={() => setShowFilterModal(false)}
+        selectedCategory={filterCategory}
+        onCategoryChange={setFilterCategory}
+        filterCount={filterCount}
+        onReset={handleResetFilters}
+        onApply={handleApplyFilters}
+        initialFilters={memoizedFilters}
+        initialSubType={propertySubType}
+      />
     </div>
   )
 }

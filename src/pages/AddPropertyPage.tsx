@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Home, Upload, X, Camera, MessageCircle } from 'lucide-react'
@@ -12,7 +11,6 @@ interface PropertyDetails {
 }
 
 export function AddPropertyPage() {
-  const navigate = useNavigate()
   const { user, profile } = useAuth()
   const [loading, setLoading] = useState(false)
   const [uploadingImages, setUploadingImages] = useState(false)
@@ -42,7 +40,7 @@ export function AddPropertyPage() {
     area_sqft: '',
     state: 'Andhra Pradesh',
     pincode: '',
-    agent_name: profile?.full_name || '',
+    agent_name: profile?.name || profile?.full_name || '',
     agent_phone: '',
     agent_whatsapp: '',
     amenities: [] as string[]
@@ -114,12 +112,6 @@ export function AddPropertyPage() {
       setLocalities([])
     }
   }
-
-  useEffect(() => {
-    if (!user) {
-      navigate('/login?redirect=/post-property')
-    }
-  }, [user, navigate])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -326,24 +318,13 @@ export function AddPropertyPage() {
     }
 
     setLoading(true)
+    setErrorMessage('')
+    setSuccessMessage('')
+
     try {
       stopCamera()
 
       const imageUrls = await uploadImages()
-
-      // Profile is guaranteed by trigger - auto-upgrade buyer to owner
-      const { data: existingUser } = await supabase
-        .from('users')
-        .select('id, role')
-        .eq('id', user.id)
-        .maybeSingle()
-
-      if (existingUser?.role === 'buyer') {
-        await supabase
-          .from('users')
-          .update({ role: 'owner' })
-          .eq('id', user.id)
-      }
 
       const propertyData: any = {
         title: formData.title,
@@ -397,15 +378,13 @@ export function AddPropertyPage() {
       }
 
       setSuccessMessage('Property submitted for review! Our team will review and approve it shortly.')
-      setErrorMessage('')
 
       setTimeout(() => {
         window.location.href = '/my-listings'
-      }, 2000)
+      }, 1500)
     } catch (error: any) {
-      console.error('Error adding property:', error)
       setErrorMessage(error.message || 'Failed to add property')
-      setSuccessMessage('')
+    } finally {
       setLoading(false)
     }
   }
@@ -427,7 +406,7 @@ export function AddPropertyPage() {
   }
 
   return (
-    <AuthGuard redirectTo="/add-property">
+    <AuthGuard>
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
