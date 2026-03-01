@@ -1,24 +1,34 @@
-import { Navigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
 interface AuthGuardProps {
   children: React.ReactNode
+  redirectTo?: string
 }
 
-export function AuthGuard({ children }: AuthGuardProps) {
+export function AuthGuard({ children, redirectTo }: AuthGuardProps) {
   const { user, loading } = useAuth()
+  const navigate = useNavigate()
   const location = useLocation()
+
+  useEffect(() => {
+    if (!loading && !user) {
+      const returnUrl = redirectTo || location.pathname
+      navigate(`/login?redirect=${encodeURIComponent(returnUrl)}`, { replace: true })
+    }
+  }, [user, loading, navigate, location.pathname, redirectTo])
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-8 w-8 border-4 border-primary-600 border-r-transparent" />
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600" />
       </div>
     )
   }
 
   if (!user) {
-    return <Navigate to={`/login?redirect=${encodeURIComponent(location.pathname)}`} replace />
+    return null
   }
 
   return <>{children}</>

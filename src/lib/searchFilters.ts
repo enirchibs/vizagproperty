@@ -263,32 +263,11 @@ export interface UnifiedSearchParams {
   listingType?: 'sale' | 'rent'
   localityId?: string
   localityName?: string
-  bedrooms?: number | number[]
-  bathrooms?: number | number[]
+  bedrooms?: number
   minPrice?: number
   maxPrice?: number
   propertyStatus?: string
   keyword?: string
-  possessionStatus?: string[]
-  saleType?: string[]
-  postedBy?: string[]
-  furnishingStatus?: string[]
-  amenities?: string[]
-  minArea?: number
-  maxArea?: number
-  areaUnit?: string
-  commercialType?: string
-  facing?: string[]
-  boundaryWall?: boolean
-  cornerPlot?: boolean
-  tenantPreference?: string[]
-  availableFrom?: string
-  roomType?: string
-  foodIncluded?: boolean
-  gender?: string
-  attachedBathroom?: boolean
-  parking?: boolean
-  washroom?: boolean
 }
 
 /**
@@ -311,39 +290,7 @@ export interface UnifiedSearchParams {
 export function buildUnifiedPropertyQuery(params: UnifiedSearchParams) {
   let query = supabase
     .from('properties')
-    .select(`
-      id,
-      title,
-      description,
-      category,
-      property_type,
-      listing_type,
-      price,
-      bedrooms,
-      bathrooms,
-      area_sqft,
-      locality_id,
-      location,
-      city,
-      state,
-      pincode,
-      latitude,
-      longitude,
-      amenities,
-      images,
-      video_url,
-      status,
-      featured,
-      verified,
-      owner_id,
-      agent_name,
-      agent_phone,
-      agent_whatsapp,
-      views_count,
-      created_at,
-      updated_at,
-      localities!inner(name, slug, city)
-    `, { count: 'exact' })
+    .select('*, localities!inner(name, slug, city)', { count: 'exact' })
 
   // MANDATORY FILTERS - Always applied
   query = query.eq('localities.city', 'Visakhapatnam')
@@ -361,24 +308,8 @@ export function buildUnifiedPropertyQuery(params: UnifiedSearchParams) {
     query = query.eq('locality_id', params.localityId)
   }
 
-  if (params.bedrooms) {
-    if (Array.isArray(params.bedrooms)) {
-      if (params.bedrooms.length > 0) {
-        query = query.in('bedrooms', params.bedrooms)
-      }
-    } else if (params.bedrooms > 0) {
-      query = query.eq('bedrooms', params.bedrooms)
-    }
-  }
-
-  if (params.bathrooms) {
-    if (Array.isArray(params.bathrooms)) {
-      if (params.bathrooms.length > 0) {
-        query = query.in('bathrooms', params.bathrooms)
-      }
-    } else if (params.bathrooms > 0) {
-      query = query.eq('bathrooms', params.bathrooms)
-    }
+  if (params.bedrooms && params.bedrooms > 0) {
+    query = query.eq('bedrooms', params.bedrooms)
   }
 
   if (params.minPrice !== undefined && params.minPrice > 0) {
@@ -395,82 +326,6 @@ export function buildUnifiedPropertyQuery(params: UnifiedSearchParams) {
 
   if (params.keyword) {
     query = query.or(`title.ilike.%${params.keyword}%,description.ilike.%${params.keyword}%`)
-  }
-
-  if (params.possessionStatus?.length) {
-    query = query.in('possession_status', params.possessionStatus)
-  }
-
-  if (params.saleType?.length) {
-    query = query.in('sale_type', params.saleType)
-  }
-
-  if (params.postedBy?.length) {
-    query = query.in('posted_by', params.postedBy)
-  }
-
-  if (params.furnishingStatus?.length) {
-    query = query.in('furnishing_status', params.furnishingStatus)
-  }
-
-  if (params.amenities?.length) {
-    query = query.contains('amenities', params.amenities)
-  }
-
-  if (params.minArea !== undefined && params.minArea > 0) {
-    query = query.gte('area_sqft', params.minArea)
-  }
-
-  if (params.maxArea !== undefined && params.maxArea < 10000) {
-    query = query.lte('area_sqft', params.maxArea)
-  }
-
-  if (params.commercialType) {
-    query = query.eq('commercial_type', params.commercialType)
-  }
-
-  if (params.facing?.length) {
-    query = query.in('facing', params.facing)
-  }
-
-  if (params.boundaryWall !== undefined) {
-    query = query.eq('boundary_wall', params.boundaryWall)
-  }
-
-  if (params.cornerPlot !== undefined) {
-    query = query.eq('corner_plot', params.cornerPlot)
-  }
-
-  if (params.tenantPreference?.length) {
-    query = query.in('tenant_preference', params.tenantPreference)
-  }
-
-  if (params.availableFrom) {
-    query = query.gte('available_from', params.availableFrom)
-  }
-
-  if (params.roomType) {
-    query = query.eq('room_type', params.roomType)
-  }
-
-  if (params.foodIncluded !== undefined) {
-    query = query.eq('food_included', params.foodIncluded)
-  }
-
-  if (params.gender) {
-    query = query.eq('gender_preference', params.gender)
-  }
-
-  if (params.attachedBathroom !== undefined) {
-    query = query.eq('attached_bathroom', params.attachedBathroom)
-  }
-
-  if (params.parking !== undefined) {
-    query = query.eq('parking_available', params.parking)
-  }
-
-  if (params.washroom !== undefined) {
-    query = query.eq('washroom_available', params.washroom)
   }
 
   return query.order('created_at', { ascending: false })

@@ -105,7 +105,7 @@ export function NotificationsPanel() {
                 <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                   {property.images && property.images.length > 0 ? (
                     <img
-                      src={property.images?.[0] || 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg'}
+                      src={property.images[0]}
                       alt={property.title}
                       className="w-full h-full object-cover"
                     />

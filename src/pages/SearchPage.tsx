@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Search, SlidersHorizontal, ChevronLeft, MessageCircle, Plus, MapPin, Mic, X } from 'lucide-react'
+import { Search, SlidersHorizontal, ChevronLeft, MessageCircle, Plus, MapPin, Mic } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { FiltersPanel } from '../components/FiltersPanel'
 import { PropertyCard } from '../components/PropertyCard'
 import { usePropertySearch } from '../hooks/usePropertySearch'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
@@ -11,7 +10,7 @@ import { saveLastSearch } from '../lib/searchMemory'
 
 export function SearchPage() {
   const navigate = useNavigate()
-  const [mobileFilterOpen, setMobileFilterOpen] = useState(false)
+  const [showFilters, setShowFilters] = useState(false)
 
   // Use SearchContext for all search-related state
   const {
@@ -27,19 +26,15 @@ export function SearchPage() {
     setLocalityId,
     bhkFilter,
     setBhkFilter,
-    priceRange,
     propertyStatus,
     setPropertyStatus,
+    newBuilderProjects,
     setNewBuilderProjects,
-    possessionStatus,
-    saleType,
-    postedBy,
-    furnishingStatus,
-    amenities,
-    coveredArea,
-    areaUnit,
+    priceRange,
+    setPriceRange,
     hasSearched,
     setHasSearched,
+    resetFilters,
     getDefaultSubType,
     getPropertyTypeForSearch,
   } = useSearch()
@@ -148,36 +143,6 @@ export function SearchPage() {
     if (propertySubType !== 'Land / Plot' && propertyStatus && propertyStatus !== '') {
       searchParams.propertyStatus = propertyStatus
     }
-
-    if (possessionStatus.length > 0) {
-      searchParams.possessionStatus = possessionStatus
-    }
-
-    if (saleType.length > 0) {
-      searchParams.saleType = saleType
-    }
-
-    if (postedBy.length > 0) {
-      searchParams.postedBy = postedBy
-    }
-
-    if (furnishingStatus.length > 0) {
-      searchParams.furnishingStatus = furnishingStatus
-    }
-
-    if (amenities.length > 0) {
-      searchParams.amenities = amenities
-    }
-
-    if (coveredArea[0] > 0) {
-      searchParams.minArea = coveredArea[0]
-    }
-
-    if (coveredArea[1] < 10000) {
-      searchParams.maxArea = coveredArea[1]
-    }
-
-    searchParams.areaUnit = areaUnit
 
     await search(searchParams)
 
@@ -303,79 +268,234 @@ export function SearchPage() {
               <Search className="w-3.5 h-3.5 md:w-4 md:h-4" />
               Search
             </button>
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="px-3 md:px-4 py-2 md:py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors flex-shrink-0"
+            >
+              <SlidersHorizontal className="h-4 w-4 md:h-5 md:w-5" />
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="flex gap-6 px-3 md:px-4 py-3 md:py-4">
-        {/* Desktop Filters Sidebar */}
-        <div className="hidden lg:block w-80 flex-shrink-0">
-          <div className="sticky top-24 bg-white rounded-lg border border-gray-200 p-4">
-            <FiltersPanel />
+      {showFilters && (
+        <div className="bg-white border-b border-gray-200 px-3 md:px-4 py-3 md:py-4 animate-slide-down">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-bold text-sm md:text-base text-gray-900">Filters</h3>
             <button
-              onClick={handleSearch}
-              className="w-full bg-orange-500 text-white py-2.5 rounded-lg font-semibold text-sm hover:bg-orange-600 transition-colors mt-4"
+              onClick={resetFilters}
+              className="text-xs md:text-sm text-red-500 font-medium"
+            >
+              Clear All
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {listingType === 'buy' && propertyCategory === 'residential' && (
+              <div>
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+                  Property Type
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    'Flat / Apartment',
+                    'Villa',
+                    'Full House',
+                    'Land / Plot'
+                  ].map(opt => (
+                    <label
+                      key={opt}
+                      className="flex items-center gap-2 text-xs md:text-sm px-3 py-2 rounded-lg border bg-white cursor-pointer hover:bg-gray-50"
+                    >
+                      <input
+                        type="radio"
+                        checked={propertySubType === opt}
+                        onChange={() => setPropertySubType(opt)}
+                      />
+                      {opt}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {listingType === 'rent' && propertyCategory === 'residential' && (
+              <div>
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+                  Property Type
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    'Flat / Apartment',
+                    'Villa',
+                    'Full House',
+                    'PG / Hostel',
+                    'Flatmates'
+                  ].map(opt => (
+                    <label
+                      key={opt}
+                      className="flex items-center gap-2 text-xs md:text-sm px-3 py-2 rounded-lg border bg-white cursor-pointer hover:bg-gray-50"
+                    >
+                      <input
+                        type="radio"
+                        name="subType"
+                        checked={propertySubType === opt}
+                        onChange={() => setPropertySubType(opt)}
+                      />
+                      {opt}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {(propertyCategory === 'commercial' || listingType === 'commercial') && (
+              <div>
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+                  Commercial Property Type
+                </label>
+                <select
+                  className="w-full rounded-lg border px-3 py-2.5 text-xs md:text-sm"
+                  value={propertySubType || ''}
+                  onChange={e => setPropertySubType(e.target.value)}
+                >
+                  <option value="">Select Commercial Type</option>
+                  <option>Office Space</option>
+                  <option>Shop / Showroom</option>
+                  <option>Warehouse</option>
+                  <option>Farmhouse</option>
+                  <option>Co-working Space</option>
+                </select>
+              </div>
+            )}
+
+            {(propertySubType === 'Full House' || propertySubType === 'Flat / Apartment') && (
+              <div>
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5">
+                  BHK Type
+                </label>
+                <select
+                  value={bhkFilter}
+                  onChange={(e) => setBhkFilter(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-2.5 md:px-3 py-1.5 md:py-2 text-xs md:text-sm"
+                >
+                  <option value="">All BHK Types</option>
+                  <option value="1">1 BHK</option>
+                  <option value="2">2 BHK</option>
+                  <option value="3">3 BHK</option>
+                  <option value="4">4 BHK</option>
+                  <option value="5">5+ BHK</option>
+                </select>
+              </div>
+            )}
+
+            {listingType === 'buy' && propertyCategory === 'residential' && (
+              <>
+                {propertySubType !== 'Land / Plot' && (
+                  <div>
+                    <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5">
+                      Property Status
+                    </label>
+                    <select
+                      value={propertyStatus}
+                      onChange={(e) => setPropertyStatus(e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg px-2.5 md:px-3 py-1.5 md:py-2 text-xs md:text-sm"
+                    >
+                      <option value="">All Status</option>
+                      <option value="ready_to_move">Ready to Move</option>
+                      <option value="under_construction">Under Construction</option>
+                    </select>
+                  </div>
+                )}
+
+                <div>
+                  <label className="flex items-center gap-1.5 text-xs md:text-sm">
+                    <input
+                      type="checkbox"
+                      checked={newBuilderProjects}
+                      onChange={(e) => setNewBuilderProjects(e.target.checked)}
+                      className="accent-blue-600"
+                    />
+                    New Builder Projects
+                  </label>
+                </div>
+              </>
+            )}
+
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5">
+                Price Range
+              </label>
+              <div className="grid grid-cols-2 gap-1.5">
+                <input
+                  type="number"
+                  placeholder="Min Price"
+                  value={priceRange[0] || ''}
+                  onChange={(e) => setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])}
+                  className="px-2.5 md:px-3 py-1.5 md:py-2 border border-gray-300 rounded-lg text-xs md:text-sm"
+                />
+                <input
+                  type="number"
+                  placeholder="Max Price"
+                  value={priceRange[1] >= 10000000 ? '' : priceRange[1]}
+                  onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 10000000])}
+                  className="px-2.5 md:px-3 py-1.5 md:py-2 border border-gray-300 rounded-lg text-xs md:text-sm"
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                setShowFilters(false)
+                handleSearch()
+              }}
+              className="w-full bg-orange-500 text-white py-2 md:py-2.5 rounded-lg font-semibold text-xs md:text-sm hover:bg-orange-600 transition-colors"
             >
               Apply Filters
             </button>
           </div>
         </div>
+      )}
 
-        {/* Results Section */}
-        <div className="flex-1">
-          {/* Mobile Filter Button */}
-          <div className="lg:hidden mb-4">
-            <button
-              onClick={() => setMobileFilterOpen(true)}
-              className="w-full h-12 bg-orange-500 text-white rounded-xl font-semibold flex items-center justify-center gap-2"
-            >
-              <SlidersHorizontal className="h-5 w-5" />
-              Filters
-            </button>
-          </div>
+      {hasSearched && (
+        <div className="px-3 md:px-4 py-3 md:py-4">
+          {loading && (
+            <div className="text-center py-8 md:py-12">
+              <div className="inline-block h-6 w-6 md:h-8 md:w-8 animate-spin rounded-full border-4 border-solid border-orange-500 border-r-transparent"></div>
+              <p className="mt-3 md:mt-4 text-xs md:text-sm text-gray-600">Loading properties...</p>
+            </div>
+          )}
 
-          {/* Results rendering remains conditional */}
-          {hasSearched && (
+          {error && (
+            <div className="text-center py-8 md:py-12">
+              <p className="text-xs md:text-sm text-red-600">{error}</p>
+            </div>
+          )}
+
+          {!loading && !error && properties.length === 0 && (
+            <div className="text-center py-8 md:py-12">
+              <MapPin className="h-10 w-10 md:h-12 md:w-12 text-gray-400 mx-auto mb-3 md:mb-4" />
+              <h3 className="text-sm md:text-lg font-bold text-gray-900 mb-1.5 md:mb-2">No properties found</h3>
+              <p className="text-xs md:text-sm text-gray-600">{getEmptyStateMessage()}</p>
+            </div>
+          )}
+
+          {!loading && !error && properties.length > 0 && (
             <>
-              {loading && (
-                <div className="text-center py-8 md:py-12">
-                  <div className="inline-block h-6 w-6 md:h-8 md:w-8 animate-spin rounded-full border-4 border-solid border-orange-500 border-r-transparent"></div>
-                  <p className="mt-3 md:mt-4 text-xs md:text-sm text-gray-600">Loading properties...</p>
-                </div>
-              )}
-
-              {error && (
-                <div className="text-center py-8 md:py-12">
-                  <p className="text-xs md:text-sm text-red-600">{error}</p>
-                </div>
-              )}
-
-              {!loading && !error && properties.length === 0 && (
-                <div className="text-center py-8 md:py-12">
-                  <MapPin className="h-10 w-10 md:h-12 md:w-12 text-gray-400 mx-auto mb-3 md:mb-4" />
-                  <h3 className="text-sm md:text-lg font-bold text-gray-900 mb-1.5 md:mb-2">No properties found</h3>
-                  <p className="text-xs md:text-sm text-gray-600">{getEmptyStateMessage()}</p>
-                </div>
-              )}
-
-              {!loading && !error && properties.length > 0 && (
-                <>
-                  <div className="flex items-center justify-between mb-3">
-                    <h2 className="font-bold text-sm md:text-base text-gray-900">
-                      {properties.length} Properties
-                    </h2>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {properties.map((property) => (
-                      <PropertyCard key={property.id} property={property} />
-                    ))}
-                  </div>
-                </>
-              )}
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="font-bold text-sm md:text-base text-gray-900">
+                  {properties.length} Properties
+                </h2>
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                {properties.map((property) => (
+                  <PropertyCard key={property.id} property={property} />
+                ))}
+              </div>
             </>
           )}
         </div>
-      </div>
+      )}
 
       {!hasSearched && (
         <div className="px-3 md:px-4 py-8 md:py-12">
@@ -448,39 +568,6 @@ export function SearchPage() {
           <MessageCircle className="text-white w-6 h-6" />
         </a>
       </div>
-
-      {mobileFilterOpen && (
-        <div className="fixed inset-0 bg-black/40 z-50 lg:hidden" onClick={() => setMobileFilterOpen(false)}>
-          <div
-            className="absolute bottom-0 w-full bg-white rounded-t-2xl max-h-[85vh] overflow-y-auto p-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">Filters</h2>
-              <button
-                onClick={() => setMobileFilterOpen(false)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <FiltersPanel />
-
-            <div className="sticky bottom-0 bg-white pt-4 pb-2">
-              <button
-                onClick={() => {
-                  setMobileFilterOpen(false)
-                  handleSearch()
-                }}
-                className="w-full h-12 bg-red-600 text-white rounded-xl font-semibold"
-              >
-                Apply Filters
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
