@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
@@ -18,13 +18,7 @@ export function AdminPropertiesPage() {
   const [adminNotes, setAdminNotes] = useState('')
   const [togglingTrustId, setTogglingTrustId] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (user && isAdmin) {
-      loadProperties()
-    }
-  }, [user, isAdmin])
-
-  const loadProperties = async () => {
+  const loadProperties = useCallback(async () => {
     if (!user) return
 
     try {
@@ -49,7 +43,13 @@ export function AdminPropertiesPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [user?.id])
+
+  useEffect(() => {
+    if (user && isAdmin) {
+      loadProperties()
+    }
+  }, [user, isAdmin, loadProperties])
 
   const toggleTrustedStatus = async (userId: string, currentStatus: boolean) => {
     setTogglingTrustId(userId)

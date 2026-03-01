@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { MapPin, Bed, Bath, Maximize, Heart, Share2, Phone, MessageCircle, Check, MessageSquare } from 'lucide-react'
 import { supabase } from '../lib/supabase'
@@ -22,20 +22,78 @@ export function PropertyDetailsPage() {
   const [loading, setLoading] = useState(true)
   const [isFavorite, setIsFavorite] = useState(false)
 
-  useEffect(() => {
-    if (id) {
-      loadPropertyData()
-    }
-  }, [id, user])
+  const loadProperty = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('properties')
+        .select(`
+          id,
+          owner_id,
+          title,
+          description,
+          price,
+          bedrooms,
+          bathrooms,
+          area_sqft,
+          images,
+          property_type,
+          listing_type,
+          category,
+          state,
+          pincode,
+          status,
+          amenities,
+          agent_name,
+          agent_phone,
+          agent_whatsapp,
+          locality_id,
+          is_vmrda_approved,
+          approved_at,
+          rejection_reason,
+          admin_notes,
+          created_at,
+          updated_at
+        `)
+        .eq('id', id)
+        .maybeSingle()
 
-  const loadPropertyData = async () => {
+      if (error) throw error
+      setProperty(data)
+    } catch (error) {
+      console.error('Error loading property:', error)
+    }
+  }, [id])
+
+  const checkFavorite = useCallback(async () => {
+    if (!user) return
+    try {
+      const { data } = await supabase
+        .from('favorites')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('property_id', id)
+        .maybeSingle()
+
+      setIsFavorite(!!data)
+    } catch (error) {
+      console.error('Error checking favorite:', error)
+    }
+  }, [user?.id, id])
+
+  const loadPropertyData = useCallback(async () => {
     setLoading(true)
     await Promise.all([
       loadProperty(),
       user ? checkFavorite() : Promise.resolve()
     ])
     setLoading(false)
-  }
+  }, [loadProperty, checkFavorite, user])
+
+  useEffect(() => {
+    if (id) {
+      loadPropertyData()
+    }
+  }, [id, loadPropertyData])
 
   useEffect(() => {
     if (property && !loading) {
@@ -109,65 +167,7 @@ export function PropertyDetailsPage() {
         }
       }
     }
-  }, [property])
-
-  const loadProperty = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('properties')
-        .select(`
-          id,
-          owner_id,
-          title,
-          description,
-          price,
-          bedrooms,
-          bathrooms,
-          area_sqft,
-          images,
-          property_type,
-          listing_type,
-          category,
-          state,
-          pincode,
-          status,
-          amenities,
-          agent_name,
-          agent_phone,
-          agent_whatsapp,
-          locality_id,
-          is_vmrda_approved,
-          approved_at,
-          rejection_reason,
-          admin_notes,
-          created_at,
-          updated_at
-        `)
-        .eq('id', id)
-        .maybeSingle()
-
-      if (error) throw error
-      setProperty(data)
-    } catch (error) {
-      console.error('Error loading property:', error)
-    }
-  }
-
-  const checkFavorite = async () => {
-    if (!user) return
-    try {
-      const { data } = await supabase
-        .from('favorites')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('property_id', id)
-        .maybeSingle()
-
-      setIsFavorite(!!data)
-    } catch (error) {
-      console.error('Error checking favorite:', error)
-    }
-  }
+  }, [property, loading])
 
   const toggleFavorite = async () => {
     if (!user) return
