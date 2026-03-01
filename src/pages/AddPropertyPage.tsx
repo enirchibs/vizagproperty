@@ -28,6 +28,7 @@ export function AddPropertyPage() {
   const streamRef = useRef<MediaStream | null>(null)
   const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
+  // Initialize form data without profile dependency to prevent re-renders
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -40,7 +41,7 @@ export function AddPropertyPage() {
     area_sqft: '',
     state: 'Andhra Pradesh',
     pincode: '',
-    agent_name: profile?.name || profile?.full_name || '',
+    agent_name: '',
     agent_phone: '',
     agent_whatsapp: '',
     amenities: [] as string[]
@@ -90,6 +91,16 @@ export function AddPropertyPage() {
   }
 
   const commonAmenities = ['Parking', 'Gym', 'Swimming Pool', 'Security', 'Power Backup', 'Elevator', 'Garden', 'Club House', 'WiFi', 'Furnished']
+
+  // Set agent name from profile once, when profile loads (prevent re-render loops)
+  useEffect(() => {
+    if (profile && !formData.agent_name) {
+      setFormData(prev => ({
+        ...prev,
+        agent_name: profile.name || profile.full_name || ''
+      }))
+    }
+  }, [profile?.id]) // Only when profile ID changes (user logs in)
 
   const fetchLocalities = async (searchTerm: string) => {
     if (!user || searchTerm.length < 3) {

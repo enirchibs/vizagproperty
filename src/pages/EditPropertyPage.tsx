@@ -38,11 +38,17 @@ export function EditPropertyPage() {
     amenities: [] as string[]
   })
 
+  // Only load property when id changes (not on every user/auth state change)
+  useEffect(() => {
+    if (!user || !id) return
+    loadProperty()
+  }, [id]) // Only depend on id to prevent infinite loops
+
+  // Load localities once on mount
   useEffect(() => {
     if (!user) return
-    loadProperty()
     loadLocalities()
-  }, [user, id])
+  }, [])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
