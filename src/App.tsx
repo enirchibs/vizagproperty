@@ -32,7 +32,6 @@ import { AdminPropertiesPage } from './pages/AdminPropertiesPage'
 import { AdminDashboardPage } from './pages/AdminDashboardPage'
 import { EditPropertyPage } from './pages/EditPropertyPage'
 import { SearchPage } from './pages/SearchPage'
-import { MobileSearchPage } from './pages/MobileSearchPage'
 
 function AppContent() {
   const { showUsernamePrompt, setShowUsernamePrompt } = useAuth()
@@ -45,7 +44,6 @@ function AppContent() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/search" element={<SearchPage />} />
-          <Route path="/mobile-search" element={<MobileSearchPage />} />
           <Route path="/vizag" element={<VizagPage />} />
           <Route path="/vmrda-plots" element={<VMRDAplotsPage />} />
           <Route path="/vmrda-approved-plots-vizag" element={<VMRDAApprovedPlotsPage />} />
