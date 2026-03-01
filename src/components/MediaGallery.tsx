@@ -21,68 +21,53 @@ export function MediaGallery({ images, propertyId, propertyTitle = 'Property', p
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    let mounted = true
-
-    const loadMedia = async () => {
-      try {
-        const items: MediaItem[] = images.map(url => ({
-          type: 'image',
-          url
-        }))
-
-        const [videosResult, socialLinksResult] = await Promise.all([
-          supabase
-            .from('property_videos')
-            .select('video_url')
-            .eq('property_id', propertyId),
-          supabase
-            .from('property_social_links')
-            .select('platform, link_url, embed_code')
-            .eq('property_id', propertyId)
-        ])
-
-        if (!mounted) return
-
-        if (videosResult.data) {
-          videosResult.data.forEach(video => {
-            items.push({
-              type: 'video',
-              url: video.video_url
-            })
-          })
-        }
-
-        if (socialLinksResult.data) {
-          socialLinksResult.data.forEach(link => {
-            items.push({
-              type: link.platform as 'youtube' | 'instagram',
-              url: link.link_url,
-              embedCode: link.embed_code || undefined
-            })
-          })
-        }
-
-        if (mounted) {
-          setMediaItems(items)
-        }
-      } catch (error) {
-        console.error('Error loading media:', error)
-        if (mounted) {
-          setMediaItems(images.map(url => ({ type: 'image', url })))
-        }
-      } finally {
-        if (mounted) {
-          setLoading(false)
-        }
-      }
-    }
-
     loadMedia()
-
-    return () => {
-      mounted = false
-    }
   }, [propertyId, images])
+
+  const loadMedia = async () => {
+    try {
+      const items: MediaItem[] = images.map(url => ({
+        type: 'image',
+        url
+      }))
+
+      const { data: videos } = await supabase
+        .from('property_videos')
+        .select('video_url')
+        .eq('property_id', propertyId)
+
+      if (videos) {
+        videos.forEach(video => {
+          items.push({
+            type: 'video',
+            url: video.video_url
+          })
+        })
+      }
+
+      const { data: socialLinks } = await supabase
+        .from('property_social_links')
+        .select('platform, link_url, embed_code')
+        .eq('property_id', propertyId)
+
+      if (socialLinks) {
+        socialLinks.forEach(link => {
+          items.push({
+            type: link.platform as 'youtube' | 'instagram',
+            url: link.link_url,
+            embedCode: link.embed_code || undefined
+          })
+        })
+      }
+
+      setMediaItems(items)
+    } catch (error) {
+      console.error('Error loading media:', error)
+      setMediaItems(images.map(url => ({ type: 'image', url })))
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const goToPrevious = () => {
     setCurrentIndex(prev => (prev === 0 ? mediaItems.length - 1 : prev - 1))

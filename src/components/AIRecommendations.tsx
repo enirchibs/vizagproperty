@@ -99,11 +99,11 @@ export function AIRecommendations() {
       reasons.push('Verified listing with authentic details')
     }
 
-    if (property.amenities && property.amenities.length >= 5) {
+    if (property.amenities.length >= 5) {
       reasons.push('Premium amenities included')
     }
 
-    if (property.views_count && property.views_count > 50) {
+    if (property.views_count > 50) {
       reasons.push('Popular choice among buyers')
     }
 
@@ -127,8 +127,8 @@ export function AIRecommendations() {
 
     if (property.featured) score += 15
     if (property.verified) score += 10
-    if (property.amenities && property.amenities.length >= 5) score += 10
-    if (property.views_count && property.views_count > 50) score += 5
+    if (property.amenities.length >= 5) score += 10
+    if (property.views_count > 50) score += 5
     if (property.bedrooms && property.bedrooms >= 2 && property.bedrooms <= 3) score += 10
 
     return Math.min(score, 100)
@@ -218,7 +218,7 @@ export function AIRecommendations() {
                 onClick={() => navigate(`/property/${rec.property.id}`)}
               >
                 <img
-                  src={rec.property.images?.[0] || 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg'}
+                  src={rec.property.images[0] || 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg'}
                   alt={`${rec.property.property_type || 'Property'} for sale in ${rec.property.location} - ${rec.property.title}`}
                   className="w-full h-full object-cover"
                 />

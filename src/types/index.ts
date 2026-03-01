@@ -49,27 +49,26 @@ export interface Property {
   locality_id: string
   location?: string
   city?: string
-  state?: string
+  state: string
   pincode?: string
   latitude?: number
   longitude?: number
-  amenities?: string[]
-  images?: string[]
+  amenities: string[]
+  images: string[]
   video_url?: string
   status: 'pending' | 'approved' | 'rejected'
   rejection_reason?: string
   approved_at?: string
   admin_notes?: string
-  featured?: boolean
-  verified?: boolean
+  featured: boolean
+  verified: boolean
   owner_id?: string
-  agent_name?: string
-  agent_phone?: string
+  agent_name: string
+  agent_phone: string
   agent_whatsapp?: string
-  views_count?: number
+  views_count: number
   created_at: string
-  updated_at?: string
-  is_vmrda_approved?: boolean
+  updated_at: string
   users?: {
     id: string
     email?: string
@@ -129,7 +128,6 @@ export interface SearchFilters {
   bathrooms?: number
   min_area?: number
   max_area?: number
-  property_status?: string
   amenities?: string[]
   radius_enabled?: boolean
   radius_km?: number

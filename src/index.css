@@ -16,14 +16,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-img, video, iframe {
-  content-visibility: auto;
-}
-
-.lg\:sticky {
-  will-change: transform;
-}
-
 @media (max-width: 768px) {
   h1 {
     font-size: 1.25rem;
@@ -78,46 +70,6 @@ img, video, iframe {
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
-  }
-
-  .scrollbar-thin {
-    scrollbar-width: thin;
-    scrollbar-color: #cbd5e0 #f7fafc;
-  }
-
-  .scrollbar-thin::-webkit-scrollbar {
-    height: 6px;
-    width: 6px;
-  }
-
-  .scrollbar-thin::-webkit-scrollbar-track {
-    background: #f7fafc;
-    border-radius: 10px;
-  }
-
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: #cbd5e0;
-    border-radius: 10px;
-  }
-
-  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: #a0aec0;
-  }
-
-  .scrollbar-thumb-gray-300 {
-    scrollbar-color: #d1d5db #f9fafb;
-  }
-
-  .scrollbar-thumb-gray-300::-webkit-scrollbar-thumb {
-    background: #d1d5db;
-  }
-
-  .scrollbar-track-gray-100 {
-    scrollbar-color: #d1d5db #f3f4f6;
-  }
-
-  .scrollbar-track-gray-100::-webkit-scrollbar-track {
-    background: #f3f4f6;
   }
 
   .animate-fadeIn {
@@ -186,22 +138,5 @@ img, video, iframe {
     50% { transform: translateX(8px); }
     75% { transform: translateX(-8px); }
     100% { transform: translateX(0); }
-  }
-
-  .animate-fade-in {
-    animation: fadeIn 0.2s ease-in;
-  }
-
-  @keyframes slideRight {
-    from {
-      transform: translateX(-100%);
-    }
-    to {
-      transform: translateX(0);
-    }
-  }
-
-  .animate-slide-right {
-    animation: slideRight 0.3s ease-out;
   }
 }

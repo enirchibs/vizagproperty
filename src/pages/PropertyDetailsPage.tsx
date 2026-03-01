@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { MapPin, Bed, Bath, Maximize, Heart, Share2, Phone, MessageCircle, Check, MessageSquare } from 'lucide-react'
 import { supabase } from '../lib/supabase'
@@ -22,87 +22,22 @@ export function PropertyDetailsPage() {
   const [loading, setLoading] = useState(true)
   const [isFavorite, setIsFavorite] = useState(false)
 
-  const loadProperty = useCallback(async () => {
-    try {
-      const { data, error } = await supabase
-        .from('properties')
-        .select(`
-          id,
-          owner_id,
-          title,
-          description,
-          price,
-          bedrooms,
-          bathrooms,
-          area_sqft,
-          images,
-          property_type,
-          listing_type,
-          category,
-          state,
-          pincode,
-          status,
-          amenities,
-          agent_name,
-          agent_phone,
-          agent_whatsapp,
-          locality_id,
-          is_vmrda_approved,
-          approved_at,
-          rejection_reason,
-          admin_notes,
-          created_at,
-          updated_at
-        `)
-        .eq('id', id)
-        .maybeSingle()
-
-      if (error) throw error
-      setProperty(data)
-    } catch (error) {
-      console.error('Error loading property:', error)
-    }
-  }, [id])
-
-  const checkFavorite = useCallback(async () => {
-    if (!user) return
-    try {
-      const { data } = await supabase
-        .from('favorites')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('property_id', id)
-        .maybeSingle()
-
-      setIsFavorite(!!data)
-    } catch (error) {
-      console.error('Error checking favorite:', error)
-    }
-  }, [user?.id, id])
-
-  const loadPropertyData = useCallback(async () => {
-    setLoading(true)
-    await Promise.all([
-      loadProperty(),
-      user ? checkFavorite() : Promise.resolve()
-    ])
-    setLoading(false)
-  }, [loadProperty, checkFavorite, user])
-
   useEffect(() => {
     if (id) {
-      loadPropertyData()
+      loadProperty()
+      recordView()
+      checkFavorite()
     }
-  }, [id, loadPropertyData])
+  }, [id, user])
 
   useEffect(() => {
-    if (property && !loading) {
+    if (property) {
       const schema = {
         "@context": "https://schema.org",
         "@type": "Product",
         "name": property.title,
         "description": property.description,
-        "image": property.images?.length ? property.images : ["https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg"],
+        "image": property.images.length > 0 ? property.images : ["https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg"],
         "offers": {
           "@type": "Offer",
           "price": property.price,
@@ -135,39 +70,76 @@ export function PropertyDetailsPage() {
         ],
         "address": {
           "@type": "PostalAddress",
-          "addressLocality": property.city ?? property.location ?? 'Visakhapatnam',
-          "addressRegion": property.state ?? 'Andhra Pradesh',
+          "addressLocality": property.city,
+          "addressRegion": property.state,
           "addressCountry": "IN"
         }
       }
 
-      const existingScript = document.getElementById('property-schema')
-      if (existingScript) {
-        existingScript.remove()
-      }
+      const script = document.createElement('script')
+      script.type = 'application/ld+json'
+      script.text = JSON.stringify(schema)
+      script.id = 'property-schema'
+      document.head.appendChild(script)
 
-      requestAnimationFrame(() => {
-        const script = document.createElement('script')
-        script.type = 'application/ld+json'
-        script.text = JSON.stringify(schema)
-        script.id = 'property-schema'
-        document.head.appendChild(script)
-      })
-
-      document.title = `${property.title} - ${property.location ?? property.city ?? 'Visakhapatnam'} | VizagProperty`
+      document.title = `${property.title} - ${property.location} | VizagProperty`
       const metaDescription = document.querySelector('meta[name="description"]')
       if (metaDescription) {
-        metaDescription.setAttribute('content', `${property.title} in ${property.location ?? property.city ?? 'Visakhapatnam'}. ${property.bedrooms ? property.bedrooms + ' BHK, ' : ''}${property.area_sqft} sqft. ${property.listing_type === 'sale' ? 'For Sale' : 'For Rent'}. Contact now for more details.`)
+        metaDescription.setAttribute('content', `${property.title} in ${property.location}. ${property.bedrooms} BHK, ${property.area_sqft} sqft. ${property.listing_type === 'sale' ? 'For Sale' : 'For Rent'}. Contact now for more details.`)
       }
 
       return () => {
-        const scriptToRemove = document.getElementById('property-schema')
-        if (scriptToRemove) {
-          scriptToRemove.remove()
+        const existingScript = document.getElementById('property-schema')
+        if (existingScript) {
+          existingScript.remove()
         }
       }
     }
-  }, [property, loading])
+  }, [property])
+
+  const loadProperty = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle()
+
+      if (error) throw error
+      setProperty(data)
+    } catch (error) {
+      console.error('Error loading property:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const recordView = async () => {
+    try {
+      await supabase.from('property_views').insert({
+        property_id: id,
+        user_id: user?.id
+      })
+    } catch (error) {
+      console.error('Error recording view:', error)
+    }
+  }
+
+  const checkFavorite = async () => {
+    if (!user) return
+    try {
+      const { data } = await supabase
+        .from('favorites')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('property_id', id)
+        .maybeSingle()
+
+      setIsFavorite(!!data)
+    } catch (error) {
+      console.error('Error checking favorite:', error)
+    }
+  }
 
   const toggleFavorite = async () => {
     if (!user) return
@@ -231,32 +203,10 @@ export function PropertyDetailsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <div className="h-96 bg-gray-200 rounded-2xl animate-pulse mb-6"></div>
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <div className="h-8 bg-gray-200 rounded w-3/4 mb-4 animate-pulse"></div>
-                <div className="h-6 bg-gray-200 rounded w-1/2 mb-6 animate-pulse"></div>
-                <div className="space-y-3">
-                  <div className="h-4 bg-gray-200 rounded w-full animate-pulse"></div>
-                  <div className="h-4 bg-gray-200 rounded w-5/6 animate-pulse"></div>
-                  <div className="h-4 bg-gray-200 rounded w-4/6 animate-pulse"></div>
-                </div>
-              </div>
-            </div>
-            <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <div className="h-10 bg-gray-200 rounded w-1/2 mb-6 animate-pulse"></div>
-                <div className="space-y-3">
-                  <div className="h-12 bg-gray-200 rounded animate-pulse"></div>
-                  <div className="h-12 bg-gray-200 rounded animate-pulse"></div>
-                  <div className="h-12 bg-gray-200 rounded animate-pulse"></div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading property...</p>
         </div>
       </div>
     )
@@ -275,7 +225,7 @@ export function PropertyDetailsPage() {
     )
   }
 
-  const images = property.images?.length
+  const images = property.images.length > 0
     ? property.images
     : ['https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=1200']
 
@@ -304,20 +254,18 @@ export function PropertyDetailsPage() {
                 </button>
               </div>
 
-              {(property.featured || property.verified) && (
-                <div className="absolute top-4 left-4 flex gap-2 z-20">
-                  {property.featured && (
-                    <span className="bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-medium">
-                      Featured
-                    </span>
-                  )}
-                  {property.verified && (
-                    <span className="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-medium">
-                      Verified
-                    </span>
-                  )}
-                </div>
-              )}
+              <div className="absolute top-4 left-4 flex gap-2 z-20">
+                {property.featured && (
+                  <span className="bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    Featured
+                  </span>
+                )}
+                {property.verified && (
+                  <span className="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    Verified
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100 mb-6">
@@ -326,10 +274,7 @@ export function PropertyDetailsPage() {
                   <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{property.title}</h1>
                   <div className="flex items-start text-gray-600 text-base md:text-lg">
                     <MapPin className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
-                    <span>
-                      {property.location ?? property.city ?? 'Visakhapatnam'}
-                      {property.state && `, ${property.state}`}
-                    </span>
+                    <span>{property.location}, {property.city}, {property.state}</span>
                   </div>
                 </div>
                 <span className="px-4 py-2 bg-primary-50 text-primary-700 rounded-full capitalize font-medium text-sm whitespace-nowrap self-start">
@@ -362,7 +307,7 @@ export function PropertyDetailsPage() {
                 <PropertyDisclaimer />
               </div>
 
-              {property.amenities && property.amenities.length > 0 && (
+              {property.amenities.length > 0 && (
                 <div>
                   <h2 className="text-xl font-semibold text-gray-900 mb-3">Amenities</h2>
                   <div className="grid grid-cols-2 gap-3">
@@ -382,13 +327,13 @@ export function PropertyDetailsPage() {
             <BudgetStretchAdvisor
               currentPrice={property.price}
               propertyType={property.property_type}
-              location={property.location ?? property.city ?? 'Vizag'}
-              bedrooms={property.bedrooms ?? 0}
+              location={property.location || property.city || 'Vizag'}
+              bedrooms={property.bedrooms || 0}
             />
 
             <NegotiationCoach propertyId={property.id} currentPrice={property.price} />
 
-            <SmartAreaDiscovery currentCity={property.city ?? 'Vizag'} />
+            <SmartAreaDiscovery currentCity={property.city || 'Vizag'} />
 
             <PropertyShortlistMemory propertyId={property.id} />
 
@@ -422,7 +367,7 @@ export function PropertyDetailsPage() {
                 </button>
 
                 <button
-                  onClick={() => openWhatsApp(`Hi Vizag Property Experts, I am interested in this property:\n${property.title}\nLocation: ${property.location ?? property.city ?? 'Visakhapatnam'}\nPrice: ${formatPrice(property.price)}\nPlease share more details.`)}
+                  onClick={() => openWhatsApp(`Hi Vizag Property Experts, I am interested in this property:\n${property.title}\nLocation: ${property.location}\nPrice: ${formatPrice(property.price)}\nPlease share more details.`)}
                   className="w-full bg-green-50 text-green-700 border-2 border-green-600 py-3.5 md:py-3 rounded-lg hover:bg-green-100 transition-colors flex items-center justify-center space-x-2 font-medium text-base min-h-[48px]"
                 >
                   <MessageSquare className="h-5 w-5" />
@@ -433,12 +378,15 @@ export function PropertyDetailsPage() {
               <div className="pt-6 border-t border-gray-200">
                 <h3 className="font-semibold text-gray-900 mb-3">Contact Agent</h3>
                 <div className="space-y-2 text-gray-600">
-                  <p><span className="font-medium">Name:</span> {property.agent_name ?? 'Vizag Property'}</p>
-                  <p><span className="font-medium">Phone:</span> {property.agent_phone ?? VIZAG_PROPERTY_PHONE}</p>
+                  <p><span className="font-medium">Name:</span> {property.agent_name}</p>
+                  <p><span className="font-medium">Phone:</span> {property.agent_phone}</p>
                 </div>
               </div>
 
               <div className="pt-6 border-t border-gray-200 mt-6">
+                <p className="text-sm text-gray-500">
+                  <span className="font-medium">Views:</span> {property.views_count}
+                </p>
                 <p className="text-sm text-gray-500 mt-1">
                   <span className="font-medium">Posted:</span> {new Date(property.created_at).toLocaleDateString()}
                 </p>

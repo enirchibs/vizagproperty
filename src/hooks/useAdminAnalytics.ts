@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
 export interface AnalyticsKPIs {
@@ -36,7 +36,11 @@ export function useAdminAnalytics() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const loadAnalytics = useCallback(async () => {
+  useEffect(() => {
+    loadAnalytics()
+  }, [])
+
+  const loadAnalytics = async () => {
     setLoading(true)
     setError(null)
 
@@ -86,11 +90,7 @@ export function useAdminAnalytics() {
     } finally {
       setLoading(false)
     }
-  }, [])
-
-  useEffect(() => {
-    loadAnalytics()
-  }, [loadAnalytics])
+  }
 
   return {
     kpis,

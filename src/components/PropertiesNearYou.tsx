@@ -81,7 +81,7 @@ export default function PropertiesNearYou() {
               <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                 {property.images && property.images.length > 0 ? (
                   <img
-                    src={property.images?.[0] || 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg'}
+                    src={property.images[0]}
                     alt={property.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />

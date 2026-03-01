@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
@@ -18,7 +18,13 @@ export function AdminPropertiesPage() {
   const [adminNotes, setAdminNotes] = useState('')
   const [togglingTrustId, setTogglingTrustId] = useState<string | null>(null)
 
-  const loadProperties = useCallback(async () => {
+  useEffect(() => {
+    if (user && isAdmin) {
+      loadProperties()
+    }
+  }, [user, isAdmin])
+
+  const loadProperties = async () => {
     if (!user) return
 
     try {
@@ -43,13 +49,7 @@ export function AdminPropertiesPage() {
     } finally {
       setLoading(false)
     }
-  }, [user?.id])
-
-  useEffect(() => {
-    if (user && isAdmin) {
-      loadProperties()
-    }
-  }, [user, isAdmin, loadProperties])
+  }
 
   const toggleTrustedStatus = async (userId: string, currentStatus: boolean) => {
     setTogglingTrustId(userId)
@@ -289,7 +289,7 @@ export function AdminPropertiesPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProperties.map((property) => {
-              const mainImage = property.images?.[0] || 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=800'
+              const mainImage = property.images[0] || 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=800'
 
               return (
                 <div
