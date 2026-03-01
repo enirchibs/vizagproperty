@@ -31,15 +31,51 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let mounted = true
+    let loadingProfileId: string | null = null
+
+    const loadProfile = async (userId: string) => {
+      if (loadingProfileId === userId) {
+        return
+      }
+      loadingProfileId = userId
+
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', userId)
+          .maybeSingle()
+
+        if (error) throw error
+        if (mounted) {
+          setProfile(data)
+        }
+      } catch (err) {
+        console.error('Error loading profile:', err)
+      } finally {
+        if (mounted) {
+          setLoading(false)
+        }
+        loadingProfileId = null
+      }
+    }
 
     const getSession = async () => {
-      const { data } = await supabase.auth.getSession()
-      if (mounted) {
+      try {
+        const { data } = await supabase.auth.getSession()
+        if (!mounted) return
+
         setSession(data.session)
         setUser(data.session?.user ?? null)
+
         if (data.session?.user) {
-          loadProfile(data.session.user.id)
+          await loadProfile(data.session.user.id)
         } else {
+          setLoading(false)
+        }
+      } catch (err) {
+        console.error('Error getting session:', err)
+        if (mounted) {
           setLoading(false)
         }
       }
@@ -55,33 +91,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(session?.user ?? null)
 
         if (session?.user) {
-          const { data: existingProfile } = await supabase
-            .from('users')
-            .select('*')
-            .eq('id', session.user.id)
-            .maybeSingle()
+          if (event === 'SIGNED_IN') {
+            const { data: existingProfile } = await supabase
+              .from('users')
+              .select('*')
+              .eq('id', session.user.id)
+              .maybeSingle()
 
-          const authProvider = session.user.phone ? 'phone'
-            : session.user.app_metadata?.provider === 'google' ? 'google'
-            : 'email'
+            const authProvider = session.user.phone ? 'phone'
+              : session.user.app_metadata?.provider === 'google' ? 'google'
+              : 'email'
 
-          if (!existingProfile && (event === 'SIGNED_IN' || event === 'USER_UPDATED')) {
-            const intentRole = session.user.user_metadata?.intent_role || 'buyer'
+            if (!existingProfile) {
+              const intentRole = session.user.user_metadata?.intent_role || 'buyer'
 
-            const { error: insertError } = await supabase.from('users').insert({
-              id: session.user.id,
-              name: session.user.user_metadata?.full_name || session.user.phone || session.user.email?.split('@')[0] || 'User',
-              email: session.user.email,
-              phone: session.user.phone,
-              role: intentRole
-            })
+              await supabase.from('users').insert({
+                id: session.user.id,
+                name: session.user.user_metadata?.full_name || session.user.phone || session.user.email?.split('@')[0] || 'User',
+                email: session.user.email,
+                phone: session.user.phone,
+                role: intentRole
+              })
 
-            if (!insertError && authProvider === 'email') {
-              setShowUsernamePrompt(true)
+              if (authProvider === 'email') {
+                setShowUsernamePrompt(true)
+              }
             }
-          }
 
-          await loadProfile(session.user.id)
+            await loadProfile(session.user.id)
+          } else if (event === 'TOKEN_REFRESHED') {
+            await loadProfile(session.user.id)
+          }
         } else {
           setProfile(null)
           setLoading(false)
@@ -95,7 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const loadProfile = async (userId: string) => {
+  const refreshProfile = async (userId: string) => {
     try {
       const { data, error } = await supabase
         .from('users')
@@ -107,8 +147,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setProfile(data)
     } catch (err) {
       console.error('Error loading profile:', err)
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -224,7 +262,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw error
     }
 
-    await loadProfile(user.id)
+    await refreshProfile(user.id)
   }
 
   const signOut = async () => {

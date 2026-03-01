@@ -40,7 +40,7 @@ export function AddPropertyPage() {
     area_sqft: '',
     state: 'Andhra Pradesh',
     pincode: '',
-    agent_name: profile?.full_name || '',
+    agent_name: profile?.name || profile?.full_name || '',
     agent_phone: '',
     agent_whatsapp: '',
     amenities: [] as string[]
@@ -326,19 +326,6 @@ export function AddPropertyPage() {
 
       const imageUrls = await uploadImages()
 
-      const { data: existingUser } = await supabase
-        .from('users')
-        .select('id, role')
-        .eq('id', user.id)
-        .maybeSingle()
-
-      if (existingUser?.role === 'buyer') {
-        await supabase
-          .from('users')
-          .update({ role: 'owner' })
-          .eq('id', user.id)
-      }
-
       const propertyData: any = {
         title: formData.title,
         description: formData.description,
@@ -394,7 +381,7 @@ export function AddPropertyPage() {
 
       setTimeout(() => {
         window.location.href = '/my-listings'
-      }, 2000)
+      }, 1500)
     } catch (error: any) {
       setErrorMessage(error.message || 'Failed to add property')
     } finally {
