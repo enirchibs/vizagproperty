@@ -59,7 +59,6 @@ export function useNearbyProperties() {
         await loadPropertiesInLocality(vizagCenter.id)
       }
     } catch (err) {
-      console.error('Error detecting location:', err)
       setError('Failed to load nearby properties')
     } finally {
       setLoading(false)
@@ -113,7 +112,6 @@ export function useNearbyProperties() {
 
       return { id: nearest.id, name: nearest.name }
     } catch (error) {
-      console.error('Error finding nearest locality:', error)
       return null
     }
   }
@@ -154,7 +152,6 @@ export function useNearbyProperties() {
 
       return anyLocality ? { id: anyLocality.id, name: anyLocality.name } : null
     } catch (error) {
-      console.error('Error getting center locality:', error)
       return null
     }
   }
@@ -172,7 +169,6 @@ export function useNearbyProperties() {
       if (error) throw error
       setProperties(data || [])
     } catch (error) {
-      console.error('Error loading properties:', error)
       throw error
     }
   }

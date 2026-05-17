@@ -35,7 +35,6 @@ export const saveLastSearch = async (data: Omit<LastSearchData, 'savedAt'>) => {
         })
     }
   } catch (error) {
-    console.error('Failed to save last search:', error)
   }
 }
 
@@ -55,7 +54,6 @@ export const getLastSearch = (): Omit<LastSearchData, 'savedAt'> | null => {
     const { savedAt, ...searchData } = data
     return searchData
   } catch (error) {
-    console.error('Failed to retrieve last search:', error)
     return null
   }
 }
@@ -64,6 +62,5 @@ export const clearLastSearch = () => {
   try {
     localStorage.removeItem(STORAGE_KEY)
   } catch (error) {
-    console.error('Failed to clear last search:', error)
   }
 }

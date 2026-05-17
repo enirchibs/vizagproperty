@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, useRef, ReactNode } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
 import { UserProfile } from '../types'
@@ -28,72 +28,125 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const [showUsernamePrompt, setShowUsernamePrompt] = useState(false)
+  const initialLoadDone = useRef(false)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        loadProfile(session.user.id)
-      } else {
-        setLoading(false)
+    let mounted = true
+    let loadingProfileId: string | null = null
+
+    const loadProfile = async (userId: string) => {
+      if (loadingProfileId === userId) {
+        return
       }
-    })
+      loadingProfileId = userId
+
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', userId)
+          .maybeSingle()
+
+        if (error) throw error
+        if (mounted) {
+          setProfile(data)
+        }
+      } catch (err) {
+      } finally {
+        if (mounted && !initialLoadDone.current) {
+          initialLoadDone.current = true
+          setLoading(false)
+        }
+        loadingProfileId = null
+      }
+    }
+
+    const getSession = async () => {
+      try {
+        const { data } = await supabase.auth.getSession()
+        if (!mounted) return
+
+        setSession(data.session)
+        setUser(data.session?.user ?? null)
+
+        if (data.session?.user) {
+          await loadProfile(data.session.user.id)
+        } else {
+          if (!initialLoadDone.current) {
+            initialLoadDone.current = true
+            setLoading(false)
+          }
+        }
+      } catch (err) {
+        if (mounted && !initialLoadDone.current) {
+          initialLoadDone.current = true
+          setLoading(false)
+        }
+      }
+    }
+
+    getSession()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        if (!mounted) return
+
         setSession(session)
         setUser(session?.user ?? null)
 
         if (session?.user) {
-          (async () => {
-            const { data: existingProfile } = await supabase
-              .from('users')
-              .select('*')
-              .eq('id', session.user.id)
-              .maybeSingle()
+          if (event === 'SIGNED_IN') {
+            (async () => {
+              const { data: existingProfile } = await supabase
+                .from('users')
+                .select('*')
+                .eq('id', session.user.id)
+                .maybeSingle()
 
-            // Determine auth provider from user metadata or app metadata
-            const authProvider = session.user.phone ? 'phone'
-              : session.user.app_metadata?.provider === 'google' ? 'google'
-              : 'email'
+              const authProvider = session.user.phone ? 'phone'
+                : session.user.app_metadata?.provider === 'google' ? 'google'
+                : 'email'
 
-            if (!existingProfile && (event === 'SIGNED_IN' || event === 'USER_UPDATED')) {
-              // Get intent role from user metadata if available (works for all auth methods)
-              const intentRole = session.user.user_metadata?.intent_role || 'buyer'
+              if (!existingProfile) {
+                const intentRole = session.user.user_metadata?.intent_role || 'buyer'
 
-              // Create new user row
-              const { error: insertError } = await supabase.from('users').insert({
-                id: session.user.id,
-                name: session.user.user_metadata?.full_name || session.user.phone || session.user.email?.split('@')[0] || 'User',
-                email: session.user.email,
-                phone: session.user.phone,
-                role: intentRole
-              })
+                await supabase.from('users').insert({
+                  id: session.user.id,
+                  name: session.user.user_metadata?.full_name || session.user.phone || session.user.email?.split('@')[0] || 'User',
+                  email: session.user.email,
+                  phone: session.user.phone,
+                  role: intentRole
+                })
 
-              if (insertError) {
-                console.error('Failed to create user profile:', insertError)
+                if (authProvider === 'email') {
+                  setShowUsernamePrompt(true)
+                }
               }
 
-              // Show username prompt only for email signups (not phone or Google)
-              if (!insertError && authProvider === 'email') {
-                setShowUsernamePrompt(true)
-              }
-            }
-
-            await loadProfile(session.user.id)
-          })()
+              await loadProfile(session.user.id)
+            })()
+          } else if (event === 'TOKEN_REFRESHED') {
+            (async () => {
+              await loadProfile(session.user.id)
+            })()
+          }
         } else {
           setProfile(null)
-          setLoading(false)
+          if (!initialLoadDone.current) {
+            initialLoadDone.current = true
+            setLoading(false)
+          }
         }
       }
     )
 
-    return () => subscription.unsubscribe()
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
   }, [])
 
-  const loadProfile = async (userId: string) => {
+  const refreshProfile = async (userId: string) => {
     try {
       const { data, error } = await supabase
         .from('users')
@@ -104,9 +157,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) throw error
       setProfile(data)
     } catch (err) {
-      console.error('Error loading profile:', err)
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -126,7 +176,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     if (error) {
-      console.error('OTP send error:', error.message)
       throw new Error(error.message)
     }
   }
@@ -143,7 +192,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     if (error) {
-      console.error('OTP verify error:', error.message)
       throw new Error('Invalid or expired OTP')
     }
   }
@@ -168,7 +216,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     if (error) {
-      console.error('Email signup error:', error.message)
       throw error
     }
 
@@ -182,7 +229,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     if (error) {
-      console.error('Email signin error:', error.message)
       throw error
     }
   }
@@ -200,7 +246,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     if (error) {
-      console.error('Google signin error:', error.message)
       throw error
     }
   }
@@ -218,11 +263,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .eq('id', user.id)
 
     if (error) {
-      console.error('Update username error:', error.message)
       throw error
     }
 
-    await loadProfile(user.id)
+    await refreshProfile(user.id)
   }
 
   const signOut = async () => {

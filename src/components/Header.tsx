@@ -29,7 +29,6 @@ export function Header() {
       sessionStorage.removeItem('hasSeenUsernameModal')
       await signOut()
     } catch (error) {
-      console.error('Sign out error:', error)
     }
   }
 
@@ -68,13 +67,10 @@ export function Header() {
                 {showMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
               <img
-                src="/assets/logo/vizag-property-logo.png"
-                alt="Vizag Property Experts logo"
-                className="hidden md:block h-8 md:h-10 w-auto"
+                src="../dist/assets/vizag-property-logo.png"
+                alt="Vizag Property - Gateway to Coastal Living"
+                className="hidden md:block h-10 md:h-14 w-auto"
               />
-              <span className="text-base md:text-lg font-bold text-white">
-                VizagProperty
-              </span>
             </a>
 
             <nav className="hidden md:flex items-center space-x-3 md:space-x-4 lg:space-x-6 overflow-x-auto scrollbar-hide flex-1 mx-2 md:mx-4">
@@ -192,12 +188,12 @@ export function Header() {
           </div>
         </div>
 
-        <div className="hidden md:block bg-primary-700 border-t border-primary-500">
+        <div className="hidden md:block bg-primary-400 border-t border-primary-500">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center space-x-6 py-3 overflow-x-auto scrollbar-hide">
               <a
                 href="/vmrda-approved-plots-vizag"
-                className="text-sm text-white hover:text-primary-100 whitespace-nowrap transition-colors"
+                className="text-sm text-white hover:text-primary-800 whitespace-nowrap transition-colors"
                 aria-label="VMRDA Approved Plots in Vizag"
                 title="VMRDA Approved Plots in Vizag"
               >
@@ -205,7 +201,7 @@ export function Header() {
               </a>
               <a
                 href="/residential-property-in-vizag"
-                className="text-sm text-white hover:text-primary-100 whitespace-nowrap transition-colors"
+                className="text-sm text-white hover:text-primary-800 whitespace-nowrap transition-colors"
                 aria-label="Residential Property in Vizag"
                 title="Residential Property in Vizag"
               >
@@ -213,7 +209,7 @@ export function Header() {
               </a>
               <a
                 href="/flats-for-sale-in-vizag"
-                className="text-sm text-white hover:text-primary-100 whitespace-nowrap transition-colors"
+                className="text-sm text-white hover:text-primary-800 whitespace-nowrap transition-colors"
                 aria-label="Flats for Sale in Vizag"
                 title="Flats for Sale in Vizag"
               >
@@ -221,7 +217,7 @@ export function Header() {
               </a>
               <a
                 href="/villas-in-vizag"
-                className="text-sm text-white hover:text-primary-100 whitespace-nowrap transition-colors"
+                className="text-sm text-white hover:text-primary-800 whitespace-nowrap transition-colors"
                 aria-label="Villas in Vizag"
                 title="Villas in Vizag"
               >
@@ -229,7 +225,7 @@ export function Header() {
               </a>
               <a
                 href="/flats-for-rent-vizag"
-                className="text-sm text-white hover:text-primary-100 whitespace-nowrap transition-colors"
+                className="text-sm text-white hover:text-primary-800 whitespace-nowrap transition-colors"
                 aria-label="Flats for Rent in Vizag"
                 title="Flats for Rent in Vizag"
               >
@@ -237,7 +233,7 @@ export function Header() {
               </a>
               <a
                 href="/pg-hostels-in-vizag"
-                className="text-sm text-white hover:text-primary-100 whitespace-nowrap transition-colors"
+                className="text-sm text-white hover:text-primary-800 whitespace-nowrap transition-colors"
                 aria-label="PG & Hostels in Vizag"
                 title="PG & Hostels in Vizag"
               >

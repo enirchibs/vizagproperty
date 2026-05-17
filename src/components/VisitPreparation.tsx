@@ -61,7 +61,6 @@ export function VisitPreparation({ property }: VisitPreparationProps) {
         setVisitTime(data.visit_time || '')
       }
     } catch (error) {
-      console.error('Error loading visit status:', error)
     }
   }
 
@@ -86,7 +85,6 @@ export function VisitPreparation({ property }: VisitPreparationProps) {
       setVisitScheduled(true)
       alert('Visit scheduled successfully! You will receive a confirmation.')
     } catch (error) {
-      console.error('Error scheduling visit:', error)
       alert('Failed to schedule visit. Please try again.')
     }
   }

@@ -30,7 +30,6 @@ export const trackEvent = (eventData: AnalyticsEvent) => {
     })
   }
 
-  console.log('[Analytics Event]', eventData)
 }
 
 declare global {

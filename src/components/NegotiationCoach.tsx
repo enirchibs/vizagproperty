@@ -44,7 +44,6 @@ export function NegotiationCoach({ propertyId, currentPrice }: NegotiationCoachP
         setInsights(data)
       }
     } catch (error) {
-      console.error('Error loading insights:', error)
     } finally {
       setLoading(false)
     }
@@ -78,7 +77,6 @@ export function NegotiationCoach({ propertyId, currentPrice }: NegotiationCoachP
       if (error) throw error
       setInsights(data)
     } catch (error) {
-      console.error('Error generating insights:', error)
     }
   }
 

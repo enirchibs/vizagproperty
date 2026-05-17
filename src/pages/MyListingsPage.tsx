@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
-import { MapPin, Bed, Bath, Maximize, Edit, Trash2, AlertCircle, Clock, CheckCircle, XCircle } from 'lucide-react'
+import { MapPin, Bed, Bath, Maximize, FileEdit as Edit, Trash2, AlertCircle, Clock, CheckCircle, XCircle } from 'lucide-react'
 
 export function MyListingsPage() {
   const { user, profile, loading: authLoading } = useAuth()
@@ -31,7 +31,6 @@ export function MyListingsPage() {
       if (error) throw error
       setProperties(data || [])
     } catch (err) {
-      console.error('Error loading properties:', err)
     } finally {
       setLoading(false)
     }
@@ -50,7 +49,6 @@ export function MyListingsPage() {
       setProperties(prev => prev.filter(p => p.id !== propertyId))
       setDeleteId(null)
     } catch (err) {
-      console.error('Error deleting property:', err)
       alert('Failed to delete property. Please try again.')
     } finally {
       setDeleting(false)
@@ -149,7 +147,7 @@ export function MyListingsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {properties.map((property) => {
-                const mainImage = property.images[0] || 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=800'
+                const mainImage = property.images?.[0] || 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=800'
 
                 return (
                   <div

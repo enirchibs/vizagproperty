@@ -41,7 +41,6 @@ export function GoodDealAnalysis({ propertyId, currentPrice }: GoodDealAnalysisP
         setAnalytics(data)
       }
     } catch (error) {
-      console.error('Error loading analytics:', error)
     } finally {
       setLoading(false)
     }
@@ -75,7 +74,6 @@ export function GoodDealAnalysis({ propertyId, currentPrice }: GoodDealAnalysisP
       if (error) throw error
       setAnalytics(data)
     } catch (error) {
-      console.error('Error generating analytics:', error)
     }
   }
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
@@ -18,13 +18,7 @@ export function AdminPropertiesPage() {
   const [adminNotes, setAdminNotes] = useState('')
   const [togglingTrustId, setTogglingTrustId] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (user && isAdmin) {
-      loadProperties()
-    }
-  }, [user, isAdmin])
-
-  const loadProperties = async () => {
+  const loadProperties = useCallback(async () => {
     if (!user) return
 
     try {
@@ -45,11 +39,16 @@ export function AdminPropertiesPage() {
       if (error) throw error
       setProperties(data || [])
     } catch (err) {
-      console.error('Error loading properties:', err)
     } finally {
       setLoading(false)
     }
-  }
+  }, [user?.id])
+
+  useEffect(() => {
+    if (user && isAdmin) {
+      loadProperties()
+    }
+  }, [user, isAdmin, loadProperties])
 
   const toggleTrustedStatus = async (userId: string, currentStatus: boolean) => {
     setTogglingTrustId(userId)
@@ -75,7 +74,6 @@ export function AdminPropertiesPage() {
         return p
       }))
     } catch (err) {
-      console.error('Error toggling trusted status:', err)
       alert('Failed to update trusted status. Please try again.')
     } finally {
       setTogglingTrustId(null)
@@ -114,7 +112,6 @@ export function AdminPropertiesPage() {
       setRejectionReason('')
       setAdminNotes('')
     } catch (err) {
-      console.error('Error updating property:', err)
       alert('Failed to update property. Please try again.')
     } finally {
       setProcessing(false)
@@ -289,7 +286,7 @@ export function AdminPropertiesPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProperties.map((property) => {
-              const mainImage = property.images[0] || 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=800'
+              const mainImage = property.images?.[0] || 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=800'
 
               return (
                 <div

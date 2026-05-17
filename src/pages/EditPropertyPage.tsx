@@ -38,11 +38,17 @@ export function EditPropertyPage() {
     amenities: [] as string[]
   })
 
+  // Only load property when id changes (not on every user/auth state change)
+  useEffect(() => {
+    if (!user || !id) return
+    loadProperty()
+  }, [id]) // Only depend on id to prevent infinite loops
+
+  // Load localities once on mount
   useEffect(() => {
     if (!user) return
-    loadProperty()
     loadLocalities()
-  }, [user, id])
+  }, [])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -106,7 +112,6 @@ export function EditPropertyPage() {
         setLocality(localityData.name)
       }
     } catch (err) {
-      console.error('Error loading property:', err)
       alert('Failed to load property')
       navigate('/my-listings')
     } finally {
@@ -160,12 +165,13 @@ export function EditPropertyPage() {
   }
 
   const removeImage = (index: number) => {
-    const isExistingImage = index < (property?.images.length || 0)
+    const existingImagesLength = property?.images?.length || 0
+    const isExistingImage = index < existingImagesLength
 
     if (isExistingImage) {
       setImagePreviews(prev => prev.filter((_, i) => i !== index))
     } else {
-      const fileIndex = index - (property?.images.length || 0)
+      const fileIndex = index - existingImagesLength
       setSelectedFiles(prev => prev.filter((_, i) => i !== fileIndex))
       setImagePreviews(prev => prev.filter((_, i) => i !== index))
     }
@@ -197,7 +203,6 @@ export function EditPropertyPage() {
 
       return uploadedUrls
     } catch (error: any) {
-      console.error('Error uploading images:', error)
       throw new Error('Failed to upload images: ' + error.message)
     } finally {
       setUploadingImages(false)
@@ -263,7 +268,6 @@ export function EditPropertyPage() {
         navigate('/my-listings')
       }, 2000)
     } catch (error: any) {
-      console.error('Error updating property:', error)
       setErrorMessage(error.message || 'Failed to update property')
       setSuccessMessage('')
     } finally {

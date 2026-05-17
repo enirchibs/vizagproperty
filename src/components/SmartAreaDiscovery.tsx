@@ -47,7 +47,6 @@ export function SmartAreaDiscovery({ userWorkLocation, currentCity }: SmartAreaD
         setAreas(data)
       }
     } catch (error) {
-      console.error('Error loading area insights:', error)
     } finally {
       setLoading(false)
     }
@@ -93,7 +92,6 @@ export function SmartAreaDiscovery({ userWorkLocation, currentCity }: SmartAreaD
       if (error) throw error
       setAreas(data || [])
     } catch (error) {
-      console.error('Error generating sample insights:', error)
     }
   }
 

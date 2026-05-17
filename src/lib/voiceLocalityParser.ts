@@ -66,7 +66,6 @@ export async function parseVoiceToLocality(voiceText: string): Promise<LocalityM
 
     return null
   } catch (error) {
-    console.error('Error parsing voice to locality:', error)
     return null
   }
 }

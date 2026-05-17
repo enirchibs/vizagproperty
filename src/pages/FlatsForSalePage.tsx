@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, MapPin, Building2, CheckCircle2, ArrowRight, Phone, Mic, MicOff, X, MessageCircle } from 'lucide-react'
-import { PropertyCard } from '../components/PropertyCard'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import type { Property } from '../types'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
@@ -103,7 +102,6 @@ export default function FlatsForSalePage() {
         setShowZeroResultsModal(true)
       }
     } catch (error) {
-      console.error('Error loading properties:', error)
     } finally {
       setLoading(false)
     }
@@ -644,7 +642,11 @@ export default function FlatsForSalePage() {
           ) : properties.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {properties.map((property) => (
-                <PropertyCard key={property.id} property={property} />
+                <div key={property.id} className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
+                  <h3 className="font-bold text-lg mb-2">{property.title}</h3>
+                  <p className="text-gray-600 text-sm mb-2">{property.description}</p>
+                  <p className="text-primary-600 font-bold">₹{property.price?.toLocaleString()}</p>
+                </div>
               ))}
             </div>
           ) : (

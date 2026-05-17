@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Home, Upload, X, Camera, MessageCircle } from 'lucide-react'
@@ -12,7 +11,6 @@ interface PropertyDetails {
 }
 
 export function AddPropertyPage() {
-  const navigate = useNavigate()
   const { user, profile } = useAuth()
   const [loading, setLoading] = useState(false)
   const [uploadingImages, setUploadingImages] = useState(false)
@@ -30,6 +28,7 @@ export function AddPropertyPage() {
   const streamRef = useRef<MediaStream | null>(null)
   const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
+  // Initialize form data without profile dependency to prevent re-renders
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -42,7 +41,7 @@ export function AddPropertyPage() {
     area_sqft: '',
     state: 'Andhra Pradesh',
     pincode: '',
-    agent_name: profile?.full_name || '',
+    agent_name: '',
     agent_phone: '',
     agent_whatsapp: '',
     amenities: [] as string[]
@@ -93,6 +92,18 @@ export function AddPropertyPage() {
 
   const commonAmenities = ['Parking', 'Gym', 'Swimming Pool', 'Security', 'Power Backup', 'Elevator', 'Garden', 'Club House', 'WiFi', 'Furnished']
 
+  const agentNameSetRef = useRef(false)
+
+  useEffect(() => {
+    if (profile && !agentNameSetRef.current) {
+      agentNameSetRef.current = true
+      setFormData(prev => ({
+        ...prev,
+        agent_name: profile.name || profile.full_name || ''
+      }))
+    }
+  }, [profile?.id])
+
   const fetchLocalities = async (searchTerm: string) => {
     if (!user || searchTerm.length < 3) {
       setLocalities([])
@@ -110,16 +121,9 @@ export function AddPropertyPage() {
     if (!error && data) {
       setLocalities(data as any)
     } else {
-      console.error('Failed to load localities', error)
       setLocalities([])
     }
   }
-
-  useEffect(() => {
-    if (!user) {
-      navigate('/login?redirect=/post-property')
-    }
-  }, [user, navigate])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -220,7 +224,6 @@ export function AddPropertyPage() {
       }
     } catch (error) {
       alert('Unable to access camera. Please check permissions.')
-      console.error('Camera error:', error)
     }
   }
 
@@ -288,7 +291,6 @@ export function AddPropertyPage() {
 
       return uploadedUrls
     } catch (error: any) {
-      console.error('Error uploading images:', error)
       throw new Error('Failed to upload images: ' + error.message)
     } finally {
       setUploadingImages(false)
@@ -326,24 +328,13 @@ export function AddPropertyPage() {
     }
 
     setLoading(true)
+    setErrorMessage('')
+    setSuccessMessage('')
+
     try {
       stopCamera()
 
       const imageUrls = await uploadImages()
-
-      // Profile is guaranteed by trigger - auto-upgrade buyer to owner
-      const { data: existingUser } = await supabase
-        .from('users')
-        .select('id, role')
-        .eq('id', user.id)
-        .maybeSingle()
-
-      if (existingUser?.role === 'buyer') {
-        await supabase
-          .from('users')
-          .update({ role: 'owner' })
-          .eq('id', user.id)
-      }
 
       const propertyData: any = {
         title: formData.title,
@@ -392,20 +383,17 @@ export function AddPropertyPage() {
           .insert(detailsToInsert)
 
         if (detailsError) {
-          console.error('Error saving property details:', detailsError)
         }
       }
 
       setSuccessMessage('Property submitted for review! Our team will review and approve it shortly.')
-      setErrorMessage('')
 
       setTimeout(() => {
         window.location.href = '/my-listings'
-      }, 2000)
+      }, 1500)
     } catch (error: any) {
-      console.error('Error adding property:', error)
       setErrorMessage(error.message || 'Failed to add property')
-      setSuccessMessage('')
+    } finally {
       setLoading(false)
     }
   }
@@ -427,7 +415,7 @@ export function AddPropertyPage() {
   }
 
   return (
-    <AuthGuard redirectTo="/add-property">
+    <AuthGuard>
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">

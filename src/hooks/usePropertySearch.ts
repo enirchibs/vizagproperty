@@ -31,7 +31,6 @@ export function usePropertySearch(): UsePropertySearchReturn {
       setProperties(data || [])
       setTotalCount(count || 0)
     } catch (err) {
-      console.error('Search error:', err)
       setError(err instanceof Error ? err.message : 'An error occurred')
       setProperties([])
       setTotalCount(0)

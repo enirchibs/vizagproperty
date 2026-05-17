@@ -70,7 +70,6 @@ export function useNotifications() {
       setNotifications(notificationsWithProperty as Notification[])
       setUnreadCount(notificationsWithProperty.filter(n => !n.is_read).length)
     } catch (error) {
-      console.error('Error loading notifications:', error)
     } finally {
       setLoading(false)
     }
@@ -117,7 +116,6 @@ export function useNotifications() {
       )
       setUnreadCount(prev => Math.max(0, prev - 1))
     } catch (error) {
-      console.error('Error marking notification as read:', error)
     }
   }
 
@@ -136,7 +134,6 @@ export function useNotifications() {
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
       setUnreadCount(0)
     } catch (error) {
-      console.error('Error marking all as read:', error)
     }
   }
 
@@ -160,7 +157,6 @@ export function useNotifications() {
         setUnreadCount(prev => Math.max(0, prev - 1))
       }
     } catch (error) {
-      console.error('Error deleting notification:', error)
     }
   }
 

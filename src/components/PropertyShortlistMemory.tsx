@@ -45,7 +45,6 @@ export function PropertyShortlistMemory({ propertyId, onInteraction }: PropertyS
       if (error) throw error
       setInteractions(data || [])
     } catch (error) {
-      console.error('Error loading interactions:', error)
     }
   }
 
@@ -63,7 +62,6 @@ export function PropertyShortlistMemory({ propertyId, onInteraction }: PropertyS
       if (error) throw error
       setHasInteracted(!!data)
     } catch (error) {
-      console.error('Error checking interaction:', error)
     }
   }
 
@@ -83,7 +81,6 @@ export function PropertyShortlistMemory({ propertyId, onInteraction }: PropertyS
       loadInteractions()
       onInteraction?.()
     } catch (error) {
-      console.error('Error recording interaction:', error)
     }
   }
 

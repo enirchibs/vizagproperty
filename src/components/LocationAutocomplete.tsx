@@ -47,7 +47,6 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
           popularLocalities = data
         }
       } catch (error) {
-        console.error('Error loading popular localities:', error)
       }
     }
 
@@ -95,7 +94,6 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
         setResults(localities)
         setShowResults(true)
       } catch (error) {
-        console.error('Error searching localities:', error)
       } finally {
         setLoading(false)
       }

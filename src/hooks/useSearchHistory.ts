@@ -42,7 +42,6 @@ export function useSearchHistory() {
       if (error) throw error
       setLastSearch(data)
     } catch (error) {
-      console.error('Error loading search history:', error)
     } finally {
       setLoading(false)
     }
@@ -70,7 +69,6 @@ export function useSearchHistory() {
       if (error) throw error
       await loadLastSearch()
     } catch (error) {
-      console.error('Error saving search:', error)
     }
   }
 

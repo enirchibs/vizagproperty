@@ -39,7 +39,6 @@ export function useRadiusSearch() {
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to search properties'
       setError(message)
-      console.error('Radius search error:', err)
       return []
     } finally {
       setLoading(false)
