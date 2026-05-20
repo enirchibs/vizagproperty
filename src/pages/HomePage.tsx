@@ -23,6 +23,7 @@ import { openWhatsApp } from '../lib/whatsapp'
 import { getLastSearch } from '../lib/searchMemory'
 import RestoredSearchBanner from '../components/RestoredSearchBanner'
 import PropertiesNearYou from '../components/PropertiesNearYou'
+import { HomeBlogSection } from '../components/HomeBlogSection'
 
 type PropertyCategory = 'full_house' | 'land_plot' | 'flat_apartment' | 'pg_hostel' | 'flatmates'
 
@@ -1508,6 +1509,8 @@ export function HomePage() {
           )}
         </div>
       </section>
+
+      <HomeBlogSection />
 
       <ChatBot />
       {showAuthModal && (
