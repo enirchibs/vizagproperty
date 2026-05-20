@@ -35,6 +35,8 @@ const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage').then(
 const EditPropertyPage = lazy(() => import('./pages/EditPropertyPage').then(m => ({ default: m.EditPropertyPage })))
 const SearchPage = lazy(() => import('./pages/SearchPage').then(m => ({ default: m.SearchPage })))
 const MobileSearchPage = lazy(() => import('./pages/MobileSearchPage').then(m => ({ default: m.MobileSearchPage })))
+const BlogPage = lazy(() => import('./pages/BlogPage').then(m => ({ default: m.BlogPage })))
+const BlogPostPage = lazy(() => import('./pages/BlogPostPage').then(m => ({ default: m.BlogPostPage })))
 
 function AppContent() {
   const { showUsernamePrompt, setShowUsernamePrompt } = useAuth()
@@ -80,6 +82,8 @@ function AppContent() {
           <Route path="/add-property" element={<AddPropertyPage />} />
           <Route path="/post-property" element={<AddPropertyPage />} />
           <Route path="/edit-property/:id" element={<EditPropertyPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
           </Routes>
         </Suspense>
         <Footer />

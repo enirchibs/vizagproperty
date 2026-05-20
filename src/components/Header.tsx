@@ -84,6 +84,9 @@ export function Header() {
                 <span>Insights</span>
                 <span className="ml-1 px-1.5 py-0.5 text-[10px] font-bold bg-accent-500 text-white rounded">NEW</span>
               </a>
+              <a href="/blog" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
+                Blog
+              </a>
               <a href="/vizag" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
                 About
               </a>
@@ -255,6 +258,9 @@ export function Header() {
               <a href="/recommendations" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center space-x-2" onClick={() => setShowMenu(false)}>
                 <span>Insights</span>
                 <span className="ml-1 px-1.5 py-0.5 text-[10px] font-bold bg-accent-500 text-white rounded">NEW</span>
+              </a>
+              <a href="/blog" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center" onClick={() => setShowMenu(false)}>
+                Blog
               </a>
               <a href="/vizag" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center" onClick={() => setShowMenu(false)}>
                 About

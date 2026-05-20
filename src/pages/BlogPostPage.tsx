@@ -1,0 +1,171 @@
+import React, { useEffect, useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
+import ReactMarkdown from 'react-markdown';
+import { Calendar, Clock, ArrowLeft, User, Tag } from 'lucide-react';
+
+interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  category: string;
+  tags: string[];
+  og_image: string;
+  author_name: string;
+  reading_time_min: number;
+  published_at: string;
+  meta_title: string;
+  meta_description: string;
+}
+
+export function BlogPostPage() {
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+  const [blog, setBlog] = useState<BlogPost | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    async function fetchBlog() {
+      if (!slug) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('slug', slug)
+          .eq('published', true)
+          .single();
+
+        if (error) throw error;
+        
+        if (data) {
+          setBlog(data);
+          document.title = data.meta_title || `${data.title} | VizagProperty`;
+          // Update meta description
+          let meta = document.querySelector('meta[name="description"]');
+          if (meta) {
+            meta.setAttribute('content', data.meta_description);
+          } else {
+            meta = document.createElement('meta');
+            meta.setAttribute('name', 'description');
+            meta.setAttribute('content', data.meta_description);
+            document.head.appendChild(meta);
+          }
+        } else {
+          setError('Blog not found');
+        }
+      } catch (err: any) {
+        setError(err.message || 'Blog not found');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchBlog();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      </div>
+    );
+  }
+
+  if (error || !blog) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center px-4">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">{error || 'Blog not found'}</h2>
+          <button
+            onClick={() => navigate('/blog')}
+            className="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to all blogs
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <article className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <div className="relative w-full h-[40vh] min-h-[300px] lg:h-[50vh] bg-gray-900">
+        <img
+          src={blog.og_image || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"}
+          alt={blog.title}
+          className="absolute inset-0 w-full h-full object-cover opacity-60"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
+        
+        <div className="absolute inset-0 flex items-center">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-primary-600 text-white text-sm font-semibold tracking-wider mb-6">
+              {blog.category.replace('-', ' ').toUpperCase()}
+            </span>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-6">
+              {blog.title}
+            </h1>
+            <div className="flex flex-wrap items-center justify-center text-gray-200 text-sm gap-6">
+              <div className="flex items-center">
+                <User className="mr-2 h-4 w-4" />
+                {blog.author_name}
+              </div>
+              <div className="flex items-center">
+                <Calendar className="mr-2 h-4 w-4" />
+                {new Date(blog.published_at).toLocaleDateString('en-US', {
+                  month: 'long',
+                  day: 'numeric',
+                  year: 'numeric'
+                })}
+              </div>
+              <div className="flex items-center">
+                <Clock className="mr-2 h-4 w-4" />
+                {blog.reading_time_min} min read
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Content Section */}
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <Link 
+          to="/blog"
+          className="inline-flex items-center text-sm text-gray-500 hover:text-primary-600 transition-colors mb-10 group"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+          Back to all articles
+        </Link>
+
+        <div className="prose prose-lg prose-primary max-w-none prose-headings:font-bold prose-a:text-primary-600 hover:prose-a:text-primary-700">
+          <ReactMarkdown>{blog.content}</ReactMarkdown>
+        </div>
+
+        {/* Tags */}
+        {blog.tags && blog.tags.length > 0 && (
+          <div className="mt-12 pt-8 border-t border-gray-100">
+            <h3 className="text-sm font-medium text-gray-900 mb-4 flex items-center">
+              <Tag className="h-4 w-4 mr-2" />
+              Tags
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {blog.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </article>
+  );
+}
