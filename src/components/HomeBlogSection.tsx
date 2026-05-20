@@ -59,7 +59,17 @@ export function HomeBlogSection() {
   }
 
   if (blogs.length === 0) {
-    return null; // Don't show the section if no blogs exist yet
+    return (
+      <section className="py-16 px-4 bg-white border-t border-gray-100">
+        <div className="max-w-7xl mx-auto text-center py-10">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Latest from our Blog</h2>
+          <div className="bg-gray-50 rounded-2xl p-8 border border-dashed border-gray-300">
+            <p className="text-gray-500 text-lg">Your first AI blog post is being generated! Check back soon.</p>
+            <p className="text-sm text-gray-400 mt-2">(If you just ran the function, refresh the page in a few seconds)</p>
+          </div>
+        </div>
+      </section>
+    );
   }
 
   return (
