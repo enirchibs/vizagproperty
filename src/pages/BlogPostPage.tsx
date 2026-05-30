@@ -165,6 +165,31 @@ export function BlogPostPage() {
             </div>
           </div>
         )}
+
+        {/* CTA Section */}
+        <div className="mt-16 bg-gradient-to-br from-primary-50 to-primary-100 rounded-3xl p-8 sm:p-10 text-center border border-primary-200">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Ready to find your dream property in Vizag?
+          </h2>
+          <p className="text-primary-800 mb-8 max-w-2xl mx-auto">
+            Explore our curated list of verified flats, villas, and plots in the best neighborhoods. Our AI assistant can help you find exactly what you're looking for.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              to="/properties"
+              className="w-full sm:w-auto px-8 py-3 bg-primary-600 text-white rounded-full font-semibold hover:bg-primary-700 transition-colors shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+            >
+              Explore Properties
+              <ArrowLeft className="h-4 w-4 rotate-180" />
+            </Link>
+            <Link
+              to="/"
+              className="w-full sm:w-auto px-8 py-3 bg-white text-primary-600 border-2 border-primary-200 rounded-full font-semibold hover:bg-primary-50 transition-colors flex items-center justify-center"
+            >
+              Go to Homepage
+            </Link>
+          </div>
+        </div>
       </div>
     </article>
   );

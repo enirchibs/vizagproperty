@@ -38,19 +38,12 @@ function getRandomTopic() {
   ];
 }
 
-// RANDOM IMAGE
-const images = [
-  "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg",
-  "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg",
-  "https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg",
-  "https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg",
-  "https://images.pexels.com/photos/1732414/pexels-photo-1732414.jpeg"
-];
-
-function getRandomImage() {
-  return images[
-    Math.floor(Math.random() * images.length)
-  ];
+// DYNAMIC AI IMAGE
+function getDynamicImage(title: string) {
+  // We use Pollinations AI to generate a free, dynamic, royalty-free image on the fly
+  const prompt = `luxury modern real estate property photography, high quality, 8k resolution, ${title}`;
+  const encodedPrompt = encodeURIComponent(prompt);
+  return `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1200&height=630&nologo=true`;
 }
 
 // READING TIME
@@ -164,7 +157,7 @@ CATEGORY OPTIONS:
         tags: aiData.tags,
         meta_title: aiData.meta_title,
         meta_description: aiData.meta_description,
-        og_image: getRandomImage(),
+        og_image: getDynamicImage(aiData.title),
         author_name: "VizagProperty AI",
         published: true,
         featured: false,

@@ -1,0 +1,5 @@
+In the AI Image Generator Prompt box, simply append with the text "YOUR NEWS HEADLINE" written clearly on the image at the end of the prompt.
+For example, change the prompt to:
+"A scenic wide-angle view of Vizag beach corridor, with the text 'ఏపీ అటవీ శాఖపై పవన్ సమీక్ష' written clearly at the bottom"
+
+Click Re-generate Image!
