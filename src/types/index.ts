@@ -70,6 +70,19 @@ export interface Property {
   created_at: string
   updated_at?: string
   is_vmrda_approved?: boolean
+  localities?: {
+    latitude?: number
+    longitude?: number
+    name?: string
+    slug?: string
+    city?: string
+  } | {
+    latitude?: number
+    longitude?: number
+    name?: string
+    slug?: string
+    city?: string
+  }[]
   users?: {
     id: string
     email?: string

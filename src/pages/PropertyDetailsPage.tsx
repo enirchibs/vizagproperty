@@ -48,8 +48,11 @@ export function PropertyDetailsPage() {
           agent_phone,
           agent_whatsapp,
           locality_id,
-          latitude,
-          longitude,
+          localities(
+            latitude,
+            longitude,
+            name
+          ),
           is_vmrda_approved,
           approved_at,
           rejection_reason,
@@ -383,8 +386,8 @@ export function PropertyDetailsPage() {
                 Location on Map
               </h2>
               <PropertyLocationMap
-                latitude={property.latitude}
-                longitude={property.longitude}
+                latitude={Array.isArray(property.localities) ? property.localities[0]?.latitude : property.localities?.latitude}
+                longitude={Array.isArray(property.localities) ? property.localities[0]?.longitude : property.localities?.longitude}
                 title={property.title}
                 location={property.location ?? property.city ?? 'Visakhapatnam'}
               />
