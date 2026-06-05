@@ -7,6 +7,7 @@ import { Footer } from './components/Footer'
 import { ChatBot } from './components/ChatBot'
 import { FloatingWhatsAppButton } from './components/FloatingWhatsAppButton'
 import { UsernameModal } from './components/UsernameModal'
+import { CookieBanner } from './components/CookieBanner'
 import { HomePage } from './pages/HomePage'
 
 const LoginPage = lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })))
@@ -37,6 +38,11 @@ const SearchPage = lazy(() => import('./pages/SearchPage').then(m => ({ default:
 const MobileSearchPage = lazy(() => import('./pages/MobileSearchPage').then(m => ({ default: m.MobileSearchPage })))
 const BlogPage = lazy(() => import('./pages/BlogPage').then(m => ({ default: m.BlogPage })))
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage').then(m => ({ default: m.BlogPostPage })))
+const AboutUsPage = lazy(() => import('./pages/AboutUsPage').then(m => ({ default: m.AboutUsPage })))
+const ContactUsPage = lazy(() => import('./pages/ContactUsPage').then(m => ({ default: m.ContactUsPage })))
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })))
+const TermsAndConditionsPage = lazy(() => import('./pages/TermsAndConditionsPage').then(m => ({ default: m.TermsAndConditionsPage })))
+const DisclaimerPage = lazy(() => import('./pages/DisclaimerPage').then(m => ({ default: m.DisclaimerPage })))
 
 function AppContent() {
   const { showUsernamePrompt, setShowUsernamePrompt } = useAuth()
@@ -84,11 +90,17 @@ function AppContent() {
           <Route path="/edit-property/:id" element={<EditPropertyPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
+          <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/contact" element={<ContactUsPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditionsPage />} />
+          <Route path="/disclaimer" element={<DisclaimerPage />} />
           </Routes>
         </Suspense>
         <Footer />
         <ChatBot />
         <FloatingWhatsAppButton />
+        <CookieBanner />
 
         {showUsernamePrompt && (
           <UsernameModal onClose={() => setShowUsernamePrompt(false)} />

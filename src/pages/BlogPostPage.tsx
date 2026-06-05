@@ -84,7 +84,7 @@ export function BlogPostPage() {
             className="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to all blogs
+            Back to VizagInformation
           </button>
         </div>
       </div>
@@ -139,7 +139,7 @@ export function BlogPostPage() {
           className="inline-flex items-center text-sm text-gray-500 hover:text-primary-600 transition-colors mb-10 group"
         >
           <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-          Back to all articles
+          Back to VizagInformation
         </Link>
 
         <div className="prose prose-lg prose-primary max-w-none prose-headings:font-bold prose-a:text-primary-600 hover:prose-a:text-primary-700">

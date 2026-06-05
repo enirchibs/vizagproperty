@@ -17,18 +17,23 @@ const supabase = createClient(
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
 );
 
-// BLOG TOPICS
+// VIZAG LIFESTYLE & INFO TOPICS
 const topics = [
-  "Vizag Property Prices 2026",
-  "Best Areas to Buy Flats in Vizag",
-  "Vizag Real Estate Investment Guide",
-  "PMAY Housing Scheme Andhra Pradesh",
-  "Best Villas in Vizag",
-  "Home Loan Tips India",
-  "Real Estate Trends Andhra Pradesh",
-  "Plots vs Flats Investment",
-  "Top Residential Areas in Vizag",
-  "2BHK Flats Buying Guide"
+  "Top 10 Places to Visit in Vizag for Tourists",
+  "Best Luxury Hotels and Resorts in Visakhapatnam",
+  "Must-Try Street Food Spots in Vizag",
+  "A Guide to the Best Beaches in Visakhapatnam",
+  "Top Bars and Nightlife Spots in Vizag",
+  "Best Shopping Malls and Local Markets in Vizag",
+  "Lifestyle and Culture: What It's Like Living in Vizag",
+  "Top IT Companies and Tech Parks in Visakhapatnam",
+  "Major Government Companies and Industries in Vizag",
+  "Best Weekend Getaways near Visakhapatnam",
+  "A Guide to Rushikonda Beach and Water Sports",
+  "History and Heritage of Visakhapatnam City",
+  "Best Schools and Educational Institutions in Vizag",
+  "Top Hospitals and Healthcare Facilities in Vizag",
+  "Upcoming Infrastructure Projects in Visakhapatnam"
 ];
 
 // RANDOM TOPIC
@@ -56,17 +61,16 @@ Deno.serve(async () => {
   try {
     const topic = getRandomTopic();
 
-    // GEMINI PROMPT
     const prompt = `
-You are a professional SEO blog writer.
+You are a professional local guide and SEO blog writer for Visakhapatnam (Vizag).
 
-Write a detailed SEO optimized blog article.
+Write a highly engaging, detailed, and SEO-optimized blog article about the city.
 
 TOPIC:
 ${topic}
 
 NICHE:
-Real Estate + Vizag + Investment
+Vizag City Guide + Lifestyle + Indirect Real Estate Marketing
 
 Return ONLY valid JSON.
 
@@ -83,15 +87,13 @@ FORMAT:
 
 RULES:
 - 1200+ words
-- Human writing style
-- SEO optimized
-- Markdown formatting
-- Use headings
-- Use bullet points
-- Add FAQs
-- Add conclusion
-- No fake stats
-- No robotic writing
+- Human, enthusiastic writing style like a local guide
+- SEO optimized with local keywords
+- Markdown formatting (Use headings, bullet points)
+- Add FAQs and a conclusion
+- No fake stats or robotic writing
+- VERY IMPORTANT: Seamlessly and naturally transition the conclusion (or a relevant paragraph) into mentioning that if the reader is planning to move to Vizag, they should check out the best properties.
+- INCLUDE AT LEAST 3 HYPERLINKS pointing to: https://vizagproperty.co.in/ (use anchor text like 'flats in Vizag', 'moving to Vizag', 'Vizag real estate', 'Vizag Property', etc.)
 
 CATEGORY OPTIONS:
 - real-estate

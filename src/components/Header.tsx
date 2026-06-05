@@ -77,18 +77,23 @@ export function Header() {
               <a href="/" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
                 Home
               </a>
-              <a href="/properties" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
-                For Buyers
+              <a href="/properties?q=buy" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
+                Buy
               </a>
-              <a href="/recommendations" className="text-white hover:text-primary-100 transition-colors font-medium flex items-center space-x-1 text-sm lg:text-base whitespace-nowrap">
-                <span>Insights</span>
-                <span className="ml-1 px-1.5 py-0.5 text-[10px] font-bold bg-accent-500 text-white rounded">NEW</span>
+              <a href="/properties?q=rent" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
+                Rent
+              </a>
+              <a href="/properties?q=commercial" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
+                Commercial
               </a>
               <a href="/blog" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
-                Blog
+                VizagInformation
               </a>
-              <a href="/vizag" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
-                About
+              <a href="/about" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
+                About Us
+              </a>
+              <a href="/contact" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
+                Contact Us
               </a>
               <button
                 onClick={() => openWhatsApp('Hi, I want to list my property in Vizag listed on VizagProperty. Please share more details.')}
@@ -260,7 +265,7 @@ export function Header() {
                 <span className="ml-1 px-1.5 py-0.5 text-[10px] font-bold bg-accent-500 text-white rounded">NEW</span>
               </a>
               <a href="/blog" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center" onClick={() => setShowMenu(false)}>
-                Blog
+                VizagInformation
               </a>
               <a href="/vizag" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center" onClick={() => setShowMenu(false)}>
                 About
