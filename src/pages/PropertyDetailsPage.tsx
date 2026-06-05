@@ -194,13 +194,6 @@ export function PropertyDetailsPage() {
     }
   }
 
-  const handleWhatsApp = () => {
-    if (!property) return
-    openWhatsApp(
-      `Hi, I'm interested in ${property.title} listed on VizagProperty. Can you provide more details?`
-    )
-  }
-
   const handleCall = () => {
     window.location.href = `tel:${VIZAG_PROPERTY_PHONE}`
   }
@@ -422,7 +415,14 @@ export function PropertyDetailsPage() {
 
               <div className="space-y-3 mb-5 md:mb-6">
                 <button
-                  onClick={handleWhatsApp}
+                  onClick={() => {
+                    if (!property) return
+                    const targetPhone = property.agent_whatsapp || property.agent_phone
+                    openWhatsApp(
+                      `Hi, I'm interested in ${property.title} listed on VizagProperty. Can you provide more details?`,
+                      targetPhone
+                    )
+                  }}
                   className="w-full bg-green-600 text-white py-3.5 md:py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2 font-medium text-base min-h-[48px]"
                 >
                   <MessageCircle className="h-5 w-5" />
