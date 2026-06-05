@@ -93,8 +93,6 @@ export function PropertiesPage() {
         setFilters(prev => ({ ...prev, max_price: maxPriceNum }))
       }
     }
-
-    loadProperties()
   }, [])
 
   useEffect(() => {
