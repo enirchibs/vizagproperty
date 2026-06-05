@@ -95,8 +95,14 @@ export function MagicBricksSearchCard() {
     params.append('listingType', listingType === 'buy' ? 'sale' : listingType)
 
     let category = 'flat_apartment'
-    if (propertyType === 'house') category = 'full_house'
-    if (propertyType === 'plot') category = 'land_plot'
+    if (listingType === 'commercial') {
+      category = 'commercial'
+    } else if (listingType === 'rent' && propertyType === 'plot') {
+      category = 'pg_hostel'
+    } else {
+      if (propertyType === 'house') category = 'full_house'
+      if (propertyType === 'plot') category = 'land_plot'
+    }
     params.append('category', category)
 
     if (minBudget) params.append('minPrice', minBudget)
@@ -221,35 +227,69 @@ export function MagicBricksSearchCard() {
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">Budget Range</label>
           <div className="flex items-center gap-2">
-            <select
-              value={minBudget}
-              onChange={(e) => setMinBudget(e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
-            >
-              <option value="">₹ Min</option>
-              <option value="1000000">₹ 10 Lac</option>
-              <option value="2000000">₹ 20 Lac</option>
-              <option value="3000000">₹ 30 Lac</option>
-              <option value="5000000">₹ 50 Lac</option>
-              <option value="7000000">₹ 70 Lac</option>
-              <option value="10000000">₹ 1 Cr</option>
-              <option value="20000000">₹ 2 Cr</option>
-            </select>
-            <span className="text-gray-500 text-sm">to</span>
-            <select
-              value={maxBudget}
-              onChange={(e) => setMaxBudget(e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
-            >
-              <option value="">₹ Max</option>
-              <option value="2000000">₹ 20 Lac</option>
-              <option value="3000000">₹ 30 Lac</option>
-              <option value="5000000">₹ 50 Lac</option>
-              <option value="7000000">₹ 70 Lac</option>
-              <option value="10000000">₹ 1 Cr</option>
-              <option value="20000000">₹ 2 Cr</option>
-              <option value="50000000">₹ 5 Cr</option>
-            </select>
+            {listingType === 'rent' ? (
+              <>
+                <select
+                  value={minBudget}
+                  onChange={(e) => setMinBudget(e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                >
+                  <option value="">₹ Min</option>
+                  <option value="5000">₹ 5,000</option>
+                  <option value="10000">₹ 10,000</option>
+                  <option value="15000">₹ 15,000</option>
+                  <option value="20000">₹ 20,000</option>
+                  <option value="30000">₹ 30,000</option>
+                  <option value="50000">₹ 50,000</option>
+                </select>
+                <span className="text-gray-500 text-sm">to</span>
+                <select
+                  value={maxBudget}
+                  onChange={(e) => setMaxBudget(e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                >
+                  <option value="">₹ Max</option>
+                  <option value="10000">₹ 10,000</option>
+                  <option value="15000">₹ 15,000</option>
+                  <option value="20000">₹ 20,000</option>
+                  <option value="30000">₹ 30,000</option>
+                  <option value="50000">₹ 50,000</option>
+                  <option value="100000">₹ 1 Lac+</option>
+                </select>
+              </>
+            ) : (
+              <>
+                <select
+                  value={minBudget}
+                  onChange={(e) => setMinBudget(e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                >
+                  <option value="">₹ Min</option>
+                  <option value="1000000">₹ 10 Lac</option>
+                  <option value="2000000">₹ 20 Lac</option>
+                  <option value="3000000">₹ 30 Lac</option>
+                  <option value="5000000">₹ 50 Lac</option>
+                  <option value="7000000">₹ 70 Lac</option>
+                  <option value="10000000">₹ 1 Cr</option>
+                  <option value="20000000">₹ 2 Cr</option>
+                </select>
+                <span className="text-gray-500 text-sm">to</span>
+                <select
+                  value={maxBudget}
+                  onChange={(e) => setMaxBudget(e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                >
+                  <option value="">₹ Max</option>
+                  <option value="2000000">₹ 20 Lac</option>
+                  <option value="3000000">₹ 30 Lac</option>
+                  <option value="5000000">₹ 50 Lac</option>
+                  <option value="7000000">₹ 70 Lac</option>
+                  <option value="10000000">₹ 1 Cr</option>
+                  <option value="20000000">₹ 2 Cr</option>
+                  <option value="50000000">₹ 5 Cr</option>
+                </select>
+              </>
+            )}
           </div>
         </div>
 
@@ -257,39 +297,115 @@ export function MagicBricksSearchCard() {
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">Property Type</label>
           <div className="grid grid-cols-3 gap-2">
-            <button
-              onClick={() => setPropertyType('flat')}
-              className={`p-4 rounded-xl border-2 transition flex flex-col items-center gap-2 ${
-                propertyType === 'flat'
-                  ? 'border-red-600 bg-red-50 text-red-600'
-                  : 'border-gray-200 text-gray-700'
-              }`}
-            >
-              <Building2 className="h-6 w-6" />
-              <span className="text-xs font-semibold">Flat</span>
-            </button>
-            <button
-              onClick={() => setPropertyType('house')}
-              className={`p-4 rounded-xl border-2 transition flex flex-col items-center gap-2 ${
-                propertyType === 'house'
-                  ? 'border-red-600 bg-red-50 text-red-600'
-                  : 'border-gray-200 text-gray-700'
-              }`}
-            >
-              <Home className="h-6 w-6" />
-              <span className="text-xs font-semibold">House/Villa</span>
-            </button>
-            <button
-              onClick={() => setPropertyType('plot')}
-              className={`p-4 rounded-xl border-2 transition flex flex-col items-center gap-2 ${
-                propertyType === 'plot'
-                  ? 'border-red-600 bg-red-50 text-red-600'
-                  : 'border-gray-200 text-gray-700'
-              }`}
-            >
-              <MapPin className="h-6 w-6" />
-              <span className="text-xs font-semibold">Plot</span>
-            </button>
+            {listingType === 'commercial' ? (
+              <>
+                <button
+                  onClick={() => setPropertyType('flat')} // maps to Office
+                  className={`p-4 rounded-xl border-2 transition flex flex-col items-center gap-2 ${
+                    propertyType === 'flat'
+                      ? 'border-red-600 bg-red-50 text-red-600'
+                      : 'border-gray-200 text-gray-700'
+                  }`}
+                >
+                  <Building2 className="h-6 w-6" />
+                  <span className="text-xs font-semibold">Office</span>
+                </button>
+                <button
+                  onClick={() => setPropertyType('house')} // maps to Shop
+                  className={`p-4 rounded-xl border-2 transition flex flex-col items-center gap-2 ${
+                    propertyType === 'house'
+                      ? 'border-red-600 bg-red-50 text-red-600'
+                      : 'border-gray-200 text-gray-700'
+                  }`}
+                >
+                  <Home className="h-6 w-6" />
+                  <span className="text-xs font-semibold">Shop</span>
+                </button>
+                <button
+                  onClick={() => setPropertyType('plot')} // maps to Warehouse
+                  className={`p-4 rounded-xl border-2 transition flex flex-col items-center gap-2 ${
+                    propertyType === 'plot'
+                      ? 'border-red-600 bg-red-50 text-red-600'
+                      : 'border-gray-200 text-gray-700'
+                  }`}
+                >
+                  <MapPin className="h-6 w-6" />
+                  <span className="text-xs font-semibold">Warehouse</span>
+                </button>
+              </>
+            ) : listingType === 'rent' ? (
+              <>
+                <button
+                  onClick={() => setPropertyType('flat')}
+                  className={`p-4 rounded-xl border-2 transition flex flex-col items-center gap-2 ${
+                    propertyType === 'flat'
+                      ? 'border-red-600 bg-red-50 text-red-600'
+                      : 'border-gray-200 text-gray-700'
+                  }`}
+                >
+                  <Building2 className="h-6 w-6" />
+                  <span className="text-xs font-semibold">Flat</span>
+                </button>
+                <button
+                  onClick={() => setPropertyType('house')}
+                  className={`p-4 rounded-xl border-2 transition flex flex-col items-center gap-2 ${
+                    propertyType === 'house'
+                      ? 'border-red-600 bg-red-50 text-red-600'
+                      : 'border-gray-200 text-gray-700'
+                  }`}
+                >
+                  <Home className="h-6 w-6" />
+                  <span className="text-xs font-semibold">House/Villa</span>
+                </button>
+                <button
+                  onClick={() => setPropertyType('plot')} // represents PG/Hostel in Rent context
+                  className={`p-4 rounded-xl border-2 transition flex flex-col items-center gap-2 ${
+                    propertyType === 'plot'
+                      ? 'border-red-600 bg-red-50 text-red-600'
+                      : 'border-gray-200 text-gray-700'
+                  }`}
+                >
+                  <MapPin className="h-6 w-6" />
+                  <span className="text-xs font-semibold">PG/Hostel</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setPropertyType('flat')}
+                  className={`p-4 rounded-xl border-2 transition flex flex-col items-center gap-2 ${
+                    propertyType === 'flat'
+                      ? 'border-red-600 bg-red-50 text-red-600'
+                      : 'border-gray-200 text-gray-700'
+                  }`}
+                >
+                  <Building2 className="h-6 w-6" />
+                  <span className="text-xs font-semibold">Flat</span>
+                </button>
+                <button
+                  onClick={() => setPropertyType('house')}
+                  className={`p-4 rounded-xl border-2 transition flex flex-col items-center gap-2 ${
+                    propertyType === 'house'
+                      ? 'border-red-600 bg-red-50 text-red-600'
+                      : 'border-gray-200 text-gray-700'
+                  }`}
+                >
+                  <Home className="h-6 w-6" />
+                  <span className="text-xs font-semibold">House/Villa</span>
+                </button>
+                <button
+                  onClick={() => setPropertyType('plot')}
+                  className={`p-4 rounded-xl border-2 transition flex flex-col items-center gap-2 ${
+                    propertyType === 'plot'
+                      ? 'border-red-600 bg-red-50 text-red-600'
+                      : 'border-gray-200 text-gray-700'
+                  }`}
+                >
+                  <MapPin className="h-6 w-6" />
+                  <span className="text-xs font-semibold">Plot</span>
+                </button>
+              </>
+            )}
           </div>
         </div>
 
