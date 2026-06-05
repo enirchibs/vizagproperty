@@ -12,6 +12,7 @@ import { SmartAreaDiscovery } from '../components/SmartAreaDiscovery'
 import { PropertyShortlistMemory } from '../components/PropertyShortlistMemory'
 import { VisitPreparation } from '../components/VisitPreparation'
 import { MediaGallery } from '../components/MediaGallery'
+import { PropertyLocationMap } from '../components/PropertyLocationMap'
 import { VIZAG_PROPERTY_PHONE } from '../config/contact'
 import PropertyDisclaimer from '../components/PropertyDisclaimer'
 
@@ -47,6 +48,8 @@ export function PropertyDetailsPage() {
           agent_phone,
           agent_whatsapp,
           locality_id,
+          latitude,
+          longitude,
           is_vmrda_approved,
           approved_at,
           rejection_reason,
@@ -371,6 +374,20 @@ export function PropertyDetailsPage() {
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Location Map Section */}
+            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100 mb-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-primary-600" />
+                Location on Map
+              </h2>
+              <PropertyLocationMap
+                latitude={property.latitude}
+                longitude={property.longitude}
+                title={property.title}
+                location={property.location ?? property.city ?? 'Visakhapatnam'}
+              />
             </div>
 
             <GoodDealAnalysis propertyId={property.id} currentPrice={property.price} />

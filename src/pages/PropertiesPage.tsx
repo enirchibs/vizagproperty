@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Search, Mic, MicOff, Filter, X, MapPin, MessageCircle } from 'lucide-react'
+import { Search, Mic, MicOff, Filter, X, MapPin, MessageCircle, Map, LayoutGrid } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property, SearchFilters } from '../types'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { PropertyCard } from '../components/PropertyCard'
+import { GoogleMapView } from '../components/GoogleMapView'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp } from '../lib/whatsapp'
 
@@ -14,6 +15,9 @@ export function PropertiesPage() {
   const [localityName, setLocalityName] = useState('')
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState<SearchFilters>({})
+  const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid')
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
+  const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(null)
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
 
   useEffect(() => {
@@ -248,6 +252,27 @@ export function PropertiesPage() {
               <span className="hidden sm:inline">Filters</span>
             </button>
             <button
+              onClick={() => setViewMode(viewMode === 'grid' ? 'map' : 'grid')}
+              className={`flex items-center justify-center space-x-1.5 px-3 md:px-4 py-2.5 rounded-lg transition-colors min-h-[44px] ${
+                viewMode === 'map'
+                  ? 'bg-primary-100 text-primary-700 border border-primary-300'
+                  : 'bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200'
+              }`}
+              aria-label={viewMode === 'grid' ? 'Switch to map view' : 'Switch to grid view'}
+            >
+              {viewMode === 'grid' ? (
+                <>
+                  <Map className="h-5 w-5" />
+                  <span className="hidden sm:inline">Map</span>
+                </>
+              ) : (
+                <>
+                  <LayoutGrid className="h-5 w-5" />
+                  <span className="hidden sm:inline">Grid</span>
+                </>
+              )}
+            </button>
+            <button
               onClick={handleSearch}
               className="px-4 md:px-6 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors min-h-[44px] hidden md:block"
             >
@@ -407,7 +432,7 @@ export function PropertiesPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className={`max-w-7xl mx-auto px-4 py-8 ${viewMode === 'map' ? 'max-w-full' : ''}`}>
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-gray-900">
             {properties.length} Properties Found
@@ -427,7 +452,7 @@ export function PropertiesPage() {
             <p className="text-gray-600 mb-6">We couldn't find any properties matching your search criteria</p>
             <button
               onClick={() => {
-                const filterText = []
+                const filterText: string[] = []
                 if (filters.property_type) filterText.push(filters.property_type)
                 if (filters.listing_type) filterText.push(`for ${filters.listing_type}`)
                 if (filters.bedrooms) filterText.push(`(${filters.bedrooms} BHK)`)
@@ -441,7 +466,47 @@ export function PropertiesPage() {
               Contact Us on WhatsApp
             </button>
           </div>
+        ) : viewMode === 'map' ? (
+          /* Split Map View */
+          <div className="flex flex-col lg:flex-row gap-4" style={{ height: 'calc(100vh - 280px)', minHeight: '500px' }}>
+            {/* Map Panel */}
+            <div className="w-full lg:w-[60%] h-[400px] lg:h-full rounded-2xl overflow-hidden shadow-lg border border-gray-200">
+              <GoogleMapView
+                properties={properties}
+                selectedPropertyId={selectedPropertyId}
+                onPropertySelect={(id) => {
+                  setSelectedPropertyId(id)
+                  // Scroll to the property card
+                  const card = document.getElementById(`property-card-${id}`)
+                  card?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                }}
+                onPropertyHover={setHoveredPropertyId}
+              />
+            </div>
+            {/* Property List Panel */}
+            <div className="w-full lg:w-[40%] overflow-y-auto space-y-3 pr-1" style={{ maxHeight: 'calc(100vh - 280px)' }}>
+              {properties.map((property) => (
+                <div
+                  key={property.id}
+                  id={`property-card-${property.id}`}
+                  className={`transition-all duration-200 rounded-xl ${
+                    selectedPropertyId === property.id
+                      ? 'ring-2 ring-primary-500 shadow-lg scale-[1.01]'
+                      : hoveredPropertyId === property.id
+                      ? 'ring-1 ring-primary-300 shadow-md'
+                      : ''
+                  }`}
+                  onMouseEnter={() => setHoveredPropertyId(property.id)}
+                  onMouseLeave={() => setHoveredPropertyId(null)}
+                  onClick={() => setSelectedPropertyId(property.id)}
+                >
+                  <PropertyCard property={property} />
+                </div>
+              ))}
+            </div>
+          </div>
         ) : (
+          /* Grid View (default) */
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {properties.map((property) => (
               <PropertyCard key={property.id} property={property} />
