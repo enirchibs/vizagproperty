@@ -16,6 +16,7 @@ export function PropertiesPage() {
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState<SearchFilters>({})
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid')
+  const [mobileView, setMobileView] = useState<'list' | 'map'>('list')
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
   const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(null)
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
@@ -467,42 +468,79 @@ export function PropertiesPage() {
             </button>
           </div>
         ) : viewMode === 'map' ? (
-          /* Split Map View */
-          <div className="flex flex-col lg:flex-row gap-4" style={{ height: 'calc(100vh - 280px)', minHeight: '500px' }}>
-            {/* Map Panel */}
-            <div className="w-full lg:w-[60%] h-[400px] lg:h-full rounded-2xl overflow-hidden shadow-lg border border-gray-200">
-              <GoogleMapView
-                properties={properties}
-                selectedPropertyId={selectedPropertyId}
-                onPropertySelect={(id) => {
-                  setSelectedPropertyId(id)
-                  // Scroll to the property card
-                  const card = document.getElementById(`property-card-${id}`)
-                  card?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                }}
-                onPropertyHover={setHoveredPropertyId}
-              />
+          /* Map View: Responsive Toggle (Mobile) & Split (Desktop) */
+          <div className="relative">
+            <div className="flex flex-col lg:flex-row gap-4" style={{ height: 'calc(100vh - 280px)', minHeight: '500px' }}>
+              {/* Map Panel - Full screen on mobile if active, hidden otherwise. Width 60% on desktop. */}
+              <div 
+                className={`w-full lg:w-[60%] h-[calc(100vh-320px)] lg:h-full rounded-2xl overflow-hidden shadow-lg border border-gray-200 lg:block ${
+                  mobileView === 'map' ? 'block' : 'hidden'
+                }`}
+              >
+                <GoogleMapView
+                  properties={properties}
+                  selectedPropertyId={selectedPropertyId}
+                  onPropertySelect={(id) => {
+                    setSelectedPropertyId(id)
+                    // If on mobile and selected a property, switch back to list view to see it or vice-versa
+                    const card = document.getElementById(`property-card-${id}`)
+                    if (card) {
+                      setMobileView('list')
+                      setTimeout(() => {
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                      }, 100)
+                    }
+                  }}
+                  onPropertyHover={setHoveredPropertyId}
+                />
+              </div>
+
+              {/* Property List Panel - Full screen on mobile if active, hidden otherwise. Width 40% on desktop. */}
+              <div 
+                className={`w-full lg:w-[40%] overflow-y-auto space-y-3 pr-1 lg:block ${
+                  mobileView === 'list' ? 'block' : 'hidden'
+                }`} 
+                style={{ maxHeight: 'calc(100vh - 280px)' }}
+              >
+                {properties.map((property) => (
+                  <div
+                    key={property.id}
+                    id={`property-card-${property.id}`}
+                    className={`transition-all duration-200 rounded-xl ${
+                      selectedPropertyId === property.id
+                        ? 'ring-2 ring-primary-500 shadow-lg scale-[1.01]'
+                        : hoveredPropertyId === property.id
+                        ? 'ring-1 ring-primary-300 shadow-md'
+                        : ''
+                    }`}
+                    onMouseEnter={() => setHoveredPropertyId(property.id)}
+                    onMouseLeave={() => setHoveredPropertyId(null)}
+                    onClick={() => setSelectedPropertyId(property.id)}
+                  >
+                    <PropertyCard property={property} />
+                  </div>
+                ))}
+              </div>
             </div>
-            {/* Property List Panel */}
-            <div className="w-full lg:w-[40%] overflow-y-auto space-y-3 pr-1" style={{ maxHeight: 'calc(100vh - 280px)' }}>
-              {properties.map((property) => (
-                <div
-                  key={property.id}
-                  id={`property-card-${property.id}`}
-                  className={`transition-all duration-200 rounded-xl ${
-                    selectedPropertyId === property.id
-                      ? 'ring-2 ring-primary-500 shadow-lg scale-[1.01]'
-                      : hoveredPropertyId === property.id
-                      ? 'ring-1 ring-primary-300 shadow-md'
-                      : ''
-                  }`}
-                  onMouseEnter={() => setHoveredPropertyId(property.id)}
-                  onMouseLeave={() => setHoveredPropertyId(null)}
-                  onClick={() => setSelectedPropertyId(property.id)}
-                >
-                  <PropertyCard property={property} />
-                </div>
-              ))}
+
+            {/* Mobile Floating Toggle Button */}
+            <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40 lg:hidden">
+              <button
+                onClick={() => setMobileView(mobileView === 'list' ? 'map' : 'list')}
+                className="flex items-center space-x-2 bg-gray-950 text-white px-5 py-3 rounded-full shadow-2xl hover:bg-gray-900 transition-all font-semibold border border-gray-800 text-sm"
+              >
+                {mobileView === 'list' ? (
+                  <>
+                    <Map className="h-4 w-4" />
+                    <span>Show Map</span>
+                  </>
+                ) : (
+                  <>
+                    <LayoutGrid className="h-4 w-4" />
+                    <span>Show List</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
         ) : (
