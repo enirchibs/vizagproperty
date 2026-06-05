@@ -54,13 +54,9 @@ export function SearchPage() {
 
   const handleListingTypeChange = (type: 'buy' | 'rent' | 'commercial') => {
     setListingType(type)
-    if (type === 'commercial') {
-      setPropertyCategory('commercial')
-      setPropertySubType(null)
-    } else {
-      setPropertyCategory('residential')
-      setPropertySubType(null)
-    }
+    const category = type === 'commercial' ? 'commercial' : 'residential'
+    setPropertyCategory(category)
+    setPropertySubType(getDefaultSubType(type, category))
     setPropertyStatus('')
     setBhkFilter('')
     setNewBuilderProjects(false)

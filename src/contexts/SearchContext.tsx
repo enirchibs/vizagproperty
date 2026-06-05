@@ -79,8 +79,8 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   const [coveredArea, setCoveredArea] = useState<[number, number]>([0, 10000])
   const [areaUnit, setAreaUnit] = useState<string>('sqft')
 
-  const getDefaultSubType = (_listing: ListingType, category: PropertyCategory): string | null => {
-    if (category === 'commercial') return null
+  const getDefaultSubType = (listing: ListingType, category: PropertyCategory): string | null => {
+    if (category === 'commercial' || listing === 'commercial') return 'Office Space'
     return 'Flat / Apartment'
   }
 

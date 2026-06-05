@@ -4,7 +4,9 @@ import { useSearch } from '../contexts/SearchContext'
 export function FiltersPanel() {
   const {
     listingType,
+    setListingType,
     propertyCategory,
+    setPropertyCategory,
     propertySubType,
     setPropertySubType,
     bhkFilter,
@@ -58,7 +60,59 @@ export function FiltersPanel() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between mb-4">
+      {/* Category Tabs (Specifically for Mobile Modal context, visible everywhere for ease) */}
+      <div>
+        <label className="block text-sm font-semibold text-gray-800 mb-2">
+          I want to...
+        </label>
+        <div className="flex rounded-xl overflow-hidden border border-gray-200">
+          {['buy', 'rent', 'projects', 'commercial'].map((type) => {
+            const isSelected = 
+              type === 'projects' 
+                ? (listingType === 'buy' && propertySubType === 'Land / Plot') // Projects represent plots here
+                : type === listingType
+
+            const handleTabClick = () => {
+              if (type === 'projects') {
+                setListingType('buy')
+                setPropertyCategory('residential')
+                setPropertySubType('Land / Plot')
+              } else if (type === 'commercial') {
+                setListingType('commercial')
+                setPropertyCategory('commercial')
+                setPropertySubType('Office Space')
+              } else {
+                setListingType(type as 'buy' | 'rent')
+                setPropertyCategory('residential')
+                setPropertySubType('Flat / Apartment')
+              }
+            }
+
+            return (
+              <button
+                key={type}
+                type="button"
+                onClick={handleTabClick}
+                className={`flex-1 py-2 text-xs font-semibold transition-colors ${
+                  isSelected
+                    ? type === 'buy'
+                      ? 'bg-blue-600 text-white'
+                      : type === 'rent'
+                      ? 'bg-red-500 text-white'
+                      : type === 'projects'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-purple-600 text-white'
+                    : 'bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                {type.toUpperCase()}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between border-t border-gray-100 pt-3 mb-2">
         <h3 className="font-bold text-base text-gray-900">Filters</h3>
         <button
           onClick={resetFilters}
@@ -122,7 +176,7 @@ export function FiltersPanel() {
       </div>
 
       {/* BHK Type */}
-      {(propertySubType === 'Flat / Apartment' || propertySubType === 'Full House') && (
+      {(propertySubType === 'Flat / Apartment' || propertySubType === 'Villa' || propertySubType === 'PG / Hostel') && (
         <div>
           <label className="block text-sm font-semibold text-gray-800 mb-3">
             No. of Bedrooms
