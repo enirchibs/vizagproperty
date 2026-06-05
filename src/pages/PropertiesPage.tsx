@@ -37,6 +37,8 @@ export function PropertiesPage() {
       setSearchQuery(query)
     }
 
+    const initialFilters: SearchFilters = {}
+
     // Map mobile category names to search API property types
     const categoryMap: Record<string, string> = {
       'full_house': 'villa',
@@ -45,7 +47,6 @@ export function PropertiesPage() {
       'pg_hostel': 'pg',
       'flatmates': 'pg',
       'commercial': 'commercial',
-      // Already mapped types
       'villa': 'villa',
       'flat': 'flat',
       'plot': 'plot',
@@ -53,46 +54,45 @@ export function PropertiesPage() {
     }
 
     if (propertyTypeRaw) {
-      const mappedType = categoryMap[propertyTypeRaw] || propertyTypeRaw
-      setFilters(prev => ({ ...prev, property_type: mappedType }))
+      initialFilters.property_type = categoryMap[propertyTypeRaw] || propertyTypeRaw
     }
 
     if (listingType) {
-      // Map 'buy' and 'commercial' to 'sale'
-      const mappedListingType = listingType === 'buy' || listingType === 'commercial' ? 'sale' : listingType
-      setFilters(prev => ({ ...prev, listing_type: mappedListingType }))
+      initialFilters.listing_type = listingType === 'buy' || listingType === 'commercial' ? 'sale' : listingType as 'sale' | 'rent'
     }
 
     if (localityId) {
-      setFilters(prev => ({ ...prev, locality_id: localityId }))
+      initialFilters.locality_id = localityId
     } else if (localityName) {
-      setFilters(prev => ({ ...prev, locality_id: localityName }))
+      initialFilters.locality_id = localityName
     }
 
     if (bhk) {
       const bedroomsNum = parseInt(bhk.replace('+', ''))
       if (!isNaN(bedroomsNum)) {
-        setFilters(prev => ({ ...prev, bedrooms: bedroomsNum }))
+        initialFilters.bedrooms = bedroomsNum
       }
     }
 
     if (status) {
-      setFilters(prev => ({ ...prev, property_status: status }))
+      initialFilters.property_status = status
     }
 
     if (minPrice) {
       const minPriceNum = parseInt(minPrice)
       if (!isNaN(minPriceNum)) {
-        setFilters(prev => ({ ...prev, min_price: minPriceNum }))
+        initialFilters.min_price = minPriceNum
       }
     }
 
     if (maxPrice) {
       const maxPriceNum = parseInt(maxPrice)
       if (!isNaN(maxPriceNum)) {
-        setFilters(prev => ({ ...prev, max_price: maxPriceNum }))
+        initialFilters.max_price = maxPriceNum
       }
     }
+
+    setFilters(initialFilters)
   }, [])
 
   useEffect(() => {
