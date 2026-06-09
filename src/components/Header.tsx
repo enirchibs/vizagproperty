@@ -24,6 +24,25 @@ export function Header() {
     }
   }, [user, profile, loading])
 
+  useEffect(() => {
+    document.body.classList.toggle('mobile-nav-open', showMenu)
+
+    return () => {
+      document.body.classList.remove('mobile-nav-open')
+    }
+  }, [showMenu])
+
+  useEffect(() => {
+    const closeMenuOnDesktop = () => {
+      if (window.innerWidth >= 768) {
+        setShowMenu(false)
+      }
+    }
+
+    window.addEventListener('resize', closeMenuOnDesktop)
+    return () => window.removeEventListener('resize', closeMenuOnDesktop)
+  }, [])
+
   const handleSignOut = async () => {
     try {
       sessionStorage.removeItem('hasSeenUsernameModal')
@@ -52,24 +71,25 @@ export function Header() {
 
   return (
     <>
-      <header className="bg-primary-600 sticky top-0 z-40 shadow-lg">
+      <header className="bg-primary-600 sticky top-0 z-50 shadow-lg">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14 md:h-18">
-            <a href="/" className="flex items-center gap-2 py-2 flex-shrink-0">
+            <a href="/" className="flex items-center gap-2 py-1 flex-shrink min-w-0">
               <button
                 onClick={(e) => {
                   e.preventDefault()
                   setShowMenu(!showMenu)
                 }}
-                className="md:hidden text-white text-xl p-0 min-h-0 min-w-0"
-                aria-label="Toggle menu"
+                className="md:hidden inline-flex h-10 w-10 flex-none items-center justify-center rounded-lg text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50"
+                aria-label={showMenu ? 'Close menu' : 'Open menu'}
+                aria-expanded={showMenu}
               >
                 {showMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
               <img
                 src="../dist/assets/vizag-property-logo.png"
                 alt="Vizag Property - Gateway to Coastal Living"
-                className="hidden md:block h-10 md:h-14 w-auto"
+                className="h-9 w-auto max-w-[128px] object-contain md:h-14 md:max-w-none"
               />
             </a>
 
@@ -107,7 +127,7 @@ export function Header() {
               )}
             </nav>
 
-            <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+            <div className="flex items-center gap-1.5 md:gap-3 flex-shrink-0">
               {user ? (
                 <>
                   <a
@@ -168,15 +188,15 @@ export function Header() {
                   </button>
                   <button
                     onClick={handleLoginClick}
-                    className="md:hidden bg-green-500 text-white text-xs font-semibold px-3 py-2 rounded-md whitespace-nowrap hover:bg-green-600 transition-colors"
+                    className="md:hidden inline-flex h-10 min-w-0 items-center justify-center rounded-lg bg-green-500 px-2.5 text-xs font-semibold text-white whitespace-nowrap transition-colors hover:bg-green-600"
                   >
-                    Login / Sign up
+                    Login
                   </button>
                   <a
                     href="https://wa.me/917207550499"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="md:hidden relative"
+                    className="md:hidden relative flex h-10 w-10 flex-none items-center justify-center"
                   >
                     <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-all shadow">
                       <MessageCircle className="h-5 w-5 text-white" />
@@ -247,8 +267,8 @@ export function Header() {
         </div>
 
         {showMenu && (
-          <div className="md:hidden border-t border-primary-500 bg-primary-700">
-            <nav className="flex flex-col px-4 py-2">
+          <div className="md:hidden fixed inset-x-0 top-14 z-50 max-h-[calc(100dvh-3.5rem)] overflow-y-auto overscroll-contain border-t border-primary-500 bg-primary-700 shadow-2xl">
+            <nav className="flex flex-col px-4 py-3">
               <a href="/" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center" onClick={() => setShowMenu(false)}>
                 Home
               </a>
@@ -270,7 +290,7 @@ export function Header() {
                   openWhatsApp('Hi, I want to list my property in Vizag listed on VizagProperty. Please share more details.')
                   setShowMenu(false)
                 }}
-                className="bg-green-600 text-white px-4 py-2.5 rounded-full hover:bg-green-700 transition-all font-semibold shadow-sm my-2 flex items-center gap-2"
+                className="bg-green-600 text-white px-4 py-2.5 rounded-lg hover:bg-green-700 transition-all font-semibold shadow-sm my-2 flex items-center justify-center gap-2"
               >
                 <MessageCircle className="h-5 w-5" />
                 <span>Post Property via WhatsApp</span>
@@ -279,7 +299,7 @@ export function Header() {
               {!user && (
                 <button
                   onClick={handleLoginClick}
-                  className="bg-gradient-to-r from-[#16a34a] to-[#22c55e] text-white px-4 py-2.5 rounded-full hover:shadow-lg transition-all font-semibold shadow-sm my-2"
+                  className="bg-gradient-to-r from-[#16a34a] to-[#22c55e] text-white px-4 py-2.5 rounded-lg hover:shadow-lg transition-all font-semibold shadow-sm my-2"
                 >
                   Login / Sign up
                 </button>
