@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Search, Mic, MicOff, Filter, X, MapPin, MessageCircle } from 'lucide-react'
+import { Search, Mic, MicOff, Filter, X, MapPin, MessageCircle, Map, LayoutGrid } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property, SearchFilters } from '../types'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { PropertyCard } from '../components/PropertyCard'
+import { GoogleMapView } from '../components/GoogleMapView'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp } from '../lib/whatsapp'
 
@@ -14,6 +15,10 @@ export function PropertiesPage() {
   const [localityName, setLocalityName] = useState('')
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState<SearchFilters>({})
+  const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid')
+  const [mobileView, setMobileView] = useState<'list' | 'map'>('list')
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
+  const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(null)
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
 
   useEffect(() => {
@@ -32,6 +37,8 @@ export function PropertiesPage() {
       setSearchQuery(query)
     }
 
+    const initialFilters: SearchFilters = {}
+
     // Map mobile category names to search API property types
     const categoryMap: Record<string, string> = {
       'full_house': 'villa',
@@ -40,7 +47,6 @@ export function PropertiesPage() {
       'pg_hostel': 'pg',
       'flatmates': 'pg',
       'commercial': 'commercial',
-      // Already mapped types
       'villa': 'villa',
       'flat': 'flat',
       'plot': 'plot',
@@ -48,48 +54,45 @@ export function PropertiesPage() {
     }
 
     if (propertyTypeRaw) {
-      const mappedType = categoryMap[propertyTypeRaw] || propertyTypeRaw
-      setFilters(prev => ({ ...prev, property_type: mappedType }))
+      initialFilters.property_type = categoryMap[propertyTypeRaw] || propertyTypeRaw
     }
 
     if (listingType) {
-      // Map 'buy' and 'commercial' to 'sale'
-      const mappedListingType = listingType === 'buy' || listingType === 'commercial' ? 'sale' : listingType
-      setFilters(prev => ({ ...prev, listing_type: mappedListingType }))
+      initialFilters.listing_type = listingType === 'buy' || listingType === 'commercial' ? 'sale' : listingType as 'sale' | 'rent'
     }
 
     if (localityId) {
-      setFilters(prev => ({ ...prev, locality_id: localityId }))
+      initialFilters.locality_id = localityId
     } else if (localityName) {
-      setFilters(prev => ({ ...prev, locality_id: localityName }))
+      initialFilters.locality_id = localityName
     }
 
     if (bhk) {
       const bedroomsNum = parseInt(bhk.replace('+', ''))
       if (!isNaN(bedroomsNum)) {
-        setFilters(prev => ({ ...prev, bedrooms: bedroomsNum }))
+        initialFilters.bedrooms = bedroomsNum
       }
     }
 
     if (status) {
-      setFilters(prev => ({ ...prev, property_status: status }))
+      initialFilters.property_status = status
     }
 
     if (minPrice) {
       const minPriceNum = parseInt(minPrice)
       if (!isNaN(minPriceNum)) {
-        setFilters(prev => ({ ...prev, min_price: minPriceNum }))
+        initialFilters.min_price = minPriceNum
       }
     }
 
     if (maxPrice) {
       const maxPriceNum = parseInt(maxPrice)
       if (!isNaN(maxPriceNum)) {
-        setFilters(prev => ({ ...prev, max_price: maxPriceNum }))
+        initialFilters.max_price = maxPriceNum
       }
     }
 
-    loadProperties()
+    setFilters(initialFilters)
   }, [])
 
   useEffect(() => {
@@ -108,7 +111,28 @@ export function PropertiesPage() {
     loadProperties()
   }, [filters])
 
-  const loadProperties = async () => {
+  // Distance helper (Haversine formula in km)
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371 // Radius of the earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180)
+    const dLon = (lon2 - lon1) * (Math.PI / 180)
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    return R * c
+  }
+
+  // Multi-tier search state
+  const [searchTier, setSearchTier] = useState<number>(5) // Max distance threshold currently active (5km default, then 10, 15, 20...)
+  const [exactProperties, setExactProperties] = useState<Property[]>([])
+  const [nearbyProperties, setNearbyProperties] = useState<Property[]>([])
+  const [hasMoreTiers, setHasMoreTiers] = useState(false)
+
+  const loadProperties = async (currentMaxDistance = 5) => {
     setLoading(true)
     try {
       // If no property_type, show all approved properties (browse mode)
@@ -123,6 +147,9 @@ export function PropertiesPage() {
 
         if (error) throw error
         setProperties(data || [])
+        setExactProperties(data || [])
+        setNearbyProperties([])
+        setHasMoreTiers(false)
         setLoading(false)
         return
       }
@@ -134,13 +161,8 @@ export function PropertiesPage() {
         propertyType: filters.property_type as 'flat' | 'plot' | 'villa' | 'pg' | 'commercial'
       }
 
-      // OPTIONAL: Only add if value exists
       if (filters.listing_type) {
         searchParams.listingType = filters.listing_type as 'sale' | 'rent'
-      }
-
-      if (filters.locality_id) {
-        searchParams.localityId = filters.locality_id
       }
 
       if (filters.bedrooms && filters.bedrooms > 0) {
@@ -163,11 +185,94 @@ export function PropertiesPage() {
         searchParams.keyword = searchQuery.trim()
       }
 
-      const query = buildUnifiedPropertyQuery(searchParams)
-      const { data, error } = await query.limit(50)
+      // 1. Fetch exact matching locality properties
+      let exactList: Property[] = []
+      if (filters.locality_id) {
+        const { data, error } = await buildUnifiedPropertyQuery({
+          ...searchParams,
+          localityId: filters.locality_id
+        }).limit(50)
+        if (error) throw error
+        exactList = data || []
+      } else {
+        // If no explicit locality search, fetch all matching criteria
+        const { data, error } = await buildUnifiedPropertyQuery(searchParams).limit(50)
+        if (error) throw error
+        exactList = data || []
+      }
 
-      if (error) throw error
-      setProperties(data || [])
+      // 2. Fetch coordinate details for current locality to find nearby properties
+      let nearbyList: Property[] = []
+      let canExpandFurther = false
+
+      if (filters.locality_id) {
+        // Get coordinates of the queried locality
+        const { data: localityData } = await supabase
+          .from('localities')
+          .select('latitude, longitude')
+          .eq('id', filters.locality_id)
+          .maybeSingle()
+
+        if (localityData && localityData.latitude && localityData.longitude) {
+          // Fetch ALL localities in Vizag to compute distance thresholds
+          const { data: allLocalities } = await supabase
+            .from('localities')
+            .select('id, name, latitude, longitude')
+            .eq('city', 'Visakhapatnam')
+
+          if (allLocalities) {
+            // Find locality IDs within current range and next range
+            const nearbyLocalityIds: string[] = []
+            const nextTierLocalityIds: string[] = []
+
+            allLocalities.forEach((loc) => {
+              if (loc.id === filters.locality_id || !loc.latitude || !loc.longitude) return
+              const dist = calculateDistance(
+                localityData.latitude!,
+                localityData.longitude!,
+                loc.latitude,
+                loc.longitude
+              )
+
+              if (dist <= currentMaxDistance) {
+                nearbyLocalityIds.push(loc.id)
+              } else if (dist <= currentMaxDistance + 5) {
+                nextTierLocalityIds.push(loc.id)
+              }
+            })
+
+            // Query properties in the nearby localities
+            if (nearbyLocalityIds.length > 0) {
+              const { data: nData, error: nErr } = await buildUnifiedPropertyQuery({
+                ...searchParams
+              })
+                .in('locality_id', nearbyLocalityIds)
+                .limit(50)
+
+              if (nErr) throw nErr
+              nearbyList = nData || []
+            }
+
+            // Check if there are any properties available in the next expansion tier (currentMaxDistance + 5km)
+            if (nextTierLocalityIds.length > 0) {
+              const { data: checkData } = await buildUnifiedPropertyQuery({
+                ...searchParams
+              })
+                .in('locality_id', nextTierLocalityIds)
+                .limit(1)
+
+              if (checkData && checkData.length > 0) {
+                canExpandFurther = true
+              }
+            }
+          }
+        }
+      }
+
+      setExactProperties(exactList)
+      setNearbyProperties(nearbyList)
+      setProperties([...exactList, ...nearbyList])
+      setHasMoreTiers(canExpandFurther)
     } catch (error) {
     } finally {
       setLoading(false)
@@ -246,6 +351,27 @@ export function PropertiesPage() {
             >
               <Filter className="h-5 w-5" />
               <span className="hidden sm:inline">Filters</span>
+            </button>
+            <button
+              onClick={() => setViewMode(viewMode === 'grid' ? 'map' : 'grid')}
+              className={`flex items-center justify-center space-x-1.5 px-3 md:px-4 py-2.5 rounded-lg transition-colors min-h-[44px] ${
+                viewMode === 'map'
+                  ? 'bg-primary-100 text-primary-700 border border-primary-300'
+                  : 'bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200'
+              }`}
+              aria-label={viewMode === 'grid' ? 'Switch to map view' : 'Switch to grid view'}
+            >
+              {viewMode === 'grid' ? (
+                <>
+                  <Map className="h-5 w-5" />
+                  <span className="hidden sm:inline">Map</span>
+                </>
+              ) : (
+                <>
+                  <LayoutGrid className="h-5 w-5" />
+                  <span className="hidden sm:inline">Grid</span>
+                </>
+              )}
             </button>
             <button
               onClick={handleSearch}
@@ -407,7 +533,7 @@ export function PropertiesPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className={`max-w-7xl mx-auto px-4 py-8 ${viewMode === 'map' ? 'max-w-full' : ''}`}>
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-gray-900">
             {properties.length} Properties Found
@@ -427,7 +553,7 @@ export function PropertiesPage() {
             <p className="text-gray-600 mb-6">We couldn't find any properties matching your search criteria</p>
             <button
               onClick={() => {
-                const filterText = []
+                const filterText: string[] = []
                 if (filters.property_type) filterText.push(filters.property_type)
                 if (filters.listing_type) filterText.push(`for ${filters.listing_type}`)
                 if (filters.bedrooms) filterText.push(`(${filters.bedrooms} BHK)`)
@@ -441,11 +567,174 @@ export function PropertiesPage() {
               Contact Us on WhatsApp
             </button>
           </div>
+        ) : viewMode === 'map' ? (
+          /* Map View: Responsive Toggle (Mobile) & Split (Desktop) */
+          <div className="relative">
+            <div className="flex flex-col lg:flex-row gap-4" style={{ height: 'calc(100vh - 280px)', minHeight: '500px' }}>
+              {/* Map Panel */}
+              <div 
+                className={`w-full lg:w-[60%] h-[calc(100vh-320px)] lg:h-full rounded-2xl overflow-hidden shadow-lg border border-gray-200 lg:block ${
+                  mobileView === 'map' ? 'block' : 'hidden'
+                }`}
+              >
+                <GoogleMapView
+                  properties={properties}
+                  selectedPropertyId={selectedPropertyId}
+                  onPropertySelect={(id) => {
+                    setSelectedPropertyId(id)
+                    const card = document.getElementById(`property-card-${id}`)
+                    if (card) {
+                      setMobileView('list')
+                      setTimeout(() => {
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                      }, 100)
+                    }
+                  }}
+                  onPropertyHover={setHoveredPropertyId}
+                />
+              </div>
+
+              {/* Property List Panel */}
+              <div 
+                className={`w-full lg:w-[40%] overflow-y-auto space-y-4 pr-1 lg:block ${
+                  mobileView === 'list' ? 'block' : 'hidden'
+                }`} 
+                style={{ maxHeight: 'calc(100vh - 280px)' }}
+              >
+                {exactProperties.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Exact Matches</h3>
+                    <div className="space-y-3">
+                      {exactProperties.map((property) => (
+                        <div
+                          key={property.id}
+                          id={`property-card-${property.id}`}
+                          className={`transition-all duration-200 rounded-xl ${
+                            selectedPropertyId === property.id
+                              ? 'ring-2 ring-primary-500 shadow-lg scale-[1.01]'
+                              : hoveredPropertyId === property.id
+                              ? 'ring-1 ring-primary-300 shadow-md'
+                              : ''
+                          }`}
+                          onMouseEnter={() => setHoveredPropertyId(property.id)}
+                          onMouseLeave={() => setHoveredPropertyId(null)}
+                          onClick={() => setSelectedPropertyId(property.id)}
+                        >
+                          <PropertyCard property={property} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {nearbyProperties.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mt-4 mb-2">
+                      Nearby Matches (Within {searchTier} km)
+                    </h3>
+                    <div className="space-y-3">
+                      {nearbyProperties.map((property) => (
+                        <div
+                          key={property.id}
+                          id={`property-card-${property.id}`}
+                          className={`transition-all duration-200 rounded-xl ${
+                            selectedPropertyId === property.id
+                              ? 'ring-2 ring-primary-500 shadow-lg scale-[1.01]'
+                              : hoveredPropertyId === property.id
+                              ? 'ring-1 ring-primary-300 shadow-md'
+                              : ''
+                          }`}
+                          onMouseEnter={() => setHoveredPropertyId(property.id)}
+                          onMouseLeave={() => setHoveredPropertyId(null)}
+                          onClick={() => setSelectedPropertyId(property.id)}
+                        >
+                          <PropertyCard property={property} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {hasMoreTiers && (
+                  <div className="p-4 bg-primary-50 rounded-xl border border-primary-200 text-center shadow-sm">
+                    <p className="text-sm font-semibold text-primary-900 mb-2">Want to see more properties?</p>
+                    <button
+                      onClick={() => {
+                        const nextTier = searchTier + 5
+                        setSearchTier(nextTier)
+                        loadProperties(nextTier)
+                      }}
+                      className="px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-semibold transition-colors shadow-sm"
+                    >
+                      Show Properties within {searchTier + 5} km
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Mobile Floating Toggle Button */}
+            <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40 lg:hidden">
+              <button
+                onClick={() => setMobileView(mobileView === 'list' ? 'map' : 'list')}
+                className="flex items-center space-x-2 bg-gray-950 text-white px-5 py-3 rounded-full shadow-2xl hover:bg-gray-900 transition-all font-semibold border border-gray-800 text-sm"
+              >
+                {mobileView === 'list' ? (
+                  <>
+                    <Map className="h-4 w-4" />
+                    <span>Show Map</span>
+                  </>
+                ) : (
+                  <>
+                    <LayoutGrid className="h-4 w-4" />
+                    <span>Show List</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties.map((property) => (
-              <PropertyCard key={property.id} property={property} />
-            ))}
+          /* Grid View (default) */
+          <div>
+            {exactProperties.length > 0 && (
+              <div className="mb-8">
+                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Exact Matches</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {exactProperties.map((property) => (
+                    <PropertyCard key={property.id} property={property} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {nearbyProperties.length > 0 && (
+              <div className="mb-8">
+                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
+                  Nearby Matches (Within {searchTier} km)
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {nearbyProperties.map((property) => (
+                    <PropertyCard key={property.id} property={property} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {hasMoreTiers && (
+              <div className="max-w-md mx-auto p-6 bg-primary-50 rounded-2xl border border-primary-200 text-center shadow-sm mt-4">
+                <p className="font-semibold text-primary-900 mb-3">Want to see more properties?</p>
+                <button
+                  onClick={() => {
+                    const nextTier = searchTier + 5
+                    setSearchTier(nextTier)
+                    loadProperties(nextTier)
+                  }}
+                  className="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold transition-colors shadow-sm"
+                >
+                  Show Properties within {searchTier + 5} km
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

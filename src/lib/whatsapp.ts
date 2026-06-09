@@ -35,13 +35,16 @@ function getDefaultMessage(): string {
   return DEFAULT_MESSAGE
 }
 
-export function getWhatsAppLink(message?: string): string {
+export function getWhatsAppLink(message?: string, customPhone?: string): string {
   const finalMessage = message || getDefaultMessage()
   const encodedMessage = encodeURIComponent(finalMessage)
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`
+  const phone = customPhone ? customPhone.replace(/[^0-9]/g, '') : WHATSAPP_NUMBER
+  // Ensure the phone number has country code (e.g. 91 for India)
+  const targetPhone = phone.length === 10 ? `91${phone}` : phone
+  return `https://wa.me/${targetPhone}?text=${encodedMessage}`
 }
 
-export function openWhatsApp(message?: string): void {
-  const link = getWhatsAppLink(message)
+export function openWhatsApp(message?: string, customPhone?: string): void {
+  const link = getWhatsAppLink(message, customPhone)
   window.open(link, '_blank', 'noopener,noreferrer')
 }

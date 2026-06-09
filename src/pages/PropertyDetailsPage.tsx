@@ -12,6 +12,7 @@ import { SmartAreaDiscovery } from '../components/SmartAreaDiscovery'
 import { PropertyShortlistMemory } from '../components/PropertyShortlistMemory'
 import { VisitPreparation } from '../components/VisitPreparation'
 import { MediaGallery } from '../components/MediaGallery'
+import { PropertyLocationMap } from '../components/PropertyLocationMap'
 import { VIZAG_PROPERTY_PHONE } from '../config/contact'
 import PropertyDisclaimer from '../components/PropertyDisclaimer'
 
@@ -47,6 +48,11 @@ export function PropertyDetailsPage() {
           agent_phone,
           agent_whatsapp,
           locality_id,
+          localities(
+            latitude,
+            longitude,
+            name
+          ),
           is_vmrda_approved,
           approved_at,
           rejection_reason,
@@ -186,13 +192,6 @@ export function PropertyDetailsPage() {
       }
     } catch (error) {
     }
-  }
-
-  const handleWhatsApp = () => {
-    if (!property) return
-    openWhatsApp(
-      `Hi, I'm interested in ${property.title} listed on VizagProperty. Can you provide more details?`
-    )
   }
 
   const handleCall = () => {
@@ -373,6 +372,20 @@ export function PropertyDetailsPage() {
               )}
             </div>
 
+            {/* Location Map Section */}
+            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100 mb-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-primary-600" />
+                Location on Map
+              </h2>
+              <PropertyLocationMap
+                latitude={Array.isArray(property.localities) ? property.localities[0]?.latitude : property.localities?.latitude}
+                longitude={Array.isArray(property.localities) ? property.localities[0]?.longitude : property.localities?.longitude}
+                title={property.title}
+                location={property.location ?? property.city ?? 'Visakhapatnam'}
+              />
+            </div>
+
             <GoodDealAnalysis propertyId={property.id} currentPrice={property.price} />
 
             <BudgetStretchAdvisor
@@ -402,7 +415,14 @@ export function PropertyDetailsPage() {
 
               <div className="space-y-3 mb-5 md:mb-6">
                 <button
-                  onClick={handleWhatsApp}
+                  onClick={() => {
+                    if (!property) return
+                    const targetPhone = property.agent_whatsapp || property.agent_phone
+                    openWhatsApp(
+                      `Hi, I'm interested in ${property.title} listed on VizagProperty. Can you provide more details?`,
+                      targetPhone
+                    )
+                  }}
                   className="w-full bg-green-600 text-white py-3.5 md:py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2 font-medium text-base min-h-[48px]"
                 >
                   <MessageCircle className="h-5 w-5" />

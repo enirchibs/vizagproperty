@@ -71,7 +71,8 @@ export function PropertyCard({ property }: PropertyCardProps) {
     e.preventDefault()
     e.stopPropagation()
     const message = `Hi, I'm interested in your property: ${property.title} - ${formatPrice(property.price)}`
-    openWhatsApp(message)
+    const targetPhone = property.agent_whatsapp || property.agent_phone
+    openWhatsApp(message, targetPhone)
   }
 
   return (

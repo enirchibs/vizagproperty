@@ -1,5 +1,6 @@
 import { MapPin, Home, MessageCircle } from 'lucide-react'
 import { openWhatsApp } from '../lib/whatsapp'
+import { Link } from 'react-router-dom'
 
 export function Footer() {
   const localities = [
@@ -14,7 +15,7 @@ export function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300 py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Home className="h-6 w-6 text-primary-400" />
@@ -55,14 +56,40 @@ export function Footer() {
                   Villas in Vizag
                 </a>
               </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-white font-semibold mb-4">Company</h4>
+            <ul className="space-y-2">
               <li>
-                <a href="/vizag" className="text-sm hover:text-primary-400 transition-colors">
+                <Link to="/about" className="text-sm hover:text-primary-400 transition-colors">
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/vizag" className="text-sm hover:text-primary-400 transition-colors">
-                  Contact
+                <Link to="/contact" className="text-sm hover:text-primary-400 transition-colors">
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacy-policy" className="text-sm hover:text-primary-400 transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link to="/terms-and-conditions" className="text-sm hover:text-primary-400 transition-colors">
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li>
+                <Link to="/disclaimer" className="text-sm hover:text-primary-400 transition-colors">
+                  Disclaimer
+                </Link>
+              </li>
+              <li>
+                <a href="/sitemap.xml" className="text-sm hover:text-primary-400 transition-colors">
+                  Sitemap
                 </a>
               </li>
             </ul>
