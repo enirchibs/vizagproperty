@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from 'react'
 
-export type ListingType = 'buy' | 'rent' | 'commercial'
+export type ListingType = 'buy' | 'rent' | 'projects' | 'commercial'
 export type PropertyCategory = 'residential' | 'commercial'
 
 interface SearchContextType {

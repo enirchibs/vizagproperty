@@ -573,7 +573,29 @@ export function HomePage() {
 
                 <button
                   onClick={() => {
+                    setSearchCategory('residential')
+                    setListingType('projects')
+                    setPropertyCategory('full_house')
+                  }}
+                  className={`flex-1 py-4 px-6 font-semibold text-center transition-all relative ${
+                    listingType === 'projects' && searchCategory === 'residential'
+                      ? 'text-green-600 bg-green-50'
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <Building2 className="h-5 w-5" />
+                    <span>Projects</span>
+                  </div>
+                  {listingType === 'projects' && searchCategory === 'residential' && (
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-green-600"></div>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => {
                     setSearchCategory('commercial')
+                    setListingType('commercial')
                     setPropertyCategory('full_house')
                   }}
                   className={`flex-1 py-4 px-6 font-semibold text-center transition-all relative ${
@@ -678,6 +700,7 @@ export function HomePage() {
                   <div className="lg:col-span-3">
                     <button
                       onClick={handleAdvancedSearch}
+                      type="button"
                       className="w-full h-12 text-white px-6 py-3 rounded-full font-bold transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl bg-accent-500 hover:bg-accent-600"
                     >
                       <Search className="h-5 w-5" />
@@ -686,7 +709,7 @@ export function HomePage() {
                   </div>
                 </div>
 
-                {listingType === 'buy' && searchCategory === 'residential' && (
+                {(listingType === 'buy' || listingType === 'rent' || listingType === 'projects' || listingType === 'commercial' || searchCategory === 'commercial') && (
                   <div className="space-y-3 border-t-2 border-gray-200 pt-4 mt-4">
                     <div className="bg-white rounded-2xl p-4 space-y-6">
                       <div className="flex items-center justify-between">
@@ -711,25 +734,66 @@ export function HomePage() {
                         {/* Property Type */}
                         <div>
                           <label className="block text-sm font-semibold mb-3">Property Type</label>
-
+ 
                           <div className="grid grid-cols-3 gap-3">
-                            {[
-                              { label: 'Flat', value: 'flat_apartment' },
-                              { label: 'House/Villa', value: 'full_house' },
-                              { label: 'Plot', value: 'land_plot' }
-                            ].map(type => (
-                              <button
-                                key={type.value}
-                                onClick={() => setPropertyCategory(type.value as PropertyCategory)}
-                                className={`p-4 rounded-xl border text-sm font-medium transition
-                                ${propertyCategory === type.value
-                                  ? 'border-blue-600 bg-blue-50 text-blue-600'
-                                  : 'border-gray-200 bg-white text-gray-700'
-                                }`}
-                              >
-                                {type.label}
-                              </button>
-                            ))}
+                            {listingType === 'commercial' ? (
+                              [
+                                { label: 'Office', value: 'flat_apartment' },
+                                { label: 'Shop', value: 'full_house' },
+                                { label: 'Warehouse', value: 'land_plot' }
+                              ].map(type => (
+                                <button
+                                  key={type.label}
+                                  type="button"
+                                  onClick={() => setPropertyCategory(type.value as PropertyCategory)}
+                                  className={`p-4 rounded-xl border text-sm font-medium transition
+                                  ${propertyCategory === type.value
+                                    ? 'border-blue-600 bg-blue-50 text-blue-600'
+                                    : 'border-gray-200 bg-white text-gray-700'
+                                  }`}
+                                >
+                                  {type.label}
+                                </button>
+                              ))
+                            ) : listingType === 'rent' ? (
+                              [
+                                { label: 'Flat', value: 'flat_apartment' },
+                                { label: 'House/Villa', value: 'full_house' },
+                                { label: 'PG/Hostel', value: 'pg_hostel' }
+                              ].map(type => (
+                                <button
+                                  key={type.label}
+                                  type="button"
+                                  onClick={() => setPropertyCategory(type.value as PropertyCategory)}
+                                  className={`p-4 rounded-xl border text-sm font-medium transition
+                                  ${propertyCategory === type.value
+                                    ? 'border-blue-600 bg-blue-50 text-blue-600'
+                                    : 'border-gray-200 bg-white text-gray-700'
+                                  }`}
+                                >
+                                  {type.label}
+                                </button>
+                              ))
+                            ) : (
+                              [
+                                { label: 'Flat', value: 'flat_apartment' },
+                                { label: 'House/Villa', value: 'full_house' },
+                                { label: 'Plot', value: 'land_plot' }
+                              ].map(type => (
+                                <button
+                                  key={type.value}
+                                  type="button"
+                                  onClick={() => setPropertyCategory(type.value as PropertyCategory)}
+                                  className={`p-4 rounded-xl border text-sm font-medium transition
+                                  ${propertyCategory === type.value
+                                    ? 'border-blue-600 bg-blue-50 text-blue-600'
+                                    : 'border-gray-200 bg-white text-gray-700'
+                                  }`}
+                                >
+                                  {type.label}
+                                </button>
+                              ))
+                            )}
                           </div>
                         </div>
 

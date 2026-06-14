@@ -58,7 +58,7 @@ export function PropertiesPage() {
     }
 
     if (listingType) {
-      initialFilters.listing_type = listingType === 'buy' || listingType === 'commercial' ? 'sale' : listingType as 'sale' | 'rent'
+      initialFilters.listing_type = listingType === 'buy' || listingType === 'commercial' || listingType === 'projects' ? 'sale' : listingType as 'sale' | 'rent'
     }
 
     if (localityId) {
