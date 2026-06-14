@@ -25,7 +25,7 @@ import RestoredSearchBanner from '../components/RestoredSearchBanner'
 import PropertiesNearYou from '../components/PropertiesNearYou'
 import { HomeBlogSection } from '../components/HomeBlogSection'
 
-type PropertyCategory = 'full_house' | 'land_plot' | 'flat_apartment' | 'pg_hostel' | 'flatmates'
+type PropertyCategory = 'full_house' | 'land_plot' | 'flat_apartment' | 'pg_hostel' | 'flatmates' | 'villa'
 
 export function HomePage() {
   const { user } = useAuth()
@@ -62,6 +62,16 @@ export function HomePage() {
   const [filterCount, setFilterCount] = useState(0)
   const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilters>({})
   const [propertySubType, setPropertySubType] = useState<'residential' | 'plot' | 'pg'>('residential')
+  
+  // Rent and PG/Hostel specific filter states
+  const [tenantPreference, setTenantPreference] = useState<string[]>([])
+  const [availableFrom, setAvailableFrom] = useState('')
+  const [roomType, setRoomType] = useState('')
+  const [foodIncluded, setFoodIncluded] = useState<boolean | undefined>(undefined)
+  const [gender, setGender] = useState('')
+  const [attachedBathroom, setAttachedBathroom] = useState<boolean | undefined>(undefined)
+  const [minRent, setMinRent] = useState('')
+  const [maxRent, setMaxRent] = useState('')
 
   const memoizedFilters = useMemo(() => advancedFilters, [advancedFilters])
 
@@ -307,6 +317,34 @@ export function HomePage() {
     // OPTIONAL: Add amenities filter
     if (amenities.length > 0) {
       params.append('amenities', amenities.join(','))
+    }
+    
+    // Rent specific parameters
+    if (tenantPreference.length > 0) {
+      params.append('tenantPreference', tenantPreference.join(','))
+    }
+    if (availableFrom) {
+      params.append('availableFrom', availableFrom)
+    }
+    if (minRent) {
+      params.append('minPrice', minRent)
+    }
+    if (maxRent) {
+      params.append('maxPrice', maxRent)
+    }
+    
+    // PG specific parameters
+    if (roomType) {
+      params.append('roomType', roomType)
+    }
+    if (foodIncluded !== undefined) {
+      params.append('foodIncluded', foodIncluded.toString())
+    }
+    if (gender) {
+      params.append('gender', gender)
+    }
+    if (attachedBathroom !== undefined) {
+      params.append('attachedBathroom', attachedBathroom.toString())
     }
 
     window.location.href = `/properties?${params.toString()}`
@@ -731,81 +769,231 @@ export function HomePage() {
                           Reset
                         </button>
                       </div>
-                        {/* Property Type */}
-                        <div>
-                          <label className="block text-sm font-semibold mb-3">Property Type</label>
- 
-                          <div className="grid grid-cols-3 gap-3">
-                            {listingType === 'commercial' ? (
-                              [
-                                { label: 'Office', value: 'flat_apartment' },
-                                { label: 'Shop', value: 'full_house' },
-                                { label: 'Warehouse', value: 'land_plot' }
-                              ].map(type => (
-                                <button
-                                  key={type.label}
-                                  type="button"
-                                  onClick={() => setPropertyCategory(type.value as PropertyCategory)}
-                                  className={`p-4 rounded-xl border text-sm font-medium transition
-                                  ${propertyCategory === type.value
-                                    ? 'border-blue-600 bg-blue-50 text-blue-600'
-                                    : 'border-gray-200 bg-white text-gray-700'
-                                  }`}
-                                >
-                                  {type.label}
-                                </button>
-                              ))
-                            ) : listingType === 'rent' ? (
-                              [
-                                { label: 'Flat', value: 'flat_apartment' },
-                                { label: 'House/Villa', value: 'full_house' },
-                                { label: 'PG/Hostel', value: 'pg_hostel' }
-                              ].map(type => (
-                                <button
-                                  key={type.label}
-                                  type="button"
-                                  onClick={() => setPropertyCategory(type.value as PropertyCategory)}
-                                  className={`p-4 rounded-xl border text-sm font-medium transition
-                                  ${propertyCategory === type.value
-                                    ? 'border-blue-600 bg-blue-50 text-blue-600'
-                                    : 'border-gray-200 bg-white text-gray-700'
-                                  }`}
-                                >
-                                  {type.label}
-                                </button>
-                              ))
-                            ) : (
-                              [
-                                { label: 'Flat', value: 'flat_apartment' },
-                                { label: 'House/Villa', value: 'full_house' },
-                                { label: 'Plot', value: 'land_plot' }
-                              ].map(type => (
-                                <button
-                                  key={type.value}
-                                  type="button"
-                                  onClick={() => setPropertyCategory(type.value as PropertyCategory)}
-                                  className={`p-4 rounded-xl border text-sm font-medium transition
-                                  ${propertyCategory === type.value
-                                    ? 'border-blue-600 bg-blue-50 text-blue-600'
-                                    : 'border-gray-200 bg-white text-gray-700'
-                                  }`}
-                                >
-                                  {type.label}
-                                </button>
-                              ))
-                            )}
+                        {/* Rent Subcategory Switcher */}
+                        {listingType === 'rent' && (
+                          <div className="w-full">
+                            <div className="flex gap-2 bg-gray-100 rounded-lg p-1 max-w-xs mb-4">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setPropertyCategory('flat_apartment')
+                                }}
+                                className={`flex-1 py-2 px-4 rounded-md text-sm font-semibold transition-all ${
+                                  propertyCategory !== 'pg_hostel'
+                                    ? 'bg-white text-gray-900 shadow-sm'
+                                    : 'text-gray-600 hover:text-gray-900'
+                                }`}
+                              >
+                                House/Flat
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setPropertyCategory('pg_hostel')
+                                }}
+                                className={`flex-1 py-2 px-4 rounded-md text-sm font-semibold transition-all ${
+                                  propertyCategory === 'pg_hostel'
+                                    ? 'bg-white text-gray-900 shadow-sm'
+                                    : 'text-gray-600 hover:text-gray-900'
+                                }`}
+                              >
+                                PG/Hostel
+                              </button>
+                            </div>
                           </div>
-                        </div>
+                        )}
 
-                        {/* No. of Bedrooms - Only for Flat/House */}
-                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
+                        {listingType === 'rent' && propertyCategory === 'pg_hostel' ? (
+                          <>
+                            {/* Room Type */}
+                            <div>
+                              <label className="block text-sm font-semibold mb-3">Room Type</label>
+                              <div className="flex flex-wrap gap-2">
+                                {['Single', 'Double', 'Triple'].map(type => (
+                                  <button
+                                    key={type}
+                                    type="button"
+                                    onClick={() => setRoomType(type.toLowerCase())}
+                                    className={`px-5 py-2.5 rounded-full text-sm border font-medium transition-all ${
+                                      roomType === type.toLowerCase()
+                                        ? 'bg-blue-50 border-blue-600 text-blue-600 font-semibold'
+                                        : 'border-gray-300 text-gray-700 bg-white hover:border-gray-400'
+                                    }`}
+                                  >
+                                    {type}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Food Included */}
+                            <div>
+                              <label className="block text-sm font-semibold mb-3">Food Included</label>
+                              <div className="flex flex-wrap gap-2">
+                                {[
+                                  { label: 'Yes', value: true },
+                                  { label: 'No', value: false }
+                                ].map(option => (
+                                  <button
+                                    key={option.label}
+                                    type="button"
+                                    onClick={() => setFoodIncluded(option.value)}
+                                    className={`px-5 py-2.5 rounded-full text-sm border font-medium transition-all ${
+                                      foodIncluded === option.value
+                                        ? 'bg-blue-50 border-blue-600 text-blue-600 font-semibold'
+                                        : 'border-gray-300 text-gray-700 bg-white hover:border-gray-400'
+                                    }`}
+                                  >
+                                    {option.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Gender */}
+                            <div>
+                              <label className="block text-sm font-semibold mb-3">Gender</label>
+                              <div className="flex flex-wrap gap-2">
+                                {['Male', 'Female', 'Any'].map(g => (
+                                  <button
+                                    key={g}
+                                    type="button"
+                                    onClick={() => setGender(g.toLowerCase())}
+                                    className={`px-5 py-2.5 rounded-full text-sm border font-medium transition-all ${
+                                      gender === g.toLowerCase()
+                                        ? 'bg-blue-50 border-blue-600 text-blue-600 font-semibold'
+                                        : 'border-gray-300 text-gray-700 bg-white hover:border-gray-400'
+                                    }`}
+                                  >
+                                    {g}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Attached Bathroom */}
+                            <div>
+                              <label className="block text-sm font-semibold mb-3">Attached Bathroom</label>
+                              <div className="flex flex-wrap gap-2">
+                                {[
+                                  { label: 'Yes', value: true },
+                                  { label: 'No', value: false }
+                                ].map(option => (
+                                  <button
+                                    key={option.label}
+                                    type="button"
+                                    onClick={() => setAttachedBathroom(option.value)}
+                                    className={`px-5 py-2.5 rounded-full text-sm border font-medium transition-all ${
+                                      attachedBathroom === option.value
+                                        ? 'bg-blue-50 border-blue-600 text-blue-600 font-semibold'
+                                        : 'border-gray-300 text-gray-700 bg-white hover:border-gray-400'
+                                    }`}
+                                  >
+                                    {option.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Rent Range */}
+                            <div>
+                              <label className="block text-sm font-semibold mb-3">Rent Range</label>
+                              <div className="grid grid-cols-2 gap-3">
+                                <input
+                                  type="number"
+                                  placeholder="Min Rent"
+                                  value={minRent}
+                                  onChange={(e) => setMinRent(e.target.value)}
+                                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                                />
+                                <input
+                                  type="number"
+                                  placeholder="Max Rent"
+                                  value={maxRent}
+                                  onChange={(e) => setMaxRent(e.target.value)}
+                                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                                />
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            {/* Property Type */}
+                            <div>
+                              <label className="block text-sm font-semibold mb-3">Property Type</label>
+
+                              <div className="grid grid-cols-3 gap-3">
+                                {listingType === 'commercial' ? (
+                                  [
+                                    { label: 'Office', value: 'flat_apartment' },
+                                    { label: 'Shop', value: 'full_house' },
+                                    { label: 'Warehouse', value: 'land_plot' }
+                                  ].map(type => (
+                                    <button
+                                      key={type.label}
+                                      type="button"
+                                      onClick={() => setPropertyCategory(type.value as PropertyCategory)}
+                                      className={`p-4 rounded-xl border text-sm font-medium transition
+                                      ${propertyCategory === type.value
+                                        ? 'border-blue-600 bg-blue-50 text-blue-600'
+                                        : 'border-gray-200 bg-white text-gray-700'
+                                      }`}
+                                    >
+                                      {type.label}
+                                    </button>
+                                  ))
+                                ) : listingType === 'rent' ? (
+                                  [
+                                    { label: 'Flat', value: 'flat_apartment' },
+                                    { label: 'House', value: 'full_house' },
+                                    { label: 'Villa', value: 'villa' }
+                                  ].map(type => (
+                                    <button
+                                      key={type.label}
+                                      type="button"
+                                      onClick={() => setPropertyCategory(type.value as PropertyCategory)}
+                                      className={`p-4 rounded-xl border text-sm font-medium transition
+                                      ${propertyCategory === type.value
+                                        ? 'border-blue-600 bg-blue-50 text-blue-600'
+                                        : 'border-gray-200 bg-white text-gray-700'
+                                      }`}
+                                    >
+                                      {type.label}
+                                    </button>
+                                  ))
+                                ) : (
+                                  [
+                                    { label: 'Flat', value: 'flat_apartment' },
+                                    { label: 'House/Villa', value: 'full_house' },
+                                    { label: 'Plot', value: 'land_plot' }
+                                  ].map(type => (
+                                    <button
+                                      key={type.value}
+                                      type="button"
+                                      onClick={() => setPropertyCategory(type.value as PropertyCategory)}
+                                      className={`p-4 rounded-xl border text-sm font-medium transition
+                                      ${propertyCategory === type.value
+                                        ? 'border-blue-600 bg-blue-50 text-blue-600'
+                                        : 'border-gray-200 bg-white text-gray-700'
+                                      }`}
+                                    >
+                                      {type.label}
+                                    </button>
+                                  ))
+                                )}
+                              </div>
+                            </div>
+
+                        {/* No. of Bedrooms - Only for Flat/House/Villa */}
+                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house' || propertyCategory === 'villa') && (
                           <div>
                             <label className="block text-sm font-semibold mb-3">No. of Bedrooms</label>
 
                             <div className="flex flex-wrap gap-2">
-                              {[1, 2, 3, 4].map(bhk => (
+                              {[1, 2, 3, 4, 5].map(bhk => (
                                 <button
                                   key={bhk}
+                                  type="button"
                                   onClick={() => toggleBedroom(bhk)}
                                   className={`px-4 py-2 rounded-full text-sm border
                                   ${selectedBedrooms.includes(String(bhk))
@@ -820,8 +1008,8 @@ export function HomePage() {
                           </div>
                         )}
 
-                        {/* Possession Status - Only for Flat/House */}
-                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
+                        {/* Possession Status - Only for Buy / Sale */}
+                        {listingType !== 'rent' && (propertyCategory === 'flat_apartment' || propertyCategory === 'full_house' || propertyCategory === 'villa') && (
                           <div>
                             <label className="block text-sm font-semibold mb-3">Possession Status</label>
 
@@ -829,6 +1017,7 @@ export function HomePage() {
                               {['Under Construction', 'Ready to Move'].map(status => (
                                 <button
                                   key={status}
+                                  type="button"
                                   onClick={() => togglePossession(status)}
                                   className={`px-4 py-2 rounded-full border text-sm
                                   ${possessionStatus.includes(status === 'Under Construction' ? 'under_construction' : 'ready_to_move')
@@ -853,14 +1042,14 @@ export function HomePage() {
                               placeholder="Min"
                               value={minArea}
                               onChange={(e) => setMinArea(e.target.value)}
-                              className="border rounded-lg px-3 py-2"
+                              className="border rounded-lg px-3 py-2 bg-white"
                             />
                             <input
                               type="number"
                               placeholder="Max"
                               value={maxArea}
                               onChange={(e) => setMaxArea(e.target.value)}
-                              className="border rounded-lg px-3 py-2"
+                              className="border rounded-lg px-3 py-2 bg-white"
                             />
                           </div>
 
@@ -877,8 +1066,8 @@ export function HomePage() {
                           </select>
                         </div>
 
-                        {/* Sale Type - Only for Flat/House */}
-                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
+                        {/* Sale Type - Only for Flat/House / Villa in Sale */}
+                        {listingType !== 'rent' && (propertyCategory === 'flat_apartment' || propertyCategory === 'full_house' || propertyCategory === 'villa') && (
                           <div>
                             <label className="block text-sm font-semibold mb-3">Sale Type</label>
                             <div className="flex flex-wrap gap-2">
@@ -948,8 +1137,8 @@ export function HomePage() {
                           </div>
                         </div>
 
-                        {/* Furnishing Status - Only for Flat/House */}
-                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
+                        {/* Furnishing Status - Only for Flat/House/Villa */}
+                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house' || propertyCategory === 'villa') && (
                           <div>
                             <label className="block text-sm font-semibold mb-3">Furnishing Status</label>
                             <div className="flex flex-wrap gap-2">
@@ -978,8 +1167,86 @@ export function HomePage() {
                           </div>
                         )}
 
+                        {/* Tenant Preference - Only for Rent */}
+                        {listingType === 'rent' && (
+                          <div>
+                            <label className="block text-sm font-semibold mb-3">Tenant Preference</label>
+                            <div className="flex flex-wrap gap-2">
+                              {['Family', 'Bachelor', 'Company'].map((pref) => (
+                                <button
+                                  key={pref}
+                                  type="button"
+                                  onClick={() => {
+                                    const lowerPref = pref.toLowerCase()
+                                    if (tenantPreference.includes(lowerPref)) {
+                                      setTenantPreference(tenantPreference.filter(p => p !== lowerPref))
+                                    } else {
+                                      setTenantPreference([...tenantPreference, lowerPref])
+                                    }
+                                  }}
+                                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                    tenantPreference.includes(pref.toLowerCase())
+                                      ? 'bg-primary-600 text-white shadow-md'
+                                      : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
+                                  }`}
+                                >
+                                  + {pref}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Available From - Only for Rent */}
+                        {listingType === 'rent' && (
+                          <div>
+                            <label className="block text-sm font-semibold mb-3">Available From</label>
+                            <input
+                              type="date"
+                              value={availableFrom}
+                              onChange={(e) => setAvailableFrom(e.target.value)}
+                              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                            />
+                          </div>
+                        )}
+
+                        {/* Rent / Budget Range */}
+                        <div>
+                          <label className="block text-sm font-semibold mb-3">
+                            {listingType === 'rent' ? 'Rent Range' : 'Budget Range'}
+                          </label>
+                          <div className="grid grid-cols-2 gap-3">
+                            <input
+                              type="number"
+                              placeholder={listingType === 'rent' ? 'Min Rent' : 'Min'}
+                              value={listingType === 'rent' ? minRent : minArea}
+                              onChange={(e) => {
+                                if (listingType === 'rent') {
+                                  setMinRent(e.target.value)
+                                } else {
+                                  setMinArea(e.target.value)
+                                }
+                              }}
+                              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                            />
+                            <input
+                              type="number"
+                              placeholder={listingType === 'rent' ? 'Max Rent' : 'Max'}
+                              value={listingType === 'rent' ? maxRent : maxArea}
+                              onChange={(e) => {
+                                if (listingType === 'rent') {
+                                  setMaxRent(e.target.value)
+                                } else {
+                                  setMaxArea(e.target.value)
+                                }
+                              }}
+                              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                            />
+                          </div>
+                        </div>
+
                         {/* Amenities - Only for Flat/House */}
-                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house') && (
+                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house' || propertyCategory === 'villa') && (
                           <div>
                             <label className="block text-sm font-semibold mb-3">Amenities</label>
                             <div className="flex flex-wrap gap-2">
@@ -1007,6 +1274,8 @@ export function HomePage() {
                             </div>
                           </div>
                         )}
+                          </>
+                        )}
                     </div>
 
                     <div className="sticky bottom-0 bg-white pt-4 pb-2">
@@ -1016,117 +1285,6 @@ export function HomePage() {
                       >
                         View Properties
                       </button>
-                    </div>
-                  </div>
-                )}
-
-                {listingType === 'rent' && searchCategory === 'residential' && (
-                  <div className="space-y-4">
-                    <div className="flex flex-wrap items-center gap-4">
-                      <div className="flex items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => setPropertyCategory('full_house')}
-                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
-                            propertyCategory === 'full_house'
-                              ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          <Home className="h-4 w-4 inline-block mr-1.5" />
-                          Full House
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setPropertyCategory('pg_hostel')}
-                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
-                            propertyCategory === 'pg_hostel'
-                              ? 'bg-gradient-to-r from-violet-500 to-purple-500 text-white shadow-lg'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          <Users className="h-4 w-4 inline-block mr-1.5" />
-                          PG/Hostel
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setPropertyCategory('flatmates')}
-                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
-                            propertyCategory === 'flatmates'
-                              ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          <Users className="h-4 w-4 inline-block mr-1.5" />
-                          Flatmates
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setPropertyCategory('flat_apartment')}
-                          className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
-                            propertyCategory === 'flat_apartment'
-                              ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          <Building2 className="h-4 w-4 inline-block mr-1.5" />
-                          Flat/Apartment
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {searchCategory === 'commercial' && (
-                  <div className="space-y-4">
-                    <div className="flex flex-wrap items-center gap-4">
-                      <div className="flex items-center gap-3">
-                        <label className="flex items-center gap-2 cursor-pointer group">
-                          <input
-                            type="radio"
-                            name="commercialType"
-                            value="buy"
-                            checked={listingType === 'buy'}
-                            onChange={() => setListingType('buy')}
-                            className="w-4 h-4 text-orange-600"
-                          />
-                          <span className="text-sm font-medium text-gray-700 group-hover:text-orange-600 transition-colors">
-                            Buy
-                          </span>
-                        </label>
-
-                        <label className="flex items-center gap-2 cursor-pointer group">
-                          <input
-                            type="radio"
-                            name="commercialType"
-                            value="rent"
-                            checked={listingType === 'rent'}
-                            onChange={() => setListingType('rent')}
-                            className="w-4 h-4 text-orange-600"
-                          />
-                          <span className="text-sm font-medium text-gray-700 group-hover:text-orange-600 transition-colors">
-                            Rent
-                          </span>
-                        </label>
-                      </div>
-
-                      <div className="flex-1 min-w-[200px]">
-                        <select
-                          value={propertyCategory}
-                          onChange={(e) => setPropertyCategory(e.target.value as PropertyCategory)}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-sm"
-                        >
-                          <option value="">Property Type</option>
-                          <option value="office">Office Space</option>
-                          <option value="shop">Shop / Showroom</option>
-                          <option value="warehouse">Warehouse</option>
-                          <option value="farmhouse">Farmhouse</option>
-                          <option value="coworking">Co-working Space</option>
-                        </select>
-                      </div>
                     </div>
                   </div>
                 )}
