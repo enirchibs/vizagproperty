@@ -6,6 +6,7 @@ import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { ChatBot } from './components/ChatBot'
 import { FloatingWhatsAppButton } from './components/FloatingWhatsAppButton'
+import { FloatingCallBanner } from './components/FloatingCallBanner'
 import { UsernameModal } from './components/UsernameModal'
 import { CookieBanner } from './components/CookieBanner'
 import { HomePage } from './pages/HomePage'
@@ -100,6 +101,7 @@ function AppContent() {
         <Footer />
         <ChatBot />
         <FloatingWhatsAppButton />
+        <FloatingCallBanner />
         <CookieBanner />
 
         {showUsernamePrompt && (
