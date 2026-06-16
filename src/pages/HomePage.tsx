@@ -747,6 +747,61 @@ export function HomePage() {
                   </div>
                 </div>
 
+                {/* Rent Subcategory Tabs Pills */}
+                {listingType === 'rent' && (
+                  <div className="flex flex-wrap items-center gap-3 mt-4">
+                    {[
+                      { label: 'Full House', value: 'full_house', icon: Home },
+                      { label: 'PG/Hostel', value: 'pg_hostel', icon: Users },
+                      { label: 'Flatmates', value: 'flatmates', icon: Users },
+                      { label: 'Flat/Apartment', value: 'flat_apartment', icon: Building2 }
+                    ].map(type => (
+                      <button
+                        key={type.value}
+                        type="button"
+                        onClick={() => {
+                          setPropertyCategory(type.value as PropertyCategory)
+                        }}
+                        className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all flex items-center gap-2 ${
+                          propertyCategory === type.value
+                            ? 'bg-rose-500 text-white shadow-lg'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        <type.icon className="h-4 w-4" />
+                        <span>{type.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Buy Subcategory Tabs Pills */}
+                {listingType === 'buy' && (
+                  <div className="flex flex-wrap items-center gap-3 mt-4">
+                    {[
+                      { label: 'Full House', value: 'full_house', icon: Home },
+                      { label: 'Flat/Apartment', value: 'flat_apartment', icon: Building2 },
+                      { label: 'Plot/Land', value: 'land_plot', icon: MapPin }
+                    ].map(type => (
+                      <button
+                        key={type.value}
+                        type="button"
+                        onClick={() => {
+                          setPropertyCategory(type.value as PropertyCategory)
+                        }}
+                        className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all flex items-center gap-2 ${
+                          propertyCategory === type.value
+                            ? 'bg-primary-600 text-white shadow-lg'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        <type.icon className="h-4 w-4" />
+                        <span>{type.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
                 {(listingType === 'buy' || listingType === 'rent' || listingType === 'projects' || listingType === 'commercial' || searchCategory === 'commercial') && (
                   <div className="space-y-3 border-t-2 border-gray-200 pt-4 mt-4">
                     <div className="bg-white rounded-2xl p-4 space-y-6">
