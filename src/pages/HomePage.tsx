@@ -1,25 +1,19 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { Search, Mic, MicOff, TrendingUp, Shield, Zap, CheckCircle, PhoneOff, DollarSign, Home, Building2, Store, MapPin, Users, ArrowRight, Key, X, MessageCircle } from 'lucide-react'
+import { Mic, TrendingUp, Shield, Zap, CheckCircle, PhoneOff, DollarSign, Home, Building2, MapPin, Users, ArrowRight, Key } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { AdvancedFilters } from '../types/filters'
-import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { ChatBot } from '../components/ChatBot'
-import { AITypingAnimation } from '../components/AITypingAnimation'
-import { AISearchSuggestions } from '../components/AISearchSuggestions'
 import { WelcomeMessage } from '../components/WelcomeMessage'
 import { AuthModal } from '../components/AuthModal'
 import { StickySearchBar } from '../components/StickySearchBar'
 import { MobileCategoryGrid } from '../components/MobileCategoryGrid'
-import { MagicBricksSearchCard } from '../components/MagicBricksSearchCard'
 import { PropertyActionCards } from '../components/PropertyActionCards'
 import { FilterModal } from '../components/FilterModal'
 import { useAuth } from '../contexts/AuthContext'
 import { useSearch } from '../contexts/SearchContext'
 import { useSearchHistory } from '../hooks/useSearchHistory'
-import { useVoiceSearch } from '../hooks/useVoiceSearch'
-import { openWhatsApp } from '../lib/whatsapp'
 import { getLastSearch } from '../lib/searchMemory'
 import RestoredSearchBanner from '../components/RestoredSearchBanner'
 import PropertiesNearYou from '../components/PropertiesNearYou'
@@ -31,32 +25,29 @@ export function HomePage() {
   const { user } = useAuth()
   const { listingType, setListingType, propertyCategory: searchCategory, setPropertyCategory: setSearchCategory } = useSearch()
   const { lastSearch, saveSearch } = useSearchHistory()
-  const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
-  const [propertyCategory, setPropertyCategory] = useState<PropertyCategory>('full_house')
+  const propertyCategory: PropertyCategory = 'full_house'
   const [location, setLocation] = useState('Visakhapatnam')
   const [locality, setLocality] = useState('')
-  const [localityId, setLocalityId] = useState<string | undefined>()
+  const localityId: string | undefined = undefined
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
-  const [showSuggestions, setShowSuggestions] = useState(false)
   const [showWelcome, setShowWelcome] = useState(false)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [showRestoredBanner, setShowRestoredBanner] = useState(false)
   const [restoredSearchData, setRestoredSearchData] = useState<{
     localityName: string
   } | null>(null)
-  const searchInputRef = useRef<HTMLDivElement>(null)
 
   // Additional filter states
-  const [minArea, setMinArea] = useState('')
-  const [maxArea, setMaxArea] = useState('')
-  const [areaUnit, setAreaUnit] = useState('sqft')
-  const [saleType, setSaleType] = useState<string[]>([])
-  const [postedBy, setPostedBy] = useState<string[]>([])
-  const [furnishingStatus, setFurnishingStatus] = useState<string[]>([])
-  const [amenities, setAmenities] = useState<string[]>([])
-  const [selectedBedrooms, setSelectedBedrooms] = useState<string[]>([])
-  const [possessionStatus, setPossessionStatus] = useState<string[]>([])
+  const minArea = ''
+  const maxArea = ''
+  const areaUnit = 'sqft'
+  const saleType: string[] = []
+  const postedBy: string[] = []
+  const furnishingStatus: string[] = []
+  const amenities: string[] = []
+  const selectedBedrooms: string[] = []
+  const possessionStatus: string[] = []
   const [showFilterModal, setShowFilterModal] = useState(false)
   const [filterCategory, setFilterCategory] = useState<'buy' | 'rent' | 'projects' | 'commercial'>('buy')
   const [filterCount, setFilterCount] = useState(0)
@@ -64,14 +55,12 @@ export function HomePage() {
   const [propertySubType, setPropertySubType] = useState<'residential' | 'plot' | 'pg'>('residential')
   
   // Rent and PG/Hostel specific filter states
-  const [tenantPreference, setTenantPreference] = useState<string[]>([])
-  const [availableFrom, setAvailableFrom] = useState('')
-  const [roomType, setRoomType] = useState('')
-  const [foodIncluded, setFoodIncluded] = useState<boolean | undefined>(undefined)
-  const [gender, setGender] = useState('')
-  const [attachedBathroom, setAttachedBathroom] = useState<boolean | undefined>(undefined)
-  const [minRent, setMinRent] = useState('')
-  const [maxRent, setMaxRent] = useState('')
+  const tenantPreference: string[] = []
+  const availableFrom = ''
+  const roomType = ''
+  const gender = ''
+  const minRent = ''
+  const maxRent = ''
 
   const memoizedFilters = useMemo(() => advancedFilters, [advancedFilters])
 
@@ -103,17 +92,7 @@ export function HomePage() {
     }
   }, [])
 
-  useEffect(() => {
-    if (transcript) {
-      setLocality(transcript)
-    }
-  }, [transcript])
 
-  useEffect(() => {
-    if (localityMatch) {
-      setLocality(localityMatch.locality_name)
-    }
-  }, [localityMatch])
 
   useEffect(() => {
     document.title = 'Vizag Real Estate: Buy, Sell & Rent Property in Visakhapatnam'
@@ -234,27 +213,7 @@ export function HomePage() {
     }
   }
 
-  const toggleBedroom = (bhk: number) => {
-    const bhkStr = String(bhk)
-    if (selectedBedrooms.includes(bhkStr)) {
-      setSelectedBedrooms(selectedBedrooms.filter(b => b !== bhkStr))
-    } else {
-      setSelectedBedrooms([...selectedBedrooms, bhkStr])
-    }
-  }
 
-  const togglePossession = (status: string) => {
-    const statusMap: { [key: string]: string } = {
-      'Under Construction': 'under_construction',
-      'Ready to Move': 'ready_to_move'
-    }
-    const dbValue = statusMap[status] || status
-    if (possessionStatus.includes(dbValue)) {
-      setPossessionStatus(possessionStatus.filter(s => s !== dbValue))
-    } else {
-      setPossessionStatus([...possessionStatus, dbValue])
-    }
-  }
 
   const handleAdvancedSearch = async () => {
     const searchType = searchCategory === 'commercial' ? 'commercial' : listingType
@@ -337,14 +296,8 @@ export function HomePage() {
     if (roomType) {
       params.append('roomType', roomType)
     }
-    if (foodIncluded !== undefined) {
-      params.append('foodIncluded', foodIncluded.toString())
-    }
     if (gender) {
       params.append('gender', gender)
-    }
-    if (attachedBathroom !== undefined) {
-      params.append('attachedBathroom', attachedBathroom.toString())
     }
 
     window.location.href = `/properties?${params.toString()}`
@@ -368,20 +321,7 @@ export function HomePage() {
     }
   }
 
-  const handleSuggestionSelect = (query: string) => {
-    setLocality(query)
-    setShowSuggestions(false)
-    handleAdvancedSearch()
-  }
 
-  const handleVoiceToggle = () => {
-    if (isListening) {
-      stopListening()
-    } else {
-      resetTranscript()
-      startListening()
-    }
-  }
 
   const handleSearchCardClick = () => {
     setShowFilterModal(true)
@@ -531,7 +471,6 @@ export function HomePage() {
         }}
         placeholder="Search locality (3+ letters)"
       />
-      <MagicBricksSearchCard />
       <MobileCategoryGrid />
 
       <section id="search-section" className="relative py-8 md:py-16 px-4">
@@ -550,802 +489,6 @@ export function HomePage() {
             onPostClick={handlePostCardClick}
           />
 
-          <div className="max-w-6xl mx-auto mb-8">
-            <AITypingAnimation />
-
-            <div className="mb-6 hidden md:flex flex-col items-center justify-center gap-2">
-              <a
-                href="/add-property"
-                className="group bg-white text-primary-600 border-2 border-primary-600 px-8 py-3 rounded-full hover:bg-primary-50 transition-all font-bold text-base shadow-md hover:shadow-xl hover:scale-105 transform duration-200"
-              >
-                Post Property Free
-              </a>
-              <p className="text-xs text-gray-600 font-medium text-center">
-                Get instant buyers & tenants in Vizag
-              </p>
-            </div>
-
-            <div className="hidden md:block bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-              <div className="flex border-b border-gray-200">
-                <button
-                  onClick={() => {
-                    setSearchCategory('residential')
-                    setListingType('buy')
-                    setPropertyCategory('full_house')
-                  }}
-                  className={`flex-1 py-4 px-6 font-semibold text-center transition-all relative ${
-                    listingType === 'buy' && searchCategory === 'residential'
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center justify-center gap-2">
-                    <Home className="h-5 w-5" />
-                    <span>Buy</span>
-                  </div>
-                  {listingType === 'buy' && searchCategory === 'residential' && (
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary-600"></div>
-                  )}
-                </button>
-
-                <button
-                  onClick={() => {
-                    setSearchCategory('residential')
-                    setListingType('rent')
-                    setPropertyCategory('full_house')
-                  }}
-                  className={`flex-1 py-4 px-6 font-semibold text-center transition-all relative ${
-                    listingType === 'rent' && searchCategory === 'residential'
-                      ? 'text-rose-600 bg-rose-50'
-                      : 'text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center justify-center gap-2">
-                    <Building2 className="h-5 w-5" />
-                    <span>Rent</span>
-                  </div>
-                  {listingType === 'rent' && searchCategory === 'residential' && (
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-rose-600"></div>
-                  )}
-                </button>
-
-                <button
-                  onClick={() => {
-                    setSearchCategory('residential')
-                    setListingType('projects')
-                    setPropertyCategory('full_house')
-                  }}
-                  className={`flex-1 py-4 px-6 font-semibold text-center transition-all relative ${
-                    listingType === 'projects' && searchCategory === 'residential'
-                      ? 'text-green-600 bg-green-50'
-                      : 'text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center justify-center gap-2">
-                    <Building2 className="h-5 w-5" />
-                    <span>Projects</span>
-                  </div>
-                  {listingType === 'projects' && searchCategory === 'residential' && (
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-green-600"></div>
-                  )}
-                </button>
-
-                <button
-                  onClick={() => {
-                    setSearchCategory('commercial')
-                    setListingType('commercial')
-                    setPropertyCategory('full_house')
-                  }}
-                  className={`flex-1 py-4 px-6 font-semibold text-center transition-all relative ${
-                    searchCategory === 'commercial'
-                      ? 'text-orange-600 bg-orange-50'
-                      : 'text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center justify-center gap-2">
-                    <Store className="h-5 w-5" />
-                    <span>Commercial</span>
-                  </div>
-                  {searchCategory === 'commercial' && (
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-orange-600"></div>
-                  )}
-                </button>
-              </div>
-
-              <div className="p-4 md:p-6">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 md:gap-4 mb-6">
-                  <div className="lg:col-span-9">
-                    <div className="relative" ref={searchInputRef}>
-                      <LocationAutocomplete
-                        value={locality}
-                        onChange={(value, localityId) => {
-                          setLocality(value)
-                          setLocalityId(localityId)
-                        }}
-                        placeholder="Type 3+ characters to search Vizag localities (e.g., Madhurawada, Gajuwaka)"
-                        className="h-12 border-4 border-red-600 text-base font-medium"
-                      />
-                      <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10 pointer-events-none">
-                        <div className="pointer-events-auto">
-                          {isSupported && (
-                            <button
-                              onClick={handleVoiceToggle}
-                              className={`p-2 rounded-lg transition-all ${
-                                isListening
-                                  ? 'bg-red-600 text-white animate-pulse'
-                                  : 'text-gray-600 hover:bg-gray-200'
-                              }`}
-                              aria-label={isListening ? "Stop voice search" : "Start voice search"}
-                            >
-                              {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
-                            </button>
-                          )}
-                        </div>
-                        <div className="pointer-events-auto">
-                          <button
-                            onClick={() => openWhatsApp('Hi Vizag Property Experts, I am looking for a property in Vizag. Please assist.')}
-                            className="p-2 rounded-lg transition-all text-green-600 hover:bg-green-50"
-                            aria-label="Contact on WhatsApp"
-                          >
-                            <MessageCircle className="h-5 w-5" />
-                          </button>
-                        </div>
-                      </div>
-                      {showSuggestions && (
-                        <AISearchSuggestions
-                          onSelect={handleSuggestionSelect}
-                          onClose={() => setShowSuggestions(false)}
-                        />
-                      )}
-                      {localityMatch && (
-                        <div className="absolute top-full left-0 right-0 mt-2 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between z-20">
-                          <div className="flex items-center space-x-2">
-                            <MapPin className="h-5 w-5 text-green-600 flex-shrink-0" />
-                            <div>
-                              <div className="text-sm font-medium text-green-900">
-                                Found: {localityMatch.locality_name}
-                              </div>
-                              <div className="text-xs text-green-600">
-                                {localityMatch.confidence === 'exact' ? 'Exact match' : 'Similar match'}
-                              </div>
-                            </div>
-                          </div>
-                          <button
-                            onClick={() => resetTranscript()}
-                            className="text-green-600 hover:text-green-800"
-                          >
-                            <X className="h-5 w-5" />
-                          </button>
-                        </div>
-                      )}
-                      {noMatchMessage && (
-                        <div className="absolute top-full left-0 right-0 mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center justify-between z-20">
-                          <div className="flex items-center space-x-2">
-                            <MapPin className="h-5 w-5 text-yellow-600 flex-shrink-0" />
-                            <div className="text-sm font-medium text-yellow-900">{noMatchMessage}</div>
-                          </div>
-                          <button
-                            onClick={() => resetTranscript()}
-                            className="text-yellow-600 hover:text-yellow-800"
-                          >
-                            <X className="h-5 w-5" />
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="lg:col-span-3">
-                    <button
-                      onClick={handleAdvancedSearch}
-                      type="button"
-                      className="w-full h-12 text-white px-6 py-3 rounded-full font-bold transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl bg-accent-500 hover:bg-accent-600"
-                    >
-                      <Search className="h-5 w-5" />
-                      <span>Search</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Rent Subcategory Tabs Pills */}
-                {listingType === 'rent' && (
-                  <div className="flex flex-wrap items-center gap-3 mt-4">
-                    {[
-                      { label: 'Full House', value: 'full_house', icon: Home },
-                      { label: 'PG/Hostel', value: 'pg_hostel', icon: Users },
-                      { label: 'Flatmates', value: 'flatmates', icon: Users },
-                      { label: 'Flat/Apartment', value: 'flat_apartment', icon: Building2 }
-                    ].map(type => (
-                      <button
-                        key={type.value}
-                        type="button"
-                        onClick={() => {
-                          setPropertyCategory(type.value as PropertyCategory)
-                        }}
-                        className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all flex items-center gap-2 ${
-                          propertyCategory === type.value
-                            ? 'bg-rose-500 text-white shadow-lg'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
-                      >
-                        <type.icon className="h-4 w-4" />
-                        <span>{type.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Buy Subcategory Tabs Pills */}
-                {listingType === 'buy' && (
-                  <div className="flex flex-wrap items-center gap-3 mt-4">
-                    {[
-                      { label: 'Full House', value: 'full_house', icon: Home },
-                      { label: 'Flat/Apartment', value: 'flat_apartment', icon: Building2 },
-                      { label: 'Plot/Land', value: 'land_plot', icon: MapPin }
-                    ].map(type => (
-                      <button
-                        key={type.value}
-                        type="button"
-                        onClick={() => {
-                          setPropertyCategory(type.value as PropertyCategory)
-                        }}
-                        className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all flex items-center gap-2 ${
-                          propertyCategory === type.value
-                            ? 'bg-primary-600 text-white shadow-lg'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
-                      >
-                        <type.icon className="h-4 w-4" />
-                        <span>{type.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {(listingType === 'buy' || listingType === 'rent' || listingType === 'projects' || listingType === 'commercial' || searchCategory === 'commercial') && (
-                  <div className="space-y-3 border-t-2 border-gray-200 pt-4 mt-4">
-                    <div className="bg-white rounded-2xl p-4 space-y-6">
-                      <div className="flex items-center justify-between">
-                        <h2 className="text-lg font-semibold">Filters</h2>
-                        <button
-                          onClick={() => {
-                            setSelectedBedrooms([])
-                            setPossessionStatus([])
-                            setMinArea('')
-                            setMaxArea('')
-                            setAreaUnit('sqft')
-                            setSaleType([])
-                            setPostedBy([])
-                            setFurnishingStatus([])
-                            setAmenities([])
-                          }}
-                          className="text-sm text-red-600 font-medium"
-                        >
-                          Reset
-                        </button>
-                      </div>
-                        {/* Rent Subcategory Switcher */}
-                        {listingType === 'rent' && (
-                          <div className="w-full">
-                            <div className="flex gap-2 bg-gray-100 rounded-lg p-1 max-w-xs mb-4">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setPropertyCategory('flat_apartment')
-                                }}
-                                className={`flex-1 py-2 px-4 rounded-md text-sm font-semibold transition-all ${
-                                  propertyCategory !== 'pg_hostel'
-                                    ? 'bg-white text-gray-900 shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
-                                }`}
-                              >
-                                House/Flat
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setPropertyCategory('pg_hostel')
-                                }}
-                                className={`flex-1 py-2 px-4 rounded-md text-sm font-semibold transition-all ${
-                                  propertyCategory === 'pg_hostel'
-                                    ? 'bg-white text-gray-900 shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
-                                }`}
-                              >
-                                PG/Hostel
-                              </button>
-                            </div>
-                          </div>
-                        )}
-
-                        {listingType === 'rent' && propertyCategory === 'pg_hostel' ? (
-                          <>
-                            {/* Room Type */}
-                            <div>
-                              <label className="block text-sm font-semibold mb-3">Room Type</label>
-                              <div className="flex flex-wrap gap-2">
-                                {['Single', 'Double', 'Triple'].map(type => (
-                                  <button
-                                    key={type}
-                                    type="button"
-                                    onClick={() => setRoomType(type.toLowerCase())}
-                                    className={`px-5 py-2.5 rounded-full text-sm border font-medium transition-all ${
-                                      roomType === type.toLowerCase()
-                                        ? 'bg-blue-50 border-blue-600 text-blue-600 font-semibold'
-                                        : 'border-gray-300 text-gray-700 bg-white hover:border-gray-400'
-                                    }`}
-                                  >
-                                    {type}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Food Included */}
-                            <div>
-                              <label className="block text-sm font-semibold mb-3">Food Included</label>
-                              <div className="flex flex-wrap gap-2">
-                                {[
-                                  { label: 'Yes', value: true },
-                                  { label: 'No', value: false }
-                                ].map(option => (
-                                  <button
-                                    key={option.label}
-                                    type="button"
-                                    onClick={() => setFoodIncluded(option.value)}
-                                    className={`px-5 py-2.5 rounded-full text-sm border font-medium transition-all ${
-                                      foodIncluded === option.value
-                                        ? 'bg-blue-50 border-blue-600 text-blue-600 font-semibold'
-                                        : 'border-gray-300 text-gray-700 bg-white hover:border-gray-400'
-                                    }`}
-                                  >
-                                    {option.label}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Gender */}
-                            <div>
-                              <label className="block text-sm font-semibold mb-3">Gender</label>
-                              <div className="flex flex-wrap gap-2">
-                                {['Male', 'Female', 'Any'].map(g => (
-                                  <button
-                                    key={g}
-                                    type="button"
-                                    onClick={() => setGender(g.toLowerCase())}
-                                    className={`px-5 py-2.5 rounded-full text-sm border font-medium transition-all ${
-                                      gender === g.toLowerCase()
-                                        ? 'bg-blue-50 border-blue-600 text-blue-600 font-semibold'
-                                        : 'border-gray-300 text-gray-700 bg-white hover:border-gray-400'
-                                    }`}
-                                  >
-                                    {g}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Attached Bathroom */}
-                            <div>
-                              <label className="block text-sm font-semibold mb-3">Attached Bathroom</label>
-                              <div className="flex flex-wrap gap-2">
-                                {[
-                                  { label: 'Yes', value: true },
-                                  { label: 'No', value: false }
-                                ].map(option => (
-                                  <button
-                                    key={option.label}
-                                    type="button"
-                                    onClick={() => setAttachedBathroom(option.value)}
-                                    className={`px-5 py-2.5 rounded-full text-sm border font-medium transition-all ${
-                                      attachedBathroom === option.value
-                                        ? 'bg-blue-50 border-blue-600 text-blue-600 font-semibold'
-                                        : 'border-gray-300 text-gray-700 bg-white hover:border-gray-400'
-                                    }`}
-                                  >
-                                    {option.label}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Rent Range */}
-                            <div>
-                              <label className="block text-sm font-semibold mb-3">Rent Range</label>
-                              <div className="grid grid-cols-2 gap-3">
-                                <input
-                                  type="number"
-                                  placeholder="Min Rent"
-                                  value={minRent}
-                                  onChange={(e) => setMinRent(e.target.value)}
-                                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                                />
-                                <input
-                                  type="number"
-                                  placeholder="Max Rent"
-                                  value={maxRent}
-                                  onChange={(e) => setMaxRent(e.target.value)}
-                                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                                />
-                              </div>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            {/* Property Type */}
-                            <div>
-                              <label className="block text-sm font-semibold mb-3">Property Type</label>
-
-                              <div className="grid grid-cols-3 gap-3">
-                                {listingType === 'commercial' ? (
-                                  [
-                                    { label: 'Office', value: 'flat_apartment' },
-                                    { label: 'Shop', value: 'full_house' },
-                                    { label: 'Warehouse', value: 'land_plot' }
-                                  ].map(type => (
-                                    <button
-                                      key={type.label}
-                                      type="button"
-                                      onClick={() => setPropertyCategory(type.value as PropertyCategory)}
-                                      className={`p-4 rounded-xl border text-sm font-medium transition
-                                      ${propertyCategory === type.value
-                                        ? 'border-blue-600 bg-blue-50 text-blue-600'
-                                        : 'border-gray-200 bg-white text-gray-700'
-                                      }`}
-                                    >
-                                      {type.label}
-                                    </button>
-                                  ))
-                                ) : listingType === 'rent' ? (
-                                  [
-                                    { label: 'Flat', value: 'flat_apartment' },
-                                    { label: 'House', value: 'full_house' },
-                                    { label: 'Villa', value: 'villa' }
-                                  ].map(type => (
-                                    <button
-                                      key={type.label}
-                                      type="button"
-                                      onClick={() => setPropertyCategory(type.value as PropertyCategory)}
-                                      className={`p-4 rounded-xl border text-sm font-medium transition
-                                      ${propertyCategory === type.value
-                                        ? 'border-blue-600 bg-blue-50 text-blue-600'
-                                        : 'border-gray-200 bg-white text-gray-700'
-                                      }`}
-                                    >
-                                      {type.label}
-                                    </button>
-                                  ))
-                                ) : (
-                                  [
-                                    { label: 'Flat', value: 'flat_apartment' },
-                                    { label: 'House/Villa', value: 'full_house' },
-                                    { label: 'Plot', value: 'land_plot' }
-                                  ].map(type => (
-                                    <button
-                                      key={type.value}
-                                      type="button"
-                                      onClick={() => setPropertyCategory(type.value as PropertyCategory)}
-                                      className={`p-4 rounded-xl border text-sm font-medium transition
-                                      ${propertyCategory === type.value
-                                        ? 'border-blue-600 bg-blue-50 text-blue-600'
-                                        : 'border-gray-200 bg-white text-gray-700'
-                                      }`}
-                                    >
-                                      {type.label}
-                                    </button>
-                                  ))
-                                )}
-                              </div>
-                            </div>
-
-                        {/* No. of Bedrooms - Only for Flat/House/Villa */}
-                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house' || propertyCategory === 'villa') && (
-                          <div>
-                            <label className="block text-sm font-semibold mb-3">No. of Bedrooms</label>
-
-                            <div className="flex flex-wrap gap-2">
-                              {[1, 2, 3, 4, 5].map(bhk => (
-                                <button
-                                  key={bhk}
-                                  type="button"
-                                  onClick={() => toggleBedroom(bhk)}
-                                  className={`px-4 py-2 rounded-full text-sm border
-                                  ${selectedBedrooms.includes(String(bhk))
-                                    ? 'bg-blue-50 border-blue-600 text-blue-600'
-                                    : 'border-gray-300 text-gray-700'
-                                  }`}
-                                >
-                                  {bhk} BHK
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Possession Status - Only for Buy / Sale */}
-                        {listingType !== 'rent' && (propertyCategory === 'flat_apartment' || propertyCategory === 'full_house' || propertyCategory === 'villa') && (
-                          <div>
-                            <label className="block text-sm font-semibold mb-3">Possession Status</label>
-
-                            <div className="flex flex-wrap gap-2">
-                              {['Under Construction', 'Ready to Move'].map(status => (
-                                <button
-                                  key={status}
-                                  type="button"
-                                  onClick={() => togglePossession(status)}
-                                  className={`px-4 py-2 rounded-full border text-sm
-                                  ${possessionStatus.includes(status === 'Under Construction' ? 'under_construction' : 'ready_to_move')
-                                    ? 'bg-blue-50 border-blue-600 text-blue-600'
-                                    : 'border-gray-300 text-gray-700'
-                                  }`}
-                                >
-                                  {status}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Covered Area */}
-                        <div>
-                          <label className="block text-sm font-semibold mb-3">Covered Area</label>
-
-                          <div className="grid grid-cols-2 gap-3">
-                            <input
-                              type="number"
-                              placeholder="Min"
-                              value={minArea}
-                              onChange={(e) => setMinArea(e.target.value)}
-                              className="border rounded-lg px-3 py-2 bg-white"
-                            />
-                            <input
-                              type="number"
-                              placeholder="Max"
-                              value={maxArea}
-                              onChange={(e) => setMaxArea(e.target.value)}
-                              className="border rounded-lg px-3 py-2 bg-white"
-                            />
-                          </div>
-
-                          <select
-                            value={areaUnit}
-                            onChange={(e) => setAreaUnit(e.target.value)}
-                            className="mt-3 w-full border rounded-lg px-3 py-2 bg-white"
-                          >
-                            <option value="sqft">Sqft</option>
-                            <option value="sqyd">Sq.yd</option>
-                            <option value="sqm">Sq.m</option>
-                            <option value="acre">Acre</option>
-                            <option value="cents">Cents</option>
-                          </select>
-                        </div>
-
-                        {/* Sale Type - Only for Flat/House / Villa in Sale */}
-                        {listingType !== 'rent' && (propertyCategory === 'flat_apartment' || propertyCategory === 'full_house' || propertyCategory === 'villa') && (
-                          <div>
-                            <label className="block text-sm font-semibold mb-3">Sale Type</label>
-                            <div className="flex flex-wrap gap-2">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  if (saleType.includes('new')) {
-                                    setSaleType(saleType.filter(t => t !== 'new'))
-                                  } else {
-                                    setSaleType([...saleType, 'new'])
-                                  }
-                                }}
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                                  saleType.includes('new')
-                                    ? 'bg-primary-600 text-white shadow-md'
-                                    : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
-                                }`}
-                              >
-                                + New
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  if (saleType.includes('resale')) {
-                                    setSaleType(saleType.filter(t => t !== 'resale'))
-                                  } else {
-                                    setSaleType([...saleType, 'resale'])
-                                  }
-                                }}
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                                  saleType.includes('resale')
-                                    ? 'bg-primary-600 text-white shadow-md'
-                                    : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
-                                }`}
-                              >
-                                + Resale
-                              </button>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Posted By */}
-                        <div>
-                          <label className="block text-sm font-semibold mb-3">Posted By</label>
-                          <div className="flex flex-wrap gap-2">
-                            {['Agent', 'Owner', 'Builder'].map((type) => (
-                              <button
-                                key={type}
-                                type="button"
-                                onClick={() => {
-                                  const lowerType = type.toLowerCase()
-                                  if (postedBy.includes(lowerType)) {
-                                    setPostedBy(postedBy.filter(p => p !== lowerType))
-                                  } else {
-                                    setPostedBy([...postedBy, lowerType])
-                                  }
-                                }}
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                                  postedBy.includes(type.toLowerCase())
-                                    ? 'bg-primary-600 text-white shadow-md'
-                                    : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
-                                }`}
-                              >
-                                + {type}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Furnishing Status - Only for Flat/House/Villa */}
-                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house' || propertyCategory === 'villa') && (
-                          <div>
-                            <label className="block text-sm font-semibold mb-3">Furnishing Status</label>
-                            <div className="flex flex-wrap gap-2">
-                              {['Furnished', 'Semi-Furnished', 'Unfurnished'].map((status) => (
-                                <button
-                                  key={status}
-                                  type="button"
-                                  onClick={() => {
-                                    const lowerStatus = status.toLowerCase().replace('-', '_')
-                                    if (furnishingStatus.includes(lowerStatus)) {
-                                      setFurnishingStatus(furnishingStatus.filter(f => f !== lowerStatus))
-                                    } else {
-                                      setFurnishingStatus([...furnishingStatus, lowerStatus])
-                                    }
-                                  }}
-                                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                                    furnishingStatus.includes(status.toLowerCase().replace('-', '_'))
-                                      ? 'bg-primary-600 text-white shadow-md'
-                                      : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
-                                  }`}
-                                >
-                                  + {status}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Tenant Preference - Only for Rent */}
-                        {listingType === 'rent' && (
-                          <div>
-                            <label className="block text-sm font-semibold mb-3">Tenant Preference</label>
-                            <div className="flex flex-wrap gap-2">
-                              {['Family', 'Bachelor', 'Company'].map((pref) => (
-                                <button
-                                  key={pref}
-                                  type="button"
-                                  onClick={() => {
-                                    const lowerPref = pref.toLowerCase()
-                                    if (tenantPreference.includes(lowerPref)) {
-                                      setTenantPreference(tenantPreference.filter(p => p !== lowerPref))
-                                    } else {
-                                      setTenantPreference([...tenantPreference, lowerPref])
-                                    }
-                                  }}
-                                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                                    tenantPreference.includes(pref.toLowerCase())
-                                      ? 'bg-primary-600 text-white shadow-md'
-                                      : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
-                                  }`}
-                                >
-                                  + {pref}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Available From - Only for Rent */}
-                        {listingType === 'rent' && (
-                          <div>
-                            <label className="block text-sm font-semibold mb-3">Available From</label>
-                            <input
-                              type="date"
-                              value={availableFrom}
-                              onChange={(e) => setAvailableFrom(e.target.value)}
-                              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                            />
-                          </div>
-                        )}
-
-                        {/* Rent / Budget Range */}
-                        <div>
-                          <label className="block text-sm font-semibold mb-3">
-                            {listingType === 'rent' ? 'Rent Range' : 'Budget Range'}
-                          </label>
-                          <div className="grid grid-cols-2 gap-3">
-                            <input
-                              type="number"
-                              placeholder={listingType === 'rent' ? 'Min Rent' : 'Min'}
-                              value={listingType === 'rent' ? minRent : minArea}
-                              onChange={(e) => {
-                                if (listingType === 'rent') {
-                                  setMinRent(e.target.value)
-                                } else {
-                                  setMinArea(e.target.value)
-                                }
-                              }}
-                              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                            />
-                            <input
-                              type="number"
-                              placeholder={listingType === 'rent' ? 'Max Rent' : 'Max'}
-                              value={listingType === 'rent' ? maxRent : maxArea}
-                              onChange={(e) => {
-                                if (listingType === 'rent') {
-                                  setMaxRent(e.target.value)
-                                } else {
-                                  setMaxArea(e.target.value)
-                                }
-                              }}
-                              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                            />
-                          </div>
-                        </div>
-
-                        {/* Amenities - Only for Flat/House */}
-                        {(propertyCategory === 'flat_apartment' || propertyCategory === 'full_house' || propertyCategory === 'villa') && (
-                          <div>
-                            <label className="block text-sm font-semibold mb-3">Amenities</label>
-                            <div className="flex flex-wrap gap-2">
-                              {['Parking', 'Gym', 'Swimming Pool', 'Security'].map((amenity) => (
-                                <button
-                                  key={amenity}
-                                  type="button"
-                                  onClick={() => {
-                                    const lowerAmenity = amenity.toLowerCase().replace(' ', '_')
-                                    if (amenities.includes(lowerAmenity)) {
-                                      setAmenities(amenities.filter(a => a !== lowerAmenity))
-                                    } else {
-                                      setAmenities([...amenities, lowerAmenity])
-                                    }
-                                  }}
-                                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                                    amenities.includes(amenity.toLowerCase().replace(' ', '_'))
-                                      ? 'bg-primary-600 text-white shadow-md'
-                                      : 'bg-white border border-gray-300 text-gray-700 hover:border-primary-500'
-                                  }`}
-                                >
-                                  + {amenity}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                          </>
-                        )}
-                    </div>
-
-                    <div className="sticky bottom-0 bg-white pt-4 pb-2">
-                      <button
-                        onClick={handleAdvancedSearch}
-                        className="w-full bg-red-600 text-white py-4 rounded-full font-semibold text-base"
-                      >
-                        View Properties
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
 
           <div className="max-w-6xl mx-auto mb-12">
             <div className="mb-10">
