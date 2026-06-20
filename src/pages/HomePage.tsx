@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { Mic, TrendingUp, Shield, Zap, CheckCircle, PhoneOff, DollarSign, Home, Building2, MapPin, Users, ArrowRight, Key, Search, MessageCircle, Sliders } from 'lucide-react'
+import { Mic, TrendingUp, Shield, Zap, CheckCircle, PhoneOff, DollarSign, Home, Building2, MapPin, Users, ArrowRight, Key, Search, MessageCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { AdvancedFilters } from '../types/filters'
@@ -27,7 +27,6 @@ export function HomePage() {
   const propertyCategory: PropertyCategory = 'full_house'
   const [location, setLocation] = useState('Visakhapatnam')
   const [locality, setLocality] = useState('')
-  const [heroSearchQuery, setHeroSearchQuery] = useState('')
   const localityId: string | undefined = undefined
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
@@ -323,18 +322,6 @@ export function HomePage() {
 
 
 
-  const handleHeroSearchSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault()
-    if (heroSearchQuery.trim()) {
-      window.location.href = `/properties?q=${encodeURIComponent(heroSearchQuery.trim())}`
-    } else {
-      window.location.href = `/properties`
-    }
-  }
-
-  const handleSuggestionClick = (localityName: string) => {
-    window.location.href = `/properties?locality=${encodeURIComponent(localityName)}`
-  }
 
   const handleResetFilters = () => {
     setFilterCount(0)
@@ -497,82 +484,55 @@ export function HomePage() {
             </p>
           </div>
 
-          {/* Search Section (Glassmorphism Card) */}
-          <div className="w-full max-w-2xl bg-white/10 backdrop-blur-md border border-white/20 p-4 md:p-6 rounded-3xl shadow-2xl space-y-4">
-            <form onSubmit={handleHeroSearchSubmit} className="flex flex-col md:flex-row gap-3">
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
-                <input
-                  type="text"
-                  value={heroSearchQuery}
-                  onChange={(e) => setHeroSearchQuery(e.target.value)}
-                  placeholder="Search locality, area or project..."
-                  className="w-full pl-12 pr-12 py-3.5 bg-white/15 border border-white/25 rounded-2xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#00BFA5] focus:bg-white/20 transition-all text-base"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowFilterModal(true)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 hover:bg-white/15 rounded-xl transition-all text-gray-300 hover:text-white"
-                  title="Advanced Filters"
-                >
-                  <Sliders className="h-5 w-5" />
-                </button>
-              </div>
-              <button
-                type="submit"
-                className="bg-[#00BFA5] hover:bg-[#00b098] text-white px-8 py-3.5 rounded-2xl font-bold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg flex items-center justify-center gap-2 whitespace-nowrap text-base"
-              >
-                <Search className="h-5 w-5" />
-                <span>Search Properties</span>
-              </button>
-            </form>
-
-            {/* Suggestions */}
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-1 text-xs md:text-sm">
-              <span className="text-gray-300 font-medium mr-1">Popular:</span>
-              {['Madhurawada', 'Kommadi', 'PM Palem', 'Anandapuram', 'IT Hills', 'Bheemili', 'Yendada'].map((loc) => (
-                <button
-                  key={loc}
-                  onClick={() => handleSuggestionClick(loc)}
-                  className="px-3 py-1.5 bg-white/10 hover:bg-white/20 border border-white/15 hover:border-white/25 rounded-full transition-all text-white font-medium shadow-sm"
-                >
-                  {loc}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Trust Badges */}
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 pt-2 text-xs md:text-sm font-semibold tracking-wide text-gray-200">
-            <span className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full backdrop-blur-sm">
-              <CheckCircle className="h-4 w-4 text-[#00BFA5]" />
-              Verified Listings
-            </span>
-            <span className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full backdrop-blur-sm">
-              <CheckCircle className="h-4 w-4 text-[#00BFA5]" />
-              Trusted Agents
-            </span>
-            <span className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full backdrop-blur-sm">
-              <CheckCircle className="h-4 w-4 text-[#00BFA5]" />
-              VMRDA Approved Projects
-            </span>
-            <span className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full backdrop-blur-sm">
-              <CheckCircle className="h-4 w-4 text-[#00BFA5]" />
-              Free Property Posting
-            </span>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 pt-4 w-full max-w-md justify-center">
-            <Link
-              to="/add-property"
-              className="flex-1 bg-[#1565C0] hover:bg-[#1258a8] border border-[#1565C0] hover:border-[#1258a8] text-white px-6 py-3.5 rounded-2xl font-bold transition-all text-center shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] text-base"
+          {/* Action Cards (Search Property & Post Property) in the requested format */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-3xl pt-4">
+            {/* Search Property Card */}
+            <button
+              onClick={() => setShowFilterModal(true)}
+              className="group relative bg-[#1565C0] text-white p-8 rounded-2xl shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl text-left flex flex-col justify-between min-h-[180px] overflow-hidden border border-white/10"
             >
-              Post Property Free
-            </Link>
+              {/* Subtle light reflection on hover */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+              
+              <div className="space-y-4">
+                <Search className="h-10 w-10 text-white" />
+                <div>
+                  <h3 className="text-2xl font-bold text-white mb-1">
+                    Search Property
+                  </h3>
+                  <p className="text-blue-100 text-sm">
+                    Find your dream home in Vizag
+                  </p>
+                </div>
+              </div>
+            </button>
+
+            {/* Post Property Card */}
+            <button
+              onClick={() => window.location.href = '/add-property'}
+              className="group relative bg-[#00BFA5] text-white p-8 rounded-2xl shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl text-left flex flex-col justify-between min-h-[180px] overflow-hidden border border-white/10"
+            >
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+              
+              <div className="space-y-4">
+                <Home className="h-10 w-10 text-white" />
+                <div>
+                  <h3 className="text-2xl font-bold text-white mb-1">
+                    Post Property
+                  </h3>
+                  <p className="text-teal-50 text-sm font-medium">
+                    List your property for free
+                  </p>
+                </div>
+              </div>
+            </button>
+          </div>
+
+          {/* Talk to Expert CTA */}
+          <div className="pt-2 w-full max-w-xs">
             <button
               onClick={() => openWhatsApp('Hi Vizag Property Experts, I am looking for a property in Vizag. Please assist.')}
-              className="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/30 text-white px-6 py-3.5 rounded-2xl font-bold transition-all text-center shadow-lg hover:scale-[1.02] active:scale-[0.98] text-base backdrop-blur-sm flex items-center justify-center gap-2"
+              className="w-full bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/30 text-white px-6 py-3.5 rounded-2xl font-bold transition-all text-center shadow-lg hover:scale-[1.02] active:scale-[0.98] text-base backdrop-blur-sm flex items-center justify-center gap-2"
             >
               <MessageCircle className="h-5 w-5 text-[#00BFA5]" />
               <span>Talk to Property Expert</span>
