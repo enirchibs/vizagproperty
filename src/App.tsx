@@ -62,6 +62,8 @@ const BhogapuramPlotsPage = lazyWithRetry(() => import('./pages/BhogapuramPlotsP
 const MadhurawadaResidentialPage = lazyWithRetry(() => import('./pages/MadhurawadaResidentialPage').then(m => ({ default: m.MadhurawadaResidentialPage })))
 const OfficeSpacePage = lazyWithRetry(() => import('./pages/OfficeSpacePage').then(m => ({ default: m.OfficeSpacePage })))
 const BhogapuramImpactPage = lazyWithRetry(() => import('./pages/BhogapuramImpactPage').then(m => ({ default: m.BhogapuramImpactPage })))
+const PartnersPage = lazyWithRetry(() => import('./pages/PartnersPage').then(m => ({ default: m.PartnersPage })))
+const AdminPartnersPage = lazyWithRetry(() => import('./pages/AdminPartnersPage').then(m => ({ default: m.AdminPartnersPage })))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -133,6 +135,8 @@ function AppContent() {
               <Route path="/residential/madhurawada" element={<MadhurawadaResidentialPage />} />
               <Route path="/commercial/office-space" element={<OfficeSpacePage />} />
               <Route path="/insights/bhogapuram-airport-impact" element={<BhogapuramImpactPage />} />
+              <Route path="/partners" element={<PartnersPage />} />
+              <Route path="/admin/partners" element={<AdminPartnersPage />} />
             </Routes>
           </ErrorBoundary>
         </Suspense>

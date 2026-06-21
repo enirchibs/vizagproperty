@@ -585,8 +585,85 @@ export function HomePage() {
 
       <section id="search-section" className="relative py-8 md:py-16 px-4">
         <div className="max-w-7xl mx-auto">
+          {/* Partner With Us Section */}
+          <div className="max-w-6xl mx-auto mb-16">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                Partner With Vizag Property
+              </h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                Grow your real estate business and receive property enquiries directly from buyers, sellers, tenants, and investors.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+              <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all group">
+                <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Users className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Real Estate Agents</h3>
+                <p className="text-gray-600 mb-6 min-h-[80px]">
+                  Create your profile, post properties, receive WhatsApp leads, and connect with property seekers across Visakhapatnam.
+                </p>
+                <Link to="/partners" className="inline-flex items-center justify-center w-full bg-blue-50 text-blue-700 font-bold py-3 rounded-xl hover:bg-blue-600 hover:text-white transition-colors">
+                  Join as Agent
+                </Link>
+              </div>
 
+              <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all group relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-bl-lg">POPULAR</div>
+                <div className="w-14 h-14 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Building2 className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Builders & Developers</h3>
+                <p className="text-gray-600 mb-6 min-h-[80px]">
+                  Promote apartments, gated communities, villas, commercial spaces, and plots to thousands of property seekers.
+                </p>
+                <Link to="/partners" className="inline-flex items-center justify-center w-full bg-orange-50 text-orange-700 font-bold py-3 rounded-xl hover:bg-orange-600 hover:text-white transition-colors">
+                  Partner as Builder
+                </Link>
+              </div>
 
+              <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all group">
+                <div className="w-14 h-14 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <TrendingUp className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Referral Partners</h3>
+                <p className="text-gray-600 mb-6 min-h-[80px]">
+                  Retired employees, working professionals, and local residents can earn referral commissions by connecting buyers and sellers.
+                </p>
+                <Link to="/partners" className="inline-flex items-center justify-center w-full bg-green-50 text-green-700 font-bold py-3 rounded-xl hover:bg-green-600 hover:text-white transition-colors">
+                  Become a Partner
+                </Link>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-gray-900 via-slate-800 to-gray-900 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden shadow-2xl">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500 rounded-full blur-3xl opacity-20 -mr-20 -mt-20"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-500 rounded-full blur-3xl opacity-20 -ml-20 -mb-20"></div>
+              
+              <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                <div className="flex-1">
+                  <h3 className="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">
+                    Grow Your Real Estate Business with VizagProperty.co.in
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    <div className="flex items-center gap-2"><CheckCircle className="text-[#00BFA5] w-5 h-5 flex-shrink-0" /> <span>Free Property Posting</span></div>
+                    <div className="flex items-center gap-2"><CheckCircle className="text-[#00BFA5] w-5 h-5 flex-shrink-0" /> <span>WhatsApp Lead Notifications</span></div>
+                    <div className="flex items-center gap-2"><CheckCircle className="text-[#00BFA5] w-5 h-5 flex-shrink-0" /> <span>Dedicated Partner Profile</span></div>
+                    <div className="flex items-center gap-2"><CheckCircle className="text-[#00BFA5] w-5 h-5 flex-shrink-0" /> <span>Featured Listings</span></div>
+                    <div className="flex items-center gap-2"><CheckCircle className="text-[#00BFA5] w-5 h-5 flex-shrink-0" /> <span>Locality-Based Visibility</span></div>
+                    <div className="flex items-center gap-2"><CheckCircle className="text-[#00BFA5] w-5 h-5 flex-shrink-0" /> <span>Referral Earnings</span></div>
+                  </div>
+                </div>
+                <div className="w-full md:w-auto">
+                  <Link to="/partners" className="inline-flex items-center justify-center w-full md:w-auto bg-[#00BFA5] hover:bg-[#009688] text-white font-bold text-lg py-4 px-8 rounded-full shadow-[0_0_20px_rgba(0,191,165,0.4)] hover:shadow-[0_0_30px_rgba(0,191,165,0.6)] hover:scale-105 transition-all">
+                    Become a Partner Today <ArrowRight className="ml-2 w-5 h-5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="max-w-6xl mx-auto mb-12">
             <div className="mb-10">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">

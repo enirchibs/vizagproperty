@@ -149,3 +149,15 @@ export interface SearchFilters {
   center_latitude?: number
   center_longitude?: number
 }
+
+export interface PartnerEnquiry {
+  id: string
+  created_at: string
+  full_name: string
+  mobile: string
+  email: string
+  city: string
+  partner_type: 'Agent' | 'Builder' | 'Referral Partner' | string
+  company_name?: string
+  message?: string
+}
