@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { lazy, Suspense, useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { SearchProvider } from './contexts/SearchContext'
 import { ErrorBoundary } from './components/ErrorBoundary'
@@ -63,11 +63,22 @@ const MadhurawadaResidentialPage = lazyWithRetry(() => import('./pages/Madhurawa
 const OfficeSpacePage = lazyWithRetry(() => import('./pages/OfficeSpacePage').then(m => ({ default: m.OfficeSpacePage })))
 const BhogapuramImpactPage = lazyWithRetry(() => import('./pages/BhogapuramImpactPage').then(m => ({ default: m.BhogapuramImpactPage })))
 
+function ScrollToTop() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+
+  return null
+}
+
 function AppContent() {
   const { showUsernamePrompt, setShowUsernamePrompt } = useAuth()
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="min-h-screen bg-gray-50">
         <TopAnnouncementBar />
         <Header />

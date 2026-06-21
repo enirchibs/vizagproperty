@@ -9,7 +9,7 @@ interface AuthGuardProps {
 export function AuthGuard({ children }: AuthGuardProps) {
   const { user, loading } = useAuth()
   const location = useLocation()
-  const [initialCheckDone, setInitialCheckDone] = useState(false)
+  const [initialCheckDone, setInitialCheckDone] = useState(!loading)
   const wasAuthenticated = useRef(false)
 
   useEffect(() => {
