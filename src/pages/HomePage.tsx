@@ -460,22 +460,22 @@ export function HomePage() {
       <div 
         className="relative min-h-[90vh] md:min-h-[85vh] flex flex-col justify-center items-center text-white px-4 py-16 bg-cover bg-center overflow-hidden"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80')`
+          backgroundImage: `url('/vizag_beach_kailasagiri.png')`
         }}
       >
         {/* Subtle dynamic background overlay mixing dark luxury with ocean themes */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/95 via-slate-900/80 to-teal-950/45 z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-slate-950 via-[#071926] to-[#04334c] z-0 animate-gradient-move"></div>
 
         {/* Content Wrapper */}
         <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center text-center space-y-8 animate-fadeIn">
           
           {/* SEO Text float badge */}
-          <span className="text-[#00BFA5] font-bold tracking-wider text-xs md:text-sm uppercase bg-[#00BFA5]/10 px-4 py-1.5 rounded-full border border-[#00BFA5]/25 backdrop-blur-sm shadow-sm animate-float-heavy">
+          <span className="text-white font-extrabold tracking-wider text-xs md:text-sm uppercase bg-[#E53935] px-5 py-2 rounded-full border border-red-500 shadow-[0_4px_20px_rgba(229,57,53,0.4)] animate-float-vibrant-stagger1">
             Buy, Sell and Rent Properties in Visakhapatnam
           </span>
 
           {/* Main Headline & Subheading with gold and teal accent gradients */}
-          <div className="space-y-4 max-w-3xl">
+          <div className="space-y-4 max-w-3xl animate-title-scale">
             <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-md">
               Find Your <span className="bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 bg-clip-text text-transparent font-black">Dream Property</span> <span className="bg-gradient-to-r from-teal-300 to-[#00BFA5] bg-clip-text text-transparent font-black">in Vizag</span>
             </h1>
@@ -487,54 +487,58 @@ export function HomePage() {
           {/* Action Cards (Search Property & Post Property) in the requested format with micro-animations */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-3xl pt-4">
             {/* Search Property Card */}
-            <button
-              onClick={() => setShowFilterModal(true)}
-              className="group relative bg-gradient-to-br from-[#092B40] via-[#0E4A70] to-[#1565C0] text-white p-8 rounded-3xl shadow-xl transition-all duration-300 hover:-translate-y-4 hover:scale-[1.04] hover:shadow-[0_25px_50px_rgba(21,101,192,0.55)] text-left flex flex-col justify-between min-h-[180px] overflow-hidden border border-white/10 cursor-pointer animate-slide-in-left"
-            >
-              {/* Glossy shine overlay */}
-              <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 -translate-x-full group-hover:animate-shine z-0"></div>
-              
-              <div className="space-y-4 relative z-10">
-                <div className="bg-white/15 w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-white/20 transition-all duration-300 group-hover:-translate-y-1">
-                  <Search className="h-8 w-8 text-[#00BFA5] group-hover:scale-110 transition-transform duration-300" />
+            <div className="animate-float-vibrant-stagger2 w-full">
+              <button
+                onClick={() => setShowFilterModal(true)}
+                className="w-full group relative bg-gradient-to-br from-[#092B40] via-[#0E4A70] to-[#1565C0] text-white p-8 rounded-3xl shadow-xl transition-all duration-300 hover:-translate-y-4 hover:scale-[1.06] hover:rotate-[-1.5deg] hover:shadow-[0_25px_50px_rgba(21,101,192,0.6)] text-left flex flex-col justify-between min-h-[180px] overflow-hidden border border-white/10 cursor-pointer animate-slide-in-left"
+              >
+                {/* Glossy shine overlay */}
+                <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 -translate-x-full group-hover:animate-shine z-0"></div>
+                
+                <div className="space-y-4 relative z-10">
+                  <div className="bg-white/15 w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-white/20 transition-all duration-300 group-hover:-translate-y-1">
+                    <Search className="h-8 w-8 text-[#00BFA5] group-hover:scale-110 transition-transform duration-300" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-amber-300 transition-colors duration-300">
+                      Search Property
+                    </h3>
+                    <p className="text-blue-100/90 text-sm font-medium">
+                      Find your dream home in Vizag
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-amber-300 transition-colors duration-300">
-                    Search Property
-                  </h3>
-                  <p className="text-blue-100/90 text-sm font-medium">
-                    Find your dream home in Vizag
-                  </p>
-                </div>
-              </div>
-            </button>
+              </button>
+            </div>
 
             {/* Post Property Card */}
-            <button
-              onClick={() => window.location.href = '/add-property'}
-              className="group relative bg-gradient-to-br from-[#F57F17] via-[#FF8F00] to-[#E65100] text-white p-8 rounded-3xl shadow-xl transition-all duration-300 hover:-translate-y-4 hover:scale-[1.04] hover:shadow-[0_25px_50px_rgba(230,81,0,0.55)] text-left flex flex-col justify-between min-h-[180px] overflow-hidden border border-white/10 cursor-pointer animate-slide-in-right"
-            >
-              {/* Glossy shine overlay */}
-              <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 -translate-x-full group-hover:animate-shine z-0"></div>
-              
-              <div className="space-y-4 relative z-10">
-                <div className="bg-white/15 w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-white/20 transition-all duration-300 group-hover:-translate-y-1">
-                  <Home className="h-8 w-8 text-[#FFD700] group-hover:scale-110 transition-transform duration-300" />
+            <div className="animate-float-vibrant-stagger3 w-full">
+              <button
+                onClick={() => window.location.href = '/add-property'}
+                className="w-full group relative bg-gradient-to-br from-[#F57F17] via-[#FF8F00] to-[#E65100] text-white p-8 rounded-3xl shadow-xl transition-all duration-300 hover:-translate-y-4 hover:scale-[1.06] hover:rotate-[1.5deg] hover:shadow-[0_25px_50px_rgba(230,81,0,0.6)] text-left flex flex-col justify-between min-h-[180px] overflow-hidden border border-white/10 cursor-pointer animate-slide-in-right"
+              >
+                {/* Glossy shine overlay */}
+                <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 -translate-x-full group-hover:animate-shine z-0"></div>
+                
+                <div className="space-y-4 relative z-10">
+                  <div className="bg-white/15 w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-white/20 transition-all duration-300 group-hover:-translate-y-1">
+                    <Home className="h-8 w-8 text-[#FFD700] group-hover:scale-110 transition-transform duration-300" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-amber-300 transition-colors duration-300">
+                      Post Property
+                    </h3>
+                    <p className="text-orange-50/90 text-sm font-medium">
+                      List your property for free
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-amber-300 transition-colors duration-300">
-                    Post Property
-                  </h3>
-                  <p className="text-orange-50/90 text-sm font-medium">
-                    List your property for free
-                  </p>
-                </div>
-              </div>
-            </button>
+              </button>
+            </div>
           </div>
 
           {/* Talk to Expert CTA - glowing transition capsule */}
-          <div className="pt-4 w-full max-w-xs animate-pulse-ring rounded-2xl">
+          <div className="pt-4 w-full max-w-xs animate-float-vibrant-stagger1">
             <button
               onClick={() => openWhatsApp('Hi Vizag Property Experts, I am looking for a property in Vizag. Please assist.')}
               className="w-full bg-slate-900/60 hover:bg-[#00BFA5] border-2 border-[#00BFA5]/60 hover:border-[#00BFA5] text-white px-6 py-3.5 rounded-2xl font-bold transition-all duration-300 text-center shadow-lg hover:shadow-[0_0_20px_rgba(0,191,165,0.4)] hover:scale-105 active:scale-[0.98] text-base backdrop-blur-md flex items-center justify-center gap-2 group cursor-pointer"
@@ -565,7 +569,6 @@ export function HomePage() {
               </div>
             </div>
           </div>
-
         </div>
       </div>
 
