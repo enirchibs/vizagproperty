@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Home } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
 interface AuthModalProps {
@@ -9,6 +10,7 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthModalProps) {
+  const navigate = useNavigate()
   const { user, signInWithPhone, verifyOtp, signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth()
   const lastMethod = (localStorage.getItem('last_login_method') || 'phone') as 'phone' | 'email'
   const [authMethod, setAuthMethod] = useState<'phone' | 'email'>(lastMethod)
@@ -42,15 +44,15 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
 
       if (finalRedirect === 'post-property') {
         setTimeout(() => {
-          window.location.href = '/add-property'
+          navigate('/add-property', { replace: true })
         }, 100)
       } else if (finalRedirect) {
         setTimeout(() => {
-          window.location.href = finalRedirect
+          navigate(finalRedirect, { replace: true })
         }, 100)
       }
     }
-  }, [user, onClose, redirectTo])
+  }, [user, onClose, redirectTo, navigate])
 
   if (user) {
     return null

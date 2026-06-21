@@ -514,7 +514,7 @@ export function HomePage() {
             {/* Post Property Card */}
             <div className="animate-float-vibrant-stagger3 w-full">
               <button
-                onClick={() => window.location.href = '/add-property'}
+                onClick={() => navigate('/add-property')}
                 className="w-full group relative bg-gradient-to-br from-[#F57F17] via-[#FF8F00] to-[#E65100] text-white p-8 rounded-3xl shadow-xl transition-all duration-300 hover:-translate-y-4 hover:scale-[1.06] hover:rotate-[1.5deg] hover:shadow-[0_25px_50px_rgba(230,81,0,0.6)] text-left flex flex-col justify-between min-h-[180px] overflow-hidden border border-white/10 cursor-pointer animate-slide-in-right"
               >
                 {/* Glossy shine overlay */}
