@@ -21,10 +21,6 @@ export function ChatBot({ externalTrigger }: ChatBotProps = {}) {
   
   const hideOnRoutes = ['/add-property', '/post-property', '/search', '/mobile-search', '/properties']
 
-  if (hideOnRoutes.includes(location.pathname)) {
-    return null
-  }
-
   const [isOpen, setIsOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
   const [isMaximized, setIsMaximized] = useState(false)
@@ -154,6 +150,10 @@ export function ChatBot({ externalTrigger }: ChatBotProps = {}) {
 
   const handleSuggestionClick = (suggestion: string) => {
     handleSend(suggestion)
+  }
+
+  if (hideOnRoutes.includes(location.pathname)) {
+    return null
   }
 
   return (

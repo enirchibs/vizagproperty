@@ -5,10 +5,6 @@ import { useLocation } from 'react-router-dom'
 export function TopAnnouncementBar() {
   const location = useLocation();
   const hideOnRoutes = ['/add-property', '/post-property'];
-  
-  if (hideOnRoutes.includes(location.pathname)) {
-    return null;
-  }
 
   const items = [
     { text: "Call Now", lang: "English" },
@@ -38,6 +34,10 @@ export function TopAnnouncementBar() {
 
     return () => clearInterval(interval);
   }, [items.length]);
+
+  if (hideOnRoutes.includes(location.pathname)) {
+    return null;
+  }
 
   return (
     <div className="w-full flex items-center justify-center z-40 relative bg-transparent py-1 md:py-1.5">
