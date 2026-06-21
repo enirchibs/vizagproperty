@@ -51,10 +51,10 @@ export function ResidentialFilters({ filters, onChange }: ResidentialFiltersProp
             <button
               key={type}
               onClick={() => handlePropertyTypeChange(type)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.propertyType === type
-                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20 border border-blue-600 scale-[1.02]'
-                  : 'bg-white border border-blue-200/60 text-blue-700 hover:border-blue-400 hover:bg-blue-50/30'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02]'
+                  : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:bg-blue-50/30 hover:text-blue-700'
               }`}
             >
               {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -71,10 +71,10 @@ export function ResidentialFilters({ filters, onChange }: ResidentialFiltersProp
             <button
               key={bhk}
               onClick={() => handleBedroomToggle(bhk)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.bedrooms?.includes(bhk)
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20 border border-indigo-600 scale-[1.02]'
-                  : 'bg-white border border-blue-200/60 text-indigo-700 hover:border-indigo-400 hover:bg-blue-50/30'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02]'
+                  : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:bg-blue-50/30 hover:text-blue-700'
               }`}
             >
               {bhk} BHK
@@ -91,10 +91,10 @@ export function ResidentialFilters({ filters, onChange }: ResidentialFiltersProp
             <button
               key={bath}
               onClick={() => handleBathroomToggle(bath)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.bathrooms?.includes(bath)
-                  ? 'bg-sky-600 text-white shadow-md shadow-sky-500/20 border border-sky-600 scale-[1.02]'
-                  : 'bg-white border border-blue-200/60 text-sky-700 hover:border-sky-400 hover:bg-blue-50/30'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02]'
+                  : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:bg-blue-50/30 hover:text-blue-700'
               }`}
             >
               {bath}
@@ -111,10 +111,10 @@ export function ResidentialFilters({ filters, onChange }: ResidentialFiltersProp
             <button
               key={status}
               onClick={() => handlePossessionToggle(status)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.possession?.includes(status)
-                  ? 'bg-indigo-700 text-white shadow-md shadow-indigo-600/20 border border-indigo-700 scale-[1.02]'
-                  : 'bg-white border border-blue-200/60 text-indigo-800 hover:border-indigo-400 hover:bg-blue-50/30'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02]'
+                  : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:bg-blue-50/30 hover:text-blue-700'
               }`}
             >
               {status === 'ready_to_move' ? 'Ready to Move' : 'Under Construction'}
@@ -131,10 +131,10 @@ export function ResidentialFilters({ filters, onChange }: ResidentialFiltersProp
             <button
               key={furn}
               onClick={() => handleFurnishingToggle(furn)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.furnishing?.includes(furn)
-                  ? 'bg-blue-700 text-white shadow-md shadow-blue-600/20 border border-blue-700 scale-[1.02]'
-                  : 'bg-white border border-blue-200/60 text-blue-800 hover:border-blue-400 hover:bg-blue-50/30'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02]'
+                  : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:bg-blue-50/30 hover:text-blue-700'
               }`}
             >
               {furn === 'furnished' ? 'Furnished' : furn === 'semi_furnished' ? 'Semi-Furnished' : 'Unfurnished'}
@@ -151,10 +151,10 @@ export function ResidentialFilters({ filters, onChange }: ResidentialFiltersProp
             <button
               key={type}
               onClick={() => handleSaleTypeToggle(type)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.saleType?.includes(type)
-                  ? 'bg-sky-700 text-white shadow-md shadow-sky-600/20 border border-sky-700 scale-[1.02]'
-                  : 'bg-white border border-blue-200/60 text-sky-800 hover:border-sky-400 hover:bg-blue-50/30'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02]'
+                  : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:bg-blue-50/30 hover:text-blue-700'
               }`}
             >
               {type === 'new' ? 'New' : 'Resale'}
@@ -171,10 +171,10 @@ export function ResidentialFilters({ filters, onChange }: ResidentialFiltersProp
             <button
               key={amenity.value}
               onClick={() => handleAmenityToggle(amenity.value)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.amenities?.includes(amenity.value)
-                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20 border border-blue-600 scale-[1.02]'
-                  : 'bg-white border border-blue-200/60 text-blue-700 hover:border-blue-400 hover:bg-blue-50/30'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02]'
+                  : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:bg-blue-50/30 hover:text-blue-700'
               }`}
             >
               {amenity.label}

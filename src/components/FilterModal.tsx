@@ -210,7 +210,7 @@ export function FilterModal({
                         className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'residential'
                             ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/25 scale-[1.02]'
-                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
+                            : 'bg-white/90 text-gray-600 border-gray-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300'
                         }`}
                       >
                         Residential
@@ -220,7 +220,7 @@ export function FilterModal({
                         className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'plot'
                             ? 'bg-green-600 text-white border-green-600 shadow-md shadow-green-500/25 scale-[1.02]'
-                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
+                            : 'bg-white/90 text-gray-600 border-gray-200 hover:bg-green-50 hover:text-green-600 hover:border-green-300'
                         }`}
                       >
                         Plot
@@ -233,7 +233,7 @@ export function FilterModal({
                         className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'residential'
                             ? 'bg-rose-600 text-white border-rose-600 shadow-md shadow-rose-500/25 scale-[1.02]'
-                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
+                            : 'bg-white/90 text-gray-600 border-gray-200 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-300'
                         }`}
                       >
                         House/Flat
@@ -243,7 +243,7 @@ export function FilterModal({
                         className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'pg'
                             ? 'bg-amber-600 text-white border-amber-600 shadow-md shadow-amber-500/25 scale-[1.02]'
-                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
+                            : 'bg-white/90 text-gray-600 border-gray-200 hover:bg-amber-50 hover:text-amber-600 hover:border-amber-300'
                         }`}
                       >
                         PG/Hostel
@@ -356,7 +356,7 @@ export function FilterModal({
                         className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'residential'
                             ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/25 scale-[1.02]'
-                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
+                            : 'bg-white/90 text-gray-600 border-gray-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300'
                         }`}
                       >
                         Residential
@@ -366,7 +366,7 @@ export function FilterModal({
                         className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'plot'
                             ? 'bg-green-600 text-white border-green-600 shadow-md shadow-green-500/25 scale-[1.02]'
-                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
+                            : 'bg-white/90 text-gray-600 border-gray-200 hover:bg-green-50 hover:text-green-600 hover:border-green-300'
                         }`}
                       >
                         Plot
@@ -379,7 +379,7 @@ export function FilterModal({
                         className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'residential'
                             ? 'bg-rose-600 text-white border-rose-600 shadow-md shadow-rose-500/25 scale-[1.02]'
-                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
+                            : 'bg-white/90 text-gray-600 border-gray-200 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-300'
                         }`}
                       >
                         House/Flat
@@ -389,7 +389,7 @@ export function FilterModal({
                         className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'pg'
                             ? 'bg-amber-600 text-white border-amber-600 shadow-md shadow-amber-500/25 scale-[1.02]'
-                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
+                            : 'bg-white/90 text-gray-600 border-gray-200 hover:bg-amber-50 hover:text-amber-600 hover:border-amber-300'
                         }`}
                       >
                         PG/Hostel
