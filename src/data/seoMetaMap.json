@@ -1,0 +1,120 @@
+{
+  "site_root": "https://vizagproperty.co.in",
+  "metadata_engine": {
+    "/plots": {
+      "title": "Plots for Sale in Vizag | Residential & Open Land",
+      "meta_description": "Explore 1000+ residential plots for sale in Vizag. Find premium verified layouts, gated community plots, and investment lands at affordable prices.",
+      "h1": "Residential Plots for Sale in Visakhapatnam"
+    },
+    "/plots/vuda-approved": {
+      "title": "VUDA Approved Plots in Vizag | VMRDA Certified Layouts",
+      "meta_description": "Buy verified VUDA approved plots for sale in Vizag. Browse bank-loan-approved residential layouts, clear titles, and gated community open lands.",
+      "h1": "VUDA & VMRDA Approved Plots in Visakhapatnam"
+    },
+    "/plots/gated-community": {
+      "title": "Gated Community Plots for Sale in Vizag | Luxury Layouts",
+      "meta_description": "Find premium gated community plots in Vizag with modern amenities, blacktop roads, 24/7 security, and underground electricity. Direct from builders.",
+      "h1": "Gated Community Plots for Sale in Vizag"
+    },
+    "/plots/east-facing": {
+      "title": "East Facing Plots in Visakhapatnam | Vaastu Compliant",
+      "meta_description": "Looking for Vaastu compliant plots? Explore premium east facing plots for sale in Vizag across top localities. Verified properties with clear titles.",
+      "h1": "East Facing Plots for Sale in Visakhapatnam"
+    },
+    "/plots/corner": {
+      "title": "Corner Plots for Sale in Vizag | Premium Location Lands",
+      "meta_description": "Invest in high-ROI corner plots for sale in Vizag. Perfect for luxury villas or commercial setups with dual-road connectivity. Check listings now.",
+      "h1": "Premium Corner Plots in Vizag"
+    },
+    "/plots/bhogapuram": {
+      "title": "Plots for Sale in Bhogapuram Vizag | Near New Airport",
+      "meta_description": "High-investment open plots for sale in Bhogapuram, Vizag near the upcoming International Airport. Secure early bird pricing on premium gated communities.",
+      "h1": "Residential & Premium Plots in Bhogapuram"
+    },
+    "/plots/anandapuram": {
+      "title": "Plots in Anandapuram Vizag | Residential Land for Sale",
+      "meta_description": "Browse verified residential plots in Anandapuram, Vizag. Located on the fast-growing growth corridor, perfect for immediate villa construction.",
+      "h1": "Plots for Sale in Anandapuram, Visakhapatnam"
+    },
+    "/plots/tarluvada": {
+      "title": "Plots in Tarluvada Visakhapatnam | Affordable Open Land",
+      "meta_description": "Invest in low-budget and premium open plots in Tarluvada, Visakhapatnam. Clear market titles, VUDA/VMRDA project layouts with high returns.",
+      "h1": "Verified Plots for Sale in Tarluvada"
+    },
+    "/plots/kothavalasa": {
+      "title": "Plots for Sale in Kothavalasa | Affordable Residential Land",
+      "meta_description": "Find cheap and premium residential plots for sale in Kothavalasa, Vizag. Safe investment layouts with instant registration and spot approvals.",
+      "h1": "Plots & Open Land in Kothavalasa"
+    },
+    "/plots/tagarapuvalasa": {
+      "title": "Plots in Tagarapuvalasa | Residential Layouts for Sale",
+      "meta_description": "Explore hot real estate open plots in Tagarapuvalasa, Vizag. Top-tier gated community projects near educational hubs and National Highway NH16.",
+      "h1": "Properties & Plots in Tagarapuvalasa"
+    },
+    "/plots/bheemili": {
+      "title": "Beach View Plots in Bheemili | Premium Oceanfront Land",
+      "meta_description": "Live luxury by the coast. Buy exclusive beach view plots in Bheemili, Visakhapatnam. High-end gated community villa plots with clear ocean view vistas.",
+      "h1": "Beach View Plots & Land for Sale in Bheemili"
+    },
+    "/residential/villas": {
+      "title": "Villas in Visakhapatnam | Gated Community Luxury Homes",
+      "meta_description": "Find ready-to-move and under-construction luxury villas in Visakhapatnam. Features independent properties with private gardens and clubhouses.",
+      "h1": "Luxury Villas for Sale in Visakhapatnam"
+    },
+    "/residential/villas/madhurawada": {
+      "title": "Gated Community Villas in Madhurawada | Luxury Living",
+      "meta_description": "Buy premium gated community villas in Madhurawada, Vizag. 3/4 BHK independent luxury villas equipped with modular kitchens and 24/7 security.",
+      "h1": "Villas for Sale in Madhurawada, Vizag"
+    },
+    "/residential/villas/bhogapuram": {
+      "title": "Beachfront Villas in Bhogapuram | Premium Holiday Homes",
+      "meta_description": "Exclusive beachfront villas for sale in Bhogapuram, Vizag. Perfect investment holiday homes near the new airport corridor with high rental yields.",
+      "h1": "Beachfront Luxury Villas in Bhogapuram"
+    },
+    "/residential/flats": {
+      "title": "Flats for Sale in Vizag | New Apartments in Visakhapatnam",
+      "meta_description": "Search verified apartments and flats for sale in Vizag. Explore budget 2 BHK homes to ultra-luxury 3 BHK/4 BHK premium flats across top localities.",
+      "h1": "Apartments & Flats for Sale in Vizag"
+    },
+    "/residential/flats/3-bhk": {
+      "title": "3 BHK Flats in Visakhapatnam | Luxury Gated Apartments",
+      "meta_description": "Spacious 3 BHK flats for sale in Visakhapatnam. Check out premium gated societies featuring gym, pool, backup power, and dedicated car parking spaces.",
+      "h1": "Spacious 3 BHK Apartments in Vizag"
+    },
+    "/residential/flats/2-bhk-mvp-colony": {
+      "title": "2 BHK Flats in MVP Colony Vizag | Properties for Sale",
+      "meta_description": "Find residential 2 BHK flats in MVP Colony, Vizag. Located in prime residential hubs near schools, markets, and hospitals. Browse direct owner listings.",
+      "h1": "2 BHK Apartments for Sale in MVP Colony"
+    },
+    "/residential/flats/sea-view": {
+      "title": "Sea View Apartments in Vizag | Beachfront Luxury Flats",
+      "meta_description": "Wake up to ocean views. Explore premium sea view apartments in Vizag along Beach Road, Bheemili, and Ocean Drive. Secure your high-end flat today.",
+      "h1": "Premium Beachfront & Sea View Flats in Vizag"
+    },
+    "/commercial/shops-for-rent": {
+      "title": "Shops for Rent in Vizag | Commercial Outlets & Spaces",
+      "meta_description": "Rent high-footfall commercial retail shops in Vizag. Premium retail spaces available in high-street markets, shopping complexes, and prime business hubs.",
+      "h1": "Commercial Shops for Rent in Visakhapatnam"
+    },
+    "/commercial/office-space-mvp-colony": {
+      "title": "Office Space for Rent in MVP Colony | Commercial Properties",
+      "meta_description": "Plug-and-play IT/Corporate office space for rent in MVP Colony, Vizag. Furnished and unfurnished options available with high-speed internet setups.",
+      "h1": "Commercial Office Spaces in MVP Colony"
+    },
+    "/commercial/showrooms-asilmetla": {
+      "title": "Showrooms for Lease in Asilmetla Vizag | Retail Spaces",
+      "meta_description": "Lease premium ground-floor retail showrooms in Asilmetla, Vizag. High visibility commercial zones ideal for jewelry, clothing, and automobile brands.",
+      "h1": "Commercial Showrooms for Lease in Asilmetla"
+    },
+    "/alternative/farm-houses": {
+      "title": "Farm Houses for Sale in Vizag | Weekend Luxury Resorts",
+      "meta_description": "Escape the city hustle. Premium organic farm houses for sale in Vizag with swimming pools, orchards, and peaceful green environments for weekend getaways.",
+      "h1": "Luxury & Organic Farm Houses in Vizag"
+    },
+    "/alternative/hostels": {
+      "title": "Hostels in Visakhapatnam | Student & Professional PGs",
+      "meta_description": "Find verified hostels in Visakhapatnam for students and working professionals. Comfortable single/sharing rooms with food, Wi-Fi, and laundry.",
+      "h1": "Hostels & PG Accommodations in Visakhapatnam"
+    }
+  }
+}
