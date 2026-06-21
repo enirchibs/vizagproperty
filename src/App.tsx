@@ -6,7 +6,7 @@ import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { ChatBot } from './components/ChatBot'
 import { FloatingWhatsAppButton } from './components/FloatingWhatsAppButton'
-import { FloatingCallBanner } from './components/FloatingCallBanner'
+import { TopAnnouncementBar } from './components/TopAnnouncementBar'
 import { UsernameModal } from './components/UsernameModal'
 import { CookieBanner } from './components/CookieBanner'
 import { HomePage } from './pages/HomePage'
@@ -51,6 +51,7 @@ function AppContent() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-50">
+        <TopAnnouncementBar />
         <Header />
         <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div></div>}>
           <Routes>
@@ -101,7 +102,6 @@ function AppContent() {
         <Footer />
         <ChatBot />
         <FloatingWhatsAppButton />
-        <FloatingCallBanner />
         <CookieBanner />
 
         {showUsernamePrompt && (
