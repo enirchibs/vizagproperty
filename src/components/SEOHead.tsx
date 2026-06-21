@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { generateBreadcrumbSchema } from '../lib/schemaUtils';
 
 interface SEOHeadProps {
   title: string;
@@ -56,16 +57,35 @@ export function SEOHead({ title, description, schema, ogImage = 'https://vizagpr
     ogUrl.setAttribute('content', url);
 
     // Update JSON-LD Schema
+    const breadcrumbSchema = generateBreadcrumbSchema(url);
+    
+    let finalSchema;
     if (schema) {
-      let script = document.querySelector('#seo-schema-script') as HTMLScriptElement;
-      if (!script) {
-        script = document.createElement('script');
-        script.id = 'seo-schema-script';
-        script.type = 'application/ld+json';
-        document.head.appendChild(script);
+      // If user provided an array of schemas, push breadcrumb into it
+      if (Array.isArray(schema)) {
+        // Only add breadcrumb if one doesn't already exist in the array
+        const hasBreadcrumb = schema.some(s => s['@type'] === 'BreadcrumbList');
+        finalSchema = hasBreadcrumb ? schema : [breadcrumbSchema, ...schema];
+      } else if (schema['@graph']) {
+         // Handle @graph structure
+         const hasBreadcrumb = schema['@graph'].some((s: any) => s['@type'] === 'BreadcrumbList');
+         finalSchema = hasBreadcrumb ? schema : { ...schema, '@graph': [breadcrumbSchema, ...schema['@graph']] };
+      } else {
+        // If it's a single schema object, wrap both in an array
+        finalSchema = schema['@type'] === 'BreadcrumbList' ? schema : [breadcrumbSchema, schema];
       }
-      script.text = JSON.stringify(schema);
+    } else {
+      finalSchema = breadcrumbSchema;
     }
+
+    let script = document.querySelector('#seo-schema-script') as HTMLScriptElement;
+    if (!script) {
+      script = document.createElement('script');
+      script.id = 'seo-schema-script';
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    script.text = JSON.stringify(finalSchema);
 
     return () => {
       // Cleanup dynamically injected schema on unmount to avoid duplication

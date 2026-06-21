@@ -15,6 +15,7 @@ import { MediaGallery } from '../components/MediaGallery'
 import { PropertyLocationMap } from '../components/PropertyLocationMap'
 import { VIZAG_PROPERTY_PHONE } from '../config/contact'
 import PropertyDisclaimer from '../components/PropertyDisclaimer'
+import { SEOHead } from '../components/SEOHead'
 
 export function PropertyDetailsPage() {
   const { id } = useParams()
@@ -99,79 +100,7 @@ export function PropertyDetailsPage() {
     }
   }, [id, loadPropertyData])
 
-  useEffect(() => {
-    if (property && !loading) {
-      const schema = {
-        "@context": "https://schema.org",
-        "@type": "Product",
-        "name": property.title,
-        "description": property.description,
-        "image": property.images?.length ? property.images : ["https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg"],
-        "offers": {
-          "@type": "Offer",
-          "price": property.price,
-          "priceCurrency": "INR",
-          "availability": "https://schema.org/InStock",
-          "url": window.location.href
-        },
-        "category": property.property_type,
-        "additionalProperty": [
-          {
-            "@type": "PropertyValue",
-            "name": "Bedrooms",
-            "value": property.bedrooms
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "Bathrooms",
-            "value": property.bathrooms
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "Area",
-            "value": property.area_sqft + " sqft"
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "Listing Type",
-            "value": property.listing_type
-          }
-        ],
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": property.city ?? property.location ?? 'Visakhapatnam',
-          "addressRegion": property.state ?? 'Andhra Pradesh',
-          "addressCountry": "IN"
-        }
-      }
 
-      const existingScript = document.getElementById('property-schema')
-      if (existingScript) {
-        existingScript.remove()
-      }
-
-      requestAnimationFrame(() => {
-        const script = document.createElement('script')
-        script.type = 'application/ld+json'
-        script.text = JSON.stringify(schema)
-        script.id = 'property-schema'
-        document.head.appendChild(script)
-      })
-
-      document.title = `${property.title} - ${property.location ?? property.city ?? 'Visakhapatnam'} | VizagProperty`
-      const metaDescription = document.querySelector('meta[name="description"]')
-      if (metaDescription) {
-        metaDescription.setAttribute('content', `${property.title} in ${property.location ?? property.city ?? 'Visakhapatnam'}. ${property.bedrooms ? property.bedrooms + ' BHK, ' : ''}${property.area_sqft} sqft. ${property.listing_type === 'sale' ? 'For Sale' : 'For Rent'}. Contact now for more details.`)
-      }
-
-      return () => {
-        const scriptToRemove = document.getElementById('property-schema')
-        if (scriptToRemove) {
-          scriptToRemove.remove()
-        }
-      }
-    }
-  }, [property, loading])
 
   const toggleFavorite = async () => {
     if (!user) return
@@ -274,8 +203,81 @@ export function PropertyDetailsPage() {
     ? property.images
     : ['https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=1200']
 
+  const lat = Array.isArray(property.localities) ? property.localities[0]?.latitude : property.localities?.latitude;
+  const lng = Array.isArray(property.localities) ? property.localities[0]?.longitude : property.localities?.longitude;
+
+  const realEstateSchema = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    "name": property.title,
+    "description": property.description,
+    "url": window.location.href,
+    "datePosted": property.created_at ? new Date(property.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+    "priceCurrency": "INR",
+    "price": property.price.toString(),
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "INR",
+      "price": property.price.toString(),
+      "priceValidUntil": new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      "availability": "https://schema.org/InStock",
+      "validFrom": property.created_at ? new Date(property.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
+    },
+    "about": {
+      "@type": property.property_type === 'plot_land' ? "LandProperties" : "House",
+      "name": property.title,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": property.location ?? property.city ?? 'Visakhapatnam',
+        "addressRegion": property.state ?? 'Andhra Pradesh',
+        "addressCountry": "IN"
+      },
+      ...(lat && lng ? {
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": lat.toString(),
+          "longitude": lng.toString()
+        }
+      } : {}),
+      ...(property.area_sqft ? {
+        "floorSize": {
+          "@type": "QuantitativeValue",
+          "value": property.area_sqft.toString(),
+          "unitCode": property.property_type === 'plot_land' ? "AUI" : "SQF"
+        }
+      } : {}),
+      "additionalProperty": [
+        ...(property.is_vmrda_approved ? [{
+          "@type": "PropertyValue",
+          "name": "Approval Authority",
+          "value": "VUDA / VMRDA Approved"
+        }] : []),
+        ...(property.bedrooms ? [{
+          "@type": "PropertyValue",
+          "name": "Bedrooms",
+          "value": property.bedrooms.toString()
+        }] : []),
+        ...(property.property_type ? [{
+          "@type": "PropertyValue",
+          "name": "Property Type",
+          "value": property.property_type.replace('_', ' ')
+        }] : [])
+      ]
+    }
+  };
+
+  const pageTitle = `${property.title} - ${property.location ?? property.city ?? 'Visakhapatnam'} | VizagProperty`;
+  const pageDesc = `${property.title} in ${property.location ?? property.city ?? 'Visakhapatnam'}. ${property.bedrooms ? property.bedrooms + ' BHK, ' : ''}${property.area_sqft} sqft. ${property.listing_type === 'sale' ? 'For Sale' : 'For Rent'}. Contact now for more details.`;
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEOHead 
+        title={pageTitle} 
+        description={pageDesc} 
+        schema={realEstateSchema} 
+        url={window.location.href} 
+        ogImage={images[0]} 
+      />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
