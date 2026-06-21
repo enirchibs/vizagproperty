@@ -53,8 +53,8 @@ export function ResidentialFilters({ filters, onChange }: ResidentialFiltersProp
               onClick={() => handlePropertyTypeChange(type)}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.propertyType === type
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02]'
-                  : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:bg-blue-50/30 hover:text-blue-700'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02] font-bold'
+                  : 'bg-white border-blue-200 text-blue-600 font-bold hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700'
               }`}
             >
               {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -73,8 +73,8 @@ export function ResidentialFilters({ filters, onChange }: ResidentialFiltersProp
               onClick={() => handleBedroomToggle(bhk)}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.bedrooms?.includes(bhk)
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02]'
-                  : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:bg-blue-50/30 hover:text-blue-700'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02] font-bold'
+                  : 'bg-white border-blue-200 text-blue-600 font-bold hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700'
               }`}
             >
               {bhk} BHK
@@ -93,8 +93,8 @@ export function ResidentialFilters({ filters, onChange }: ResidentialFiltersProp
               onClick={() => handleBathroomToggle(bath)}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.bathrooms?.includes(bath)
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02]'
-                  : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:bg-blue-50/30 hover:text-blue-700'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02] font-bold'
+                  : 'bg-white border-blue-200 text-blue-600 font-bold hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700'
               }`}
             >
               {bath}
@@ -113,8 +113,8 @@ export function ResidentialFilters({ filters, onChange }: ResidentialFiltersProp
               onClick={() => handlePossessionToggle(status)}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.possession?.includes(status)
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02]'
-                  : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:bg-blue-50/30 hover:text-blue-700'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02] font-bold'
+                  : 'bg-white border-blue-200 text-blue-600 font-bold hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700'
               }`}
             >
               {status === 'ready_to_move' ? 'Ready to Move' : 'Under Construction'}
@@ -133,8 +133,8 @@ export function ResidentialFilters({ filters, onChange }: ResidentialFiltersProp
               onClick={() => handleFurnishingToggle(furn)}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.furnishing?.includes(furn)
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02]'
-                  : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:bg-blue-50/30 hover:text-blue-700'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02] font-bold'
+                  : 'bg-white border-blue-200 text-blue-600 font-bold hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700'
               }`}
             >
               {furn === 'furnished' ? 'Furnished' : furn === 'semi_furnished' ? 'Semi-Furnished' : 'Unfurnished'}
@@ -153,8 +153,8 @@ export function ResidentialFilters({ filters, onChange }: ResidentialFiltersProp
               onClick={() => handleSaleTypeToggle(type)}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.saleType?.includes(type)
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02]'
-                  : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:bg-blue-50/30 hover:text-blue-700'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02] font-bold'
+                  : 'bg-white border-blue-200 text-blue-600 font-bold hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700'
               }`}
             >
               {type === 'new' ? 'New' : 'Resale'}
@@ -173,8 +173,8 @@ export function ResidentialFilters({ filters, onChange }: ResidentialFiltersProp
               onClick={() => handleAmenityToggle(amenity.value)}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.amenities?.includes(amenity.value)
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02]'
-                  : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400 hover:bg-blue-50/30 hover:text-blue-700'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20 scale-[1.02] font-bold'
+                  : 'bg-white border-blue-200 text-blue-600 font-bold hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700'
               }`}
             >
               {amenity.label}

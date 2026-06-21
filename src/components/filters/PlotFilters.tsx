@@ -20,8 +20,8 @@ export function PlotFilters({ filters, onChange }: PlotFiltersProps) {
   return (
     <div className="space-y-6">
       {/* Plot Type Card */}
-      <div className="bg-green-50/25 rounded-2xl shadow-sm border border-green-100 p-4 hover:shadow-md transition-shadow duration-300">
-        <label className="block text-sm font-bold text-green-950 mb-3">Plot Type</label>
+      <div className="bg-orange-50/25 rounded-2xl shadow-sm border border-orange-100 p-4 hover:shadow-md transition-shadow duration-300">
+        <label className="block text-sm font-bold text-orange-950 mb-3">Plot Type</label>
         <div className="grid grid-cols-2 gap-2">
           {['residential', 'commercial'].map(type => (
             <button
@@ -29,8 +29,8 @@ export function PlotFilters({ filters, onChange }: PlotFiltersProps) {
               onClick={() => onChange({ ...filters, propertyType: type })}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.propertyType === type
-                  ? 'bg-green-600 text-white border-green-600 shadow-md shadow-green-500/20 scale-[1.02]'
-                  : 'bg-white border-gray-200 text-gray-700 hover:border-green-400 hover:bg-green-50/30 hover:text-green-700'
+                  ? 'bg-orange-600 text-white border-orange-600 shadow-md shadow-orange-500/20 scale-[1.02] font-bold'
+                  : 'bg-white border-orange-200 text-orange-600 font-bold hover:border-orange-400 hover:bg-orange-50 hover:text-orange-700'
               }`}
             >
               {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -40,8 +40,8 @@ export function PlotFilters({ filters, onChange }: PlotFiltersProps) {
       </div>
 
       {/* Facing Card */}
-      <div className="bg-green-50/25 rounded-2xl shadow-sm border border-green-100 p-4 hover:shadow-md transition-shadow duration-300">
-        <label className="block text-sm font-bold text-green-950 mb-3">Facing</label>
+      <div className="bg-orange-50/25 rounded-2xl shadow-sm border border-orange-100 p-4 hover:shadow-md transition-shadow duration-300">
+        <label className="block text-sm font-bold text-orange-950 mb-3">Facing</label>
         <div className="grid grid-cols-2 gap-2">
           {FACING_OPTIONS.map(facing => (
             <button
@@ -49,8 +49,8 @@ export function PlotFilters({ filters, onChange }: PlotFiltersProps) {
               onClick={() => handleFacingToggle(facing)}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.facing?.includes(facing)
-                  ? 'bg-green-600 text-white border-green-600 shadow-md shadow-green-500/20 scale-[1.02]'
-                  : 'bg-white border-gray-200 text-gray-700 hover:border-green-400 hover:bg-green-50/30 hover:text-green-700'
+                  ? 'bg-orange-600 text-white border-orange-600 shadow-md shadow-orange-500/20 scale-[1.02] font-bold'
+                  : 'bg-white border-orange-200 text-orange-600 font-bold hover:border-orange-400 hover:bg-orange-50 hover:text-orange-700'
               }`}
             >
               {facing.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('-')}
@@ -60,8 +60,8 @@ export function PlotFilters({ filters, onChange }: PlotFiltersProps) {
       </div>
 
       {/* Boundary Wall Card */}
-      <div className="bg-green-50/25 rounded-2xl shadow-sm border border-green-100 p-4 hover:shadow-md transition-shadow duration-300">
-        <label className="block text-sm font-bold text-green-950 mb-3">Boundary Wall</label>
+      <div className="bg-orange-50/25 rounded-2xl shadow-sm border border-orange-100 p-4 hover:shadow-md transition-shadow duration-300">
+        <label className="block text-sm font-bold text-orange-950 mb-3">Boundary Wall</label>
         <div className="flex gap-2">
           {[
             { value: true, label: 'Yes' },
@@ -72,8 +72,8 @@ export function PlotFilters({ filters, onChange }: PlotFiltersProps) {
               onClick={() => onChange({ ...filters, boundaryWall: option.value })}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.boundaryWall === option.value
-                  ? 'bg-green-600 text-white border-green-600 shadow-md shadow-green-500/20 scale-[1.02]'
-                  : 'bg-white border-gray-200 text-gray-700 hover:border-green-400 hover:bg-green-50/30 hover:text-green-700'
+                  ? 'bg-orange-600 text-white border-orange-600 shadow-md shadow-orange-500/20 scale-[1.02] font-bold'
+                  : 'bg-white border-orange-200 text-orange-600 font-bold hover:border-orange-400 hover:bg-orange-50 hover:text-orange-700'
               }`}
             >
               {option.label}
@@ -83,8 +83,8 @@ export function PlotFilters({ filters, onChange }: PlotFiltersProps) {
       </div>
 
       {/* Corner Plot Card */}
-      <div className="bg-green-50/25 rounded-2xl shadow-sm border border-green-100 p-4 hover:shadow-md transition-shadow duration-300">
-        <label className="block text-sm font-bold text-green-950 mb-3">Corner Plot</label>
+      <div className="bg-orange-50/25 rounded-2xl shadow-sm border border-orange-100 p-4 hover:shadow-md transition-shadow duration-300">
+        <label className="block text-sm font-bold text-orange-950 mb-3">Corner Plot</label>
         <div className="flex gap-2">
           {[
             { value: true, label: 'Yes' },
@@ -95,8 +95,8 @@ export function PlotFilters({ filters, onChange }: PlotFiltersProps) {
               onClick={() => onChange({ ...filters, cornerPlot: option.value })}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border-2 ${
                 filters.cornerPlot === option.value
-                  ? 'bg-green-600 text-white border-green-600 shadow-md shadow-green-500/20 scale-[1.02]'
-                  : 'bg-white border-gray-200 text-gray-700 hover:border-green-400 hover:bg-green-50/30 hover:text-green-700'
+                  ? 'bg-orange-600 text-white border-orange-600 shadow-md shadow-orange-500/20 scale-[1.02] font-bold'
+                  : 'bg-white border-orange-200 text-orange-600 font-bold hover:border-orange-400 hover:bg-orange-50 hover:text-orange-700'
               }`}
             >
               {option.label}
@@ -106,8 +106,8 @@ export function PlotFilters({ filters, onChange }: PlotFiltersProps) {
       </div>
 
       {/* Plot Area Card */}
-      <div className="bg-green-50/25 rounded-2xl shadow-sm border border-green-100 p-4 hover:shadow-md transition-shadow duration-300">
-        <label className="block text-sm font-bold text-green-950 mb-3">Plot Area</label>
+      <div className="bg-orange-50/25 rounded-2xl shadow-sm border border-orange-100 p-4 hover:shadow-md transition-shadow duration-300">
+        <label className="block text-sm font-bold text-orange-950 mb-3">Plot Area</label>
         <div className="grid grid-cols-2 gap-3 mb-3">
           <input
             type="number"
