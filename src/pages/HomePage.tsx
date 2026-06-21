@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Mic, TrendingUp, Shield, Zap, CheckCircle, PhoneOff, DollarSign, Home, Building2, MapPin, Users, ArrowRight, Key, Search, MessageCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
@@ -21,6 +21,7 @@ import { openWhatsApp } from '../lib/whatsapp'
 type PropertyCategory = 'full_house' | 'land_plot' | 'flat_apartment' | 'pg_hostel' | 'flatmates' | 'villa'
 
 export function HomePage() {
+  const navigate = useNavigate()
   const { user } = useAuth()
   const { listingType, setListingType, propertyCategory: searchCategory, setPropertyCategory: setSearchCategory } = useSearch()
   const { lastSearch, saveSearch } = useSearchHistory()
