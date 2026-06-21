@@ -6,6 +6,7 @@ import { Calendar, Clock, ArrowLeft, User, Tag } from 'lucide-react';
 import { SEOHead } from '../components/SEOHead';
 import { AdSenseInArticle } from '../components/AdSenseInArticle';
 import { injectInternalLinks } from '../utils/seo/autoLinker';
+import { useSeoKeywords } from '../hooks/useSeoKeywords';
 
 interface BlogPost {
   id: string;
@@ -28,6 +29,7 @@ export function BlogPostPage() {
   const [blog, setBlog] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { keywords } = useSeoKeywords();
 
   useEffect(() => {
     async function fetchBlog() {
@@ -179,7 +181,7 @@ export function BlogPostPage() {
               }
             }}
           >
-            {injectInternalLinks(blog.content)}
+            {injectInternalLinks(blog.content, keywords)}
           </ReactMarkdown>
         </div>
 

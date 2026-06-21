@@ -1,38 +1,23 @@
-interface LinkMap {
-  [keyword: string]: string;
-}
-
-// 1. Define the keyword-to-URL dictionary matching your exact SEO taxonomy
-const KEYWORD_LINK_MAP: LinkMap = {
-  'plots for sale in vizag': '/plots',
-  'plots for sale in bhogapuram vizag': '/plots/bhogapuram',
-  'plots for sale in bhogapuram': '/plots/bhogapuram',
-  'vuda approved plots in vizag': '/plots/vuda-approved',
-  'vuda & vmrda approved plots': '/plots/vuda-approved',
-  'gated community plots for sale in vizag': '/plots/gated-community',
-  'open land in visakhapatnam': '/plots',
-  'residential plots for sale in vizag': '/plots',
-  'villas for sale in madhurawada': '/residential/villas/madhurawada',
-  'plots in anandapuram vizag': '/plots/anandapuram',
-  'new apartments in visakhapatnam': '/residential/flats',
-  'luxury villas for sale in vizag': '/residential/villas',
-  'shops for rent in vizag': '/commercial/shops-for-rent',
-  'plots in tarluvada visakhapatnam': '/plots/tarluvada'
-};
+import { DBKeywordRule } from '../../hooks/useSeoKeywords';
 
 /**
- * Automatically injects internal anchors into a Markdown string based on a predefined dictionary.
+ * Automatically injects internal anchors into a Markdown string based on a dynamic database dictionary.
  * Safely avoids modifying attributes, headings, HTML tags, or text already nested inside <a> tags
  * or Markdown links `[text](url)`.
  * 
  * @param content Raw Markdown content from the database
+ * @param keywordRules Array of DBKeywordRule objects fetched from Supabase
  * @param maxLinksPerPost Hard limit to prevent over-optimization penalties
  */
-export function injectInternalLinks(content: string, maxLinksPerPost: number = 5): string {
-  if (!content) return '';
+export function injectInternalLinks(
+  content: string, 
+  keywordRules: DBKeywordRule[], 
+  maxLinksPerPost: number = 5
+): string {
+  if (!content || !keywordRules || keywordRules.length === 0) return content;
 
   // Sort keywords by length descending so longer phrases match first
-  const sortedKeywords = Object.keys(KEYWORD_LINK_MAP).sort((a, b) => b.length - a.length);
+  const sortedRules = [...keywordRules].sort((a, b) => b.keyword.length - a.keyword.length);
 
   // Track already linked URLs within the current post execution path to prevent multi-linking dilution
   const linkedUrls = new Set<string>();
@@ -66,25 +51,23 @@ export function injectInternalLinks(content: string, maxLinksPerPost: number = 5
     // Process plain text nodes for keyword injections
     let textNode = token;
 
-    for (const keyword of sortedKeywords) {
+    for (const rule of sortedRules) {
       if (dynamicLinkCount >= maxLinksPerPost) break;
 
-      const targetUrl = KEYWORD_LINK_MAP[keyword];
+      const cleanedKeyword = rule.keyword.trim();
+      const targetUrl = rule.target_url.trim();
       
       // Skip if this specific landing destination has already been linked in this run
       if (linkedUrls.has(targetUrl)) continue;
 
       // Construct case-insensitive boundary regex matching the exact phrase safely
-      // \b doesn't always work perfectly if the keyword contains special characters, but for alphanumeric it's fine.
-      const regex = new RegExp(`\\b(${keyword})\\b`, 'gi');
+      const regex = new RegExp(`\\b(${cleanedKeyword})\\b`, 'gi');
 
       if (regex.test(textNode)) {
         // Replace first match instance with standard Markdown link syntax
         textNode = textNode.replace(regex, (match) => {
           linkedUrls.add(targetUrl);
           dynamicLinkCount++;
-          // Returning a markdown link. react-markdown will parse this naturally and use our router link if configured,
-          // or a standard <a> tag.
           return `[${match}](${targetUrl})`;
         });
       }
