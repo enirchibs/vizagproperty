@@ -459,7 +459,7 @@ export function HomePage() {
 
       {/* Hero Section */}
       <div 
-        className="relative min-h-[75vh] md:min-h-[85vh] flex flex-col justify-center items-center text-white px-4 py-8 md:py-16 bg-cover bg-center overflow-hidden"
+        className="relative min-h-[60vh] md:min-h-[85vh] flex flex-col justify-center items-center text-white px-4 py-4 md:py-16 bg-cover bg-center overflow-hidden"
         style={{
           backgroundImage: `url('/vizag_beach_kailasagiri.png')`
         }}
@@ -468,7 +468,7 @@ export function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-tr from-slate-950 via-[#071926] to-[#04334c] z-0 animate-gradient-move"></div>
 
         {/* Content Wrapper */}
-        <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center text-center space-y-4 md:space-y-8 animate-fadeIn mt-2 md:mt-0">
+        <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center text-center space-y-3 md:space-y-8 animate-fadeIn mt-0">
           
           {/* SEO Text float badge */}
           <span className="text-white font-extrabold tracking-wider text-[10px] md:text-sm uppercase bg-[#E53935] px-4 py-1.5 md:px-5 md:py-2 rounded-full border border-red-500 shadow-[0_4px_20px_rgba(229,57,53,0.4)] animate-float-vibrant-stagger1">
@@ -476,7 +476,7 @@ export function HomePage() {
           </span>
 
           {/* Main Headline & Subheading with gold and teal accent gradients */}
-          <div className="space-y-2 md:space-y-4 max-w-3xl animate-title-scale">
+          <div className="space-y-1 md:space-y-4 max-w-3xl animate-title-scale">
             <h1 className="text-3xl md:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-md">
               Find Your <span className="bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 bg-clip-text text-transparent font-black">Dream Property</span> <span className="bg-gradient-to-r from-teal-300 to-[#00BFA5] bg-clip-text text-transparent font-black">in Vizag</span>
             </h1>
@@ -486,7 +486,7 @@ export function HomePage() {
           </div>
 
           {/* Action Cards (Search Property & Post Property) in the requested format with micro-animations */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-6 w-full max-w-3xl pt-2 md:pt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-6 w-full max-w-3xl pt-1 md:pt-4">
             {/* Search Property Card */}
             <div className="animate-float-vibrant-stagger2 w-full">
               <button
