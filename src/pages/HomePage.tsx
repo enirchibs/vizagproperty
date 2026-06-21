@@ -628,9 +628,9 @@ export function HomePage() {
                 <div className="w-14 h-14 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <TrendingUp className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">Referral Partners</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Referral & Channel Partners</h3>
                 <p className="text-gray-600 mb-6 min-h-[80px]">
-                  Retired employees, working professionals, and local residents can earn referral commissions by connecting buyers and sellers.
+                  Join VizagProperty.co.in and earn commissions by connecting property buyers, sellers, landlords, tenants, builders, and real estate agents.
                 </p>
                 <Link to="/partners" className="inline-flex items-center justify-center w-full bg-green-50 text-green-700 font-bold py-3 rounded-xl hover:bg-green-600 hover:text-white transition-colors">
                   Become a Partner

@@ -1,76 +1,18 @@
-import { useState, useEffect } from 'react'
-import { TrendingUp, Building2, Users, ArrowRight, CheckCircle } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { TrendingUp, Building2, Users, ArrowRight, CheckCircle, Briefcase, GraduationCap, Home } from 'lucide-react'
 import { SEOHead } from '../components/SEOHead'
 
 export function PartnersPage() {
-  const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const [formData, setFormData] = useState({
-    fullName: '',
-    mobile: '',
-    email: '',
-    city: 'Visakhapatnam',
-    partnerType: 'Agent',
-    companyName: '',
-    message: ''
-  })
-
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
-    setSuccess(false)
-
-    try {
-      const { error: submitError } = await supabase.from('partner_enquiries').insert({
-        full_name: formData.fullName,
-        mobile: formData.mobile,
-        email: formData.email,
-        city: formData.city,
-        partner_type: formData.partnerType,
-        company_name: formData.companyName,
-        message: formData.message
-      })
-
-      if (submitError) throw submitError
-
-      setSuccess(true)
-      setFormData({
-        fullName: '',
-        mobile: '',
-        email: '',
-        city: 'Visakhapatnam',
-        partnerType: 'Agent',
-        companyName: '',
-        message: ''
-      })
-    } catch (err: any) {
-      console.error('Error submitting enquiry:', err)
-      setError(err.message || 'Something went wrong. Please try again.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }))
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       <SEOHead 
-        title="Partner With Vizag Property | Agents, Builders & Referral Partners"
-        description="Join VizagProperty.co.in as an Agent, Builder, Developer, or Referral Partner and grow your business with quality property leads."
+        title="Partner With Vizag Property | Earn Commissions & Grow Your Network"
+        description="Join VizagProperty.co.in as an Agent, Builder, or Referral Partner and earn commissions while growing your network across Visakhapatnam."
         url="https://vizagproperty.co.in/partners"
       />
 
@@ -81,223 +23,171 @@ export function PartnersPage() {
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight">
-            Partner With <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-[#00BFA5]">Vizag Property</span>
+            Partner With <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-[#00BFA5]">VizagProperty.co.in</span>
           </h1>
-          <p className="text-lg md:text-2xl text-gray-300 max-w-3xl mx-auto font-medium">
-            Join our growing network of real estate professionals and referral partners across Visakhapatnam.
+          <p className="text-lg md:text-2xl text-gray-300 max-w-3xl mx-auto font-medium mb-10">
+            Grow your income by helping buyers, sellers, tenants, landlords, and builders connect through VizagProperty.co.in.
           </p>
+            <Link 
+              to="/partner/apply" 
+              className="inline-flex items-center justify-center px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all"
+            >
+              Become a Partner
+            </Link>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          
-          {/* Left Column: Benefits & Categories */}
-          <div className="space-y-8 mt-10 lg:mt-20">
-            <h2 className="text-3xl font-bold text-gray-900">Why Partner With Us?</h2>
-            
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Users className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">1. Real Estate Agents</h3>
-                  <ul className="space-y-2 text-gray-600">
-                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Post unlimited properties</li>
-                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Receive buyer enquiries</li>
-                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> WhatsApp lead alerts</li>
-                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Dedicated profile page</li>
-                  </ul>
-                </div>
-              </div>
+        
+        {/* Partner Categories Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+          <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 hover:shadow-2xl transition-all group">
+            <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <Users className="w-8 h-8" />
             </div>
-
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Building2 className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">2. Builders & Developers</h3>
-                  <ul className="space-y-2 text-gray-600">
-                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Project promotion</li>
-                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Featured project placement</li>
-                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Dedicated builder profile</li>
-                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Premium lead generation</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <TrendingUp className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">3. Referral Partners</h3>
-                  <ul className="space-y-2 text-gray-600">
-                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Earn referral commissions</li>
-                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Work from home</li>
-                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> No real estate experience required</li>
-                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Flexible earning opportunity</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">1. Real Estate Agents</h3>
+            <ul className="space-y-3 text-gray-600 mb-8">
+              <li className="flex items-center gap-3"><CheckCircle className="w-5 h-5 text-blue-500" /> Post unlimited properties</li>
+              <li className="flex items-center gap-3"><CheckCircle className="w-5 h-5 text-blue-500" /> Receive verified buyer enquiries</li>
+              <li className="flex items-center gap-3"><CheckCircle className="w-5 h-5 text-blue-500" /> WhatsApp lead alerts</li>
+              <li className="flex items-center gap-3"><CheckCircle className="w-5 h-5 text-blue-500" /> Dedicated agent profile</li>
+            </ul>
           </div>
 
-          {/* Right Column: Registration Form */}
-          <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Become a Partner</h2>
-              <p className="text-gray-600">Fill out the form below and our team will get back to you within 24 hours.</p>
+          <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 hover:shadow-2xl transition-all group">
+            <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <Building2 className="w-8 h-8" />
             </div>
-
-            {success ? (
-              <div className="bg-green-50 border border-green-200 text-green-800 rounded-xl p-6 text-center animate-fadeIn">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-green-600" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Application Received!</h3>
-                <p className="mb-4">Thank you for your interest. Our partnership team will contact you shortly.</p>
-                <button 
-                  onClick={() => setSuccess(false)}
-                  className="bg-green-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors"
-                >
-                  Submit Another
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {error && (
-                  <div className="bg-red-50 text-red-600 p-4 rounded-lg text-sm border border-red-100">
-                    {error}
-                  </div>
-                )}
-
-                <div>
-                  <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
-                  <input
-                    type="text"
-                    id="fullName"
-                    name="fullName"
-                    required
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                    placeholder="Enter your full name"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div>
-                    <label htmlFor="mobile" className="block text-sm font-medium text-gray-700 mb-1">Mobile Number *</label>
-                    <input
-                      type="tel"
-                      id="mobile"
-                      name="mobile"
-                      required
-                      value={formData.mobile}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                      placeholder="e.g. 9876543210"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                      placeholder="Enter your email"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div>
-                    <label htmlFor="partnerType" className="block text-sm font-medium text-gray-700 mb-1">Partner Type *</label>
-                    <select
-                      id="partnerType"
-                      name="partnerType"
-                      required
-                      value={formData.partnerType}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors bg-white"
-                    >
-                      <option value="Agent">Real Estate Agent</option>
-                      <option value="Builder">Builder / Developer</option>
-                      <option value="Referral Partner">Referral Partner</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">City *</label>
-                    <input
-                      type="text"
-                      id="city"
-                      name="city"
-                      required
-                      value={formData.city}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                      placeholder="e.g. Visakhapatnam"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-1">Company / Agency Name (Optional)</label>
-                  <input
-                    type="text"
-                    id="companyName"
-                    name="companyName"
-                    value={formData.companyName}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                    placeholder="Enter company name if applicable"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">Message (Optional)</label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={4}
-                    value={formData.message}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                    placeholder="Tell us a bit about your experience or expectations..."
-                  ></textarea>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
-                >
-                  {loading ? (
-                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  ) : (
-                    <>Submit Application <ArrowRight className="ml-2 w-5 h-5" /></>
-                  )}
-                </button>
-                
-                <p className="text-xs text-center text-gray-500 mt-4">
-                  By submitting this form, you agree to our Terms & Conditions and Privacy Policy.
-                </p>
-              </form>
-            )}
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">2. Builders & Developers</h3>
+            <ul className="space-y-3 text-gray-600 mb-8">
+              <li className="flex items-center gap-3"><CheckCircle className="w-5 h-5 text-orange-500" /> Project promotion</li>
+              <li className="flex items-center gap-3"><CheckCircle className="w-5 h-5 text-orange-500" /> Featured project placement</li>
+              <li className="flex items-center gap-3"><CheckCircle className="w-5 h-5 text-orange-500" /> Dedicated builder profile</li>
+              <li className="flex items-center gap-3"><CheckCircle className="w-5 h-5 text-orange-500" /> Premium lead generation</li>
+            </ul>
           </div>
-
         </div>
+
+        {/* Deep Dive: Referral & Channel Partners */}
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden mb-16">
+          <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-8 md:p-12 text-white">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                <TrendingUp className="w-8 h-8 text-white" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold">3. Referral & Channel Partners</h2>
+            </div>
+            <p className="text-xl text-green-50 max-w-4xl leading-relaxed">
+              Join VizagProperty.co.in and earn commissions by connecting property buyers, sellers, landlords, tenants, builders, and real estate agents. No prior real estate experience is required.
+            </p>
+          </div>
+
+          <div className="p-8 md:p-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              
+              {/* Benefits */}
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                  <TrendingUp className="w-6 h-6 text-green-600" /> Key Benefits
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+                    <span className="text-gray-700 font-medium text-lg">Earn attractive referral commissions</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+                    <span className="text-gray-700 font-medium text-lg">Work from home or part-time</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+                    <span className="text-gray-700 font-medium text-lg">No real estate experience required</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+                    <span className="text-gray-700 font-medium text-lg">Flexible income opportunity</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+                    <span className="text-gray-700 font-medium text-lg">Free registration and training support</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+                    <span className="text-gray-700 font-medium text-lg">WhatsApp-based lead sharing</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+                    <span className="text-gray-700 font-medium text-lg">Unlimited earning potential</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Who Can Join */}
+              <div className="bg-gray-50 p-8 rounded-2xl border border-gray-100">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">Who Can Join?</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm">
+                    <Briefcase className="w-5 h-5 text-gray-400" />
+                    <span className="text-gray-700 font-medium">Retired Employees</span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm">
+                    <Users className="w-5 h-5 text-gray-400" />
+                    <span className="text-gray-700 font-medium">Unemployed Individuals</span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm">
+                    <GraduationCap className="w-5 h-5 text-gray-400" />
+                    <span className="text-gray-700 font-medium">Students</span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm">
+                    <Home className="w-5 h-5 text-gray-400" />
+                    <span className="text-gray-700 font-medium">Homemakers</span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm">
+                    <Briefcase className="w-5 h-5 text-gray-400" />
+                    <span className="text-gray-700 font-medium">Working Professionals</span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm">
+                    <Users className="w-5 h-5 text-gray-400" />
+                    <span className="text-gray-700 font-medium">Freelancers</span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm">
+                    <Users className="w-5 h-5 text-gray-400" />
+                    <span className="text-gray-700 font-medium">Local Community Leaders</span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm">
+                    <Building2 className="w-5 h-5 text-gray-400" />
+                    <span className="text-gray-700 font-medium">Property Enthusiasts</span>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+
+        {/* Highlighted CTA Banner */}
+        <div className="bg-gradient-to-r from-teal-900 via-emerald-900 to-teal-900 rounded-3xl p-8 md:p-12 text-center text-white relative overflow-hidden shadow-2xl">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-teal-500/20 via-transparent to-transparent"></div>
+          
+          <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
+            <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mb-8 backdrop-blur-md border border-white/20">
+              <TrendingUp className="w-10 h-10 text-teal-300" />
+            </div>
+            <h2 className="text-3xl md:text-5xl font-extrabold mb-6 leading-tight">
+              Turn Your Network Into Income
+            </h2>
+            <p className="text-lg md:text-xl text-teal-100 mb-10 max-w-3xl leading-relaxed">
+              Know someone looking to buy, sell, rent, or invest in property? Refer them to VizagProperty.co.in and earn commissions on successful transactions.
+            </p>
+            <Link 
+              to="/partner/apply" 
+              className="inline-flex items-center justify-center px-10 py-5 bg-teal-400 hover:bg-teal-300 text-teal-950 font-extrabold text-xl rounded-full shadow-[0_0_30px_rgba(45,212,191,0.3)] hover:shadow-[0_0_40px_rgba(45,212,191,0.5)] hover:scale-105 transition-all"
+            >
+              Become a Referral Partner <ArrowRight className="ml-3 w-6 h-6" />
+            </Link>
+          </div>
+        </div>
+
       </div>
     </div>
   )

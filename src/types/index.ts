@@ -112,6 +112,25 @@ export interface UserProfile {
   preferences?: Record<string, any>
   created_at: string
   updated_at: string
+  is_partner?: boolean
+  partner_status?: 'pending' | 'approved' | 'rejected' | 'suspended' | null
+  partner_type?: string | null
+  membership_type?: string
+  partner_since?: string | null
+  approved_by?: string | null
+}
+
+export interface PartnerApplication {
+  id: string
+  user_id: string
+  full_name: string
+  email: string
+  mobile: string
+  city: string
+  partner_type: string
+  company_name?: string
+  status: 'pending' | 'approved' | 'rejected'
+  created_at: string
 }
 
 export interface Favorite {
@@ -160,4 +179,31 @@ export interface PartnerEnquiry {
   partner_type: 'Agent' | 'Builder' | 'Referral Partner' | string
   company_name?: string
   message?: string
+}
+
+export interface PartnerProfile {
+  id: string
+  created_at: string
+  full_name: string
+  mobile: string
+  email: string
+  city: string
+  partner_type: string
+  company_name?: string
+  status: 'pending' | 'active' | 'inactive' | 'rejected'
+  membership_type: 'free' | 'silver' | 'gold' | 'builder_pro'
+  last_login?: string
+}
+
+export interface PartnerReferral {
+  id: string
+  partner_id: string
+  customer_name: string
+  customer_mobile: string
+  requirement_type: string
+  preferred_location?: string
+  budget?: string
+  remarks?: string
+  lead_status: 'New' | 'Contacted' | 'Interested' | 'Site Visit Scheduled' | 'Deal Closed' | 'Rejected'
+  created_at: string
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Heart, LogOut, Menu, X, Shield, MessageCircle, Building2, Bell } from 'lucide-react'
+import { Heart, LogOut, Menu, X, Shield, MessageCircle, Building2, Bell, Briefcase } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { UsernameModal } from './UsernameModal'
 import { trackEvent } from '../lib/analytics'
@@ -172,6 +172,11 @@ export function Header() {
                       <Building2 className="h-5 w-5" />
                     </a>
                   )}
+                  {profile?.is_partner && profile?.partner_status === 'approved' && (
+                    <a href="/partner/dashboard" className="hidden md:flex w-10 h-10 rounded-full border-2 border-green-400 bg-green-500/30 items-center justify-center text-green-400 hover:bg-green-500/50 transition-colors" title="Partner Dashboard">
+                      <Briefcase className="h-5 w-5" />
+                    </a>
+                  )}
                   <a href="/dashboard" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors relative">
                     <Bell className="h-5 w-5" />
                     {unreadCount > 0 && (
@@ -331,6 +336,12 @@ export function Header() {
                     <a href="/my-listings" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center space-x-2 border-t border-primary-500 mt-2" onClick={() => setShowMenu(false)}>
                       <Building2 className="h-5 w-5" />
                       <span>My Listings</span>
+                    </a>
+                  )}
+                  {profile?.is_partner && profile?.partner_status === 'approved' && (
+                    <a href="/partner/dashboard" className="text-green-400 hover:text-green-300 py-3 min-h-[44px] flex items-center space-x-2 border-t border-primary-500 mt-2" onClick={() => setShowMenu(false)}>
+                      <Briefcase className="h-5 w-5" />
+                      <span>Partner Dashboard</span>
                     </a>
                   )}
                   <a href="/dashboard" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center justify-between border-t border-primary-500 mt-2" onClick={() => setShowMenu(false)}>
