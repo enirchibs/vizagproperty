@@ -1,6 +1,5 @@
 import React from 'react';
 import { SEOHead } from '../components/SEOHead';
-import { AntigravityPlannerSection } from '../components/AntigravityPlannerSection';
 import AntigravityPlanner from '../components/planner/AntigravityPlanner';
 import { AdSenseStickySidebar } from '../components/AdSenseStickySidebar';
 import { AdSenseInFeedCard } from '../components/AdSenseInFeedCard';

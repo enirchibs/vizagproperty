@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { Calendar, Clock, ArrowLeft, User, Tag } from 'lucide-react';
 import { SEOHead } from '../components/SEOHead';
 import { AdSenseInArticle } from '../components/AdSenseInArticle';
+import { injectInternalLinks } from '../utils/seo/autoLinker';
 
 interface BlogPost {
   id: string;
@@ -178,7 +179,7 @@ export function BlogPostPage() {
               }
             }}
           >
-            {blog.content}
+            {injectInternalLinks(blog.content)}
           </ReactMarkdown>
         </div>
 
