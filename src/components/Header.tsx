@@ -86,15 +86,15 @@ export function Header() {
               >
                 {showMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
-              <div className="flex items-center gap-2 select-none">
-                <div className="bg-gradient-to-br from-amber-400 to-yellow-500 p-2 rounded-xl text-[#0d1b3d] shadow-md shadow-amber-400/20">
-                  <Building2 className="h-5 w-5 md:h-6 md:w-6" />
+              <div className="flex items-center gap-3 select-none bg-[#E53935] px-4 py-2 rounded-xl shadow-[0_4px_15px_rgba(229,57,53,0.4)] border border-red-500">
+                <div className="bg-white p-2 rounded-xl text-[#E53935] shadow-md">
+                  <Building2 className="h-6 w-6 md:h-8 md:w-8" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-lg md:text-2xl font-black tracking-tight text-white leading-none">
-                    Vizag<span className="text-amber-400">Property</span>
+                  <span className="text-xl md:text-3xl font-black tracking-tight text-white leading-none drop-shadow-sm">
+                    VizagProperty
                   </span>
-                  <span className="text-[9px] md:text-xs text-slate-300 font-medium tracking-wide">
+                  <span className="text-[10px] md:text-sm text-white font-medium tracking-wide">
                     Gateway to Coastal Living
                   </span>
                 </div>
