@@ -207,20 +207,20 @@ export function FilterModal({
                     <>
                       <button
                         onClick={() => setPropertySubType('residential')}
-                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
+                        className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'residential'
-                            ? 'bg-white text-gray-900 shadow-sm'
-                            : 'text-gray-600'
+                            ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/25 scale-[1.02]'
+                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
                         }`}
                       >
                         Residential
                       </button>
                       <button
                         onClick={() => setPropertySubType('plot')}
-                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
+                        className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'plot'
-                            ? 'bg-white text-gray-900 shadow-sm'
-                            : 'text-gray-600'
+                            ? 'bg-green-600 text-white border-green-600 shadow-md shadow-green-500/25 scale-[1.02]'
+                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
                         }`}
                       >
                         Plot
@@ -230,20 +230,20 @@ export function FilterModal({
                     <>
                       <button
                         onClick={() => setPropertySubType('residential')}
-                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
+                        className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'residential'
-                            ? 'bg-white text-gray-900 shadow-sm'
-                            : 'text-gray-600'
+                            ? 'bg-rose-600 text-white border-rose-600 shadow-md shadow-rose-500/25 scale-[1.02]'
+                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
                         }`}
                       >
                         House/Flat
                       </button>
                       <button
                         onClick={() => setPropertySubType('pg')}
-                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
+                        className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'pg'
-                            ? 'bg-white text-gray-900 shadow-sm'
-                            : 'text-gray-600'
+                            ? 'bg-amber-600 text-white border-amber-600 shadow-md shadow-amber-500/25 scale-[1.02]'
+                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
                         }`}
                       >
                         PG/Hostel
@@ -353,20 +353,20 @@ export function FilterModal({
                     <>
                       <button
                         onClick={() => setPropertySubType('residential')}
-                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
+                        className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'residential'
-                            ? 'bg-white text-gray-900 shadow-sm'
-                            : 'text-gray-600'
+                            ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/25 scale-[1.02]'
+                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
                         }`}
                       >
                         Residential
                       </button>
                       <button
                         onClick={() => setPropertySubType('plot')}
-                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
+                        className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'plot'
-                            ? 'bg-white text-gray-900 shadow-sm'
-                            : 'text-gray-600'
+                            ? 'bg-green-600 text-white border-green-600 shadow-md shadow-green-500/25 scale-[1.02]'
+                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
                         }`}
                       >
                         Plot
@@ -376,20 +376,20 @@ export function FilterModal({
                     <>
                       <button
                         onClick={() => setPropertySubType('residential')}
-                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
+                        className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'residential'
-                            ? 'bg-white text-gray-900 shadow-sm'
-                            : 'text-gray-600'
+                            ? 'bg-rose-600 text-white border-rose-600 shadow-md shadow-rose-500/25 scale-[1.02]'
+                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
                         }`}
                       >
                         House/Flat
                       </button>
                       <button
                         onClick={() => setPropertySubType('pg')}
-                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
+                        className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-extrabold transition-all duration-300 border-2 ${
                           propertySubType === 'pg'
-                            ? 'bg-white text-gray-900 shadow-sm'
-                            : 'text-gray-600'
+                            ? 'bg-amber-600 text-white border-amber-600 shadow-md shadow-amber-500/25 scale-[1.02]'
+                            : 'bg-white/80 text-gray-600 border-gray-200 hover:text-gray-900 hover:border-gray-300'
                         }`}
                       >
                         PG/Hostel
