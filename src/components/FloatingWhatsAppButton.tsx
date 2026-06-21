@@ -7,7 +7,7 @@ export function FloatingWhatsAppButton() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 select-none">
+    <div className="fixed bottom-16 right-6 z-50 flex items-center gap-2.5 select-none">
       {/* "Talk to Expert" capsule */}
       <button
         onClick={handleClick}

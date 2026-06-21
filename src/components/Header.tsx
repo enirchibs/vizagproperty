@@ -86,8 +86,8 @@ export function Header() {
               >
                 {showMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
-              <div className="flex items-center gap-3 select-none bg-[#E53935] px-4 py-2 rounded-xl shadow-[0_4px_15px_rgba(229,57,53,0.4)] border border-red-500">
-                <div className="bg-white p-2 rounded-xl text-[#E53935] shadow-md">
+              <div className="flex items-center gap-3 select-none bg-blue-900 px-4 py-2 rounded-xl shadow-[0_4px_15px_rgba(30,58,138,0.4)] border border-blue-800">
+                <div className="bg-white p-2 rounded-xl text-blue-900 shadow-md">
                   <Building2 className="h-6 w-6 md:h-8 md:w-8" />
                 </div>
                 <div className="flex flex-col">
