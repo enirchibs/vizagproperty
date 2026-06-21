@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { ChatMessage, Property } from '../types'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 interface ChatMessageWithProperties extends ChatMessage {
   properties?: Property[]
@@ -17,10 +17,19 @@ interface ChatBotProps {
 export function ChatBot({ externalTrigger }: ChatBotProps = {}) {
   const { user } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  
+  const hideOnRoutes = ['/add-property', '/post-property', '/search', '/mobile-search']
+
+  if (hideOnRoutes.includes(location.pathname)) {
+    return null
+  }
+
   const [isOpen, setIsOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
   const [isMaximized, setIsMaximized] = useState(false)
   const [messages, setMessages] = useState<ChatMessageWithProperties[]>([])
+
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [sessionId] = useState(() => crypto.randomUUID())

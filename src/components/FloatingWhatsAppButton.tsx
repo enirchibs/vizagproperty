@@ -1,7 +1,14 @@
 import { MessageCircle } from 'lucide-react'
 import { openWhatsApp } from '../lib/whatsapp'
+import { useLocation } from 'react-router-dom'
 
 export function FloatingWhatsAppButton() {
+  const location = useLocation()
+  const hideOnRoutes = ['/add-property', '/post-property', '/search', '/mobile-search']
+
+  if (hideOnRoutes.includes(location.pathname)) {
+    return null
+  }
   const handleClick = () => {
     openWhatsApp('Hi, I am looking for properties in Vizag listed on VizagProperty. Please share more details.')
   }
