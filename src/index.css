@@ -250,4 +250,63 @@ img, video, iframe {
   .animate-float-slow {
     animation: floatSlow 4s ease-in-out infinite;
   }
+
+  @keyframes floatHeavy {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+
+  .animate-float-heavy {
+    animation: floatHeavy 3s ease-in-out infinite;
+  }
+
+  @keyframes pulseRing {
+    0% {
+      box-shadow: 0 0 0 0 rgba(0, 191, 165, 0.5);
+    }
+    70% {
+      box-shadow: 0 0 0 15px rgba(0, 191, 165, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(0, 191, 165, 0);
+    }
+  }
+
+  .animate-pulse-ring {
+    animation: pulseRing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-slide-in-left {
+    animation: slideInLeft 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
 }
