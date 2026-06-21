@@ -35,9 +35,11 @@ export function LoginPage() {
   }
 
   return (
-    <AuthModal
-      onClose={handleClose}
-      redirectTo={redirectParam}
-    />
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <AuthModal
+        onClose={handleClose}
+        redirectTo={redirectParam}
+      />
+    </div>
   )
 }

@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { SearchProvider } from './contexts/SearchContext'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { ChatBot } from './components/ChatBot'
@@ -58,56 +59,58 @@ function AppContent() {
         <TopAnnouncementBar />
         <Header />
         <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div></div>}>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/mobile-search" element={<MobileSearchPage />} />
-          <Route path="/vizag" element={<VizagPage />} />
-          <Route path="/vmrda-plots" element={<VMRDAplotsPage />} />
-          <Route path="/vmrda-approved-plots-vizag" element={<VMRDAApprovedPlotsPage />} />
-          <Route path="/residential-property-in-vizag" element={<ResidentialPropertyPage />} />
-          <Route path="/flats-for-sale-in-vizag" element={<FlatsForSalePage />} />
-          <Route path="/villas-in-vizag" element={<VillasPage />} />
-          <Route path="/flats-for-rent-vizag" element={<FlatsForRentPage />} />
-          <Route path="/pg-hostels-in-vizag" element={<PGHostelsPage />} />
-          <Route path="/gated-community-plots-vizag" element={<GatedCommunityPlotsPage />} />
-          <Route path="/madhurawada" element={<MadhurawadaPage />} />
-          <Route path="/yendada" element={<YendadaPage />} />
-          <Route path="/pm-palem" element={<PMPalemPage />} />
-          <Route path="/mvp-colony" element={<MVPColonyPage />} />
-          <Route path="/gajuwaka" element={<GajuwakaPage />} />
-          <Route path="/vizag/madhurawada" element={<MadhurawadaPage />} />
-          <Route path="/vizag/yendada" element={<YendadaPage />} />
-          <Route path="/vizag/pm-palem" element={<PMPalemPage />} />
-          <Route path="/vizag/mvp-colony" element={<MVPColonyPage />} />
-          <Route path="/vizag/gajuwaka" element={<GajuwakaPage />} />
-          <Route path="/properties" element={<PropertiesPage />} />
-          <Route path="/property/:id" element={<PropertyDetailsPage />} />
-          <Route path="/recommendations" element={<RecommendationsPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/favorites" element={<DashboardPage />} />
-          <Route path="/my-listings" element={<MyListingsPage />} />
-          <Route path="/admin" element={<AdminPropertiesPage />} />
-          <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-          <Route path="/admin/properties" element={<AdminPropertiesPage />} />
-          <Route path="/add-property" element={<AddPropertyPage />} />
-          <Route path="/post-property" element={<AddPropertyPage />} />
-          <Route path="/edit-property/:id" element={<EditPropertyPage />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/blog/:slug" element={<BlogPostPage />} />
-          <Route path="/about" element={<AboutUsPage />} />
-          <Route path="/contact" element={<ContactUsPage />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-          <Route path="/terms-and-conditions" element={<TermsAndConditionsPage />} />
-          <Route path="/disclaimer" element={<DisclaimerPage />} />
-          
-          {/* New SEO Silo Routes */}
-          <Route path="/plots/bhogapuram" element={<BhogapuramPlotsPage />} />
-          <Route path="/residential/madhurawada" element={<MadhurawadaResidentialPage />} />
-          <Route path="/commercial/office-space" element={<OfficeSpacePage />} />
-          <Route path="/insights/bhogapuram-airport-impact" element={<BhogapuramImpactPage />} />
-          </Routes>
+          <ErrorBoundary>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/mobile-search" element={<MobileSearchPage />} />
+              <Route path="/vizag" element={<VizagPage />} />
+              <Route path="/vmrda-plots" element={<VMRDAplotsPage />} />
+              <Route path="/vmrda-approved-plots-vizag" element={<VMRDAApprovedPlotsPage />} />
+              <Route path="/residential-property-in-vizag" element={<ResidentialPropertyPage />} />
+              <Route path="/flats-for-sale-in-vizag" element={<FlatsForSalePage />} />
+              <Route path="/villas-in-vizag" element={<VillasPage />} />
+              <Route path="/flats-for-rent-vizag" element={<FlatsForRentPage />} />
+              <Route path="/pg-hostels-in-vizag" element={<PGHostelsPage />} />
+              <Route path="/gated-community-plots-vizag" element={<GatedCommunityPlotsPage />} />
+              <Route path="/madhurawada" element={<MadhurawadaPage />} />
+              <Route path="/yendada" element={<YendadaPage />} />
+              <Route path="/pm-palem" element={<PMPalemPage />} />
+              <Route path="/mvp-colony" element={<MVPColonyPage />} />
+              <Route path="/gajuwaka" element={<GajuwakaPage />} />
+              <Route path="/vizag/madhurawada" element={<MadhurawadaPage />} />
+              <Route path="/vizag/yendada" element={<YendadaPage />} />
+              <Route path="/vizag/pm-palem" element={<PMPalemPage />} />
+              <Route path="/vizag/mvp-colony" element={<MVPColonyPage />} />
+              <Route path="/vizag/gajuwaka" element={<GajuwakaPage />} />
+              <Route path="/properties" element={<PropertiesPage />} />
+              <Route path="/property/:id" element={<PropertyDetailsPage />} />
+              <Route path="/recommendations" element={<RecommendationsPage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/favorites" element={<DashboardPage />} />
+              <Route path="/my-listings" element={<MyListingsPage />} />
+              <Route path="/admin" element={<AdminPropertiesPage />} />
+              <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+              <Route path="/admin/properties" element={<AdminPropertiesPage />} />
+              <Route path="/add-property" element={<AddPropertyPage />} />
+              <Route path="/post-property" element={<AddPropertyPage />} />
+              <Route path="/edit-property/:id" element={<EditPropertyPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:slug" element={<BlogPostPage />} />
+              <Route path="/about" element={<AboutUsPage />} />
+              <Route path="/contact" element={<ContactUsPage />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+              <Route path="/terms-and-conditions" element={<TermsAndConditionsPage />} />
+              <Route path="/disclaimer" element={<DisclaimerPage />} />
+              
+              {/* New SEO Silo Routes */}
+              <Route path="/plots/bhogapuram" element={<BhogapuramPlotsPage />} />
+              <Route path="/residential/madhurawada" element={<MadhurawadaResidentialPage />} />
+              <Route path="/commercial/office-space" element={<OfficeSpacePage />} />
+              <Route path="/insights/bhogapuram-airport-impact" element={<BhogapuramImpactPage />} />
+            </Routes>
+          </ErrorBoundary>
         </Suspense>
         <Footer />
         <ChatBot />
