@@ -44,6 +44,10 @@ const ContactUsPage = lazy(() => import('./pages/ContactUsPage').then(m => ({ de
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })))
 const TermsAndConditionsPage = lazy(() => import('./pages/TermsAndConditionsPage').then(m => ({ default: m.TermsAndConditionsPage })))
 const DisclaimerPage = lazy(() => import('./pages/DisclaimerPage').then(m => ({ default: m.DisclaimerPage })))
+const BhogapuramPlotsPage = lazy(() => import('./pages/BhogapuramPlotsPage').then(m => ({ default: m.BhogapuramPlotsPage })))
+const MadhurawadaResidentialPage = lazy(() => import('./pages/MadhurawadaResidentialPage').then(m => ({ default: m.MadhurawadaResidentialPage })))
+const OfficeSpacePage = lazy(() => import('./pages/OfficeSpacePage').then(m => ({ default: m.OfficeSpacePage })))
+const BhogapuramImpactPage = lazy(() => import('./pages/BhogapuramImpactPage').then(m => ({ default: m.BhogapuramImpactPage })))
 
 function AppContent() {
   const { showUsernamePrompt, setShowUsernamePrompt } = useAuth()
@@ -97,6 +101,12 @@ function AppContent() {
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditionsPage />} />
           <Route path="/disclaimer" element={<DisclaimerPage />} />
+          
+          {/* New SEO Silo Routes */}
+          <Route path="/plots/bhogapuram" element={<BhogapuramPlotsPage />} />
+          <Route path="/residential/madhurawada" element={<MadhurawadaResidentialPage />} />
+          <Route path="/commercial/office-space" element={<OfficeSpacePage />} />
+          <Route path="/insights/bhogapuram-airport-impact" element={<BhogapuramImpactPage />} />
           </Routes>
         </Suspense>
         <Footer />
