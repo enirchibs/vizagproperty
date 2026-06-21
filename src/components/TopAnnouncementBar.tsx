@@ -40,18 +40,18 @@ export function TopAnnouncementBar() {
   }, [items.length]);
 
   return (
-    <div className="w-full flex items-center justify-center z-40 relative bg-transparent py-1.5">
+    <div className="w-full flex items-center justify-center z-40 relative bg-transparent py-1 md:py-1.5">
       <a 
         href="tel:7207550499" 
-        className={`inline-flex items-center gap-2 px-4 py-1 bg-[#e2ad10] hover:bg-[#d1a00e] text-white rounded-full font-bold text-xs md:text-sm tracking-wider transition-all duration-500 transform shadow-sm ${
+        className={`inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-0.5 md:py-1 bg-[#e2ad10] hover:bg-[#d1a00e] text-white rounded-full font-bold text-[10px] md:text-sm tracking-wider transition-all duration-500 transform shadow-sm ${
           isVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-2'
         }`}
       >
         <div className="bg-white/20 p-1 rounded-full">
-          <Phone className="h-3.5 w-3.5 animate-bounce text-white fill-white/20" />
+          <Phone className="h-3 w-3 md:h-3.5 md:w-3.5 animate-bounce text-white fill-white/20" />
         </div>
         <span className="uppercase">{items[currentIndex].text}:</span>
-        <span className="font-extrabold tracking-wider text-white text-sm md:text-base drop-shadow-sm">7207550499</span>
+        <span className="font-extrabold tracking-wider text-white text-xs md:text-base drop-shadow-sm">7207550499</span>
       </a>
     </div>
   );
