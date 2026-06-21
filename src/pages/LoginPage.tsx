@@ -17,9 +17,11 @@ export function LoginPage() {
     }
   }, [user, loading, navigate, redirectParam])
 
-  const handleClose = () => {
+  const handleClose = (isSuccess?: boolean) => {
     setShowModal(false)
-    navigate('/')
+    if (!isSuccess) {
+      navigate('/')
+    }
   }
 
   if (loading) {

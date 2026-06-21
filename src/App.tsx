@@ -9,7 +9,6 @@ import { ChatBot } from './components/ChatBot'
 import { FloatingWhatsAppButton } from './components/FloatingWhatsAppButton'
 import { TopAnnouncementBar } from './components/TopAnnouncementBar'
 import { UsernameModal } from './components/UsernameModal'
-import { CookieBanner } from './components/CookieBanner'
 import { HomePage } from './pages/HomePage'
 
 const LoginPage = lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })))
@@ -115,7 +114,6 @@ function AppContent() {
         <Footer />
         <ChatBot />
         <FloatingWhatsAppButton />
-        <CookieBanner />
 
         {showUsernamePrompt && (
           <UsernameModal onClose={() => setShowUsernamePrompt(false)} />

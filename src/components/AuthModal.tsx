@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
 interface AuthModalProps {
-  onClose: () => void
+  onClose: (isSuccess?: boolean) => void
   intentRole?: 'buyer' | 'owner'
   redirectTo?: string
 }
@@ -32,7 +32,7 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
 
   useEffect(() => {
     if (user) {
-      onClose()
+      onClose(true)
 
       const authRedirect = localStorage.getItem('auth_redirect')
       const googleRedirect = localStorage.getItem('google_auth_redirect')
@@ -212,7 +212,7 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
       await verifyOtp(phoneRef.current, otpValue)
 
       localStorage.setItem('last_login_method', 'phone')
-      onClose()
+      onClose(true)
 
     } catch (err: any) {
       setError(err.message || 'Invalid or expired OTP')
@@ -288,7 +288,7 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
 
   return (
     <div
-      onClick={onClose}
+      onClick={() => onClose()}
       className="fixed inset-0 bg-black/40 flex items-end md:items-center justify-center z-50 animate-fadeIn"
     >
       <div
@@ -325,7 +325,7 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
                   <h2 className="text-lg font-semibold text-gray-900">Login / Sign up</h2>
                 </div>
                 <button
-                  onClick={onClose}
+                  onClick={() => onClose()}
                   className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
                 >
                   ✕
@@ -471,7 +471,7 @@ export function AuthModal({ onClose, intentRole = 'buyer', redirectTo }: AuthMod
             <>
               <div className="flex items-center justify-between mb-6">
                 <button
-                  onClick={onClose}
+                  onClick={() => onClose()}
                   className="text-gray-500 hover:text-gray-700 text-2xl leading-none ml-auto"
                 >
                   ✕
