@@ -1,7 +1,15 @@
 import { useState, useEffect } from 'react'
 import { Phone } from 'lucide-react'
+import { useLocation } from 'react-router-dom'
 
 export function TopAnnouncementBar() {
+  const location = useLocation();
+  const hideOnRoutes = ['/add-property', '/post-property'];
+  
+  if (hideOnRoutes.includes(location.pathname)) {
+    return null;
+  }
+
   const items = [
     { text: "Call Now", lang: "English" },
     { text: "ఇప్పుడే కాల్ చేయండి", lang: "Telugu" },
@@ -32,7 +40,7 @@ export function TopAnnouncementBar() {
   }, [items.length]);
 
   return (
-    <div className="w-full flex items-center justify-center z-[999] relative bg-transparent py-1.5">
+    <div className="w-full flex items-center justify-center z-40 relative bg-transparent py-1.5">
       <a 
         href="tel:7207550499" 
         className={`inline-flex items-center gap-2 px-4 py-1 bg-[#e2ad10] hover:bg-[#d1a00e] text-white rounded-full font-bold text-xs md:text-sm tracking-wider transition-all duration-500 transform shadow-sm ${
