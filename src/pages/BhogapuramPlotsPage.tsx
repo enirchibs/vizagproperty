@@ -1,6 +1,7 @@
 import React from 'react';
 import { SEOHead } from '../components/SEOHead';
 import { AntigravityPlannerSection } from '../components/AntigravityPlannerSection';
+import AntigravityPlanner from '../components/planner/AntigravityPlanner';
 import { AdSenseStickySidebar } from '../components/AdSenseStickySidebar';
 import { AdSenseInFeedCard } from '../components/AdSenseInFeedCard';
 import { MapPin, Search } from 'lucide-react';
@@ -35,6 +36,15 @@ export function BhogapuramPlotsPage() {
         url="https://vizagproperty.co.in/plots/bhogapuram"
       />
 
+      {/* 1. TOP ANCHOR/LEADERBOARD AD ZONE */}
+      {/* Placed above the main wrapper, restricted to a fixed height to prevent Cumulative Layout Shift (CLS) */}
+      <div className="w-full bg-white border-b border-gray-200 py-2 flex justify-center items-center min-h-[90px] overflow-hidden">
+        {/* Google AdSense Responsive Leaderboard */}
+        <div className="text-[10px] uppercase tracking-wider text-gray-400 text-center">
+          Advertisement • Responsive Top Leaderboard
+        </div>
+      </div>
+
       {/* Hero Section */}
       <section className="relative pt-24 pb-16 bg-gradient-to-br from-primary-900 to-primary-700 text-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
@@ -54,7 +64,7 @@ export function BhogapuramPlotsPage() {
 
       {/* Flagship Feature: 3D Planner */}
       <div className="mt-[-2rem] px-4 sm:px-6 lg:px-8 relative z-20">
-        <AntigravityPlannerSection plotId="bhogapuram-premium-1" title="Bhogapuram 3D Plot Visualizer" />
+        <AntigravityPlanner locality="Bhogapuram" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 grid grid-cols-1 lg:grid-cols-4 gap-8">

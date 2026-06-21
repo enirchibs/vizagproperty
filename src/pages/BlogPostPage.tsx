@@ -3,6 +3,8 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import ReactMarkdown from 'react-markdown';
 import { Calendar, Clock, ArrowLeft, User, Tag } from 'lucide-react';
+import { SEOHead } from '../components/SEOHead';
+import { AdSenseInArticle } from '../components/AdSenseInArticle';
 
 interface BlogPost {
   id: string;
@@ -42,17 +44,6 @@ export function BlogPostPage() {
         
         if (data) {
           setBlog(data);
-          document.title = data.meta_title || `${data.title} | VizagProperty`;
-          // Update meta description
-          let meta = document.querySelector('meta[name="description"]');
-          if (meta) {
-            meta.setAttribute('content', data.meta_description);
-          } else {
-            meta = document.createElement('meta');
-            meta.setAttribute('name', 'description');
-            meta.setAttribute('content', data.meta_description);
-            document.head.appendChild(meta);
-          }
         } else {
           setError('Blog not found');
         }
@@ -93,6 +84,33 @@ export function BlogPostPage() {
 
   return (
     <article className="min-h-screen bg-white">
+      <SEOHead 
+        title={blog.meta_title || `${blog.title} | VizagProperty`}
+        description={blog.meta_description}
+        ogImage={blog.og_image || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"}
+        url={window.location.href}
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": blog.title,
+          "description": blog.meta_description,
+          "image": blog.og_image,
+          "author": {
+            "@type": "Person",
+            "name": blog.author_name
+          },
+          "datePublished": new Date(blog.published_at).toISOString(),
+          "publisher": {
+            "@type": "Organization",
+            "name": "VizagProperty",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://vizagproperty.co.in/logo.png"
+            }
+          }
+        }}
+      />
+      
       {/* Hero Section */}
       <div className="relative w-full h-[40vh] min-h-[300px] lg:h-[50vh] bg-gray-900">
         <img
@@ -143,7 +161,25 @@ export function BlogPostPage() {
         </Link>
 
         <div className="prose prose-lg prose-primary max-w-none prose-headings:font-bold prose-a:text-primary-600 hover:prose-a:text-primary-700">
-          <ReactMarkdown>{blog.content}</ReactMarkdown>
+          <ReactMarkdown
+            components={{
+              p: ({ node, children, ...props }) => {
+                const content = Array.isArray(children) ? children.join('') : String(children);
+                if (content.includes('[AdSense Native In-Article Ad Placeholder]') || content.includes('[AdSense Content Link Ad Placeholder]') || content.includes('[AdSense Matched Content Unit Placeholder]')) {
+                  return <AdSenseInArticle />;
+                }
+                return <p {...props}>{children}</p>;
+              },
+              blockquote: ({ node, children, ...props }) => {
+                // If the blockquote only contains the AdSense component, we can unwrap it to prevent layout padding issues
+                const isAdSense = String(children).includes('[object Object]'); // Rough heuristic for React Node insertion inside blockquote
+                if (isAdSense) return <div className="my-8">{children}</div>;
+                return <blockquote {...props}>{children}</blockquote>;
+              }
+            }}
+          >
+            {blog.content}
+          </ReactMarkdown>
         </div>
 
         {/* Tags */}
