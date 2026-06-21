@@ -86,11 +86,19 @@ export function Header() {
               >
                 {showMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
-              <img
-                src="../dist/assets/vizag-property-logo.png"
-                alt="Vizag Property - Gateway to Coastal Living"
-                className="h-9 w-auto max-w-[128px] object-contain md:h-14 md:max-w-none"
-              />
+              <div className="flex items-center gap-2 select-none">
+                <div className="bg-gradient-to-br from-amber-400 to-yellow-500 p-2 rounded-xl text-[#0d1b3d] shadow-md shadow-amber-400/20">
+                  <Building2 className="h-5 w-5 md:h-6 md:w-6" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-lg md:text-2xl font-black tracking-tight text-white leading-none">
+                    Vizag<span className="text-amber-400">Property</span>
+                  </span>
+                  <span className="text-[9px] md:text-xs text-slate-300 font-medium tracking-wide">
+                    Gateway to Coastal Living
+                  </span>
+                </div>
+              </div>
             </a>
 
             <nav className="hidden md:flex items-center space-x-3 md:space-x-4 lg:space-x-6 overflow-x-auto scrollbar-hide flex-1 mx-2 md:mx-4">
