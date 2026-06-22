@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Navigate, Link } from 'react-router-dom'
 import { 
-  Building2, Users, IndianRupee, Clock, CheckCircle, 
+  Building2, Users, Clock, CheckCircle, 
   PlusCircle, LayoutDashboard, FileText, Settings, LogOut, XCircle
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
@@ -131,11 +131,36 @@ export function PartnerDashboardPage() {
 
   // Calculate Stats
   const totalReferrals = referrals.length
-  const pendingReferrals = referrals.filter(r => ['New', 'Contacted', 'Interested', 'Site Visit Scheduled'].includes(r.lead_status)).length
-  const successfulReferrals = referrals.filter(r => r.lead_status === 'Deal Closed').length
+  const activeReferrals = referrals.filter(r => !['Deal Closed', 'Commission Paid', 'Rejected'].includes(r.lead_status)).length
+  const successfulReferrals = referrals.filter(r => ['Deal Closed', 'Commission Approved', 'Commission Paid'].includes(r.lead_status)).length
   
-  // Fake estimation for demo: 10,000 per closed deal
-  const estimatedEarnings = successfulReferrals * 10000
+  const totalEarned = referrals
+    .filter(r => ['Deal Closed', 'Commission Approved', 'Commission Paid'].includes(r.lead_status))
+    .reduce((sum, r) => sum + (Number(r.commission_amount) || 0), 0)
+    
+  const pendingCommission = referrals
+    .filter(r => !['Deal Closed', 'Commission Approved', 'Commission Paid', 'Rejected'].includes(r.lead_status))
+    .reduce((sum, r) => sum + (Number(r.commission_amount) || 0), 0)
+
+  const paidCommission = referrals
+    .filter(r => r.lead_status === 'Commission Paid')
+    .reduce((sum, r) => sum + (Number(r.commission_amount) || 0), 0)
+
+  const getBadgeColor = (status: string) => {
+    switch (status) {
+      case 'New': return 'bg-blue-100 text-blue-800 border-blue-200'
+      case 'Contacted':
+      case 'Qualified':
+      case 'Negotiation': return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+      case 'Property Shared':
+      case 'Site Visit Scheduled': return 'bg-purple-100 text-purple-800 border-purple-200'
+      case 'Deal Closed':
+      case 'Commission Approved': return 'bg-green-100 text-green-800 border-green-200'
+      case 'Commission Paid': return 'bg-[#166534] text-white border-[#14532d]' // Dark Green
+      case 'Rejected': return 'bg-red-100 text-red-800 border-red-200'
+      default: return 'bg-gray-100 text-gray-800 border-gray-200'
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -227,6 +252,9 @@ export function PartnerDashboardPage() {
                   <span className="bg-purple-50 text-purple-700 px-3 py-1 rounded-full font-bold border border-purple-100 uppercase">
                     {profile.membership_type || 'Free'} Member
                   </span>
+                  <span className="bg-gray-50 text-gray-700 px-3 py-1 rounded-full font-bold border border-gray-200">
+                    Partner Since: {profile.partner_since ? new Date(profile.partner_since).toLocaleDateString() : new Date(profile.created_at).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
               
@@ -241,9 +269,9 @@ export function PartnerDashboardPage() {
 
 
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            {/* Referrals Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
                 <div className="flex justify-between items-start mb-4">
                   <div className="bg-blue-100 p-3 rounded-xl">
                     <Users className="w-6 h-6 text-blue-600" />
@@ -253,36 +281,50 @@ export function PartnerDashboardPage() {
                 <p className="text-gray-500 font-medium">Total Referrals</p>
               </div>
 
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
                 <div className="flex justify-between items-start mb-4">
                   <div className="bg-yellow-100 p-3 rounded-xl">
                     <Clock className="w-6 h-6 text-yellow-600" />
                   </div>
-                  <span className="text-3xl font-black text-gray-900">{pendingReferrals}</span>
+                  <span className="text-3xl font-black text-gray-900">{activeReferrals}</span>
                 </div>
-                <p className="text-gray-500 font-medium">In Progress</p>
+                <p className="text-gray-500 font-medium">Active Referrals</p>
               </div>
 
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
                 <div className="flex justify-between items-start mb-4">
                   <div className="bg-green-100 p-3 rounded-xl">
                     <CheckCircle className="w-6 h-6 text-green-600" />
                   </div>
                   <span className="text-3xl font-black text-gray-900">{successfulReferrals}</span>
                 </div>
-                <p className="text-gray-500 font-medium">Successful Deals</p>
+                <p className="text-gray-500 font-medium">Closed Deals</p>
+              </div>
+            </div>
+
+            {/* Earnings Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <p className="text-gray-500 font-medium mb-1">Pending Commission</p>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-xl text-yellow-600">₹</span>
+                  <span className="text-3xl font-black text-gray-900">{pendingCommission.toLocaleString('en-IN')}</span>
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <p className="text-gray-500 font-medium mb-1">Paid Commission</p>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-xl text-green-600">₹</span>
+                  <span className="text-3xl font-black text-gray-900">{paidCommission.toLocaleString('en-IN')}</span>
+                </div>
               </div>
 
               <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700 text-white">
-                <div className="flex justify-between items-start mb-4">
-                  <div className="bg-white/10 p-3 rounded-xl backdrop-blur-sm">
-                    <IndianRupee className="w-6 h-6 text-emerald-400" />
-                  </div>
-                </div>
-                <p className="text-slate-400 font-medium mb-1">Est. Earnings</p>
+                <p className="text-slate-400 font-medium mb-1">Total Earned</p>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-xl text-slate-300">₹</span>
-                  <span className="text-3xl font-black">{estimatedEarnings.toLocaleString('en-IN')}</span>
+                  <span className="text-xl text-emerald-400">₹</span>
+                  <span className="text-3xl font-black">{totalEarned.toLocaleString('en-IN')}</span>
                 </div>
               </div>
             </div>
@@ -454,8 +496,10 @@ export function PartnerDashboardPage() {
                         <th className="p-4 border-b border-gray-100">Customer Name</th>
                         <th className="p-4 border-b border-gray-100">Requirement</th>
                         <th className="p-4 border-b border-gray-100">Location</th>
-                        <th className="p-4 border-b border-gray-100">Status</th>
                         <th className="p-4 border-b border-gray-100">Date</th>
+                        <th className="p-4 border-b border-gray-100">Status</th>
+                        <th className="p-4 border-b border-gray-100">Commission</th>
+                        <th className="p-4 border-b border-gray-100 text-right">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
@@ -473,18 +517,21 @@ export function PartnerDashboardPage() {
                           <td className="p-4 text-gray-600 text-sm">
                             {referral.preferred_location || '-'}
                           </td>
+                          <td className="p-4 text-sm text-gray-500">
+                            {new Date(referral.created_at).toLocaleDateString()}
+                          </td>
                           <td className="p-4">
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
-                              referral.lead_status === 'New' ? 'bg-blue-50 text-blue-700 border-blue-100' :
-                              referral.lead_status === 'Deal Closed' ? 'bg-green-50 text-green-700 border-green-100' :
-                              referral.lead_status === 'Rejected' ? 'bg-red-50 text-red-700 border-red-100' :
-                              'bg-yellow-50 text-yellow-700 border-yellow-100'
-                            }`}>
+                            <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getBadgeColor(referral.lead_status)}`}>
                               {referral.lead_status}
                             </span>
                           </td>
-                          <td className="p-4 text-sm text-gray-500">
-                            {new Date(referral.created_at).toLocaleDateString()}
+                          <td className="p-4 font-bold text-gray-900">
+                            ₹{(Number(referral.commission_amount) || 0).toLocaleString('en-IN')}
+                          </td>
+                          <td className="p-4 text-right">
+                            <Link to={`/partner/referrals/${referral.id}`} className="text-primary-600 hover:text-primary-800 font-bold text-sm bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors inline-block text-center whitespace-nowrap">
+                              View Details
+                            </Link>
                           </td>
                         </tr>
                       ))}

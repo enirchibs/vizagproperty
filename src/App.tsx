@@ -8,6 +8,7 @@ import { Footer } from './components/Footer'
 import { ChatBot } from './components/ChatBot'
 import { FloatingWhatsAppButton } from './components/FloatingWhatsAppButton'
 import { TopAnnouncementBar } from './components/TopAnnouncementBar'
+import { FloatingSocialShare } from './components/FloatingSocialShare'
 import { UsernameModal } from './components/UsernameModal'
 import { HomePage } from './pages/HomePage'
 
@@ -66,6 +67,7 @@ const PartnersPage = lazyWithRetry(() => import('./pages/PartnersPage').then(m =
 const AdminPartnersPage = lazyWithRetry(() => import('./pages/AdminPartnersPage').then(m => ({ default: m.AdminPartnersPage })))
 const PartnerApplyPage = lazyWithRetry(() => import('./pages/partner/PartnerApplyPage').then(m => ({ default: m.PartnerApplyPage })))
 const PartnerDashboardPage = lazyWithRetry(() => import('./pages/partner/PartnerDashboardPage').then(m => ({ default: m.PartnerDashboardPage })))
+const PartnerReferralDetailsPage = lazyWithRetry(() => import('./pages/partner/PartnerReferralDetailsPage').then(m => ({ default: m.PartnerReferralDetailsPage })))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -140,6 +142,7 @@ function AppContent() {
               <Route path="/partners" element={<PartnersPage />} />
               <Route path="/partner/apply" element={<PartnerApplyPage />} />
               <Route path="/partner/dashboard" element={<PartnerDashboardPage />} />
+              <Route path="/partner/referrals/:id" element={<PartnerReferralDetailsPage />} />
               <Route path="/admin/partners" element={<AdminPartnersPage />} />
             </Routes>
           </ErrorBoundary>
@@ -147,6 +150,7 @@ function AppContent() {
         <Footer />
         <ChatBot />
         <FloatingWhatsAppButton />
+        <FloatingSocialShare />
 
         {showUsernamePrompt && (
           <UsernameModal onClose={() => setShowUsernamePrompt(false)} />

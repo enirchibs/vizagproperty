@@ -129,9 +129,27 @@ export function AdminPartnersPage() {
       
       if (error) throw error
       setReferrals(prev => prev.map(r => r.id === id ? { ...r, lead_status: newStatus as any } : r))
+      
+      // Basic notification for Phase 1
+      alert(`Referral status updated to ${newStatus}. Note: In-app partner notifications require schema update.`)
     } catch (err) {
       console.error('Error updating referral:', err)
       alert('Failed to update referral status')
+    }
+  }
+
+  const handleUpdateCommission = async (id: string, amount: number) => {
+    try {
+      const { error } = await supabase
+        .from('partner_referrals')
+        .update({ commission_amount: amount })
+        .eq('id', id)
+      
+      if (error) throw error
+      setReferrals(prev => prev.map(r => r.id === id ? { ...r, commission_amount: amount } as any : r))
+    } catch (err) {
+      console.error('Error updating commission:', err)
+      alert('Failed to update commission')
     }
   }
 
@@ -236,9 +254,9 @@ export function AdminPartnersPage() {
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Date</th>
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Referred By</th>
-                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Customer</th>
-                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Requirement</th>
+                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Customer / Req</th>
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Commission (₹)</th>
                   </tr>
                 )}
               </thead>
@@ -319,18 +337,14 @@ export function AdminPartnersPage() {
                 ) : activeTab === 'referrals' ? (
                   referrals.filter(r => r.customer_name.toLowerCase().includes(searchTerm.toLowerCase())).map(r => (
                     <tr key={r.id}>
-                      <td className="px-6 py-4 text-sm">{new Date(r.created_at).toLocaleDateString()}</td>
+                      <td className="px-6 py-4 text-sm text-gray-500">{new Date(r.created_at).toLocaleDateString()}</td>
                       <td className="px-6 py-4">
                         <div className="font-medium text-primary-600">{r.users?.full_name || 'Unknown Partner'}</div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="font-bold">{r.customer_name}</div>
                         <div className="text-sm text-gray-500">{r.customer_mobile}</div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm font-medium">{r.requirement_type}</div>
-                        <div className="text-xs text-gray-500">{r.preferred_location} {r.budget ? `(${r.budget})` : ''}</div>
-                        {r.remarks && <div className="text-xs text-gray-400 mt-1 truncate max-w-[200px]">{r.remarks}</div>}
+                        <div className="text-xs font-medium mt-1 bg-gray-100 inline-block px-2 py-0.5 rounded">{r.requirement_type}</div>
                       </td>
                       <td className="px-6 py-4">
                         <select 
@@ -340,11 +354,26 @@ export function AdminPartnersPage() {
                         >
                           <option value="New">New</option>
                           <option value="Contacted">Contacted</option>
-                          <option value="Interested">Interested</option>
+                          <option value="Qualified">Qualified</option>
+                          <option value="Property Shared">Property Shared</option>
                           <option value="Site Visit Scheduled">Site Visit Scheduled</option>
+                          <option value="Negotiation">Negotiation</option>
                           <option value="Deal Closed">Deal Closed</option>
+                          <option value="Commission Approved">Commission Approved</option>
+                          <option value="Commission Paid">Commission Paid</option>
                           <option value="Rejected">Rejected</option>
                         </select>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-500">₹</span>
+                          <input
+                            type="number"
+                            defaultValue={(r as any).commission_amount || 0}
+                            onBlur={(e) => handleUpdateCommission(r.id, Number(e.target.value))}
+                            className="w-24 text-sm border border-gray-300 rounded-lg px-2 py-1 focus:ring-primary-500 focus:border-primary-500"
+                          />
+                        </div>
                       </td>
                     </tr>
                   ))

@@ -204,6 +204,8 @@ export interface PartnerReferral {
   preferred_location?: string
   budget?: string
   remarks?: string
-  lead_status: 'New' | 'Contacted' | 'Interested' | 'Site Visit Scheduled' | 'Deal Closed' | 'Rejected'
+  lead_status: 'New' | 'Contacted' | 'Qualified' | 'Property Shared' | 'Site Visit Scheduled' | 'Negotiation' | 'Deal Closed' | 'Commission Approved' | 'Commission Paid' | 'Rejected'
+  commission_amount: number
   created_at: string
+  updated_at?: string
 }
