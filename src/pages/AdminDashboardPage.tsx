@@ -5,7 +5,7 @@ import { Shield, AlertTriangle, TrendingUp } from 'lucide-react'
 import { AdminAnalyticsDashboard } from '../components/AdminAnalyticsDashboard'
 
 export function AdminDashboardPage() {
-  const { user, profile, loading: authLoading } = useAuth()
+  const { user, profile, isSuperAdmin, loading: authLoading } = useAuth()
   const { kpis, loading } = useAdminAnalytics()
 
   if (authLoading || loading) {
@@ -16,7 +16,7 @@ export function AdminDashboardPage() {
     )
   }
 
-  if (!user || !profile || profile.role !== 'admin') {
+  if (!user || !profile || (!isSuperAdmin && profile.role !== 'admin')) {
     return <Navigate to="/" />
   }
 
