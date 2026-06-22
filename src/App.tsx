@@ -8,6 +8,7 @@ import { Footer } from './components/Footer'
 import { ChatBot } from './components/ChatBot'
 import { FloatingWhatsAppButton } from './components/FloatingWhatsAppButton'
 import { TopAnnouncementBar } from './components/TopAnnouncementBar'
+import { ProtectedRoute } from './components/ProtectedRoute'
 import { FloatingSocialShare } from './components/FloatingSocialShare'
 import { UsernameModal } from './components/UsernameModal'
 import { HomePage } from './pages/HomePage'
@@ -117,15 +118,28 @@ function AppContent() {
               <Route path="/properties" element={<PropertiesPage />} />
               <Route path="/property/:id" element={<PropertyDetailsPage />} />
               <Route path="/recommendations" element={<RecommendationsPage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/favorites" element={<DashboardPage />} />
-              <Route path="/my-listings" element={<MyListingsPage />} />
-              <Route path="/admin" element={<AdminPropertiesPage />} />
-              <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-              <Route path="/admin/properties" element={<AdminPropertiesPage />} />
-              <Route path="/add-property" element={<AddPropertyPage />} />
-              <Route path="/post-property" element={<AddPropertyPage />} />
-              <Route path="/edit-property/:id" element={<EditPropertyPage />} />
+              
+              {/* General Protected Routes */}
+              <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+              <Route path="/favorites" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+              <Route path="/my-listings" element={<ProtectedRoute allowedRoles={['super_admin', 'property_admin', 'admin', 'owner', 'agent']}><MyListingsPage /></ProtectedRoute>} />
+              <Route path="/add-property" element={<ProtectedRoute><AddPropertyPage /></ProtectedRoute>} />
+              <Route path="/post-property" element={<ProtectedRoute><AddPropertyPage /></ProtectedRoute>} />
+              <Route path="/edit-property/:id" element={<ProtectedRoute><EditPropertyPage /></ProtectedRoute>} />
+
+              {/* Super Admin Routes */}
+              <Route path="/admin" element={<ProtectedRoute allowedRoles={['super_admin', 'admin']}><AdminDashboardPage /></ProtectedRoute>} />
+              <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['super_admin', 'admin']}><AdminDashboardPage /></ProtectedRoute>} />
+
+              {/* Property Admin Routes */}
+              <Route path="/property-admin" element={<ProtectedRoute allowedRoles={['super_admin', 'property_admin', 'admin']}><AdminPropertiesPage /></ProtectedRoute>} />
+              <Route path="/admin/properties" element={<ProtectedRoute allowedRoles={['super_admin', 'property_admin', 'admin']}><AdminPropertiesPage /></ProtectedRoute>} />
+
+              {/* Partner Admin Routes */}
+              <Route path="/partner-admin" element={<ProtectedRoute allowedRoles={['super_admin', 'partner_admin', 'admin']}><AdminPartnersPage /></ProtectedRoute>} />
+              <Route path="/admin/partners" element={<ProtectedRoute allowedRoles={['super_admin', 'partner_admin', 'admin']}><AdminPartnersPage /></ProtectedRoute>} />
+
+              {/* Public Info Pages */}
               <Route path="/blog" element={<BlogPage />} />
               <Route path="/blog/:slug" element={<BlogPostPage />} />
               <Route path="/about" element={<AboutUsPage />} />
@@ -139,11 +153,12 @@ function AppContent() {
               <Route path="/residential/madhurawada" element={<MadhurawadaResidentialPage />} />
               <Route path="/commercial/office-space" element={<OfficeSpacePage />} />
               <Route path="/insights/bhogapuram-airport-impact" element={<BhogapuramImpactPage />} />
+              
+              {/* Partners */}
               <Route path="/partners" element={<PartnersPage />} />
               <Route path="/partner/apply" element={<PartnerApplyPage />} />
-              <Route path="/partner/dashboard" element={<PartnerDashboardPage />} />
-              <Route path="/partner/referrals/:id" element={<PartnerReferralDetailsPage />} />
-              <Route path="/admin/partners" element={<AdminPartnersPage />} />
+              <Route path="/partner/dashboard" element={<ProtectedRoute requirePartnerApproved><PartnerDashboardPage /></ProtectedRoute>} />
+              <Route path="/partner/referrals/:id" element={<ProtectedRoute requirePartnerApproved><PartnerReferralDetailsPage /></ProtectedRoute>} />
             </Routes>
           </ErrorBoundary>
         </Suspense>

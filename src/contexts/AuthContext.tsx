@@ -9,12 +9,16 @@ interface AuthContextType {
   session: Session | null
   loading: boolean
   isAdmin: boolean
+  isSuperAdmin: boolean
+  isPropertyAdmin: boolean
+  isPartnerAdmin: boolean
+  isPartner: boolean
   showUsernamePrompt: boolean
   setShowUsernamePrompt: (show: boolean) => void
   signInWithPhone: (phone: string, intentRole?: 'buyer' | 'owner') => Promise<void>
   verifyOtp: (phone: string, otp: string) => Promise<void>
   signInWithEmail: (email: string, password: string) => Promise<void>
-  signUpWithEmail: (email: string, password: string, intentRole?: 'buyer' | 'owner') => Promise<void>
+  signUpWithEmail: (email: string, password: string, intentRole?: 'user' | 'buyer' | 'owner') => Promise<void>
   signInWithGoogle: () => Promise<void>
   updateUsername: (username: string) => Promise<void>
   signOut: () => Promise<void>
@@ -108,7 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 : 'email'
 
               if (!existingProfile) {
-                const intentRole = session.user.user_metadata?.intent_role || 'buyer'
+                const intentRole = session.user.user_metadata?.intent_role || 'user'
 
                 await supabase.from('users').insert({
                   id: session.user.id,
@@ -170,7 +174,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       options: {
         shouldCreateUser: true,
         data: {
-          intent_role: intentRole || 'buyer'
+          intent_role: intentRole || 'user'
         }
       }
     })
@@ -203,7 +207,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signUpWithEmail = async (
     email: string,
     password: string,
-    intentRole: 'buyer' | 'owner' = 'buyer'
+    intentRole: 'user' | 'buyer' | 'owner' = 'user'
   ) => {
     const { error } = await supabase.auth.signUp({
       email,
@@ -282,7 +286,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     window.location.href = '/'
   }
 
-  const isAdmin = profile?.role === 'admin'
+  const isSuperAdmin = profile?.role === 'super_admin'
+  const isPropertyAdmin = profile?.role === 'property_admin' || isSuperAdmin
+  const isPartnerAdmin = profile?.role === 'partner_admin' || isSuperAdmin
+  const isPartner = profile?.role === 'partner' || profile?.is_partner === true
+  const isAdmin = isSuperAdmin || profile?.role === 'property_admin' || profile?.role === 'partner_admin' || profile?.role === 'admin'
 
   return (
     <AuthContext.Provider
@@ -292,6 +300,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         session,
         loading,
         isAdmin,
+        isSuperAdmin,
+        isPropertyAdmin,
+        isPartnerAdmin,
+        isPartner,
         showUsernamePrompt,
         setShowUsernamePrompt,
         signInWithPhone,

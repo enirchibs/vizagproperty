@@ -7,7 +7,7 @@ import { MapPin, Bed, Bath, Maximize, CheckCircle, XCircle, Clock, Shield, Star,
 import { AdminAnalyticsDashboard } from '../components/AdminAnalyticsDashboard'
 
 export function AdminPropertiesPage() {
-  const { user, isAdmin, loading: authLoading } = useAuth()
+  const { user, isPropertyAdmin, profile, loading: authLoading } = useAuth()
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [actionId, setActionId] = useState<string | null>(null)
@@ -17,6 +17,7 @@ export function AdminPropertiesPage() {
   const [rejectionReason, setRejectionReason] = useState('')
   const [adminNotes, setAdminNotes] = useState('')
   const [togglingTrustId, setTogglingTrustId] = useState<string | null>(null)
+  const [togglingFeatureId, setTogglingFeatureId] = useState<string | null>(null)
 
   const loadProperties = useCallback(async () => {
     if (!user) return
@@ -45,10 +46,10 @@ export function AdminPropertiesPage() {
   }, [user?.id])
 
   useEffect(() => {
-    if (user && isAdmin) {
+    if (user && (isPropertyAdmin || profile?.role === 'admin')) {
       loadProperties()
     }
-  }, [user, isAdmin, loadProperties])
+  }, [user, isPropertyAdmin, profile, loadProperties])
 
   const toggleTrustedStatus = async (userId: string, currentStatus: boolean) => {
     setTogglingTrustId(userId)
@@ -79,7 +80,25 @@ export function AdminPropertiesPage() {
       setTogglingTrustId(null)
     }
   }
+  const toggleFeaturedStatus = async (propertyId: string, currentStatus: boolean) => {
+    setTogglingFeatureId(propertyId)
+    try {
+      const { error } = await supabase
+        .from('properties')
+        .update({ featured: !currentStatus })
+        .eq('id', propertyId)
 
+      if (error) throw error
+
+      setProperties(prev => prev.map(p => 
+        p.id === propertyId ? { ...p, featured: !currentStatus } : p
+      ))
+    } catch (err) {
+      alert('Failed to update featured status. Please try again.')
+    } finally {
+      setTogglingFeatureId(null)
+    }
+  }
   const handleAction = async (propertyId: string, action: 'approve' | 'reject') => {
     setProcessing(true)
     try {
@@ -166,7 +185,7 @@ export function AdminPropertiesPage() {
     )
   }
 
-  if (!isAdmin) {
+  if (!isPropertyAdmin && profile?.role !== 'admin') {
     return <Navigate to="/" />
   }
 
@@ -183,9 +202,9 @@ export function AdminPropertiesPage() {
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <Shield className="h-8 w-8 text-primary-600" />
-                <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Admin Dashboard</h1>
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Property Management Hub</h1>
               </div>
-              <p className="text-gray-600">Moderate property listings</p>
+              <p className="text-gray-600">Moderate and feature property listings</p>
             </div>
             <a
               href="/admin/dashboard"
@@ -303,6 +322,12 @@ export function AdminPropertiesPage() {
                       <span className="bg-white/90 backdrop-blur-sm text-gray-900 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg capitalize">
                         {property.listing_type}
                       </span>
+                      {property.featured && (
+                        <span className="flex items-center gap-1 bg-gradient-to-r from-amber-400 to-yellow-500 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg">
+                          <Star className="h-3 w-3 fill-white" />
+                          Featured
+                        </span>
+                      )}
                       {getStatusBadge(property.status || 'pending')}
                     </div>
                   </div>
@@ -445,12 +470,32 @@ export function AdminPropertiesPage() {
                     )}
 
                     {property.status !== 'pending' && (
-                      <a
-                        href={`/property/${property.id}`}
-                        className="block w-full text-center px-4 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-all text-sm font-semibold"
-                      >
-                        View Details
-                      </a>
+                      <div className="flex gap-2">
+                        <a
+                          href={`/property/${property.id}`}
+                          className="flex-1 text-center px-4 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-all text-sm font-semibold flex items-center justify-center gap-1.5"
+                        >
+                          View Details
+                        </a>
+                        <button
+                          onClick={() => toggleFeaturedStatus(property.id, !!property.featured)}
+                          disabled={togglingFeatureId === property.id}
+                          className={`flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg transition-all text-sm font-semibold ${
+                            property.featured
+                              ? 'bg-amber-100 text-amber-700 hover:bg-amber-200 border border-amber-300'
+                              : 'bg-white text-amber-600 hover:bg-amber-50 border border-amber-200'
+                          } disabled:opacity-50`}
+                        >
+                          {togglingFeatureId === property.id ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent"></div>
+                          ) : (
+                            <>
+                              <Star className={`h-4 w-4 ${property.featured ? 'fill-amber-600' : ''}`} />
+                              <span>{property.featured ? 'Unfeature' : 'Feature'}</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>

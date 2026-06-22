@@ -107,7 +107,7 @@ export interface UserProfile {
   phone?: string
   email?: string
   avatar_url?: string
-  role: 'buyer' | 'owner' | 'agent' | 'admin'
+  role: 'super_admin' | 'property_admin' | 'partner_admin' | 'partner' | 'user' | 'buyer' | 'owner' | 'agent' | 'admin'
   auth_provider?: 'phone' | 'email' | 'google' | 'microsoft'
   preferences?: Record<string, any>
   created_at: string
@@ -117,6 +117,7 @@ export interface UserProfile {
   partner_type?: string | null
   membership_type?: string
   partner_since?: string | null
+  created_by?: string | null
   approved_by?: string | null
 }
 

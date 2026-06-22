@@ -6,7 +6,7 @@ import { PartnerApplication, PartnerReferral, UserProfile } from '../types'
 import { Search } from 'lucide-react'
 
 export function AdminPartnersPage() {
-  const { user, profile, loading: authLoading } = useAuth()
+  const { user, isPartnerAdmin, profile, loading: authLoading } = useAuth()
   
   const [activeTab, setActiveTab] = useState<'applications' | 'partners' | 'referrals'>('applications')
   
@@ -18,10 +18,10 @@ export function AdminPartnersPage() {
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
-    if (user && profile?.role === 'admin') {
+    if (user && (isPartnerAdmin || profile?.role === 'admin')) {
       fetchData()
     }
-  }, [user, profile, activeTab])
+  }, [user, isPartnerAdmin, profile, activeTab])
 
   const fetchData = async () => {
     setLoading(true)
@@ -120,6 +120,21 @@ export function AdminPartnersPage() {
     }
   }
 
+  const handleUpdateMembership = async (id: string, newMembership: string) => {
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ membership_type: newMembership })
+        .eq('id', id)
+      
+      if (error) throw error
+      setPartners(prev => prev.map(p => p.id === id ? { ...p, membership_type: newMembership } : p))
+    } catch (err) {
+      console.error('Error updating membership:', err)
+      alert('Failed to update membership tier')
+    }
+  }
+
   const handleUpdateReferralStatus = async (id: string, newStatus: string) => {
     try {
       const { error } = await supabase
@@ -161,7 +176,7 @@ export function AdminPartnersPage() {
     )
   }
 
-  if (!user || !profile || profile.role !== 'admin') {
+  if (!isPartnerAdmin && profile?.role !== 'admin') {
     return <Navigate to="/" />
   }
 
@@ -170,8 +185,8 @@ export function AdminPartnersPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Partner Management</h1>
-            <p className="text-gray-600 mt-1">Manage partner applications, active partners, and their referrals.</p>
+            <h1 className="text-3xl font-bold text-gray-900">Partner Management Hub</h1>
+            <p className="text-gray-600 mt-1">Manage partner applications, active partners, their tiers, and referrals.</p>
           </div>
         </div>
 
@@ -313,7 +328,16 @@ export function AdminPartnersPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm font-medium">{p.partner_type || 'Unknown'}</div>
-                        <div className="text-xs uppercase bg-gray-100 inline-block px-2 py-0.5 rounded mt-1">{p.membership_type || 'Free'}</div>
+                        <select 
+                          value={p.membership_type || 'free'}
+                          onChange={(e) => handleUpdateMembership(p.id, e.target.value)}
+                          className="text-xs border-gray-300 rounded focus:ring-primary-500 focus:border-primary-500 bg-gray-50 mt-1 py-1"
+                        >
+                          <option value="free">Free Partner</option>
+                          <option value="silver">Silver Partner</option>
+                          <option value="gold">Gold Partner</option>
+                          <option value="builder_pro">Builder Pro</option>
+                        </select>
                       </td>
                       <td className="px-6 py-4">
                         <span className={`px-2 py-1 rounded text-xs font-bold ${
@@ -325,12 +349,14 @@ export function AdminPartnersPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        {p.partner_status === 'approved' && (
-                          <button onClick={() => handleUpdatePartnerStatus(p.id, 'suspended')} className="text-red-600 hover:text-red-900">Suspend</button>
-                        )}
-                        {p.partner_status === 'suspended' && (
-                          <button onClick={() => handleUpdatePartnerStatus(p.id, 'approved')} className="text-green-600 hover:text-green-900">Reactivate</button>
-                        )}
+                        <div className="flex justify-end gap-3">
+                          {p.partner_status === 'approved' && (
+                            <button onClick={() => handleUpdatePartnerStatus(p.id, 'suspended')} className="text-red-600 hover:text-red-900 text-sm font-semibold border border-red-200 bg-red-50 px-3 py-1 rounded">Suspend</button>
+                          )}
+                          {p.partner_status === 'suspended' && (
+                            <button onClick={() => handleUpdatePartnerStatus(p.id, 'approved')} className="text-green-600 hover:text-green-900 text-sm font-semibold border border-green-200 bg-green-50 px-3 py-1 rounded">Reactivate</button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))

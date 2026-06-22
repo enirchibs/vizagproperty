@@ -9,7 +9,7 @@ import { useNotifications } from '../hooks/useNotifications'
 
 export function Header() {
   const navigate = useNavigate()
-  const { user, profile, loading, isAdmin, signOut } = useAuth()
+  const { user, profile, loading, isSuperAdmin, isPropertyAdmin, isPartnerAdmin, isPartner, signOut } = useAuth()
   const { unreadCount } = useNotifications()
   const [showUsernameModal, setShowUsernameModal] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
@@ -176,9 +176,19 @@ export function Header() {
                       &#x1F446;
                     </span>
                   </a>
-                  {isAdmin && (
-                    <a href="/admin/dashboard" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors">
+                  {isSuperAdmin && (
+                    <a href="/admin/dashboard" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors" title="Super Admin Dashboard">
                       <Shield className="h-5 w-5" />
+                    </a>
+                  )}
+                  {isPropertyAdmin && !isSuperAdmin && (
+                    <a href="/property-admin" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors" title="Property Admin">
+                      <Building2 className="h-5 w-5" />
+                    </a>
+                  )}
+                  {isPartnerAdmin && !isSuperAdmin && (
+                    <a href="/partner-admin" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors" title="Partner Admin">
+                      <Briefcase className="h-5 w-5" />
                     </a>
                   )}
                   {profile?.role === 'owner' && (
@@ -186,7 +196,7 @@ export function Header() {
                       <Building2 className="h-5 w-5" />
                     </a>
                   )}
-                  {profile?.is_partner && profile?.partner_status === 'approved' && (
+                  {isPartner && (
                     <a href="/partner/dashboard" className="hidden md:flex w-10 h-10 rounded-full border-2 border-green-400 bg-green-500/30 items-center justify-center text-green-400 hover:bg-green-500/50 transition-colors" title="Partner Dashboard">
                       <Briefcase className="h-5 w-5" />
                     </a>
@@ -340,10 +350,22 @@ export function Header() {
 
               {user && (
                 <>
-                  {isAdmin && (
+                  {isSuperAdmin && (
                     <a href="/admin/dashboard" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center space-x-2 border-t border-primary-500 mt-2" onClick={() => setShowMenu(false)}>
                       <Shield className="h-5 w-5" />
-                      <span>Admin Dashboard</span>
+                      <span>Super Admin</span>
+                    </a>
+                  )}
+                  {isPropertyAdmin && !isSuperAdmin && (
+                    <a href="/property-admin" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center space-x-2 border-t border-primary-500 mt-2" onClick={() => setShowMenu(false)}>
+                      <Building2 className="h-5 w-5" />
+                      <span>Property Admin</span>
+                    </a>
+                  )}
+                  {isPartnerAdmin && !isSuperAdmin && (
+                    <a href="/partner-admin" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center space-x-2 border-t border-primary-500 mt-2" onClick={() => setShowMenu(false)}>
+                      <Briefcase className="h-5 w-5" />
+                      <span>Partner Admin</span>
                     </a>
                   )}
                   {profile?.role === 'owner' && (
@@ -352,7 +374,7 @@ export function Header() {
                       <span>My Listings</span>
                     </a>
                   )}
-                  {profile?.is_partner && profile?.partner_status === 'approved' && (
+                  {isPartner && (
                     <a href="/partner/dashboard" className="text-green-400 hover:text-green-300 py-3 min-h-[44px] flex items-center space-x-2 border-t border-primary-500 mt-2" onClick={() => setShowMenu(false)}>
                       <Briefcase className="h-5 w-5" />
                       <span>Partner Dashboard</span>
