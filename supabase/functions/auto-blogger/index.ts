@@ -1,5 +1,4 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3'
-import { GoogleGenerativeAI } from 'npm:@google/generative-ai'
 
 // 1. Define hyper-local search queries for the Google News RSS Feed
 const TOPICS = [
@@ -136,9 +135,10 @@ Deno.serve(async (req) => {
       status: 200,
     });
 
-  } catch (error: any) {
-    console.error("Autoblogging Error:", error.message);
-    return new Response(JSON.stringify({ error: error.message }), {
+  } catch (err: any) {
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    console.error("Autoblogging Error:", errorMsg);
+    return new Response(JSON.stringify({ error: errorMsg }), {
       headers: { "Content-Type": "application/json" },
       status: 500,
     });
