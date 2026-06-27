@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
     if (!geminiApiKey) throw new Error("GEMINI_API_KEY is missing in environment variables.");
     
     const genAI = new GoogleGenerativeAI(geminiApiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' }); // SDK handles endpoint routing
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.0-pro' }); // SDK handles endpoint routing
 
     // 5. The strict Gemini Prompt: Rewriting news & injecting links
     const prompt = `
