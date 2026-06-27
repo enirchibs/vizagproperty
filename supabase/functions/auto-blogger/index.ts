@@ -9,7 +9,11 @@ const TOPICS = [
   "boghapuram",
   "vizag steelplant",
   "visakhapatnam smart city",
-  "visakhapatnam it companies"
+  "visakhapatnam it companies",
+  "andhra pradesh real estate",
+  "andhra pradesh development",
+  "andhra pradesh news",
+  "amaravati andhra pradesh"
 ];
 
 Deno.serve(async (req) => {
