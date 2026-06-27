@@ -65,8 +65,18 @@ Deno.serve(async (req) => {
     `;
 
     // 6. Execute Gemini Generation
-    const result = await model.generateContent(prompt);
-    let generatedHtml = result.response.text() || '';
+    let generatedHtml = '';
+    try {
+      const result = await model.generateContent(prompt);
+      generatedHtml = result.response.text() || '';
+    } catch (e) {
+      // If generation fails, let's list the available models to debug what models the API key actually has access to
+      const listUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${geminiApiKey}`;
+      const listRes = await fetch(listUrl);
+      const listData = await listRes.json();
+      const availableModels = listData.models ? listData.models.map((m: any) => m.name).join(', ') : JSON.stringify(listData);
+      throw new Error(`Model not found. Available models on this API key: ${availableModels}`);
+    }
 
     // Fallback cleanup if Gemini includes markdown ticks anyway
     generatedHtml = generatedHtml.replace(/^```html\n?/, '').replace(/\n?```$/, '');
