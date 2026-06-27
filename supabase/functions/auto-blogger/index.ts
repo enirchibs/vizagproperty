@@ -53,12 +53,11 @@ Deno.serve(async (req) => {
       throw new Error(`No recent news found in Google RSS for any of the topics.`);
     }
 
-    // 4. Initialize Google Gemini API using official SDK
+    // 4. Initialize Google Gemini API
     const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
     if (!geminiApiKey) throw new Error("GEMINI_API_KEY is missing in environment variables.");
     
-    const genAI = new GoogleGenerativeAI(geminiApiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.0-pro' }); // SDK handles endpoint routing
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`;
 
     // 5. The strict Gemini Prompt: Rewriting news & injecting links
     const prompt = `
@@ -80,18 +79,23 @@ Deno.serve(async (req) => {
     `;
 
     // 6. Execute Gemini Generation
-    let generatedHtml = '';
-    try {
-      const result = await model.generateContent(prompt);
-      generatedHtml = result.response.text() || '';
-    } catch (e) {
-      // If generation fails, let's list the available models to debug what models the API key actually has access to
-      const listUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${geminiApiKey}`;
-      const listRes = await fetch(listUrl);
-      const listData = await listRes.json();
-      const availableModels = listData.models ? listData.models.map((m: any) => m.name).join(', ') : JSON.stringify(listData);
-      throw new Error(`Model not found. Available models on this API key: ${availableModels}`);
+    const geminiResponse = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.7 }
+      })
+    });
+
+    if (!geminiResponse.ok) {
+      const errText = await geminiResponse.text();
+      // Throw the raw Google API error so the user can see EXACTLY what is wrong with their API key
+      throw new Error(`Google API Rejected Key: ${errText}`);
     }
+
+    const geminiData = await geminiResponse.json();
+    let generatedHtml = geminiData.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
 
     // Fallback cleanup if Gemini includes markdown ticks anyway
     generatedHtml = generatedHtml.replace(/^```html\n?/, '').replace(/\n?```$/, '');
