@@ -3,12 +3,13 @@ import { GoogleGenerativeAI } from 'npm:@google/generative-ai'
 
 // 1. Define hyper-local search queries for the Google News RSS Feed
 const TOPICS = [
-  "Vizag real estate",
-  "Visakhapatnam smart city",
-  "Bhogapuram airport",
-  "Vizag Metro rail",
-  "Visakhapatnam IT companies",
-  "Andhra Pradesh capital Vizag news"
+  "vizag",
+  "Visakhapatnam",
+  "anakapalli",
+  "boghapuram",
+  "vizag steelplant",
+  "visakhapatnam smart city",
+  "visakhapatnam it companies"
 ];
 
 Deno.serve(async (req) => {
@@ -21,8 +22,8 @@ Deno.serve(async (req) => {
     let newsSnippet = '';
     
     for (const topic of shuffledTopics) {
-      // Google News RSS endpoint configured for India (English)
-      const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(topic)}&hl=en-IN&gl=IN&ceid=IN:en`;
+      // Google News RSS endpoint configured for Telugu (India)
+      const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(topic)}&hl=te&gl=IN&ceid=IN:te`;
       const rssResponse = await fetch(rssUrl);
       const xmlData = await rssResponse.text();
 
@@ -58,15 +59,15 @@ Deno.serve(async (req) => {
     // 5. The strict Gemini Prompt: Rewriting news & injecting links
     const prompt = `
       You are an expert real estate and city development journalist based in Visakhapatnam (Vizag). 
-      Here is the latest trending news regarding "${query}":
+      Here is the latest trending news (it might be in Telugu) regarding "${query}":
       
       Original Headline: ${newsTitle}
       News Summary: ${newsSnippet}
       
-      Task: Rewrite this news into a highly engaging, SEO-optimized blog article. Expand on how this specific news impacts the local real estate market, plot values, or property investments in Vizag.
+      Task: Translate the core news into English (if it's in Telugu) and rewrite this news into a highly engaging, SEO-optimized English blog article. Expand on how this specific news impacts the local real estate market, plot values, or property investments in Vizag.
       
       Strict Requirements:
-      1. Format the output entirely in clean HTML. Do NOT wrap the response in markdown blocks (e.g., no \`\`\`html).
+      1. Write the entire article in ENGLISH. Format the output entirely in clean HTML. Do NOT wrap the response in markdown blocks (e.g., no \`\`\`html).
       2. Include a catchy <H1> title, followed by at least two <H2> subheadings.
       3. CRITICAL SEO LINKING: You MUST organically include at least 3 contextual HTML links pointing exactly to "https://vizagproperty.co.in/". 
          - Use natural anchor texts like "plots for sale in Vizag", "premium flats in Visakhapatnam", or "Vizag real estate investments".
