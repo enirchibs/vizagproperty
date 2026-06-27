@@ -148,9 +148,11 @@ Deno.serve(async (req) => {
   } catch (err: any) {
     const errorMsg = err instanceof Error ? err.message : String(err);
     console.error("Autoblogging Error:", errorMsg);
-    return new Response(JSON.stringify({ error: errorMsg }), {
+    // Returning 200 here instead of 500 prevents the Supabase Dashboard "Test" UI from crashing 
+    // with "Cannot read properties of undefined (reading 'error')".
+    return new Response(JSON.stringify({ success: false, error: errorMsg }), {
       headers: { "Content-Type": "application/json" },
-      status: 500,
+      status: 200,
     });
   }
 });
