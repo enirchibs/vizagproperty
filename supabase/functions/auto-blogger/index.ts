@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3'
+import { GoogleGenerativeAI } from 'npm:@google/generative-ai'
 
 // 1. Define hyper-local search queries for the Google News RSS Feed
 const TOPICS = [
@@ -37,11 +38,12 @@ Deno.serve(async (req) => {
     // Clean raw HTML out of the RSS description snippet
     newsSnippet = newsSnippet.replace(/<[^>]*>?/gm, ''); 
 
-    // 4. Initialize Google Gemini API
+    // 4. Initialize Google Gemini API using official SDK
     const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
     if (!geminiApiKey) throw new Error("GEMINI_API_KEY is missing in environment variables.");
     
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`;
+    const genAI = new GoogleGenerativeAI(geminiApiKey);
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' }); // SDK handles endpoint routing
 
     // 5. The strict Gemini Prompt: Rewriting news & injecting links
     const prompt = `
@@ -63,23 +65,9 @@ Deno.serve(async (req) => {
     `;
 
     // 6. Execute Gemini Generation
-    const geminiResponse = await fetch(geminiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.7 }
-      })
-    });
+    const result = await model.generateContent(prompt);
+    let generatedHtml = result.response.text() || '';
 
-    if (!geminiResponse.ok) {
-      const errText = await geminiResponse.text();
-      throw new Error(`Gemini Engine Error: ${errText}`);
-    }
-
-    const geminiData = await geminiResponse.json();
-    let generatedHtml = geminiData.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
-    
     // Fallback cleanup if Gemini includes markdown ticks anyway
     generatedHtml = generatedHtml.replace(/^```html\n?/, '').replace(/\n?```$/, '');
 
