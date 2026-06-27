@@ -56,8 +56,6 @@ Deno.serve(async (req) => {
     const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
     if (!geminiApiKey) throw new Error("GEMINI_API_KEY is missing in environment variables.");
     
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`;
-
     // 5. The strict Gemini Prompt: Rewriting news & injecting links
     const prompt = `
       You are an expert real estate and city development journalist based in Visakhapatnam (Vizag). 
@@ -77,34 +75,43 @@ Deno.serve(async (req) => {
       4. End with a strong Call to Action encouraging readers to visit the site to view verified properties.
     `;
 
-    // 6. Execute Gemini Generation
-    const geminiResponse = await fetch(geminiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.7 }
-      })
-    });
+    // Try a list of fallback models because Google restricts some models on free accounts
+    const fallbackModels = [
+      'gemini-1.5-flash-8b',
+      'gemini-1.5-flash',
+      'gemini-1.0-pro',
+      'gemini-pro',
+      'gemini-1.5-pro'
+    ];
+    
+    let generatedHtml = '';
+    let lastError = '';
 
-    if (!geminiResponse.ok) {
-      const errText = await geminiResponse.text();
+    for (const modelName of fallbackModels) {
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiApiKey}`;
       
-      // Since Google is hiding the model, let's explicitly ask Google what models this API key is allowed to see!
-      try {
-        const listUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${geminiApiKey}`;
-        const listRes = await fetch(listUrl);
-        const listData = await listRes.json();
-        const availableModels = listData.models ? listData.models.map((m: any) => m.name).join(', ') : 'No models available or API key invalid';
-        
-        throw new Error(`Google API Rejected Key: ${errText} | AVAILABLE MODELS ON THIS KEY: ${availableModels}`);
-      } catch (e) {
-        throw new Error(`Google API Rejected Key: ${errText}`);
+      const geminiResponse = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.7 }
+        })
+      });
+
+      if (!geminiResponse.ok) {
+        lastError = await geminiResponse.text();
+        continue; // Try the next model
       }
+
+      const geminiData = await geminiResponse.json();
+      generatedHtml = geminiData.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+      break; // Success! Stop looping.
     }
 
-    const geminiData = await geminiResponse.json();
-    let generatedHtml = geminiData.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+    if (!generatedHtml) {
+      throw new Error(`Google API Rejected Key for ALL models. Last error: ${lastError}`);
+    }
 
     // Fallback cleanup if Gemini includes markdown ticks anyway
     generatedHtml = generatedHtml.replace(/^```html\n?/, '').replace(/\n?```$/, '');
