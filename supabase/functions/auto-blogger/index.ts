@@ -13,30 +13,40 @@ const TOPICS = [
 
 Deno.serve(async (req) => {
   try {
-    // 2. Select a random topic and fetch real-time news from Google RSS
-    const query = TOPICS[Math.floor(Math.random() * TOPICS.length)];
+    // 2. Shuffle topics to try them in random order until we find news
+    const shuffledTopics = [...TOPICS].sort(() => 0.5 - Math.random());
     
-    // Google News RSS endpoint configured for India (English)
-    const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=en-IN&gl=IN&ceid=IN:en`;
-    const rssResponse = await fetch(rssUrl);
-    const xmlData = await rssResponse.text();
+    let query = '';
+    let newsTitle = '';
+    let newsSnippet = '';
+    
+    for (const topic of shuffledTopics) {
+      // Google News RSS endpoint configured for India (English)
+      const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(topic)}&hl=en-IN&gl=IN&ceid=IN:en`;
+      const rssResponse = await fetch(rssUrl);
+      const xmlData = await rssResponse.text();
 
-    // 3. Extract the top news headline and description using native string parsing
-    const itemStart = xmlData.indexOf('<item>');
-    const itemEnd = xmlData.indexOf('</item>', itemStart);
-    
-    if (itemStart === -1 || itemEnd === -1) {
-      throw new Error(`No recent news found in Google RSS for query: ${query}`);
+      // 3. Extract the top news headline and description using native string parsing
+      const itemStart = xmlData.indexOf('<item>');
+      const itemEnd = xmlData.indexOf('</item>', itemStart);
+      
+      if (itemStart !== -1 && itemEnd !== -1) {
+        query = topic;
+        const firstItem = xmlData.substring(itemStart, itemEnd);
+        const titleMatch = firstItem.match(/<title>(.*?)<\/title>/);
+        const descMatch = firstItem.match(/<description>(.*?)<\/description>/);
+        
+        newsTitle = titleMatch ? titleMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1') : query;
+        newsSnippet = descMatch ? descMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1') : "";
+        // Clean raw HTML out of the RSS description snippet
+        newsSnippet = newsSnippet.replace(/<[^>]*>?/gm, ''); 
+        break; // Found news, stop searching
+      }
     }
     
-    const firstItem = xmlData.substring(itemStart, itemEnd);
-    const titleMatch = firstItem.match(/<title>(.*?)<\/title>/);
-    const descMatch = firstItem.match(/<description>(.*?)<\/description>/);
-    
-    const newsTitle = titleMatch ? titleMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1') : query;
-    let newsSnippet = descMatch ? descMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1') : "";
-    // Clean raw HTML out of the RSS description snippet
-    newsSnippet = newsSnippet.replace(/<[^>]*>?/gm, ''); 
+    if (!query) {
+      throw new Error(`No recent news found in Google RSS for any of the topics.`);
+    }
 
     // 4. Initialize Google Gemini API using official SDK
     const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
