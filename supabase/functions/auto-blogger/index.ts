@@ -89,8 +89,18 @@ Deno.serve(async (req) => {
 
     if (!geminiResponse.ok) {
       const errText = await geminiResponse.text();
-      // Throw the raw Google API error so the user can see EXACTLY what is wrong with their API key
-      throw new Error(`Google API Rejected Key: ${errText}`);
+      
+      // Since Google is hiding the model, let's explicitly ask Google what models this API key is allowed to see!
+      try {
+        const listUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${geminiApiKey}`;
+        const listRes = await fetch(listUrl);
+        const listData = await listRes.json();
+        const availableModels = listData.models ? listData.models.map((m: any) => m.name).join(', ') : 'No models available or API key invalid';
+        
+        throw new Error(`Google API Rejected Key: ${errText} | AVAILABLE MODELS ON THIS KEY: ${availableModels}`);
+      } catch (e) {
+        throw new Error(`Google API Rejected Key: ${errText}`);
+      }
     }
 
     const geminiData = await geminiResponse.json();
