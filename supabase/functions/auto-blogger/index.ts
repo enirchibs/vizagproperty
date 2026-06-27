@@ -87,6 +87,13 @@ Deno.serve(async (req) => {
     const h1Match = generatedHtml.match(/<h1[^>]*>(.*?)<\/h1>/i);
     const finalTitle = h1Match ? h1Match[1] : `Market Update: ${newsTitle}`;
 
+    const slug = finalTitle
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)+/g, '') + '-' + Date.now();
+
+    const excerpt = generatedHtml.replace(/<[^>]*>?/gm, '').substring(0, 150) + '...';
+
     // 7. Save to Supabase Database
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
@@ -96,7 +103,13 @@ Deno.serve(async (req) => {
     const { error } = await supabaseAdmin.from('blog_posts').insert({
       topic: query,
       title: finalTitle,
-      content: generatedHtml
+      content: generatedHtml,
+      slug: slug,
+      excerpt: excerpt,
+      published: true,
+      category: 'news',
+      author_name: 'AI Autoblogger',
+      reading_time_min: Math.ceil(generatedHtml.length / 1000)
     });
 
     if (error) throw error;
