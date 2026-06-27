@@ -77,8 +77,8 @@ Deno.serve(async (req) => {
 
     // Try a list of fallback models because Google restricts some models on free accounts
     const fallbackModels = [
-      'gemini-1.5-flash-8b',
       'gemini-1.5-flash',
+      'gemini-1.5-flash-8b',
       'gemini-1.0-pro',
       'gemini-pro',
       'gemini-1.5-pro'
