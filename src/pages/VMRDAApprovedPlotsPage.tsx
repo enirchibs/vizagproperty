@@ -43,6 +43,10 @@ export default function VMRDAApprovedPlotsPage() {
           }
         },
         {
+          "@type": "Question",
+          "name": "What is the price of VMRDA plots in Vizag?",
+          "acceptedAnswer": {
+            "@type": "Answer",
             "text": "VMRDA approved plots in Vizag range from ₹3,000 to ₹8,000 per sq yard depending on location. Budget-friendly areas like Gajuwaka and Kommadi start from ₹15-20 lakhs for complete plots, while premium locations like Madhurawada and PM Palem range from ₹25 lakhs to ₹1 crore+."
           }
         },
