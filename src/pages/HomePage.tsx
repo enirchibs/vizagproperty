@@ -16,6 +16,7 @@ import { getLastSearch } from '../lib/searchMemory'
 import RestoredSearchBanner from '../components/RestoredSearchBanner'
 import PropertiesNearYou from '../components/PropertiesNearYou'
 import { HomeBlogSection } from '../components/HomeBlogSection'
+import { TopAnnouncementBar } from '../components/TopAnnouncementBar'
 import { openWhatsApp } from '../lib/whatsapp'
 
 type PropertyCategory = 'full_house' | 'land_plot' | 'flat_apartment' | 'pg_hostel' | 'flatmates' | 'villa'
@@ -579,6 +580,10 @@ export function HomePage() {
         </div>
       </div>
 
+      <div className="py-3 bg-gray-50 border-b border-gray-100">
+        <TopAnnouncementBar />
+      </div>
+
       <div className="md:hidden pt-4">
         <MobileCategoryGrid />
       </div>
@@ -664,6 +669,11 @@ export function HomePage() {
               </div>
             </div>
           </div>
+
+          <div className="py-6 my-10 border-y border-gray-100 bg-gray-50/50 rounded-2xl max-w-6xl mx-auto">
+            <TopAnnouncementBar />
+          </div>
+
           <div className="max-w-6xl mx-auto mb-12">
             <div className="mb-10">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
