@@ -80,6 +80,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-gray-400">
               <li><Link to="/about" className="hover:text-primary-400 transition-colors">About Us</Link></li>
               <li><Link to="/contact" className="hover:text-primary-400 transition-colors">Contact</Link></li>
+              <li><Link to="/builders" className="hover:text-primary-400 transition-colors text-primary-300 font-semibold">Top Grade-A Builders</Link></li>
               <li><Link to="/nri-investments" className="hover:text-primary-400 transition-colors font-semibold text-primary-300">NRI Corner</Link></li>
               <li><Link to="/blog" className="hover:text-primary-400 transition-colors">Blog & Insights</Link></li>
               <li><Link to="/market-trends" className="hover:text-primary-400 transition-colors">Market Trends & Valuation</Link></li>

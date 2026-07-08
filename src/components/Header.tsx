@@ -120,6 +120,9 @@ export function Header() {
               <a href="/about" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
                 About Us
               </a>
+              <a href="/builders" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
+                Top Builders
+              </a>
               <a href="/contact" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
                 Contact Us
               </a>
