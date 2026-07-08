@@ -9,6 +9,7 @@ import { StickyMobileNav } from '../components/StickyMobileNav'
 import { ChatBot } from '../components/ChatBot'
 import { AuthModal } from '../components/AuthModal'
 import { HomeBlogSection } from '../components/HomeBlogSection'
+import { SEOHead } from '../components/SEOHead'
 
 export function HomePage() {
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
@@ -16,13 +17,6 @@ export function HomePage() {
   const [showAuthModal, setShowAuthModal] = useState(false)
 
   useEffect(() => {
-    document.title = 'Vizag Real Estate: Properties for Sale in Visakhapatnam'
-
-    const metaDescription = document.querySelector('meta[name="description"]')
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Find the best Vizag properties for sale. Explore Vizag real estate, VMRDA approved plots, flats, and houses in Visakhapatnam. Verified property listings.')
-    }
-
     loadFeaturedProperties()
   }, [])
 
@@ -44,8 +38,29 @@ export function HomePage() {
     }
   }
 
+  const homeSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Vizag Real Estate & Properties for Sale | Visakhapatnam Property",
+    "description": "Find your dream property in Vizag. Explore the best Vizag real estate, verified properties for sale, VMRDA plots, and flats.",
+    "url": "https://vizagproperty.co.in",
+    "publisher": {
+      "@type": "Organization",
+      "name": "VizagProperty",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://vizagproperty.co.in/assets/logo/vizag-property-logo.png"
+      }
+    }
+  }
+
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0"> {/* Padding bottom for sticky nav on mobile */}
+      <SEOHead 
+        title="Vizag Real Estate & Properties for Sale | Visakhapatnam Property"
+        description="Find your dream property in Vizag. Explore the best Vizag real estate, verified properties for sale, VMRDA plots, and flats. Leading Visakhapatnam property platform."
+        schema={homeSchema}
+      />
       
       {/* 1. Hero Section */}
       <div 
@@ -56,12 +71,15 @@ export function HomePage() {
 
         <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center text-center space-y-6">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight tracking-tight drop-shadow-lg">
-            Find Your <span className="text-primary-400">Dream Property</span> in Vizag
+            Find Your <span className="text-primary-400">Dream Property in Vizag</span>
           </h1>
           <p className="text-lg md:text-2xl text-gray-200 font-medium max-w-3xl flex flex-wrap justify-center gap-x-4 gap-y-2">
-            <span className="flex items-center gap-1"><Search className="w-5 h-5 text-accent-500" /> AI Powered Search</span>
+            <span>Visakhapatnam Real Estate • Top Verified Properties for Sale</span>
+          </p>
+          <p className="text-md text-gray-300 font-medium max-w-3xl flex flex-wrap justify-center gap-x-4 gap-y-2 mt-2">
+            <span className="flex items-center gap-1"><Search className="w-4 h-4 text-accent-500" /> AI Powered Search</span>
             <span className="hidden md:inline">•</span>
-            <span className="flex items-center gap-1"><Shield className="w-5 h-5 text-success-500" /> Verified Properties</span>
+            <span className="flex items-center gap-1"><Shield className="w-4 h-4 text-success-500" /> Verified Listings</span>
           </p>
 
           {/* New Search Component */}
@@ -213,6 +231,17 @@ export function HomePage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SEO Rich Text Content */}
+      <section className="py-12 px-4 bg-white border-t border-gray-100">
+        <div className="max-w-7xl mx-auto">
+          <div className="prose prose-lg text-gray-600 max-w-none text-center">
+            <p>
+              Looking for a <strong>property in Vizag</strong>? VizagProperty.co.in is the leading destination for <strong>vizag real estate</strong> and verified <strong>vizag properties</strong>. Whether you are searching for a premium <strong>vizag property for sale</strong>, exploring VMRDA approved plots, or looking for flats and villas, we connect you directly with top builders and owners. Experience a seamless search for any <strong>visakhapatnam property</strong> and invest in the future with the most trusted <strong>property in visakhapatnam</strong>.
+            </p>
           </div>
         </div>
       </section>
