@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import { Navigate, Link } from 'react-router-dom'
 import { 
   Building2, Users, Clock, CheckCircle, 
-  PlusCircle, LayoutDashboard, FileText, Settings, LogOut, XCircle
+  PlusCircle, LayoutDashboard, FileText, Settings, LogOut, XCircle, PieChart as PieChartIcon
 } from 'lucide-react'
+import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from 'recharts'
 import { supabase } from '../../lib/supabase'
 import { SEOHead } from '../../components/SEOHead'
 import { useAuth } from '../../contexts/AuthContext'
@@ -161,6 +162,19 @@ export function PartnerDashboardPage() {
       default: return 'bg-gray-100 text-gray-800 border-gray-200'
     }
   }
+
+  // Prepare chart data
+  const statusCounts = referrals.reduce((acc, ref) => {
+    acc[ref.lead_status] = (acc[ref.lead_status] || 0) + 1
+    return acc
+  }, {} as Record<string, number>)
+
+  const chartData = Object.keys(statusCounts).map(status => ({
+    name: status,
+    value: statusCounts[status]
+  }))
+
+  const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EF4444', '#6366F1', '#EC4899', '#14B8A6']
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -328,6 +342,40 @@ export function PartnerDashboardPage() {
                 </div>
               </div>
             </div>
+
+            {/* Analytics Section */}
+            {referrals.length > 0 && (
+              <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 animate-fadeIn">
+                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                  <PieChartIcon className="h-6 w-6 text-primary-600" />
+                  Referral Conversion Funnel
+                </h2>
+                <div className="h-[300px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={chartData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={80}
+                        outerRadius={120}
+                        paddingAngle={5}
+                        dataKey="value"
+                      >
+                        {chartData.map((_entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <RechartsTooltip 
+                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                        itemStyle={{ color: '#111827', fontWeight: 600 }}
+                      />
+                      <Legend verticalAlign="bottom" height={36} iconType="circle" />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
 
             {/* Referral Form Modal/Section */}
             {showReferralForm && (

@@ -111,8 +111,19 @@ export function MyListingsPage() {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">My Listings</h1>
-          <p className="text-gray-600">Manage your property listings</p>
+          <div className="bg-gradient-to-r from-primary-900 to-primary-700 rounded-3xl p-8 md:p-12 text-white shadow-xl mb-8 relative overflow-hidden">
+            <div className="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 -mb-16 -ml-16 w-64 h-64 bg-accent-400 opacity-10 rounded-full blur-3xl"></div>
+            <div className="relative z-10 max-w-2xl">
+              <span className="inline-block px-3 py-1 bg-green-500/20 text-green-200 border border-green-500/30 rounded-full text-xs font-bold uppercase tracking-wider mb-4">
+                Zero Brokerage Direct Listings
+              </span>
+              <h1 className="text-3xl md:text-5xl font-extrabold mb-4">Owner Dashboard</h1>
+              <p className="text-primary-100 text-lg">
+                Connect directly with verified buyers and tenants. Save lakhs on brokerage by managing your listings here.
+              </p>
+            </div>
+          </div>
         </div>
 
         {properties.length === 0 ? (
