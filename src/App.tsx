@@ -71,6 +71,7 @@ const PartnerReferralDetailsPage = lazyWithRetry(() => import('./pages/partner/P
 const AIAssistantPage = lazyWithRetry(() => import('./pages/AIAssistantPage').then(m => ({ default: m.AIAssistantPage })))
 const CalculatorPage = lazyWithRetry(() => import('./pages/CalculatorPage').then(m => ({ default: m.CalculatorPage })))
 const MarketTrendsPage = lazyWithRetry(() => import('./pages/MarketTrendsPage').then(m => ({ default: m.MarketTrendsPage })))
+const NRIInvestmentPage = lazyWithRetry(() => import('./pages/NRIInvestmentPage').then(m => ({ default: m.NRIInvestmentPage })))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -151,6 +152,7 @@ function AppContent() {
               <Route path="/disclaimer" element={<DisclaimerPage />} />
               <Route path="/home-loan-emi-calculator" element={<CalculatorPage />} />
               <Route path="/market-trends" element={<MarketTrendsPage />} />
+              <Route path="/nri-investments" element={<NRIInvestmentPage />} />
               
               {/* New SEO Silo Routes */}
               <Route path="/plots/bhogapuram" element={<BhogapuramPlotsPage />} />
