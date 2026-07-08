@@ -1,5 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js'
 import { supabase } from './supabase'
+import { fuzzySearchLocalities } from './fuzzySearch'
 
 export async function getLocalityIdByName(localityName: string): Promise<string | null> {
   const { data } = await supabase
@@ -28,15 +29,7 @@ export async function searchLocalities(query: string, limit: number = 10): Promi
     return []
   }
 
-  const { data } = await supabase
-    .from('localities')
-    .select('id, name, slug')
-    .eq('city', 'Visakhapatnam')
-    .ilike('name', `${query}%`)
-    .order('name')
-    .limit(limit)
-
-  return data || []
+  return await fuzzySearchLocalities(query, limit)
 }
 
 // Property type normalization

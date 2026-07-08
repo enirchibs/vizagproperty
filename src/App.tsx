@@ -68,6 +68,7 @@ const AdminPartnersPage = lazyWithRetry(() => import('./pages/AdminPartnersPage'
 const PartnerApplyPage = lazyWithRetry(() => import('./pages/partner/PartnerApplyPage').then(m => ({ default: m.PartnerApplyPage })))
 const PartnerDashboardPage = lazyWithRetry(() => import('./pages/partner/PartnerDashboardPage').then(m => ({ default: m.PartnerDashboardPage })))
 const PartnerReferralDetailsPage = lazyWithRetry(() => import('./pages/partner/PartnerReferralDetailsPage').then(m => ({ default: m.PartnerReferralDetailsPage })))
+const AIAssistantPage = lazyWithRetry(() => import('./pages/AIAssistantPage').then(m => ({ default: m.AIAssistantPage })))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -94,6 +95,7 @@ function AppContent() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/mobile-search" element={<MobileSearchPage />} />
+              <Route path="/ai-assistant" element={<AIAssistantPage />} />
               <Route path="/vizag" element={<VizagPage />} />
               <Route path="/vmrda-plots" element={<VMRDAplotsPage />} />
               <Route path="/vmrda-approved-plots-vizag" element={<VMRDAApprovedPlotsPage />} />

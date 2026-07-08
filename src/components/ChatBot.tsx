@@ -19,7 +19,7 @@ export function ChatBot({ externalTrigger }: ChatBotProps = {}) {
   const navigate = useNavigate()
   const location = useLocation()
   
-  const hideOnRoutes = ['/add-property', '/post-property', '/search', '/mobile-search', '/properties']
+  const hideOnRoutes = ['/add-property', '/post-property', '/search', '/mobile-search', '/properties', '/ai-assistant']
 
   const [isOpen, setIsOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)

@@ -69,7 +69,7 @@ export function HeroSearch() {
           
           <button
             type="button"
-            onClick={() => navigate('/properties?ai=true')}
+            onClick={() => navigate('/ai-assistant')}
             className="hidden md:flex p-2.5 md:p-3 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white hover:opacity-90 transition-opacity items-center gap-2"
             title="AI Search"
           >

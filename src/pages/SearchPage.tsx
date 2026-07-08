@@ -1,17 +1,34 @@
-import { useState, useEffect } from 'react'
-import { Search, SlidersHorizontal, ChevronLeft, MessageCircle, Plus, MapPin, Mic, X } from 'lucide-react'
+import { useState, useEffect, useMemo } from 'react'
+import { Search, SlidersHorizontal, ChevronLeft, MessageCircle, Plus, MapPin, Mic, X, List } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { FiltersPanel } from '../components/FiltersPanel'
 import { PropertyCard } from '../components/PropertyCard'
 import { usePropertySearch } from '../hooks/usePropertySearch'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
+import { GoogleMapView } from '../components/GoogleMapView'
 import { VIZAG_PROPERTY_PHONE_WITH_CODE } from '../config/contact'
 import { useSearch } from '../contexts/SearchContext'
 import { saveLastSearch } from '../lib/searchMemory'
+import MapRadiusToggle from '../components/MapRadiusToggle'
+
+function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371; // km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  return R * c; 
+}
 
 export function SearchPage() {
   const navigate = useNavigate()
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false)
+  const [viewMode, setViewMode] = useState<'list' | 'map'>('list')
+  const [radiusEnabled, setRadiusEnabled] = useState(false)
+  const [radiusKm, setRadiusKm] = useState<1 | 3 | 5>(3)
 
   // Use SearchContext for all search-related state
   const {
@@ -211,6 +228,21 @@ export function SearchPage() {
   }
 
 
+  const displayedProperties = useMemo(() => {
+    if (!radiusEnabled || properties.length === 0) return properties;
+    
+    const centerLat = properties[0].latitude;
+    const centerLng = properties[0].longitude;
+    
+    if (centerLat == null || centerLng == null) return properties;
+    
+    return properties.filter(p => {
+      if (p.latitude == null || p.longitude == null) return false;
+      const distance = calculateDistance(centerLat, centerLng, p.latitude, p.longitude);
+      return distance <= radiusKm;
+    });
+  }, [properties, radiusEnabled, radiusKm]);
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       <div className="sticky top-0 z-40 bg-white px-3 pt-3 pb-2 shadow-sm">
@@ -290,6 +322,18 @@ export function SearchPage() {
             </button>
           </div>
 
+          {localityId && (
+            <div className="mb-3">
+              <MapRadiusToggle
+                isEnabled={radiusEnabled}
+                radiusKm={radiusKm}
+                onToggle={setRadiusEnabled}
+                onRadiusChange={setRadiusKm}
+                localityName={locality}
+              />
+            </div>
+          )}
+
           <div className="flex gap-1.5 mt-3">
             <button
               onClick={handleSearch}
@@ -346,7 +390,7 @@ export function SearchPage() {
                 </div>
               )}
 
-              {!loading && !error && properties.length === 0 && (
+              {!loading && !error && displayedProperties.length === 0 && (
                 <div className="text-center py-8 md:py-12">
                   <MapPin className="h-10 w-10 md:h-12 md:w-12 text-gray-400 mx-auto mb-3 md:mb-4" />
                   <h3 className="text-sm md:text-lg font-bold text-gray-900 mb-1.5 md:mb-2">No properties found</h3>
@@ -354,18 +398,40 @@ export function SearchPage() {
                 </div>
               )}
 
-              {!loading && !error && properties.length > 0 && (
+              {!loading && !error && displayedProperties.length > 0 && (
                 <>
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="font-bold text-sm md:text-base text-gray-900">
-                      {properties.length} Properties
+                      {displayedProperties.length} Properties {radiusEnabled && `(within ${radiusKm}km)`}
                     </h2>
+                    <div className="flex bg-white rounded-lg border border-gray-200 p-1">
+                      <button
+                        onClick={() => setViewMode('list')}
+                        className={`px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-2 transition-colors ${viewMode === 'list' ? 'bg-orange-50 text-orange-600' : 'text-gray-600 hover:bg-gray-50'}`}
+                      >
+                        <List className="w-4 h-4" />
+                        List
+                      </button>
+                      <button
+                        onClick={() => setViewMode('map')}
+                        className={`px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-2 transition-colors ${viewMode === 'map' ? 'bg-orange-50 text-orange-600' : 'text-gray-600 hover:bg-gray-50'}`}
+                      >
+                        <MapPin className="w-4 h-4" />
+                        Map
+                      </button>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {properties.map((property) => (
-                      <PropertyCard key={property.id} property={property} />
-                    ))}
-                  </div>
+                  {viewMode === 'list' ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {displayedProperties.map((property) => (
+                        <PropertyCard key={property.id} property={property} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="h-[600px] w-full bg-white p-2 rounded-xl border border-gray-200 shadow-sm">
+                      <GoogleMapView properties={displayedProperties} />
+                    </div>
+                  )}
                 </>
               )}
             </>
