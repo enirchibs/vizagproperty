@@ -96,25 +96,25 @@ export function HomePage() {
 
 
   useEffect(() => {
-    document.title = 'Vizag Real Estate: Buy, Sell & Rent Property in Visakhapatnam'
+    document.title = 'Vizag Real Estate: Properties for Sale in Visakhapatnam'
 
     const metaDescription = document.querySelector('meta[name="description"]')
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Find the best vizag real estate deals. Search vizag plots for sale, flats, villas, and houses in Madhurawada, PM Palem, Yendada. Vizag property prices with AI-powered search.')
+      metaDescription.setAttribute('content', 'Find the best Vizag properties for sale. Explore Vizag real estate, VMRDA approved plots, flats, and houses in Visakhapatnam. Verified property listings.')
     } else {
       const meta = document.createElement('meta')
       meta.name = 'description'
-      meta.content = 'Find the best vizag real estate deals. Search vizag plots for sale, flats, villas, and houses in Madhurawada, PM Palem, Yendada. Vizag property prices with AI-powered search.'
+      meta.content = 'Find the best Vizag properties for sale. Explore Vizag real estate, VMRDA approved plots, flats, and houses in Visakhapatnam. Verified property listings.'
       document.head.appendChild(meta)
     }
 
     const metaKeywords = document.querySelector('meta[name="keywords"]')
     if (metaKeywords) {
-      metaKeywords.setAttribute('content', 'vizag real estate, vizag plots for sale, vizag house for sale, vizag flats for sale, vizag villas for sale, vizag real estate prices, vizag property, residential property in vizag')
+      metaKeywords.setAttribute('content', 'vizag real estate, vizag properties, vizag property, visakhapatnam property, visakhapatnam real estate, properties in vizag, vizag property for sale, property in visakhapatnam, vmrda l.p. number search')
     } else {
       const meta = document.createElement('meta')
       meta.name = 'keywords'
-      meta.content = 'vizag real estate, vizag plots for sale, vizag house for sale, vizag flats for sale, vizag villas for sale, vizag real estate prices, vizag property, residential property in vizag'
+      meta.content = 'vizag real estate, vizag properties, vizag property, visakhapatnam property, visakhapatnam real estate, properties in vizag, vizag property for sale, property in visakhapatnam, vmrda l.p. number search'
       document.head.appendChild(meta)
     }
 
@@ -492,17 +492,17 @@ export function HomePage() {
             <div className="animate-float-vibrant-stagger2 w-full">
               <button
                 onClick={() => setShowFilterModal(true)}
-                className="w-full group relative bg-gradient-to-br from-[#092B40] via-[#0E4A70] to-[#1565C0] text-white p-5 md:p-8 rounded-3xl shadow-xl transition-all duration-300 hover:-translate-y-4 hover:scale-[1.06] hover:rotate-[-1.5deg] hover:shadow-[0_25px_50px_rgba(21,101,192,0.6)] text-left flex flex-col justify-between min-h-[140px] md:min-h-[180px] overflow-hidden border border-white/10 cursor-pointer animate-slide-in-left"
+                className="w-full group relative bg-gradient-to-br from-[#092B40] via-[#0E4A70] to-[#1565C0] text-white p-5 md:p-8 rounded-3xl shadow-[0_10px_30px_rgba(21,101,192,0.4)] transition-all duration-300 hover:-translate-y-4 hover:scale-[1.06] hover:rotate-[-1.5deg] hover:shadow-[0_0_50px_rgba(21,101,192,0.8)] text-left flex flex-col justify-between min-h-[140px] md:min-h-[180px] overflow-hidden border border-white/20 hover:border-blue-400/60 cursor-pointer animate-slide-in-left"
               >
                 {/* Glossy shine overlay */}
-                <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 -translate-x-full group-hover:animate-shine z-0"></div>
+                <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover:animate-shine z-0"></div>
                 
                 <div className="space-y-2 md:space-y-4 relative z-10">
-                  <div className="bg-white/15 w-10 h-10 md:w-14 md:h-14 rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-white/20 transition-all duration-300 group-hover:-translate-y-1">
-                    <Search className="h-6 w-6 md:h-8 md:w-8 text-[#00BFA5] group-hover:scale-110 transition-transform duration-300" />
+                  <div className="bg-white/15 w-10 h-10 md:w-14 md:h-14 rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-white/25 transition-all duration-300 group-hover:-translate-y-1 shadow-[0_0_15px_rgba(0,191,165,0.4)] group-hover:shadow-[0_0_25px_rgba(0,191,165,0.8)]">
+                    <Search className="h-6 w-6 md:h-8 md:w-8 text-[#00BFA5] group-hover:scale-110 group-hover:animate-pulse transition-transform duration-300" />
                   </div>
                   <div>
-                    <h3 className="text-xl md:text-2xl font-bold text-white mb-0.5 md:mb-1 group-hover:text-amber-300 transition-colors duration-300">
+                    <h3 className="text-xl md:text-2xl font-bold text-white mb-0.5 md:mb-1 group-hover:text-cyan-300 transition-colors duration-300 drop-shadow-md">
                       Search Property
                     </h3>
                     <p className="text-blue-100/90 text-xs md:text-sm font-medium">
@@ -523,17 +523,17 @@ export function HomePage() {
                     navigate('/login?redirect=/add-property')
                   }
                 }}
-                className="w-full group relative bg-gradient-to-br from-[#F57F17] via-[#FF8F00] to-[#E65100] text-white p-5 md:p-8 rounded-3xl shadow-xl transition-all duration-300 hover:-translate-y-4 hover:scale-[1.06] hover:rotate-[1.5deg] hover:shadow-[0_25px_50px_rgba(230,81,0,0.6)] text-left flex flex-col justify-between min-h-[140px] md:min-h-[180px] overflow-hidden border border-white/10 cursor-pointer animate-slide-in-right"
+                className="w-full group relative bg-gradient-to-br from-[#F57F17] via-[#FF8F00] to-[#E65100] text-white p-5 md:p-8 rounded-3xl shadow-[0_10px_30px_rgba(230,81,0,0.4)] transition-all duration-300 hover:-translate-y-4 hover:scale-[1.06] hover:rotate-[1.5deg] hover:shadow-[0_0_50px_rgba(255,143,0,0.8)] text-left flex flex-col justify-between min-h-[140px] md:min-h-[180px] overflow-hidden border border-white/20 hover:border-orange-400/60 cursor-pointer animate-slide-in-right"
               >
                 {/* Glossy shine overlay */}
-                <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 -translate-x-full group-hover:animate-shine z-0"></div>
+                <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover:animate-shine z-0"></div>
                 
                 <div className="space-y-2 md:space-y-4 relative z-10">
-                  <div className="bg-white/15 w-10 h-10 md:w-14 md:h-14 rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-white/20 transition-all duration-300 group-hover:-translate-y-1">
-                    <Home className="h-6 w-6 md:h-8 md:w-8 text-[#FFD700] group-hover:scale-110 transition-transform duration-300" />
+                  <div className="bg-white/15 w-10 h-10 md:w-14 md:h-14 rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-white/25 transition-all duration-300 group-hover:-translate-y-1 shadow-[0_0_15px_rgba(255,215,0,0.4)] group-hover:shadow-[0_0_25px_rgba(255,215,0,0.8)]">
+                    <Home className="h-6 w-6 md:h-8 md:w-8 text-[#FFD700] group-hover:scale-110 group-hover:animate-pulse transition-transform duration-300" />
                   </div>
                   <div>
-                    <h3 className="text-xl md:text-2xl font-bold text-white mb-0.5 md:mb-1 group-hover:text-amber-300 transition-colors duration-300">
+                    <h3 className="text-xl md:text-2xl font-bold text-white mb-0.5 md:mb-1 group-hover:text-yellow-300 transition-colors duration-300 drop-shadow-md">
                       Post Property
                     </h3>
                     <p className="text-orange-50/90 text-xs md:text-sm font-medium">

@@ -23,7 +23,7 @@ export default function VMRDAApprovedPlotsPage() {
   const [showZeroResultsModal, setShowZeroResultsModal] = useState(false)
 
   useEffect(() => {
-    document.title = 'VMRDA Approved Plots in Vizag | Safe & Legal Plots for Sale in Visakhapatnam'
+    document.title = 'VMRDA L.P. Number Search & Approved Plots in Vizag'
 
     const metaDescription = document.querySelector('meta[name="description"]')
     if (metaDescription) {
@@ -43,11 +43,15 @@ export default function VMRDAApprovedPlotsPage() {
           }
         },
         {
+            "text": "VMRDA approved plots in Vizag range from ₹3,000 to ₹8,000 per sq yard depending on location. Budget-friendly areas like Gajuwaka and Kommadi start from ₹15-20 lakhs for complete plots, while premium locations like Madhurawada and PM Palem range from ₹25 lakhs to ₹1 crore+."
+          }
+        },
+        {
           "@type": "Question",
-          "name": "What is the price of VMRDA plots in Vizag?",
+          "name": "How to do VMRDA L.P. number search in Vizag?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "VMRDA approved plots in Vizag range from ₹3,000 to ₹8,000 per sq yard depending on location. Budget-friendly areas like Gajuwaka and Kommadi start from ₹15-20 lakhs for complete plots, while premium locations like Madhurawada and PM Palem range from ₹25 lakhs to ₹1 crore+."
+            "text": "To verify a VMRDA approved plot, you can perform a VMRDA L.P. number search. Every legally approved layout has a unique Layout Plan (L.P.) number assigned by the Visakhapatnam Metropolitan Region Development Authority. Always ask the builder or seller for the L.P. number before purchasing a plot in Vizag to ensure it is 100% legal and safe."
           }
         }
       ]
@@ -353,9 +357,9 @@ export default function VMRDAApprovedPlotsPage() {
               <div className="bg-green-600 w-16 h-16 rounded-full flex items-center justify-center mb-6">
                 <Shield className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">100% Legal Safety</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">100% Legal Safety & L.P. Number Search</h3>
               <p className="text-gray-700 leading-relaxed">
-                VMRDA approval guarantees clear title deeds, verified land records, and complete legal compliance. No risk of property disputes or illegal construction issues.
+                VMRDA approval guarantees clear title deeds, verified land records, and complete legal compliance. No risk of property disputes or illegal construction issues. Always perform a <strong>VMRDA L.P. number search</strong> to verify the plot's authenticity before buying.
               </p>
             </div>
 
