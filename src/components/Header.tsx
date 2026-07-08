@@ -126,6 +126,9 @@ export function Header() {
               <a href="/news" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
                 Daily News
               </a>
+              <a href="/home-loans" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
+                Home Loans
+              </a>
               <a href="/contact" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
                 Contact Us
               </a>
