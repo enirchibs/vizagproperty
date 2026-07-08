@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { Calendar, Clock, ArrowLeft, User, Tag } from 'lucide-react';
 import { SEOHead } from '../components/SEOHead';
 import { AdSenseInArticle } from '../components/AdSenseInArticle';
+import { AdSenseStickySidebar } from '../components/AdSenseStickySidebar';
 import { injectInternalLinks } from '../utils/seo/autoLinker';
 import { useSeoKeywords } from '../hooks/useSeoKeywords';
 
@@ -154,14 +155,15 @@ export function BlogPostPage() {
       </div>
 
       {/* Content Section */}
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <Link 
-          to="/blog"
-          className="inline-flex items-center text-sm text-gray-500 hover:text-primary-600 transition-colors mb-10 group"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-          Back to VizagInformation
-        </Link>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <div className="flex-1 lg:max-w-3xl">
+          <Link 
+            to="/blog"
+            className="inline-flex items-center text-sm text-gray-500 hover:text-primary-600 transition-colors mb-10 group"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+            Back to VizagInformation
+          </Link>
 
         <div className="prose prose-lg prose-primary max-w-none prose-headings:font-bold prose-a:text-primary-600 hover:prose-a:text-primary-700">
           <ReactMarkdown
@@ -229,6 +231,12 @@ export function BlogPostPage() {
             </Link>
           </div>
         </div>
+      </div>
+      
+      <aside className="w-full lg:w-80 lg:flex-shrink-0">
+        <AdSenseStickySidebar />
+      </aside>
+      
       </div>
     </article>
   );

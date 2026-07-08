@@ -77,24 +77,19 @@ export function Footer() {
 
           <div>
             <h4 className="text-white font-semibold mb-4">Company</h4>
-            <ul className="space-y-2">
+            <ul className="space-y-2 text-sm text-gray-400">
+              <li><Link to="/about" className="hover:text-primary-400 transition-colors">About Us</Link></li>
+              <li><Link to="/contact" className="hover:text-primary-400 transition-colors">Contact</Link></li>
+              <li><Link to="/blog" className="hover:text-primary-400 transition-colors">Blog & Insights</Link></li>
+              <li><Link to="/home-loan-emi-calculator" className="hover:text-primary-400 transition-colors">EMI Calculator</Link></li>
+              <li><Link to="/partners" className="hover:text-primary-400 transition-colors">Partner Network</Link></li>
               <li>
-                <Link to="/about" className="text-sm hover:text-primary-400 transition-colors">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-sm hover:text-primary-400 transition-colors">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/privacy-policy" className="text-sm hover:text-primary-400 transition-colors">
+                <Link to="/privacy-policy" className="hover:text-primary-400 transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link to="/terms-and-conditions" className="text-sm hover:text-primary-400 transition-colors">
+                <Link to="/terms-and-conditions" className="hover:text-primary-400 transition-colors">
                   Terms & Conditions
                 </Link>
               </li>

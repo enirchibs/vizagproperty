@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Search, Mic, MicOff, Filter, X, MapPin, MessageCircle, Map, LayoutGrid } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property, SearchFilters } from '../types'
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { PropertyCard } from '../components/PropertyCard'
 import { GoogleMapView } from '../components/GoogleMapView'
+import { AdSenseInFeedCard } from '../components/AdSenseInFeedCard'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp } from '../lib/whatsapp'
 
@@ -700,8 +701,15 @@ export function PropertiesPage() {
               <div className="mb-8">
                 <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Exact Matches</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {exactProperties.map((property) => (
-                    <PropertyCard key={property.id} property={property} />
+                  {exactProperties.map((property, index) => (
+                    <React.Fragment key={property.id}>
+                      <PropertyCard property={property} />
+                      {(index + 1) % 6 === 0 && (
+                        <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center">
+                          <AdSenseInFeedCard />
+                        </div>
+                      )}
+                    </React.Fragment>
                   ))}
                 </div>
               </div>
@@ -713,8 +721,15 @@ export function PropertiesPage() {
                   Nearby Matches (Within {searchTier} km)
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {nearbyProperties.map((property) => (
-                    <PropertyCard key={property.id} property={property} />
+                  {nearbyProperties.map((property, index) => (
+                    <React.Fragment key={property.id}>
+                      <PropertyCard property={property} />
+                      {(index + 1) % 6 === 0 && (
+                        <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center">
+                          <AdSenseInFeedCard />
+                        </div>
+                      )}
+                    </React.Fragment>
                   ))}
                 </div>
               </div>

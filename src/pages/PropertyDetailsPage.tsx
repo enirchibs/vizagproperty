@@ -13,6 +13,7 @@ import { PropertyShortlistMemory } from '../components/PropertyShortlistMemory'
 import { VisitPreparation } from '../components/VisitPreparation'
 import { MediaGallery } from '../components/MediaGallery'
 import { PropertyLocationMap } from '../components/PropertyLocationMap'
+import { EMICalculator } from '../components/EMICalculator'
 import { VIZAG_PROPERTY_PHONE } from '../config/contact'
 import PropertyDisclaimer from '../components/PropertyDisclaimer'
 import { SEOHead } from '../components/SEOHead'
@@ -386,6 +387,10 @@ export function PropertyDetailsPage() {
                 title={property.title}
                 location={property.location ?? property.city ?? 'Visakhapatnam'}
               />
+            </div>
+
+            <div className="mb-6">
+              <EMICalculator propertyPrice={property.price} />
             </div>
 
             <GoodDealAnalysis propertyId={property.id} currentPrice={property.price} />
