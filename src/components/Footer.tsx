@@ -87,6 +87,7 @@ export function Footer() {
               <li><Link to="/blog" className="hover:text-primary-400 transition-colors">Blog & Insights</Link></li>
               <li><Link to="/market-trends" className="hover:text-primary-400 transition-colors">Market Trends & Valuation</Link></li>
               <li><Link to="/legal-verification" className="hover:text-primary-400 transition-colors">VMRDA & RERA Guide</Link></li>
+              <li><Link to="/legal-verification" className="hover:text-primary-400 transition-colors text-primary-300 font-semibold">Real Estate Legal Advice Cell</Link></li>
               <li><Link to="/home-loan-emi-calculator" className="hover:text-primary-400 transition-colors">EMI Calculator</Link></li>
               <li><Link to="/partners" className="hover:text-primary-400 transition-colors">Partner Network</Link></li>
               <li>
