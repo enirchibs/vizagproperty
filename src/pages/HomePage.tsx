@@ -12,6 +12,7 @@ import { HomeBlogSection } from '../components/HomeBlogSection'
 import { SEOHead } from '../components/SEOHead'
 import { HeatMap } from '../components/HeatMap'
 import { CallBanner } from '../components/CallBanner'
+import { SponsoredBanners } from '../components/SponsoredBanners'
 
 export function HomePage() {
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
@@ -115,6 +116,9 @@ export function HomePage() {
 
       {/* 3. Browse By Category */}
       <CategoryCards />
+
+      {/* Premium Partners / Sponsored Banners */}
+      <SponsoredBanners />
 
       {/* 4. Featured Projects / Properties */}
       <section className="py-16 bg-gray-50 border-y border-gray-200">
