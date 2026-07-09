@@ -10,6 +10,7 @@ import { ChatBot } from '../components/ChatBot'
 import { AuthModal } from '../components/AuthModal'
 import { HomeBlogSection } from '../components/HomeBlogSection'
 import { SEOHead } from '../components/SEOHead'
+import { HeatMap } from '../components/HeatMap'
 
 export function HomePage() {
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
@@ -170,11 +171,8 @@ export function HomePage() {
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Explore Vizag on Map</h2>
           <p className="text-gray-600 mb-10 max-w-2xl mx-auto">Click on localities to see average prices, price trends, and rental yields across Visakhapatnam.</p>
-          
-          <div className="w-full h-[500px] bg-slate-100 rounded-3xl border-2 border-dashed border-slate-300 flex items-center justify-center flex-col relative overflow-hidden group">
-            <MapPin className="w-16 h-16 text-primary-400 mb-4 group-hover:scale-110 transition-transform" />
-            <h3 className="text-2xl font-bold text-slate-700 mb-2">Interactive Heat Map</h3>
-            <p className="text-slate-500">Coming soon in Phase 2</p>
+          <div className="w-full mt-10">
+            <HeatMap />
           </div>
         </div>
       </section>

@@ -29,12 +29,12 @@ export function CategoryCards() {
               key={index} 
               to={cat.link}
               title={`${cat.name} in Vizag | Vizag Property for Sale`}
-              className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl hover:border-primary-100 transition-all duration-300 hover:-translate-y-1 group"
+              className={`flex flex-col items-center justify-center p-6 rounded-2xl shadow-sm border border-transparent ${cat.bg} hover:shadow-md transition-all duration-300 hover:-translate-y-1 group`}
             >
-              <div className={`w-16 h-16 rounded-full ${cat.bg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+              <div className="w-16 h-16 rounded-full bg-white/60 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-white transition-all duration-300 shadow-sm">
                 <Icon className={`w-8 h-8 ${cat.color}`} />
               </div>
-              <h3 className="font-semibold text-gray-800 text-center text-sm md:text-base group-hover:text-primary-600 transition-colors">
+              <h3 className={`font-semibold text-gray-800 text-center text-sm md:text-base group-hover:${cat.color} transition-colors`}>
                 {cat.name}
               </h3>
             </Link>
