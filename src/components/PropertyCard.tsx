@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { openWhatsApp } from '../lib/whatsapp'
+import { VIZAG_PROPERTY_PHONE } from '../config/contact'
 
 interface PropertyCardProps {
   property: Property
@@ -64,14 +65,15 @@ export function PropertyCard({ property }: PropertyCardProps) {
   const handleCall = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    window.location.href = `tel:${property.agent_phone}`
+    const targetPhone = property.agent_phone || VIZAG_PROPERTY_PHONE
+    window.location.href = `tel:${targetPhone}`
   }
 
   const handleWhatsApp = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     const message = `Hi, I'm interested in your property: ${property.title} - ${formatPrice(property.price)}`
-    const targetPhone = property.agent_whatsapp || property.agent_phone
+    const targetPhone = property.agent_whatsapp || property.agent_phone || VIZAG_PROPERTY_PHONE
     openWhatsApp(message, targetPhone)
   }
 
