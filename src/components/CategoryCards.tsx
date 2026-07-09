@@ -3,15 +3,15 @@ import { Link } from 'react-router-dom';
 
 export function CategoryCards() {
   const categories = [
-    { name: 'Plots', icon: Map, color: 'text-orange-500', bg: 'bg-orange-50', link: '/properties?category=land_plot' },
-    { name: 'Flats', icon: Building2, color: 'text-blue-500', bg: 'bg-blue-50', link: '/properties?category=flat_apartment' },
-    { name: 'Villa', icon: Home, color: 'text-green-500', bg: 'bg-green-50', link: '/properties?category=villa' },
-    { name: 'Commercial', icon: Briefcase, color: 'text-purple-500', bg: 'bg-purple-50', link: '/properties?category=commercial' },
-    { name: 'Independent House', icon: Home, color: 'text-teal-500', bg: 'bg-teal-50', link: '/properties?category=full_house' },
-    { name: 'Farm Land', icon: Trees, color: 'text-emerald-500', bg: 'bg-emerald-50', link: '/properties?category=farm_land' },
-    { name: 'Rental', icon: Key, color: 'text-rose-500', bg: 'bg-rose-50', link: '/properties?type=rent' },
-    { name: 'PG / Hostel', icon: Users, color: 'text-indigo-500', bg: 'bg-indigo-50', link: '/properties?category=pg_hostel' },
-    { name: 'Office Space', icon: Building, color: 'text-sky-500', bg: 'bg-sky-50', link: '/properties?category=commercial&subType=office' },
+    { name: 'Plots', icon: Map, color: 'text-orange-600', bg: 'bg-orange-100', link: '/properties?category=land_plot' },
+    { name: 'Flats', icon: Building2, color: 'text-blue-600', bg: 'bg-blue-100', link: '/properties?category=flat_apartment' },
+    { name: 'Villa', icon: Home, color: 'text-green-600', bg: 'bg-green-100', link: '/properties?category=villa' },
+    { name: 'Commercial', icon: Briefcase, color: 'text-purple-600', bg: 'bg-purple-100', link: '/properties?category=commercial' },
+    { name: 'Independent House', icon: Home, color: 'text-teal-600', bg: 'bg-teal-100', link: '/properties?category=full_house' },
+    { name: 'Farm Land', icon: Trees, color: 'text-emerald-600', bg: 'bg-emerald-100', link: '/properties?category=farm_land' },
+    { name: 'Rental', icon: Key, color: 'text-rose-600', bg: 'bg-rose-100', link: '/properties?type=rent' },
+    { name: 'PG / Hostel', icon: Users, color: 'text-indigo-600', bg: 'bg-indigo-100', link: '/properties?category=pg_hostel' },
+    { name: 'Office Space', icon: Building, color: 'text-sky-600', bg: 'bg-sky-100', link: '/properties?category=commercial&subType=office' },
   ];
 
   return (
