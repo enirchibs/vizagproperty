@@ -14,6 +14,7 @@ import { VisitPreparation } from '../components/VisitPreparation'
 import { MediaGallery } from '../components/MediaGallery'
 import { PropertyLocationMap } from '../components/PropertyLocationMap'
 import { PropertyLoanWidget } from '../components/homeloans/PropertyLoanWidget'
+import { EMICalculator } from '../components/EMICalculator'
 import { VIZAG_PROPERTY_PHONE } from '../config/contact'
 import PropertyDisclaimer from '../components/PropertyDisclaimer'
 import { SEOHead } from '../components/SEOHead'
@@ -398,6 +399,16 @@ export function PropertyDetailsPage() {
 
             <div className="mb-6">
               <PropertyLoanWidget propertyPrice={property.price} />
+            </div>
+
+            <div className="mb-6">
+              <div className="text-center mb-6">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Home Loan EMI Calculator</h2>
+                <p className="text-gray-600 max-w-2xl mx-auto">
+                  Planning to buy a property in Vizag? Use our free EMI calculator to estimate your monthly home loan installments and plan your budget better.
+                </p>
+              </div>
+              <EMICalculator propertyPrice={property.price} />
             </div>
 
             <GoodDealAnalysis propertyId={property.id} currentPrice={property.price} />
