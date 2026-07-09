@@ -125,7 +125,9 @@ export function PropertyDetailsPage() {
   }
 
   const handleCall = () => {
-    window.location.href = `tel:${VIZAG_PROPERTY_PHONE}`
+    if (!property) return
+    const targetPhone = property.agent_phone || VIZAG_PROPERTY_PHONE
+    window.location.href = `tel:${targetPhone}`
   }
 
   const handleShare = async () => {
@@ -429,7 +431,7 @@ export function PropertyDetailsPage() {
                 <button
                   onClick={() => {
                     if (!property) return
-                    const targetPhone = property.agent_whatsapp || property.agent_phone
+                    const targetPhone = property.agent_whatsapp || property.agent_phone || undefined
                     openWhatsApp(
                       `Hi, I'm interested in ${property.title} listed on VizagProperty. Can you provide more details?`,
                       targetPhone
@@ -450,7 +452,11 @@ export function PropertyDetailsPage() {
                 </button>
 
                 <button
-                  onClick={() => openWhatsApp(`Hi Vizag Property Experts, I am interested in this property:\n${property.title}\nLocation: ${property.location ?? property.city ?? 'Visakhapatnam'}\nPrice: ${formatPrice(property.price)}\nPlease share more details.`)}
+                  onClick={() => {
+                    if (!property) return
+                    const targetPhone = property.agent_whatsapp || property.agent_phone || undefined
+                    openWhatsApp(`Hi Vizag Property Experts, I am interested in this property:\n${property.title}\nLocation: ${property.location ?? property.city ?? 'Visakhapatnam'}\nPrice: ${formatPrice(property.price)}\nPlease share more details.`, targetPhone)
+                  }}
                   className="w-full bg-green-50 text-green-700 border-2 border-green-600 py-3.5 md:py-3 rounded-lg hover:bg-green-100 transition-colors flex items-center justify-center space-x-2 font-medium text-base min-h-[48px]"
                 >
                   <MessageSquare className="h-5 w-5" />
