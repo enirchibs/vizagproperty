@@ -42,9 +42,9 @@ export function CallBanner() {
         </div>
         <a 
           href={`tel:${VIZAG_PROPERTY_PHONE}`}
-          className="w-full md:w-auto bg-yellow-400 hover:bg-yellow-500 text-red-600 font-bold text-lg md:text-xl px-6 py-2.5 md:py-3 rounded-lg transition-all shadow-lg text-center flex items-center justify-center gap-2 whitespace-nowrap"
+          className="w-full md:w-auto bg-yellow-400 hover:bg-yellow-500 text-red-600 font-bold text-lg md:text-xl px-6 py-2.5 md:py-3 rounded-lg transition-all shadow-lg text-center flex items-center justify-center gap-2 whitespace-nowrap animate-heartbeat"
         >
-          <Phone className="w-5 h-5" />
+          <Phone className="w-5 h-5 animate-bounce" />
           Call Now {VIZAG_PROPERTY_PHONE}
         </a>
       </div>

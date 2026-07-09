@@ -168,7 +168,7 @@ export function Header() {
                 <>
                   <a
                     href="/add-property"
-                    className="flex bg-yellow-400 text-red-600 px-3 md:px-7 py-1.5 md:py-2.5 rounded-full hover:bg-yellow-500 hover:shadow-lg transition-all font-bold shadow-sm text-sm md:text-lg whitespace-nowrap items-center"
+                    className="flex bg-yellow-400 text-red-600 px-3 md:px-7 py-1.5 md:py-2.5 rounded-full hover:bg-yellow-500 hover:shadow-lg transition-all font-bold shadow-sm text-sm md:text-lg whitespace-nowrap items-center animate-heartbeat"
                   >
                     Post Free Property Ad
                   </a>
@@ -233,7 +233,7 @@ export function Header() {
                 <>
                   <button
                     onClick={handlePostPropertyClick}
-                    className="flex bg-yellow-400 text-red-600 px-3 md:px-7 py-1.5 md:py-2.5 rounded-full hover:bg-yellow-500 hover:shadow-lg transition-all font-bold shadow-sm text-sm md:text-lg whitespace-nowrap items-center"
+                    className="flex bg-yellow-400 text-red-600 px-3 md:px-7 py-1.5 md:py-2.5 rounded-full hover:bg-yellow-500 hover:shadow-lg transition-all font-bold shadow-sm text-sm md:text-lg whitespace-nowrap items-center animate-heartbeat"
                   >
                     Post Free Property Ad
                   </button>

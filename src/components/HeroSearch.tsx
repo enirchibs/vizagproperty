@@ -89,7 +89,7 @@ export function HeroSearch() {
         ))}
         {/* Post free ad link */}
         <div className="ml-auto hidden lg:block pb-2 pr-4">
-          <Link to="/add-property" className="text-lg font-bold text-red-600 bg-yellow-400 hover:bg-yellow-500 px-6 py-2.5 rounded-lg transition-colors shadow-lg">
+          <Link to="/add-property" className="text-lg font-bold text-red-600 bg-yellow-400 hover:bg-yellow-500 px-6 py-2.5 rounded-lg transition-colors shadow-lg animate-heartbeat inline-block">
             Post Free Property Ad
           </Link>
         </div>
@@ -228,7 +228,7 @@ export function HeroSearch() {
       
       {/* Mobile Post Ad Link */}
       <div className="lg:hidden w-full mt-6 flex justify-center">
-         <Link to="/add-property" className="text-lg font-bold text-red-600 bg-yellow-400 hover:bg-yellow-500 px-8 py-3.5 rounded-full shadow-[0_4px_20px_rgba(250,204,21,0.5)] transition-all">
+         <Link to="/add-property" className="text-lg font-bold text-red-600 bg-yellow-400 hover:bg-yellow-500 px-8 py-3.5 rounded-full shadow-[0_4px_20px_rgba(250,204,21,0.5)] transition-all animate-heartbeat">
             Post Free Property Ad
          </Link>
       </div>
