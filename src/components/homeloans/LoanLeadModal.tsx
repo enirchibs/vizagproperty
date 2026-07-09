@@ -78,7 +78,7 @@ export function LoanLeadModal({ isOpen, onClose, selectedBankName }: LoanLeadMod
                   required
                   value={formData.name}
                   onChange={e => setFormData({...formData, name: e.target.value})}
-                  className="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none font-medium"
+                  className="w-full px-5 py-3.5 bg-gray-50 text-gray-900 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none font-medium"
                   placeholder="John Doe"
                 />
               </div>
@@ -95,7 +95,7 @@ export function LoanLeadModal({ isOpen, onClose, selectedBankName }: LoanLeadMod
                     pattern="[0-9]{10}"
                     value={formData.phone}
                     onChange={e => setFormData({...formData, phone: e.target.value})}
-                    className="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none font-medium"
+                    className="w-full px-5 py-3.5 bg-gray-50 text-gray-900 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none font-medium"
                     placeholder="98765 43210"
                   />
                 </div>
@@ -110,7 +110,7 @@ export function LoanLeadModal({ isOpen, onClose, selectedBankName }: LoanLeadMod
                     required
                     value={formData.loanAmount}
                     onChange={e => setFormData({...formData, loanAmount: e.target.value})}
-                    className="w-full pl-12 pr-5 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none font-medium"
+                    className="w-full pl-12 pr-5 py-3.5 bg-gray-50 text-gray-900 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none font-medium"
                     placeholder="5000000"
                   />
                 </div>
