@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X, CheckCircle2, IndianRupee } from 'lucide-react';
 import { trackEvent } from '../../lib/analytics';
+import { openWhatsApp } from '../../lib/whatsapp';
 
 interface LoanLeadModalProps {
   isOpen: boolean;
@@ -26,6 +27,11 @@ export function LoanLeadModal({ isOpen, onClose, selectedBankName }: LoanLeadMod
       category: 'LeadGen',
       label: selectedBankName ? `Applied to ${selectedBankName}` : 'General Inquiry'
     });
+    
+    // Send to WhatsApp
+    const message = `Hi Vizag Property,\nI would like to apply for a Home Loan.\n\n*Name:* ${formData.name}\n*Phone:* ${formData.phone}\n*Loan Amount:* ₹${formData.loanAmount}\n*Employment:* ${formData.employmentType}\n*Bank:* ${selectedBankName || 'Any Bank'}`;
+    openWhatsApp(message, '7207550499');
+
     setSubmitted(true);
     setTimeout(() => {
       onClose();
@@ -35,9 +41,9 @@ export function LoanLeadModal({ isOpen, onClose, selectedBankName }: LoanLeadMod
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-0">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-slide-up">
+      <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto animate-slide-up">
         <button 
           onClick={onClose}
           className="absolute top-4 right-4 bg-gray-100 hover:bg-gray-200 text-gray-500 p-2 rounded-full transition-colors z-10"
