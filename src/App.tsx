@@ -75,8 +75,16 @@ const NRIInvestmentPage = lazyWithRetry(() => import('./pages/NRIInvestmentPage'
 const LegalVerificationPage = lazyWithRetry(() => import('./pages/LegalVerificationPage').then(m => ({ default: m.LegalVerificationPage })))
 const TopBuildersPage = lazyWithRetry(() => import('./pages/TopBuildersPage').then(m => ({ default: m.TopBuildersPage })))
 const RealEstateNewsPage = lazyWithRetry(() => import('./pages/RealEstateNewsPage').then(m => ({ default: m.RealEstateNewsPage })))
-const HomeLoanPage = lazyWithRetry(() => import('./pages/HomeLoanPage').then(m => ({ default: m.HomeLoanPage })))
-
+const HomeLoanHubPage = lazyWithRetry(() => import('./pages/homeloans/HomeLoanHubPage').then(m => ({ default: m.HomeLoanHubPage })))
+const CompareBanksPage = lazyWithRetry(() => import('./pages/homeloans/CompareBanksPage').then(m => ({ default: m.CompareBanksPage })))
+const BankDetailsPage = lazyWithRetry(() => import('./pages/homeloans/BankDetailsPage').then(m => ({ default: m.BankDetailsPage })))
+const EMICalculatorPage = lazyWithRetry(() => import('./pages/homeloans/calculators/EMICalculatorPage').then(m => ({ default: m.EMICalculatorPage })))
+const EligibilityCalculatorPage = lazyWithRetry(() => import('./pages/homeloans/calculators/EligibilityCalculatorPage').then(m => ({ default: m.EligibilityCalculatorPage })))
+const AffordabilityCalculatorPage = lazyWithRetry(() => import('./pages/homeloans/calculators/AffordabilityCalculatorPage').then(m => ({ default: m.AffordabilityCalculatorPage })))
+const StampDutyCalculatorPage = lazyWithRetry(() => import('./pages/homeloans/calculators/StampDutyCalculatorPage').then(m => ({ default: m.StampDutyCalculatorPage })))
+const DocumentChecklistPage = lazyWithRetry(() => import('./pages/homeloans/DocumentChecklistPage').then(m => ({ default: m.DocumentChecklistPage })))
+const HomeLoanGuidePage = lazyWithRetry(() => import('./pages/homeloans/HomeLoanGuidePage').then(m => ({ default: m.HomeLoanGuidePage })))
+const ProgrammaticSEOLandingPage = lazyWithRetry(() => import('./pages/seo/ProgrammaticSEOLandingPage').then(m => ({ default: m.ProgrammaticSEOLandingPage })))
 function ScrollToTop() {
   const { pathname } = useLocation()
 
@@ -160,9 +168,19 @@ function AppContent() {
               <Route path="/legal-verification" element={<LegalVerificationPage />} />
               <Route path="/builders" element={<TopBuildersPage />} />
               <Route path="/news" element={<RealEstateNewsPage />} />
-              <Route path="/home-loans" element={<HomeLoanPage />} />
+              {/* Premium Home Loan Ecosystem */}
+              <Route path="/home-loans" element={<HomeLoanHubPage />} />
+              <Route path="/home-loans/compare" element={<CompareBanksPage />} />
+              <Route path="/home-loans/banks/:bankId" element={<BankDetailsPage />} />
+              <Route path="/home-loans/emi-calculator" element={<EMICalculatorPage />} />
+              <Route path="/home-loans/eligibility" element={<EligibilityCalculatorPage />} />
+              <Route path="/home-loans/affordability" element={<AffordabilityCalculatorPage />} />
+              <Route path="/home-loans/stamp-duty" element={<StampDutyCalculatorPage />} />
+              <Route path="/home-loans/documents" element={<DocumentChecklistPage />} />
+              <Route path="/home-loans/guide" element={<HomeLoanGuidePage />} />
               
               {/* New SEO Silo Routes */}
+              <Route path="/explore/:propertyType/in/:location" element={<ProgrammaticSEOLandingPage />} />
               <Route path="/plots/bhogapuram" element={<BhogapuramPlotsPage />} />
               <Route path="/residential/madhurawada" element={<MadhurawadaResidentialPage />} />
               <Route path="/commercial/office-space" element={<OfficeSpacePage />} />
