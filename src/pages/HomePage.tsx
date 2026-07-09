@@ -11,6 +11,7 @@ import { AuthModal } from '../components/AuthModal'
 import { HomeBlogSection } from '../components/HomeBlogSection'
 import { SEOHead } from '../components/SEOHead'
 import { HeatMap } from '../components/HeatMap'
+import { CallBanner } from '../components/CallBanner'
 
 export function HomePage() {
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
@@ -254,6 +255,7 @@ export function HomePage() {
       
       {/* 9. Sticky Bottom Mobile CTA */}
       <StickyMobileNav />
+      <CallBanner />
     </div>
   )
 }

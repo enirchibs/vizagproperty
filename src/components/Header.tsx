@@ -168,9 +168,9 @@ export function Header() {
                 <>
                   <a
                     href="/add-property"
-                    className="hidden sm:flex bg-gradient-to-r from-[#f6b300] to-[#f39c12] text-[#0d1b3d] px-4 md:px-7 py-2 md:py-2.5 rounded-full hover:shadow-lg transition-all font-semibold shadow-sm text-xs md:text-sm lg:text-base whitespace-nowrap items-center"
+                    className="flex bg-yellow-400 text-red-600 px-3 md:px-7 py-1.5 md:py-2.5 rounded-full hover:bg-yellow-500 hover:shadow-lg transition-all font-bold shadow-sm text-sm md:text-lg whitespace-nowrap items-center"
                   >
-                    Post Property — Free
+                    Post Free Property Ad
                   </a>
                   <a
                     href="https://wa.me/917207550499"
@@ -233,9 +233,9 @@ export function Header() {
                 <>
                   <button
                     onClick={handlePostPropertyClick}
-                    className="hidden sm:flex bg-gradient-to-r from-[#f6b300] to-[#f39c12] text-[#0d1b3d] px-4 md:px-7 py-2 md:py-2.5 rounded-full hover:shadow-lg transition-all font-semibold shadow-sm text-xs md:text-sm lg:text-base whitespace-nowrap items-center"
+                    className="flex bg-yellow-400 text-red-600 px-3 md:px-7 py-1.5 md:py-2.5 rounded-full hover:bg-yellow-500 hover:shadow-lg transition-all font-bold shadow-sm text-sm md:text-lg whitespace-nowrap items-center"
                   >
-                    Post Property — Free
+                    Post Free Property Ad
                   </button>
                   <button
                     onClick={handleLoginClick}

@@ -89,7 +89,7 @@ export function HeroSearch() {
         ))}
         {/* Post free ad link */}
         <div className="ml-auto hidden lg:block pb-2 pr-4">
-          <Link to="/add-property" className="text-sm font-bold text-white bg-white/20 backdrop-blur-md hover:bg-[#d92328] px-5 py-2 rounded-lg transition-colors shadow-sm">
+          <Link to="/add-property" className="text-lg font-bold text-red-600 bg-yellow-400 hover:bg-yellow-500 px-6 py-2.5 rounded-lg transition-colors shadow-lg">
             Post Free Property Ad
           </Link>
         </div>
@@ -228,7 +228,7 @@ export function HeroSearch() {
       
       {/* Mobile Post Ad Link */}
       <div className="lg:hidden w-full mt-6 flex justify-center">
-         <Link to="/add-property" className="text-sm font-bold text-white bg-black/40 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 shadow-lg">
+         <Link to="/add-property" className="text-lg font-bold text-red-600 bg-yellow-400 hover:bg-yellow-500 px-8 py-3.5 rounded-full shadow-[0_4px_20px_rgba(250,204,21,0.5)] transition-all">
             Post Free Property Ad
          </Link>
       </div>
