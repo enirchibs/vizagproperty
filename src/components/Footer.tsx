@@ -144,7 +144,7 @@ export function Footer() {
             <p className="text-xs text-gray-400">List your property for free and reach genuine buyers</p>
           </div>
           <p className="text-center text-sm text-gray-400">
-            © 2024 VizagProperty.co.in. All rights reserved.
+            © 2021 VizagProperty.co.in. All rights reserved.
           </p>
         </div>
       </div>
