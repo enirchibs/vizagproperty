@@ -138,7 +138,7 @@ export function HomePage() {
               [1, 2, 3].map(i => <div key={i} className="h-96 bg-gray-200 rounded-3xl animate-pulse"></div>)
             ) : (
               featuredProperties.map(property => (
-                <div key={property.id} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 group">
+                <Link key={property.id} to={`/property/${property.id}`} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 group block">
                   <div className="relative h-64 overflow-hidden bg-gray-100">
                     {property.images?.[0] ? (
                       <img src={property.images[0]} alt={property.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
@@ -159,12 +159,12 @@ export function HomePage() {
                       <div className="text-2xl font-black text-primary-700">
                         ₹{property.price?.toLocaleString('en-IN')}
                       </div>
-                      <Link to={`/property/${property.id}`} className="px-4 py-2 bg-primary-50 text-primary-700 font-semibold rounded-xl hover:bg-primary-600 hover:text-white transition-colors">
+                      <span className="px-4 py-2 bg-primary-50 text-primary-700 font-semibold rounded-xl group-hover:bg-primary-600 group-hover:text-white transition-colors">
                         View Details
-                      </Link>
+                      </span>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))
             )}
           </div>
