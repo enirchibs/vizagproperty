@@ -42,7 +42,7 @@ export function LoanLeadModal({ isOpen, onClose, selectedBankName }: LoanLeadMod
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose}></div>
+      <div className="absolute inset-0 bg-slate-900/80" onClick={onClose}></div>
       <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto animate-slide-up">
         <button 
           onClick={onClose}
