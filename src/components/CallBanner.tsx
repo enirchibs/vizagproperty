@@ -7,14 +7,29 @@ export function CallBanner() {
   const [isDismissed, setIsDismissed] = useState(false);
 
   useEffect(() => {
-    // 3 second delay
-    const timer = setTimeout(() => {
+    if (isDismissed) return;
+
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const cycle = () => {
+      setIsVisible(false);
+      timeoutId = setTimeout(() => {
+        if (!isDismissed) {
+          setIsVisible(true);
+          timeoutId = setTimeout(cycle, 5000); // Show for 5 seconds
+        }
+      }, 3000); // Hide for 3 seconds
+    };
+
+    // Initial 3 second delay
+    timeoutId = setTimeout(() => {
       if (!isDismissed) {
         setIsVisible(true);
+        timeoutId = setTimeout(cycle, 5000); // Show for 5 seconds
       }
     }, 3000);
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timeoutId);
   }, [isDismissed]);
 
   if (!isVisible) return null;
