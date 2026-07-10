@@ -342,11 +342,13 @@ export function HeroSearch({ onDropdownToggle }: { onDropdownToggle?: (open: boo
       </div>
       
       {/* Mobile Post Ad Link */}
-      <div className="lg:hidden w-full mt-6 flex justify-center">
-         <Link to="/add-property" className="text-lg font-bold text-red-600 bg-yellow-400 hover:bg-yellow-500 px-8 py-3.5 rounded-full shadow-[0_4px_20px_rgba(250,204,21,0.5)] transition-all animate-heartbeat">
-            Post Free Property Ad
-         </Link>
-      </div>
+      {!showDropdown && (
+        <div className="lg:hidden w-full mt-6 flex justify-center">
+           <Link to="/add-property" className="text-lg font-bold text-red-600 bg-yellow-400 hover:bg-yellow-500 px-8 py-3.5 rounded-full shadow-[0_4px_20px_rgba(250,204,21,0.5)] transition-all animate-heartbeat">
+              Post Free Property Ad
+           </Link>
+        </div>
+      )}
     </div>
   );
 }
