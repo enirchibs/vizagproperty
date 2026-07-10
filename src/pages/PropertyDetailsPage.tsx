@@ -18,6 +18,7 @@ import { EMICalculator } from '../components/EMICalculator'
 import { VIZAG_PROPERTY_PHONE } from '../config/contact'
 import PropertyDisclaimer from '../components/PropertyDisclaimer'
 import { SEOHead } from '../components/SEOHead'
+import { NearbyAmenities } from '../components/NearbyAmenities'
 
 export function PropertyDetailsPage() {
   const { id } = useParams()
@@ -396,6 +397,8 @@ export function PropertyDetailsPage() {
                 location={property.location ?? property.city ?? 'Visakhapatnam'}
               />
             </div>
+
+            <NearbyAmenities propertyId={property.id} />
 
             <div className="mb-6">
               <PropertyLoanWidget propertyPrice={property.price} />
