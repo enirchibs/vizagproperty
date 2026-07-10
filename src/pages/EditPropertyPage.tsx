@@ -44,10 +44,14 @@ export function EditPropertyPage() {
     loadProperty()
   }, [id]) // Only depend on id to prevent infinite loops
 
-  // Load localities once on mount
+  const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
   useEffect(() => {
-    if (!user) return
-    loadLocalities()
+    return () => {
+      if (fetchTimeoutRef.current) {
+        clearTimeout(fetchTimeoutRef.current)
+      }
+    }
   }, [])
 
   useEffect(() => {
@@ -119,15 +123,32 @@ export function EditPropertyPage() {
     }
   }
 
-  const loadLocalities = async () => {
-    const { data, error } = await supabase
-      .from('localities')
-      .select('id, name, slug, pincode')
-      .eq('city', 'Visakhapatnam')
-      .order('name', { ascending: true })
+  const fetchLocalities = async (searchTerm: string) => {
+    if (!user || searchTerm.length < 2) {
+      setLocalities([])
+      return
+    }
 
-    if (!error && data) {
-      setLocalities(data as any)
+    try {
+      const { data, error } = await supabase.functions.invoke('location-autocomplete', {
+        body: { query: searchTerm, limit: 10 }
+      })
+
+      if (error) throw error
+
+      const mapped = (data || []).map((item: any) => {
+        const nameOnly = item.display_name.split(',')[0].trim()
+        return {
+          id: item.id,
+          name: nameOnly,
+          pincode: item.pincode || ''
+        }
+      })
+
+      setLocalities(mapped)
+    } catch (err) {
+      console.error('Error fetching localities:', err)
+      setLocalities([])
     }
   }
 
@@ -222,14 +243,49 @@ export function EditPropertyPage() {
       return
     }
 
-    const matched = localities.find(l => (l as any).name === locality)
-    if (!matched) {
-      alert('Please select a locality from the list')
-      return
-    }
-
     setLoading(true)
     try {
+      let finalLocalityId = null
+      let finalPincode = null
+
+      if (locality.trim()) {
+        const matched = localities.find(l => (l as any).name.toLowerCase() === locality.trim().toLowerCase())
+        if (matched) {
+          finalLocalityId = matched.id
+          finalPincode = (matched as any).pincode || null
+        } else {
+          // Check database exactly
+          const { data: exactLocs } = await supabase
+            .from('localities')
+            .select('id, pincode')
+            .ilike('name', locality.trim())
+            .limit(1)
+
+          if (exactLocs && exactLocs.length > 0) {
+            finalLocalityId = exactLocs[0].id
+            finalPincode = exactLocs[0].pincode || null
+          } else {
+            // Auto-create locality
+            const baseSlug = locality.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+            const uniqueSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`
+            
+            const { data: newLoc, error: insertErr } = await supabase
+              .from('localities')
+              .insert({
+                name: locality.trim(),
+                slug: uniqueSlug,
+                city: 'Visakhapatnam'
+              })
+              .select('id')
+              .single()
+
+            if (!insertErr && newLoc) {
+              finalLocalityId = newLoc.id
+            }
+          }
+        }
+      }
+
       const newImageUrls = await uploadImages()
       const existingImages = imagePreviews.filter(url => !url.startsWith('blob:'))
       const allImages = [...existingImages, ...newImageUrls]
@@ -243,9 +299,9 @@ export function EditPropertyPage() {
         bedrooms: parseInt(formData.bedrooms),
         bathrooms: parseInt(formData.bathrooms),
         area_sqft: parseInt(formData.area_sqft),
-        locality_id: matched.id,
+        locality_id: finalLocalityId,
         state: formData.state,
-        pincode: (matched as any).pincode || null,
+        pincode: finalPincode || formData.pincode || null,
         amenities: formData.amenities,
         agent_name: formData.agent_name,
         agent_phone: formData.agent_phone,
@@ -299,9 +355,7 @@ export function EditPropertyPage() {
     )
   }
 
-  const filteredLocalities = localities.filter((loc: any) =>
-    loc.name.toLowerCase().includes(locality.toLowerCase())
-  )
+  // Localities are already fetched dynamically from search.locations
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -467,25 +521,41 @@ export function EditPropertyPage() {
                 />
               </div>
 
-              <div className="md:col-span-2" ref={localityDropdownRef}>
+              <div className="md:col-span-2 relative" ref={localityDropdownRef}>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Locality
+                  Locality <span className="text-gray-400 text-xs font-normal">(Optional)</span>
                 </label>
                 <input
                   type="text"
-                  required
                   value={locality}
                   onChange={(e) => {
-                    setLocality(e.target.value)
-                    setShowLocalityDropdown(true)
+                    const v = e.target.value
+                    setLocality(v)
+                    if (fetchTimeoutRef.current) {
+                      clearTimeout(fetchTimeoutRef.current)
+                    }
+                    if (v.length >= 2) {
+                      fetchTimeoutRef.current = setTimeout(() => {
+                        fetchLocalities(v)
+                      }, 300)
+                      setShowLocalityDropdown(true)
+                    } else {
+                      setLocalities([])
+                      setShowLocalityDropdown(false)
+                    }
                   }}
-                  onFocus={() => setShowLocalityDropdown(true)}
+                  onFocus={() => {
+                    if (locality.length >= 2) {
+                      setShowLocalityDropdown(true)
+                    }
+                  }}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Search locality..."
+                  placeholder="Type 2+ characters to search localities..."
+                  autoComplete="off"
                 />
-                {showLocalityDropdown && filteredLocalities.length > 0 && (
-                  <div className="absolute z-10 mt-1 w-full max-w-2xl bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                    {filteredLocalities.map((loc: any) => (
+                {showLocalityDropdown && localities.length > 0 && (
+                  <div className="absolute z-10 mt-1 w-full max-w-2xl bg-white border border-gray-300 rounded-lg shadow-lg max-h-[300px] overflow-y-auto">
+                    {localities.map((loc: any) => (
                       <button
                         key={loc.id}
                         type="button"
@@ -493,7 +563,7 @@ export function EditPropertyPage() {
                           setLocality(loc.name)
                           setShowLocalityDropdown(false)
                         }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
+                        className="w-full text-left px-4 py-2.5 hover:bg-gray-100 transition-colors border-b border-gray-50 last:border-b-0"
                       >
                         {loc.name}
                       </button>

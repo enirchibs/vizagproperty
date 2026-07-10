@@ -105,22 +105,35 @@ export function AddPropertyPage() {
   }, [profile?.id])
 
   const fetchLocalities = async (searchTerm: string) => {
-    if (!user || searchTerm.length < 3) {
+    if (!user || searchTerm.length < 2) {
       setLocalities([])
       return
     }
 
-    const { data, error } = await supabase
-      .from('localities')
-      .select('id, name, slug, pincode')
-      .eq('city', 'Visakhapatnam')
-      .ilike('name', `%${searchTerm}%`)
-      .order('name', { ascending: true })
-      .limit(10)
+    try {
+      const { data, error } = await supabase.functions.invoke('location-autocomplete', {
+        body: { query: searchTerm, limit: 15 }
+      })
 
-    if (!error && data) {
-      setLocalities(data as any)
-    } else {
+      if (error) throw error
+
+      const mapped = (data || []).map((item: any) => {
+        const parts = item.display_name.split(',').map((p: string) => p.trim())
+        // parts[0] = locality/sub-locality name
+        // parts[1..] = parent locality + city
+        // e.g. "Kommadi, Madhurawada, Visakhapatnam" or "Madhurawada, Visakhapatnam"
+        return {
+          id: item.id,
+          name: parts[0],
+          subtitle: parts.slice(1).join(', ') || 'Visakhapatnam',
+          entityType: item.entity_type || 'locality',
+          pincode: item.pincode || ''
+        }
+      })
+
+      setLocalities(mapped)
+    } catch (err) {
+      console.error('Error fetching localities:', err)
       setLocalities([])
     }
   }
@@ -320,19 +333,53 @@ export function AddPropertyPage() {
       return
     }
 
-    const matched = localities.find(l => (l as any).name === locality)
-
-    if (!matched) {
-      alert('Please select a locality from the list')
-      return
-    }
-
     setLoading(true)
     setErrorMessage('')
     setSuccessMessage('')
 
     try {
       stopCamera()
+
+      let finalLocalityId = null
+      let finalPincode = null
+
+      if (locality.trim()) {
+        const matched = localities.find(l => (l as any).name.toLowerCase() === locality.trim().toLowerCase())
+        if (matched) {
+          finalLocalityId = matched.id
+          finalPincode = (matched as any).pincode || null
+        } else {
+          // Check database exactly
+          const { data: exactLocs } = await supabase
+            .from('localities')
+            .select('id, pincode')
+            .ilike('name', locality.trim())
+            .limit(1)
+
+          if (exactLocs && exactLocs.length > 0) {
+            finalLocalityId = exactLocs[0].id
+            finalPincode = exactLocs[0].pincode || null
+          } else {
+            // Auto-create locality
+            const baseSlug = locality.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+            const uniqueSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`
+            
+            const { data: newLoc, error: insertErr } = await supabase
+              .from('localities')
+              .insert({
+                name: locality.trim(),
+                slug: uniqueSlug,
+                city: 'Visakhapatnam'
+              })
+              .select('id')
+              .single()
+
+            if (!insertErr && newLoc) {
+              finalLocalityId = newLoc.id
+            }
+          }
+        }
+      }
 
       const imageUrls = await uploadImages()
 
@@ -344,9 +391,9 @@ export function AddPropertyPage() {
         listing_type: formData.listing_type,
         price: parseFloat(formData.price),
         area_sqft: parseInt(formData.area_sqft),
-        locality_id: matched.id,
+        locality_id: finalLocalityId,
         state: formData.state,
-        pincode: (matched as any).pincode || null,
+        pincode: finalPincode || formData.pincode || null,
         amenities: formData.amenities,
         agent_name: formData.agent_name,
         agent_phone: formData.agent_phone,
@@ -759,7 +806,7 @@ export function AddPropertyPage() {
 
               <div className="md:col-span-2 relative" ref={localityDropdownRef}>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Locality <span className="text-red-500">*</span>
+                  Locality <span className="text-gray-400 text-xs font-normal">(Optional)</span>
                 </label>
 
                 <input
@@ -774,7 +821,7 @@ export function AddPropertyPage() {
                       clearTimeout(fetchTimeoutRef.current)
                     }
 
-                    if (v.length >= 3) {
+                    if (v.length >= 2) {
                       fetchTimeoutRef.current = setTimeout(() => {
                         fetchLocalities(v)
                       }, 300)
@@ -785,39 +832,62 @@ export function AddPropertyPage() {
                     }
                   }}
                   onFocus={() => {
-                    if (locality.length >= 3) {
+                    if (locality.length >= 2) {
                       setShowLocalityDropdown(true)
                     }
                   }}
-                  placeholder="Type 3+ characters to search Vizag localities"
+                  placeholder="Type 2+ characters to search Vizag localities"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   autoComplete="off"
                 />
 
-                {showLocalityDropdown && locality.length >= 3 && (
-                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                    {localities.length > 0 ? (
-                      localities.map(loc => (
-                        <div
-                          key={loc.id}
-                          onClick={() => {
-                            setLocality((loc as any).name)
-                            setFormData({ ...formData, pincode: (loc as any).pincode || '' })
-                            setShowLocalityDropdown(false)
-                          }}
-                          className="px-4 py-3 hover:bg-primary-50 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0"
-                        >
-                          <div className="font-medium text-gray-900">{(loc as any).name}</div>
-                          {(loc as any).pincode && (
-                            <div className="text-sm text-gray-500">Pincode: {(loc as any).pincode}</div>
-                          )}
+                {showLocalityDropdown && locality.length >= 2 && (
+                  <div className="absolute z-50 w-full mt-1 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
+                    {/* Header */}
+                    <div className="px-4 py-2.5 border-b border-gray-100 bg-gray-50">
+                      <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Location</span>
+                    </div>
+                    {/* Scrollable list */}
+                    <div className="max-h-[300px] overflow-y-auto">
+                      {localities.length > 0 ? (
+                        localities.map(loc => {
+                          const name = (loc as any).name as string
+                          const subtitle = (loc as any).subtitle as string || 'Visakhapatnam'
+                          const matchIdx = name.toLowerCase().indexOf(locality.toLowerCase())
+                          let displayName: any = name
+                          if (matchIdx !== -1) {
+                            displayName = (
+                              <>
+                                <span className="text-[#d92328] font-bold">{name.substring(0, matchIdx + locality.length)}</span>
+                                <span className="text-gray-700">{name.substring(matchIdx + locality.length)}</span>
+                              </>
+                            )
+                          }
+                          return (
+                            <div
+                              key={loc.id}
+                              onMouseDown={(e) => {
+                                e.preventDefault()
+                                setLocality(name)
+                                setFormData({ ...formData, pincode: (loc as any).pincode || '' })
+                                setShowLocalityDropdown(false)
+                              }}
+                              className="px-4 py-3 hover:bg-red-50 cursor-pointer transition-colors border-b border-gray-50 last:border-b-0 flex items-start gap-3"
+                            >
+                              <svg className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                              <div>
+                                <div className="text-sm font-medium">{displayName}</div>
+                                <div className="text-xs text-gray-400 mt-0.5">{subtitle}</div>
+                              </div>
+                            </div>
+                          )
+                        })
+                      ) : (
+                        <div className="px-4 py-5 text-gray-500 text-sm text-center">
+                          No localities found for "{locality}"
                         </div>
-                      ))
-                    ) : (
-                      <div className="px-4 py-3 text-gray-500 text-sm">
-                        No localities found matching "{locality}"
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 )}
 
@@ -833,9 +903,12 @@ export function AddPropertyPage() {
                 <input
                   type="text"
                   value={formData.pincode}
-                  readOnly
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
-                  placeholder="Auto-filled from locality"
+                  onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
+                  readOnly={localities.some(l => (l as any).name.toLowerCase() === locality.trim().toLowerCase())}
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg ${
+                    localities.some(l => (l as any).name.toLowerCase() === locality.trim().toLowerCase()) ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
+                  }`}
+                  placeholder={localities.some(l => (l as any).name.toLowerCase() === locality.trim().toLowerCase()) ? "Auto-filled from locality" : "Enter pincode..."}
                 />
               </div>
 

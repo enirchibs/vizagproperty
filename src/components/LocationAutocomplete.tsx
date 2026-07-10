@@ -8,6 +8,8 @@ interface LocalityResult {
   slug: string
   match_type?: string
   similarity_score?: number
+  rank_score?: number
+  entity_type?: string
 }
 
 interface LocationAutocompleteProps {
@@ -65,7 +67,7 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
   }, [])
 
   useEffect(() => {
-    if (query.trim().length < 3) {
+    if (query.trim().length < 2) {
       setResults([])
       setShowResults(false)
       return
@@ -83,17 +85,27 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
 
       setLoading(true)
       try {
-        const { data } = await supabase.rpc('search_localities_with_suggestions', {
-          p_query: searchTerm,
-          p_city: 'Visakhapatnam',
-          p_limit: 6
+        const { data, error } = await supabase.functions.invoke('location-autocomplete', {
+          body: { query: searchTerm, limit: 10 }
         })
 
-        const localities = data || []
+        if (error) throw error
+
+        const localities = (data || []).map((item: any) => ({
+          id: item.id,
+          name: item.display_name,
+          slug: item.id,
+          match_type: item.similarity_score > 0.8 ? 'exact' : 'fuzzy',
+          similarity_score: item.similarity_score,
+          rank_score: item.rank_score,
+          entity_type: item.entity_type
+        }))
+
         localityCache.set(cacheKey, localities)
         setResults(localities)
         setShowResults(true)
       } catch (error) {
+        console.error('Error fetching autocomplete locations:', error)
       } finally {
         setLoading(false)
       }
@@ -104,9 +116,9 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
   }, [query])
 
   const handleFocus = () => {
-    if (query.length >= 3 && results.length > 0) {
+    if (query.length >= 2 && results.length > 0) {
       setShowResults(true)
-    } else if (query.length < 3 && popularLocalities.length > 0) {
+    } else if (query.length < 2 && popularLocalities.length > 0) {
       setResults(popularLocalities)
       setShowResults(true)
     }
@@ -127,7 +139,7 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value
     setQuery(newValue)
-    if (newValue.length < 3) {
+    if (newValue.length < 2) {
       onChange(newValue)
     }
   }
@@ -141,7 +153,7 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
           value={query}
           onChange={handleInputChange}
           onFocus={handleFocus}
-          placeholder={placeholder || 'Type 3+ characters to search localities'}
+          placeholder={placeholder || 'Type 2+ characters to search localities'}
           className={`w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${className || ''}`}
         />
         {query && (
@@ -156,18 +168,18 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
       </div>
 
       {showResults && results.length > 0 && (
-        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-80 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-[450px] overflow-y-auto">
           {loading && (
             <div className="p-4 text-center text-gray-500">
               <div className="animate-spin h-5 w-5 border-2 border-primary-600 border-t-transparent rounded-full mx-auto"></div>
             </div>
           )}
-          {!loading && query.length < 3 && (
+          {!loading && query.length < 2 && (
             <div className="px-4 py-2 bg-gradient-to-r from-primary-50 to-primary-100 border-b border-primary-200">
               <div className="text-sm font-semibold text-primary-800">Popular Localities</div>
             </div>
           )}
-          {!loading && query.length >= 3 && results.length > 0 && results[0]?.match_type === 'fuzzy' && (
+          {!loading && query.length >= 2 && results.length > 0 && results[0]?.match_type === 'fuzzy' && (
             <div className="px-4 py-2.5 bg-amber-50 border-b border-amber-200">
               <div className="flex items-center gap-2 text-amber-800">
                 <AlertCircle className="h-4 w-4 flex-shrink-0" />
@@ -205,7 +217,7 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
         </div>
       )}
 
-      {showResults && !loading && query.length >= 3 && results.length === 0 && (
+      {showResults && !loading && query.length >= 2 && results.length === 0 && (
         <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-4 text-center text-gray-500">
           No matching localities found
         </div>
