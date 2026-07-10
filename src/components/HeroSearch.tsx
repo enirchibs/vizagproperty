@@ -18,7 +18,7 @@ interface LocationSuggestion {
   entityType: string;
 }
 
-export function HeroSearch() {
+export function HeroSearch({ onDropdownToggle }: { onDropdownToggle?: (open: boolean) => void } = {}) {
   const [activeTab, setActiveTab] = useState<TabType>('Buy');
   const [query, setQuery] = useState('');
   const [selectedLocations, setSelectedLocations] = useState<string[]>(['Vizag']);
@@ -80,11 +80,12 @@ export function HeroSearch() {
     function handleClickOutside(event: MouseEvent) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
         setShowDropdown(false);
+        onDropdownToggle?.(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [wrapperRef]);
+  }, [wrapperRef, onDropdownToggle]);
 
   const handleSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -106,6 +107,7 @@ export function HeroSearch() {
     }
     setQuery('');
     setShowDropdown(false);
+    onDropdownToggle?.(false);
   };
 
   const removeLocation = (loc: string) => {
@@ -162,8 +164,12 @@ export function HeroSearch() {
                 onChange={(e) => {
                   setQuery(e.target.value);
                   setShowDropdown(true);
+                  onDropdownToggle?.(true);
                 }}
-                onFocus={() => setShowDropdown(true)}
+                onFocus={() => {
+                  setShowDropdown(true);
+                  onDropdownToggle?.(true);
+                }}
                 placeholder={selectedLocations.length === 0 ? "Search locality, area or landmark..." : "+ Add area"}
                 className="flex-1 min-w-[120px] bg-transparent border-none outline-none text-gray-800 placeholder:text-gray-400 text-sm font-medium"
               />

@@ -18,6 +18,7 @@ export function HomePage() {
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [showAuthModal, setShowAuthModal] = useState(false)
+  const [searchDropdownOpen, setSearchDropdownOpen] = useState(false)
 
   useEffect(() => {
     loadFeaturedProperties()
@@ -87,13 +88,16 @@ export function HomePage() {
 
           {/* New Search Component */}
           <div className="w-full pt-8">
-            <HeroSearch />
+            <HeroSearch onDropdownToggle={setSearchDropdownOpen} />
           </div>
         </div>
       </div>
 
-      {/* 2. Statistics Bar */}
-      <div className="w-full bg-primary-900 py-8 border-t-4 border-accent-500 relative z-20 -mt-2">
+      {/* 2. Statistics Bar — hidden while location search dropdown is open */}
+      <div
+        className="w-full bg-primary-900 py-8 border-t-4 border-accent-500 relative z-20 -mt-2 transition-all duration-300"
+        style={searchDropdownOpen ? { opacity: 0, pointerEvents: 'none', maxHeight: 0, padding: 0, overflow: 'hidden' } : { opacity: 1, maxHeight: '200px' }}
+      >
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/10">
           <div className="space-y-1">
             <div className="text-3xl md:text-5xl font-black text-white">15,000+</div>
