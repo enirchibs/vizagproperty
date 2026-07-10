@@ -113,7 +113,7 @@ export function HeroSearch() {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto mt-8 flex flex-col relative z-20" ref={wrapperRef}>
+    <div className="w-full max-w-5xl mx-auto mt-8 flex flex-col relative z-[200]" ref={wrapperRef}>
       
       {/* Folder Tabs (NoBroker Style) */}
       <div className="flex overflow-x-auto no-scrollbar items-end pl-0 md:pl-4">
@@ -169,11 +169,11 @@ export function HeroSearch() {
               />
             </div>
 
-            {/* Autocomplete Dropdown — Premium Redesign */}
+            {/* Autocomplete Dropdown — always on top using high z-index */}
             {showDropdown && (
               <div
-                className="absolute left-0 w-full md:w-[520px] z-[999]"
-                style={{ top: 'calc(100% + 8px)' }}
+                className="absolute left-0 w-full md:w-[520px]"
+                style={{ top: 'calc(100% + 8px)', zIndex: 99999 }}
               >
                 <div
                   className="rounded-2xl overflow-hidden"
