@@ -2,17 +2,17 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3'
 
 // 1. Define hyper-local search queries for the Google News RSS Feed
 const TOPICS = [
-  "vizag",
-  "Visakhapatnam",
-  "anakapalli",
-  "boghapuram",
-  "vizag steelplant",
-  "visakhapatnam smart city",
-  "visakhapatnam it companies",
-  "andhra pradesh real estate",
-  "andhra pradesh development",
-  "andhra pradesh news",
-  "amaravati andhra pradesh"
+  "vizag real estate projects",
+  "visakhapatnam metro rail",
+  "vizag it companies growth",
+  "vizag cinema halls multiplexes",
+  "vizag new showrooms openings",
+  "bhogapuram airport construction update",
+  "vizag new roads flyovers",
+  "vizag steelplant status",
+  "vizag pharma city parawada",
+  "visakhapatnam smart city projects",
+  "andhra pradesh real estate news"
 ];
 
 Deno.serve(async (req) => {
@@ -75,6 +75,31 @@ Deno.serve(async (req) => {
           topic: "Beach Road Luxury Real Estate",
           title: "Beach Road Development and the Rise of Luxury Coastal Living in Visakhapatnam",
           snippet: "Infrastructure projects along the scenic Vizag-Bheemili beach road are driving luxury residential villa projects and coastal holiday home investments."
+        },
+        {
+          topic: "Vizag New Showrooms and Retail Growth",
+          title: "Retail Boom in Visakhapatnam: New Showrooms and Commercial Hubs Redefining VIP Road and Gajuwaka",
+          snippet: "The launch of premium lifestyle, jewelry, and automobile showrooms on VIP Road and Gajuwaka highlights the surging purchasing power and commercial real estate potential of Vizag."
+        },
+        {
+          topic: "Vizag Cinema Halls and Entertainment Hubs",
+          title: "New Multiplexes and Entertainment Centers Opening Across Visakhapatnam",
+          snippet: "With new cinema halls and multiplexes launching in growing suburban zones, neighborhood entertainment hubs are boosting adjacent residential land prices."
+        },
+        {
+          topic: "New Roads and Infrastructure Flyovers",
+          title: "Road Infrastructure Upgrades: New Flyovers and Highway Expansions Easing Vizag Traffic",
+          snippet: "The completion of major flyovers and highway expansions along the Anandapuram-Pendurthi-Anakapalli stretch is opening up new outskirts for housing developments."
+        },
+        {
+          topic: "Vizag Steelplant Industrial Impact",
+          title: "Vizag Steel Plant and Its Crucial Role in the Local Economy and Real Estate",
+          snippet: "The industrial presence of the Visakhapatnam Steel Plant continues to sustain high residential demand in Gajuwaka, Kurmannapalem, and Duvvada areas."
+        },
+        {
+          topic: "Pharma City Parawada Growth",
+          title: "Jawaharlal Nehru Pharma City Parawada: Industrial Expansion and Housing Demand in Anakapalli District",
+          snippet: "The expansion of pharma companies in Parawada is creating thousands of jobs, driving demand for affordable housing, rental apartments, and plots in Anakapalli and nearby suburbs."
         }
       ];
       

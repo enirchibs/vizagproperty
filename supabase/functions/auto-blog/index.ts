@@ -17,23 +17,21 @@ const supabase = createClient(
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
 );
 
-// VIZAG LIFESTYLE & INFO TOPICS
+// VIZAG LIFESTYLE, INFRASTRUCTURE & REAL ESTATE TOPICS
 const topics = [
-  "Top 10 Places to Visit in Vizag for Tourists",
-  "Best Luxury Hotels and Resorts in Visakhapatnam",
-  "Must-Try Street Food Spots in Vizag",
-  "A Guide to the Best Beaches in Visakhapatnam",
-  "Top Bars and Nightlife Spots in Vizag",
-  "Best Shopping Malls and Local Markets in Vizag",
-  "Lifestyle and Culture: What It's Like Living in Vizag",
-  "Top IT Companies and Tech Parks in Visakhapatnam",
-  "Major Government Companies and Industries in Vizag",
-  "Best Weekend Getaways near Visakhapatnam",
-  "A Guide to Rushikonda Beach and Water Sports",
-  "History and Heritage of Visakhapatnam City",
-  "Best Schools and Educational Institutions in Vizag",
-  "Top Hospitals and Healthcare Facilities in Vizag",
-  "Upcoming Infrastructure Projects in Visakhapatnam"
+  "Upcoming Metro Rail Routes and Real Estate Growth in Visakhapatnam",
+  "Bhogapuram International Airport Construction Updates and Land Value Trends",
+  "New Commercial Showrooms and Retail Growth on VIP Road and Gajuwaka",
+  "Multiplexes, Cinema Halls, and Entertainment Openings in Vizag Suburbs",
+  "Vizag Steel Plant and Its Industrial Contribution to Local Development",
+  "Jawaharlal Nehru Pharma City Parawada: Industrial Expansion and Housing Demand",
+  "Road Infrastructure Projects: Flyovers and Highway Expansions Easing Vizag Traffic",
+  "Top IT Companies and Tech Parks in Madhurawada and Rushikonda",
+  "Upcoming Mega Infrastructure and Smart City Projects in Visakhapatnam",
+  "Why VMRDA Approved Plots are the Safest Investment Choice in Vizag",
+  "Lifestyle and Culture: What It's Like Living in Visakhapatnam",
+  "Best Luxury Hotels and Tourism Projects on Vizag-Bheemili Beach Road",
+  "Major Real Estate Projects and Residential Growth Corridors in Visakhapatnam"
 ];
 
 // RANDOM TOPIC
