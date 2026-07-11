@@ -13,7 +13,7 @@ export function AdminPropertiesPage() {
   const [actionId, setActionId] = useState<string | null>(null)
   const [actionType, setActionType] = useState<'approve' | 'reject' | null>(null)
   const [processing, setProcessing] = useState(false)
-  const [activeTab, setActiveTab] = useState<'analytics' | 'pending' | 'approved' | 'rejected'>('analytics')
+  const [activeTab, setActiveTab] = useState<'pending' | 'approved' | 'rejected'>('pending')
   const [rejectionReason, setRejectionReason] = useState('')
   const [adminNotes, setAdminNotes] = useState('')
   const [togglingTrustId, setTogglingTrustId] = useState<string | null>(null)
@@ -31,7 +31,7 @@ export function AdminPropertiesPage() {
             id,
             email,
             name,
-            phone,
+            phone
           )
         `)
         .order('created_at', { ascending: false })
@@ -189,9 +189,7 @@ export function AdminPropertiesPage() {
     return <Navigate to="/" />
   }
 
-  const filteredProperties = activeTab === 'analytics' || activeTab === 'pending' 
-    ? properties.filter(p => p.status === 'pending') 
-    : properties.filter(p => p.status === activeTab)
+  const filteredProperties = properties.filter(p => p.status === activeTab)
   const pendingCount = properties.filter(p => p.status === 'pending').length
   const approvedCount = properties.filter(p => p.status === 'approved').length
   const rejectedCount = properties.filter(p => p.status === 'rejected').length
@@ -218,21 +216,9 @@ export function AdminPropertiesPage() {
           </div>
         </div>
 
-        <div className="mb-6 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="flex overflow-x-auto hide-scrollbar border-b border-gray-200">
-            <button
-              onClick={() => setActiveTab('analytics')}
-              className={`flex-none sm:flex-1 whitespace-nowrap px-4 sm:px-6 py-4 font-semibold transition-all border-b-2 ${
-                activeTab === 'analytics'
-                  ? 'border-blue-500 text-blue-700 bg-blue-50'
-                  : 'border-transparent text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              <div className="flex items-center justify-center gap-2">
-                <BarChart3 className="h-5 w-5" />
-                <span>Overview</span>
-              </div>
-            </button>
+        <div className="sticky top-[56px] md:top-[72px] z-40 bg-gray-50 pt-4 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="flex overflow-x-auto hide-scrollbar border-b border-gray-200">
             <button
               onClick={() => setActiveTab('pending')}
               className={`flex-none sm:flex-1 whitespace-nowrap px-4 sm:px-6 py-4 font-semibold transition-all border-b-2 ${
@@ -283,33 +269,19 @@ export function AdminPropertiesPage() {
             </button>
           </div>
         </div>
-
-        {activeTab === 'analytics' && (
-          <div className="mb-8">
-            <AdminAnalyticsDashboard />
-            <div className="mt-12 mb-6 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                <Clock className="h-6 w-6 text-yellow-500" />
-                Pending Approvals
-              </h2>
-              <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-bold">
-                {pendingCount} properties
-              </span>
-            </div>
-          </div>
-        )}
+        </div>
 
         {filteredProperties.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
+          <div className="bg-white rounded-2xl shadow-lg p-12 text-center mt-6">
             <div className="max-w-md mx-auto">
               <div className="bg-gray-100 rounded-full p-6 w-24 h-24 mx-auto mb-6 flex items-center justify-center">
                 <CheckCircle className="h-12 w-12 text-gray-400" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-3">
-                {(activeTab === 'pending' || activeTab === 'analytics') ? 'All Caught Up!' : `No ${activeTab} Properties`}
+                {activeTab === 'pending' ? 'All Caught Up!' : `No ${activeTab} Properties`}
               </h2>
               <p className="text-gray-600">
-                {(activeTab === 'pending' || activeTab === 'analytics')
+                {activeTab === 'pending'
                   ? 'No pending properties to review.'
                   : activeTab === 'approved'
                   ? 'No approved properties yet.'
