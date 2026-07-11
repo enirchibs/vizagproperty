@@ -49,7 +49,39 @@ Deno.serve(async (req) => {
     }
     
     if (!query) {
-      throw new Error(`No recent news found in Google RSS for any of the topics.`);
+      console.warn("Google RSS blocked or returned empty. Falling back to a predefined local topic...");
+      const fallbackTopics = [
+        {
+          topic: "Bhogapuram International Airport Development",
+          title: "Bhogapuram Airport Progress and Its Direct Impact on Vizag Real Estate",
+          snippet: "The fast-tracked construction of Bhogapuram International Airport is creating massive real estate demand in northern Visakhapatnam corridors like Tagarapuvalasa, Bhogapuram, and Anandapuram."
+        },
+        {
+          topic: "Vizag IT Corridor Expansion",
+          title: "Visakhapatnam IT Corridor Growth: Residential Demand Surges in Madhurawada",
+          snippet: "With major IT companies expanding operations in Madhurawada and Rushikonda, premium apartments and rental housing options are seeing unprecedented demand."
+        },
+        {
+          topic: "VMRDA Approved Plots",
+          title: "Why VMRDA Approved Plots are the Safest Investment Choice in Vizag",
+          snippet: "Visakhapatnam Metropolitan Region Development Authority (VMRDA) layouts offer investors legal safety, guaranteed amenities, and high capital appreciation."
+        },
+        {
+          topic: "Vizag Metro Rail Proposed Routes",
+          title: "Proposed Vizag Metro Rail: Identifying the Next Real Estate Hotspots",
+          snippet: "The upcoming Metro Rail project connecting Steel Plant to Bhogapuram is set to transform connectivity and property prices along the National Highway (NH16) corridor."
+        },
+        {
+          topic: "Beach Road Luxury Real Estate",
+          title: "Beach Road Development and the Rise of Luxury Coastal Living in Visakhapatnam",
+          snippet: "Infrastructure projects along the scenic Vizag-Bheemili beach road are driving luxury residential villa projects and coastal holiday home investments."
+        }
+      ];
+      
+      const chosenFallback = fallbackTopics[Math.floor(Math.random() * fallbackTopics.length)];
+      query = chosenFallback.topic;
+      newsTitle = chosenFallback.title;
+      newsSnippet = chosenFallback.snippet;
     }
 
     // 4. Initialize Google Gemini API
