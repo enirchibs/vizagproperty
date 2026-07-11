@@ -1,4 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js"
+import { GoogleGenerativeAI } from "npm:@google/generative-ai@0.11.4"
 
 // 1. Define hyper-local search queries for the Google News RSS Feed
 const TOPICS = [
@@ -113,6 +114,8 @@ Deno.serve(async (req) => {
     const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
     if (!geminiApiKey) throw new Error("GEMINI_API_KEY is missing in environment variables.");
     
+    const genAI = new GoogleGenerativeAI(geminiApiKey);
+
     // 5. The strict Gemini Prompt: Rewriting news & injecting links
     const prompt = `
       You are an expert real estate and city development journalist based in Visakhapatnam (Vizag). 
@@ -132,38 +135,28 @@ Deno.serve(async (req) => {
       4. End with a strong Call to Action encouraging readers to visit the site to view verified properties.
     `;
 
-    // Try a list of fallback models because Google restricts some models on free accounts
+    // Try a list of fallback models using the official Deno SDK
     const fallbackModels = [
       'gemini-1.5-flash',
       'gemini-1.5-flash-8b',
       'gemini-1.0-pro',
-      'gemini-pro',
-      'gemini-1.5-pro'
+      'gemini-pro'
     ];
     
     let generatedHtml = '';
     let lastError = '';
 
     for (const modelName of fallbackModels) {
-      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiApiKey}`;
-      
-      const geminiResponse = await fetch(geminiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.7 }
-        })
-      });
-
-      if (!geminiResponse.ok) {
-        lastError = await geminiResponse.text();
-        continue; // Try the next model
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        generatedHtml = response.text()?.trim() || '';
+        if (generatedHtml) break; // Success! Stop looping.
+      } catch (err: any) {
+        lastError = err.message || String(err);
+        console.warn(`Model ${modelName} failed. Error: ${lastError}`);
       }
-
-      const geminiData = await geminiResponse.json();
-      generatedHtml = geminiData.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
-      break; // Success! Stop looping.
     }
 
     if (!generatedHtml) {
