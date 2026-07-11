@@ -217,10 +217,10 @@ export function AdminPropertiesPage() {
         </div>
 
         <div className="mb-6 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="flex border-b border-gray-200">
+          <div className="flex overflow-x-auto hide-scrollbar border-b border-gray-200">
             <button
               onClick={() => setActiveTab('analytics')}
-              className={`flex-1 px-6 py-4 font-semibold transition-all border-b-2 ${
+              className={`flex-none sm:flex-1 whitespace-nowrap px-4 sm:px-6 py-4 font-semibold transition-all border-b-2 ${
                 activeTab === 'analytics'
                   ? 'border-blue-500 text-blue-700 bg-blue-50'
                   : 'border-transparent text-gray-600 hover:bg-gray-50'
@@ -233,7 +233,7 @@ export function AdminPropertiesPage() {
             </button>
             <button
               onClick={() => setActiveTab('pending')}
-              className={`flex-1 px-6 py-4 font-semibold transition-all border-b-2 ${
+              className={`flex-none sm:flex-1 whitespace-nowrap px-4 sm:px-6 py-4 font-semibold transition-all border-b-2 ${
                 activeTab === 'pending'
                   ? 'border-yellow-500 text-yellow-700 bg-yellow-50'
                   : 'border-transparent text-gray-600 hover:bg-gray-50'
@@ -249,7 +249,7 @@ export function AdminPropertiesPage() {
             </button>
             <button
               onClick={() => setActiveTab('approved')}
-              className={`flex-1 px-6 py-4 font-semibold transition-all border-b-2 ${
+              className={`flex-none sm:flex-1 whitespace-nowrap px-4 sm:px-6 py-4 font-semibold transition-all border-b-2 ${
                 activeTab === 'approved'
                   ? 'border-green-500 text-green-700 bg-green-50'
                   : 'border-transparent text-gray-600 hover:bg-gray-50'
@@ -265,7 +265,7 @@ export function AdminPropertiesPage() {
             </button>
             <button
               onClick={() => setActiveTab('rejected')}
-              className={`flex-1 px-6 py-4 font-semibold transition-all border-b-2 ${
+              className={`flex-none sm:flex-1 whitespace-nowrap px-4 sm:px-6 py-4 font-semibold transition-all border-b-2 ${
                 activeTab === 'rejected'
                   ? 'border-red-500 text-red-700 bg-red-50'
                   : 'border-transparent text-gray-600 hover:bg-gray-50'
