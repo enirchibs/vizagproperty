@@ -189,7 +189,9 @@ export function AdminPropertiesPage() {
     return <Navigate to="/" />
   }
 
-  const filteredProperties = activeTab === 'analytics' ? [] : properties.filter(p => p.status === activeTab)
+  const filteredProperties = activeTab === 'analytics' || activeTab === 'pending' 
+    ? properties.filter(p => p.status === 'pending') 
+    : properties.filter(p => p.status === activeTab)
   const pendingCount = properties.filter(p => p.status === 'pending').length
   const approvedCount = properties.filter(p => p.status === 'approved').length
   const rejectedCount = properties.filter(p => p.status === 'rejected').length
@@ -228,7 +230,7 @@ export function AdminPropertiesPage() {
             >
               <div className="flex items-center justify-center gap-2">
                 <BarChart3 className="h-5 w-5" />
-                <span>Analytics</span>
+                <span>Overview</span>
               </div>
             </button>
             <button
@@ -282,19 +284,32 @@ export function AdminPropertiesPage() {
           </div>
         </div>
 
-        {activeTab === 'analytics' ? (
-          <AdminAnalyticsDashboard />
-        ) : filteredProperties.length === 0 ? (
+        {activeTab === 'analytics' && (
+          <div className="mb-8">
+            <AdminAnalyticsDashboard />
+            <div className="mt-12 mb-6 flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <Clock className="h-6 w-6 text-yellow-500" />
+                Pending Approvals
+              </h2>
+              <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-bold">
+                {pendingCount} properties
+              </span>
+            </div>
+          </div>
+        )}
+
+        {filteredProperties.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
             <div className="max-w-md mx-auto">
               <div className="bg-gray-100 rounded-full p-6 w-24 h-24 mx-auto mb-6 flex items-center justify-center">
                 <CheckCircle className="h-12 w-12 text-gray-400" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-3">
-                {activeTab === 'pending' ? 'All Caught Up!' : `No ${activeTab} Properties`}
+                {(activeTab === 'pending' || activeTab === 'analytics') ? 'All Caught Up!' : `No ${activeTab} Properties`}
               </h2>
               <p className="text-gray-600">
-                {activeTab === 'pending'
+                {(activeTab === 'pending' || activeTab === 'analytics')
                   ? 'No pending properties to review.'
                   : activeTab === 'approved'
                   ? 'No approved properties yet.'
