@@ -111,8 +111,9 @@ export function AddPropertyPage() {
     }
 
     try {
-      const { data, error } = await supabase.functions.invoke('location-autocomplete', {
-        body: { query: searchTerm, limit: 15 }
+      const { data, error } = await supabase.rpc('search_locations', {
+        search_query: searchTerm,
+        limit_count: 15
       })
 
       if (error) throw error
