@@ -3,8 +3,7 @@ import { Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
-import { MapPin, Bed, Bath, Maximize, CheckCircle, XCircle, Clock, Shield, Star, Award, BarChart3 } from 'lucide-react'
-import { AdminAnalyticsDashboard } from '../components/AdminAnalyticsDashboard'
+import { MapPin, Bed, Bath, Maximize, CheckCircle, XCircle, Clock, Shield, Star, Award } from 'lucide-react'
 
 export function AdminPropertiesPage() {
   const { user, isPropertyAdmin, profile, loading: authLoading } = useAuth()
