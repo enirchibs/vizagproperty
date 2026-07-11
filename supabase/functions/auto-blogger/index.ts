@@ -135,12 +135,11 @@ Deno.serve(async (req) => {
       4. End with a strong Call to Action encouraging readers to visit the site to view verified properties.
     `;
 
-    // Try a list of fallback models using the official Deno SDK
+    // Try a list of modern fallback models using the official Deno SDK
     const fallbackModels = [
       'gemini-1.5-flash',
       'gemini-1.5-flash-8b',
-      'gemini-1.0-pro',
-      'gemini-pro'
+      'gemini-1.5-pro'
     ];
     
     let generatedHtml = '';
@@ -154,8 +153,9 @@ Deno.serve(async (req) => {
         generatedHtml = response.text()?.trim() || '';
         if (generatedHtml) break; // Success! Stop looping.
       } catch (err: any) {
-        lastError = err.message || String(err);
-        console.warn(`Model ${modelName} failed. Error: ${lastError}`);
+        const errMsg = err.message || String(err);
+        lastError += `[${modelName}]: ${errMsg} | `;
+        console.error(`Model ${modelName} failed:`, errMsg);
       }
     }
 
