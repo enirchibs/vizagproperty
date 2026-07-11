@@ -7,8 +7,6 @@ import { useAuth } from '../contexts/AuthContext'
 import { openWhatsApp } from '../lib/whatsapp'
 import { GoodDealAnalysis } from '../components/GoodDealAnalysis'
 import { BudgetStretchAdvisor } from '../components/BudgetStretchAdvisor'
-import { NegotiationCoach } from '../components/NegotiationCoach'
-import { SmartAreaDiscovery } from '../components/SmartAreaDiscovery'
 import { PropertyShortlistMemory } from '../components/PropertyShortlistMemory'
 import { VisitPreparation } from '../components/VisitPreparation'
 import { MediaGallery } from '../components/MediaGallery'
@@ -422,10 +420,6 @@ export function PropertyDetailsPage() {
               location={property.location ?? property.city ?? 'Vizag'}
               bedrooms={property.bedrooms ?? 0}
             />
-
-            <NegotiationCoach propertyId={property.id} currentPrice={property.price} />
-
-            <SmartAreaDiscovery currentCity={property.city ?? 'Vizag'} />
 
             <PropertyShortlistMemory propertyId={property.id} />
 
