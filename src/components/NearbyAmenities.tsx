@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { MapPin, Building2, Trees, GraduationCap, Stethoscope, Coffee, Plane, HeartPulse } from 'lucide-react';
+import { MapPin, Building2, Trees, GraduationCap, Stethoscope, Coffee, HeartPulse } from 'lucide-react';
 
 interface POI {
   poi_id: string;
