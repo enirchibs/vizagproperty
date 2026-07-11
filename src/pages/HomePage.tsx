@@ -73,21 +73,21 @@ export function HomePage() {
       >
         <div className="absolute inset-0 bg-slate-900/70 z-0 backdrop-blur-[2px]"></div>
 
-        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center text-center space-y-6">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight tracking-tight drop-shadow-lg">
+        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center text-center space-y-3">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-lg">
             Find Your <span className="text-primary-400">Dream Property in Vizag</span>
           </h1>
-          <p className="text-lg md:text-2xl text-gray-200 font-medium max-w-3xl flex flex-wrap justify-center gap-x-4 gap-y-2">
+          <p className="text-base md:text-xl text-gray-200 font-medium max-w-3xl flex flex-wrap justify-center gap-x-4 gap-y-1">
             <span>Visakhapatnam Real Estate • Top Verified Properties for Sale</span>
           </p>
-          <p className="text-md text-gray-300 font-medium max-w-3xl flex flex-wrap justify-center gap-x-4 gap-y-2 mt-2">
+          <p className="text-sm text-gray-300 font-medium max-w-3xl flex flex-wrap justify-center gap-x-4 gap-y-1">
             <span className="flex items-center gap-1"><Search className="w-4 h-4 text-accent-500" /> AI Powered Search</span>
             <span className="hidden md:inline">•</span>
             <span className="flex items-center gap-1"><Shield className="w-4 h-4 text-success-500" /> Verified Listings</span>
           </p>
 
           {/* New Search Component */}
-          <div className="w-full pt-8">
+          <div className="w-full pt-4">
             <HeroSearch onDropdownToggle={setSearchDropdownOpen} />
           </div>
         </div>
