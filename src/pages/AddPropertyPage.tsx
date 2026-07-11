@@ -132,7 +132,16 @@ export function AddPropertyPage() {
         }
       })
 
-      setLocalities(mapped)
+      // Deduplicate by name, preferring the one with more detailed hierarchy (longer subtitle)
+      const uniqueMap = new Map<string, typeof mapped[0]>()
+      for (const item of mapped) {
+        const existing = uniqueMap.get(item.name.toLowerCase())
+        if (!existing || item.subtitle.length > existing.subtitle.length) {
+          uniqueMap.set(item.name.toLowerCase(), item)
+        }
+      }
+
+      setLocalities(Array.from(uniqueMap.values()))
     } catch (err) {
       console.error('Error fetching localities:', err)
       setLocalities([])
