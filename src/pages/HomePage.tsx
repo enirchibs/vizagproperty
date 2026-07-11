@@ -68,14 +68,15 @@ export function HomePage() {
       
       {/* 1. Hero Section */}
       <div 
-        className="relative min-h-[70vh] flex flex-col justify-center items-center text-white px-4 pt-20 pb-16 bg-cover bg-center"
+        className="relative min-h-[50vh] md:min-h-[60vh] flex flex-col justify-center items-center text-white px-4 pt-12 md:pt-16 pb-12 md:pb-16 bg-cover bg-center"
         style={{ backgroundImage: `url('/vizag_beach_kailasagiri.png')` }}
       >
         <div className="absolute inset-0 bg-slate-900/70 z-0 backdrop-blur-[2px]"></div>
 
-        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center text-center space-y-3">
+        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center text-center space-y-2 md:space-y-3">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-lg">
-            Find Your <span className="text-primary-400">Dream Property in Vizag</span>
+            Find Your <span className="text-yellow-400">Dream Property</span> <br className="md:hidden" />
+            <span className="text-teal-400">in Vizag</span>
           </h1>
           <p className="text-base md:text-xl text-gray-200 font-medium max-w-3xl flex flex-wrap justify-center gap-x-4 gap-y-1">
             <span>Visakhapatnam Real Estate • Top Verified Properties for Sale</span>
