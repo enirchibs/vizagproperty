@@ -204,14 +204,6 @@ export function AdminPropertiesPage() {
                 <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Property Management Hub</h1>
               </div>
               <p className="text-gray-600">Moderate and feature property listings</p>
-            </div>
-            <a
-              href="/admin/dashboard"
-              className="hidden sm:flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-semibold shadow-md"
-            >
-              <BarChart3 className="h-5 w-5" />
-              <span>View Analytics</span>
-            </a>
           </div>
         </div>
 
