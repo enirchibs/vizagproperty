@@ -143,8 +143,8 @@ function AppContent() {
               <Route path="/edit-property/:id" element={<ProtectedRoute><EditPropertyPage /></ProtectedRoute>} />
 
               {/* Super Admin Routes */}
-              <Route path="/admin" element={<ProtectedRoute allowedRoles={['super_admin', 'admin']}><AdminDashboardPage /></ProtectedRoute>} />
-              <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['super_admin', 'admin']}><AdminDashboardPage /></ProtectedRoute>} />
+              <Route path="/admin" element={<ProtectedRoute allowedRoles={['super_admin', 'admin']}><AdminPropertiesPage /></ProtectedRoute>} />
+              <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['super_admin', 'admin']}><AdminPropertiesPage /></ProtectedRoute>} />
 
               {/* Property Admin Routes */}
               <Route path="/property-admin" element={<ProtectedRoute allowedRoles={['super_admin', 'property_admin', 'admin']}><AdminPropertiesPage /></ProtectedRoute>} />
