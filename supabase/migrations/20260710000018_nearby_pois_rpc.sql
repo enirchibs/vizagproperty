@@ -13,19 +13,41 @@ CREATE OR REPLACE FUNCTION geo.get_nearby_pois(
 ) AS $$
 DECLARE
     prop_point GEOMETRY(Point, 4326);
+    prop_lat NUMERIC;
+    prop_lon NUMERIC;
+    loc_id UUID;
 BEGIN
-    -- 1. Get the property's location
-    SELECT location INTO prop_point
-    FROM property.properties
+    -- 1. Get the property's location from public.properties
+    SELECT latitude, longitude, locality_id 
+    INTO prop_lat, prop_lon, loc_id
+    FROM public.properties
     WHERE id = prop_id;
 
-    -- If property not found or has no location, return empty
+    -- If property has lat/lon directly
+    IF prop_lat IS NOT NULL AND prop_lon IS NOT NULL THEN
+        prop_point := ST_SetSRID(ST_MakePoint(prop_lon, prop_lat), 4326);
+    ELSIF loc_id IS NOT NULL THEN
+        -- Fallback to locality center point in public.localities
+        SELECT latitude, longitude INTO prop_lat, prop_lon
+        FROM public.localities
+        WHERE id = loc_id;
+        
+        IF prop_lat IS NOT NULL AND prop_lon IS NOT NULL THEN
+            prop_point := ST_SetSRID(ST_MakePoint(prop_lon, prop_lat), 4326);
+        ELSE
+            -- Try geo.localities if it exists
+            SELECT center_point INTO prop_point
+            FROM geo.localities
+            WHERE id = loc_id;
+        END IF;
+    END IF;
+
+    -- If still no point, return empty
     IF prop_point IS NULL THEN
         RETURN;
     END IF;
 
     -- 2. Find nearby POIs using PostGIS ST_DWithin
-    -- Note: ST_DWithin on geometry with SRID 4326 uses degrees, so we cast to geography for meters
     RETURN QUERY
     SELECT 
         p.id,
@@ -35,7 +57,7 @@ BEGIN
     FROM geo.poi p
     WHERE ST_DWithin(p.center_point::geography, prop_point::geography, radius_meters)
     ORDER BY distance_meters ASC
-    LIMIT 20; -- Return closest 20 POIs
+    LIMIT 20;
 END;
 $$ LANGUAGE plpgsql STABLE;
 
