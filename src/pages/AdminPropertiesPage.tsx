@@ -32,10 +32,10 @@ export function AdminPropertiesPage() {
             email,
             name,
             phone,
-            trusted
           )
         `)
         .order('created_at', { ascending: false })
+        .limit(200)
 
       if (error) throw error
       setProperties(data || [])
