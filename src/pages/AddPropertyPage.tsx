@@ -296,14 +296,20 @@ export function AddPropertyPage() {
 
     try {
       for (const file of selectedFiles) {
-        const fileExt = file.name.split('.').pop()
+        const fileExt = (file.name.split('.').pop() || 'jpg').toLowerCase()
         const fileName = `${user!.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
 
         const { error: uploadError } = await supabase.storage
           .from('property-images')
-          .upload(fileName, file)
+          .upload(fileName, file, {
+            upsert: false,
+            cacheControl: '3600',
+            contentType: file.type || 'image/jpeg'
+          })
 
-        if (uploadError) throw uploadError
+        if (uploadError) {
+          throw new Error(`Upload failed for ${file.name}: ${uploadError.message} (${uploadError.statusCode || 'unknown status'})`)
+        }
 
         const { data: { publicUrl } } = supabase.storage
           .from('property-images')
@@ -314,7 +320,11 @@ export function AddPropertyPage() {
 
       return uploadedUrls
     } catch (error: any) {
-      throw new Error('Failed to upload images: ' + error.message)
+      const msg = error.message || String(error)
+      if (msg.includes('Failed to fetch') || msg.includes('fetch')) {
+        throw new Error('Image upload failed: Could not connect to storage. Please check your internet connection and try again.')
+      }
+      throw new Error('Image upload failed: ' + msg)
     } finally {
       setUploadingImages(false)
     }
@@ -339,7 +349,14 @@ export function AddPropertyPage() {
     }
 
     if (selectedFiles.length === 0) {
-      alert('Please add at least one property image')
+      setErrorMessage('Please add at least one property image before submitting.')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+
+    if (selectedFiles.length > 4) {
+      setErrorMessage(`You have ${selectedFiles.length} images selected. Maximum allowed is 4. Please remove ${selectedFiles.length - 4} image(s) and try again.`)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
 
@@ -985,10 +1002,29 @@ export function AddPropertyPage() {
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Property Images <span className="text-red-500">*</span>
-                  <span className="text-xs font-normal text-gray-500 ml-2">(Maximum 4 images, 50MB each)</span>
-                </label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Property Images <span className="text-red-500">*</span>
+                  </label>
+                  <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                    selectedFiles.length >= 4
+                      ? 'bg-red-100 text-red-700'
+                      : selectedFiles.length > 0
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-gray-100 text-gray-500'
+                  }`}>
+                    {selectedFiles.length}/4 images
+                  </span>
+                </div>
+                {selectedFiles.length >= 4 && (
+                  <div className="mb-3 flex items-start gap-2 bg-amber-50 border border-amber-300 text-amber-800 text-sm rounded-lg px-3 py-2">
+                    <span className="text-lg leading-none">⚠️</span>
+                    <span>Maximum 4 images reached. To add different images, remove one first by hovering over it and clicking the ✕ button.</span>
+                  </div>
+                )}
+                {selectedFiles.length === 0 && (
+                  <p className="text-xs text-gray-500 mb-2">Upload up to 4 images (PNG, JPG — max 50MB each)</p>
+                )}
                 <div className="space-y-4">
                   <div className="flex gap-2">
                     <label className={`flex-1 flex flex-col items-center justify-center h-32 border-2 border-gray-300 border-dashed rounded-lg ${selectedFiles.length >= 4 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:bg-gray-100'} bg-gray-50 transition-colors`}>
@@ -1064,8 +1100,10 @@ export function AddPropertyPage() {
                   )}
 
                   {selectedFiles.length > 0 && (
-                    <p className="text-sm text-gray-600">
-                      {selectedFiles.length} image{selectedFiles.length > 1 ? 's' : ''} selected
+                    <p className={`text-sm font-medium ${ selectedFiles.length >= 4 ? 'text-red-600' : 'text-green-600' }`}>
+                      {selectedFiles.length >= 4
+                        ? '✓ Maximum 4 images added. Remove an image to replace it.'
+                        : `✓ ${selectedFiles.length} of 4 images added. You can add ${4 - selectedFiles.length} more.`}
                     </p>
                   )}
                 </div>
