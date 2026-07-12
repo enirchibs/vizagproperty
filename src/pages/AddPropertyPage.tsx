@@ -371,39 +371,33 @@ export function AddPropertyPage() {
       let finalPincode = null
 
       if (locality.trim()) {
-        const matched = localities.find(l => (l as any).name.toLowerCase() === locality.trim().toLowerCase())
-        if (matched) {
-          finalLocalityId = matched.id
-          finalPincode = (matched as any).pincode || null
+        // Query public.localities by name to guarantee correct foreign key reference
+        const { data: exactLocs } = await supabase
+          .from('localities')
+          .select('id, pincode')
+          .ilike('name', locality.trim())
+          .limit(1)
+
+        if (exactLocs && exactLocs.length > 0) {
+          finalLocalityId = exactLocs[0].id
+          finalPincode = exactLocs[0].pincode || null
         } else {
-          // Check database exactly
-          const { data: exactLocs } = await supabase
+          // Auto-create in public.localities if it does not exist
+          const baseSlug = locality.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+          const uniqueSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`
+          
+          const { data: newLoc, error: insertErr } = await supabase
             .from('localities')
-            .select('id, pincode')
-            .ilike('name', locality.trim())
-            .limit(1)
+            .insert({
+              name: locality.trim(),
+              slug: uniqueSlug,
+              city: 'Visakhapatnam'
+            })
+            .select('id')
+            .single()
 
-          if (exactLocs && exactLocs.length > 0) {
-            finalLocalityId = exactLocs[0].id
-            finalPincode = exactLocs[0].pincode || null
-          } else {
-            // Auto-create locality
-            const baseSlug = locality.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
-            const uniqueSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`
-            
-            const { data: newLoc, error: insertErr } = await supabase
-              .from('localities')
-              .insert({
-                name: locality.trim(),
-                slug: uniqueSlug,
-                city: 'Visakhapatnam'
-              })
-              .select('id')
-              .single()
-
-            if (!insertErr && newLoc) {
-              finalLocalityId = newLoc.id
-            }
+          if (!insertErr && newLoc) {
+            finalLocalityId = newLoc.id
           }
         }
       }
