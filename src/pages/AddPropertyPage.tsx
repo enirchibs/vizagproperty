@@ -308,7 +308,7 @@ export function AddPropertyPage() {
           })
 
         if (uploadError) {
-          throw new Error(`Upload failed for ${file.name}: ${uploadError.message} (${uploadError.statusCode || 'unknown status'})`)
+          throw new Error(`Upload failed for ${file.name}: ${uploadError.message} (${(uploadError as any).statusCode || 'unknown status'})`)
         }
 
         const { data: { publicUrl } } = supabase.storage

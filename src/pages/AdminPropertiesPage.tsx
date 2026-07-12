@@ -204,6 +204,7 @@ export function AdminPropertiesPage() {
                 <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Property Management Hub</h1>
               </div>
               <p className="text-gray-600">Moderate and feature property listings</p>
+            </div>
           </div>
         </div>
 
