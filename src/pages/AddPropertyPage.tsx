@@ -842,7 +842,6 @@ export function AddPropertyPage() {
                   onChange={(e) => {
                     const v = e.target.value
                     setLocality(v)
-                    setFormData({ ...formData, pincode: '' })
 
                     if (fetchTimeoutRef.current) {
                       clearTimeout(fetchTimeoutRef.current)
@@ -896,7 +895,6 @@ export function AddPropertyPage() {
                               onMouseDown={(e) => {
                                 e.preventDefault()
                                 setLocality(name)
-                                setFormData({ ...formData, pincode: (loc as any).pincode || '' })
                                 setShowLocalityDropdown(false)
                               }}
                               className="px-4 py-3 hover:bg-red-50 cursor-pointer transition-colors border-b border-gray-50 last:border-b-0 flex items-start gap-3"
@@ -923,21 +921,7 @@ export function AddPropertyPage() {
                 </p>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Pincode
-                </label>
-                <input
-                  type="text"
-                  value={formData.pincode}
-                  onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
-                  readOnly={localities.some(l => (l as any).name.toLowerCase() === locality.trim().toLowerCase())}
-                  className={`w-full px-4 py-3 border border-gray-300 rounded-lg ${
-                    localities.some(l => (l as any).name.toLowerCase() === locality.trim().toLowerCase()) ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
-                  }`}
-                  placeholder={localities.some(l => (l as any).name.toLowerCase() === locality.trim().toLowerCase()) ? "Auto-filled from locality" : "Enter pincode..."}
-                />
-              </div>
+
 
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
