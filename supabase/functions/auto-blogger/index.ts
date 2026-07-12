@@ -1,215 +1,227 @@
-import { createClient } from "npm:@supabase/supabase-js"
-import { GoogleGenerativeAI } from "npm:@google/generative-ai@0.11.4"
+// auto-blogger: Zero npm imports — uses only native Deno fetch
+// This avoids import-level crashes in Supabase Edge Runtime
 
-// 1. Define hyper-local search queries for the Google News RSS Feed
+// --- CONFIG ---
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? ''
+const SUPABASE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY') ?? ''
+
+// Hyper-local Vizag topics to search on Google News RSS
 const TOPICS = [
-  "vizag real estate projects",
-  "visakhapatnam metro rail",
-  "vizag it companies growth",
-  "vizag cinema halls multiplexes",
-  "vizag new showrooms openings",
-  "bhogapuram airport construction update",
-  "vizag new roads flyovers",
-  "vizag steelplant status",
-  "vizag pharma city parawada",
-  "visakhapatnam smart city projects",
-  "andhra pradesh real estate news"
-];
+  'vizag real estate projects',
+  'visakhapatnam metro rail',
+  'vizag it companies growth',
+  'vizag cinema halls multiplexes',
+  'vizag new showrooms openings',
+  'bhogapuram airport construction update',
+  'vizag new roads flyovers',
+  'vizag steelplant status',
+  'vizag pharma city parawada',
+  'visakhapatnam smart city projects',
+  'andhra pradesh real estate news'
+]
 
-Deno.serve(async (req) => {
-  try {
-    // 2. Shuffle topics to try them in random order until we find news
-    const shuffledTopics = [...TOPICS].sort(() => 0.5 - Math.random());
-    
-    let query = '';
-    let newsTitle = '';
-    let newsSnippet = '';
-    
-    for (const topic of shuffledTopics) {
-      // Google News RSS endpoint configured for Telugu (India)
-      const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(topic)}&hl=te&gl=IN&ceid=IN:te`;
-      const rssResponse = await fetch(rssUrl);
-      const xmlData = await rssResponse.text();
-
-      // 3. Extract the top news headline and description using native string parsing
-      const itemStart = xmlData.indexOf('<item>');
-      const itemEnd = xmlData.indexOf('</item>', itemStart);
-      
-      if (itemStart !== -1 && itemEnd !== -1) {
-        query = topic;
-        const firstItem = xmlData.substring(itemStart, itemEnd);
-        const titleMatch = firstItem.match(/<title>(.*?)<\/title>/);
-        const descMatch = firstItem.match(/<description>(.*?)<\/description>/);
-        
-        newsTitle = titleMatch ? titleMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1') : query;
-        newsSnippet = descMatch ? descMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1') : "";
-        // Clean raw HTML out of the RSS description snippet
-        newsSnippet = newsSnippet.replace(/<[^>]*>?/gm, ''); 
-        break; // Found news, stop searching
-      }
-    }
-    
-    if (!query) {
-      console.warn("Google RSS blocked or returned empty. Falling back to a predefined local topic...");
-      const fallbackTopics = [
-        {
-          topic: "Bhogapuram International Airport Development",
-          title: "Bhogapuram Airport Progress and Its Direct Impact on Vizag Real Estate",
-          snippet: "The fast-tracked construction of Bhogapuram International Airport is creating massive real estate demand in northern Visakhapatnam corridors like Tagarapuvalasa, Bhogapuram, and Anandapuram."
-        },
-        {
-          topic: "Vizag IT Corridor Expansion",
-          title: "Visakhapatnam IT Corridor Growth: Residential Demand Surges in Madhurawada",
-          snippet: "With major IT companies expanding operations in Madhurawada and Rushikonda, premium apartments and rental housing options are seeing unprecedented demand."
-        },
-        {
-          topic: "VMRDA Approved Plots",
-          title: "Why VMRDA Approved Plots are the Safest Investment Choice in Vizag",
-          snippet: "Visakhapatnam Metropolitan Region Development Authority (VMRDA) layouts offer investors legal safety, guaranteed amenities, and high capital appreciation."
-        },
-        {
-          topic: "Vizag Metro Rail Proposed Routes",
-          title: "Proposed Vizag Metro Rail: Identifying the Next Real Estate Hotspots",
-          snippet: "The upcoming Metro Rail project connecting Steel Plant to Bhogapuram is set to transform connectivity and property prices along the National Highway (NH16) corridor."
-        },
-        {
-          topic: "Beach Road Luxury Real Estate",
-          title: "Beach Road Development and the Rise of Luxury Coastal Living in Visakhapatnam",
-          snippet: "Infrastructure projects along the scenic Vizag-Bheemili beach road are driving luxury residential villa projects and coastal holiday home investments."
-        },
-        {
-          topic: "Vizag New Showrooms and Retail Growth",
-          title: "Retail Boom in Visakhapatnam: New Showrooms and Commercial Hubs Redefining VIP Road and Gajuwaka",
-          snippet: "The launch of premium lifestyle, jewelry, and automobile showrooms on VIP Road and Gajuwaka highlights the surging purchasing power and commercial real estate potential of Vizag."
-        },
-        {
-          topic: "Vizag Cinema Halls and Entertainment Hubs",
-          title: "New Multiplexes and Entertainment Centers Opening Across Visakhapatnam",
-          snippet: "With new cinema halls and multiplexes launching in growing suburban zones, neighborhood entertainment hubs are boosting adjacent residential land prices."
-        },
-        {
-          topic: "New Roads and Infrastructure Flyovers",
-          title: "Road Infrastructure Upgrades: New Flyovers and Highway Expansions Easing Vizag Traffic",
-          snippet: "The completion of major flyovers and highway expansions along the Anandapuram-Pendurthi-Anakapalli stretch is opening up new outskirts for housing developments."
-        },
-        {
-          topic: "Vizag Steelplant Industrial Impact",
-          title: "Vizag Steel Plant and Its Crucial Role in the Local Economy and Real Estate",
-          snippet: "The industrial presence of the Visakhapatnam Steel Plant continues to sustain high residential demand in Gajuwaka, Kurmannapalem, and Duvvada areas."
-        },
-        {
-          topic: "Pharma City Parawada Growth",
-          title: "Jawaharlal Nehru Pharma City Parawada: Industrial Expansion and Housing Demand in Anakapalli District",
-          snippet: "The expansion of pharma companies in Parawada is creating thousands of jobs, driving demand for affordable housing, rental apartments, and plots in Anakapalli and nearby suburbs."
-        }
-      ];
-      
-      const chosenFallback = fallbackTopics[Math.floor(Math.random() * fallbackTopics.length)];
-      query = chosenFallback.topic;
-      newsTitle = chosenFallback.title;
-      newsSnippet = chosenFallback.snippet;
-    }
-
-    // 4. Initialize Google Gemini API
-    const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
-    if (!geminiApiKey) throw new Error("GEMINI_API_KEY is missing in environment variables.");
-    
-    const genAI = new GoogleGenerativeAI(geminiApiKey);
-
-    // 5. The strict Gemini Prompt: Rewriting news & injecting links
-    const prompt = `
-      You are an expert real estate and city development journalist based in Visakhapatnam (Vizag). 
-      Here is the latest trending news (it might be in Telugu) regarding "${query}":
-      
-      Original Headline: ${newsTitle}
-      News Summary: ${newsSnippet}
-      
-      Task: Translate the core news into English (if it's in Telugu) and rewrite this news into a highly engaging, SEO-optimized English blog article. Expand on how this specific news impacts the local real estate market, plot values, or property investments in Vizag.
-      
-      Strict Requirements:
-      1. Write the entire article in ENGLISH. Format the output entirely in clean HTML. Do NOT wrap the response in markdown blocks (e.g., no \`\`\`html).
-      2. Include a catchy <H1> title, followed by at least two <H2> subheadings.
-      3. CRITICAL SEO LINKING: You MUST organically include at least 3 contextual HTML links pointing exactly to "https://vizagproperty.co.in/". 
-         - Use natural anchor texts like "plots for sale in Vizag", "premium flats in Visakhapatnam", or "Vizag real estate investments".
-         - Format example: <a href="https://vizagproperty.co.in/" class="text-blue-600 font-medium">plots for sale in Vizag</a>
-      4. End with a strong Call to Action encouraging readers to visit the site to view verified properties.
-    `;
-
-    // Try a list of modern fallback models using the official Deno SDK
-    const fallbackModels = [
-      'gemini-1.5-flash',
-      'gemini-1.5-flash-8b',
-      'gemini-1.5-pro'
-    ];
-    
-    let generatedHtml = '';
-    let lastError = '';
-
-    for (const modelName of fallbackModels) {
-      try {
-        const model = genAI.getGenerativeModel({ model: modelName });
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        generatedHtml = response.text()?.trim() || '';
-        if (generatedHtml) break; // Success! Stop looping.
-      } catch (err: any) {
-        const errMsg = err.message || String(err);
-        lastError += `[${modelName}]: ${errMsg} | `;
-        console.error(`Model ${modelName} failed:`, errMsg);
-      }
-    }
-
-    if (!generatedHtml) {
-      throw new Error(`Google API Rejected Key for ALL models. Last error: ${lastError}`);
-    }
-
-    // Fallback cleanup if Gemini includes markdown ticks anyway
-    generatedHtml = generatedHtml.replace(/^```html\n?/, '').replace(/\n?```$/, '');
-
-    // Extract the H1 for the database title row
-    const h1Match = generatedHtml.match(/<h1[^>]*>(.*?)<\/h1>/i);
-    const finalTitle = h1Match ? h1Match[1] : `Market Update: ${newsTitle}`;
-
-    const slug = finalTitle
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)+/g, '') + '-' + Date.now();
-
-    const excerpt = generatedHtml.replace(/<[^>]*>?/gm, '').substring(0, 150) + '...';
-
-    // 7. Save to Supabase Database
-    const supabaseAdmin = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
-
-    const { error } = await supabaseAdmin.from('blog_posts').insert({
-      topic: query,
-      title: finalTitle,
-      content: generatedHtml,
-      slug: slug,
-      excerpt: excerpt,
-      published: true,
-      category: 'news',
-      author_name: 'AI Autoblogger',
-      reading_time_min: Math.ceil(generatedHtml.length / 1000)
-    });
-
-    if (error) throw error;
-
-    return new Response(JSON.stringify({ success: true, topic: query, title: finalTitle }), {
-      headers: { "Content-Type": "application/json" },
-      status: 200,
-    });
-
-  } catch (err: any) {
-    const errorMsg = err instanceof Error ? err.message : String(err);
-    console.error("Autoblogging Error:", errorMsg);
-    // Returning 200 here instead of 500 prevents the Supabase Dashboard "Test" UI from crashing 
-    // with "Cannot read properties of undefined (reading 'error')".
-    return new Response(JSON.stringify({ success: false, error: errorMsg }), {
-      headers: { "Content-Type": "application/json" },
-      status: 200,
-    });
+// Fallback topics when Google RSS is blocked
+const FALLBACK_TOPICS = [
+  {
+    topic: 'Bhogapuram International Airport',
+    title: 'Bhogapuram Airport Progress and Its Direct Impact on Vizag Real Estate',
+    snippet: 'The fast-tracked construction of Bhogapuram International Airport is creating massive real estate demand in northern Visakhapatnam corridors like Tagarapuvalasa, Bhogapuram, and Anandapuram.'
+  },
+  {
+    topic: 'Vizag IT Corridor Expansion',
+    title: 'Visakhapatnam IT Corridor Growth: Residential Demand Surges in Madhurawada',
+    snippet: 'With major IT companies expanding operations in Madhurawada and Rushikonda, premium apartments and rental housing options are seeing unprecedented demand.'
+  },
+  {
+    topic: 'VMRDA Approved Plots',
+    title: 'Why VMRDA Approved Plots are the Safest Investment Choice in Vizag',
+    snippet: 'Visakhapatnam Metropolitan Region Development Authority (VMRDA) layouts offer investors legal safety, guaranteed amenities, and high capital appreciation.'
+  },
+  {
+    topic: 'Vizag Metro Rail Proposed Routes',
+    title: 'Proposed Vizag Metro Rail: Identifying the Next Real Estate Hotspots',
+    snippet: 'The upcoming Metro Rail project is set to transform connectivity and property prices along the National Highway (NH16) corridor in Visakhapatnam.'
+  },
+  {
+    topic: 'Beach Road Luxury Real Estate',
+    title: 'Beach Road Development and the Rise of Luxury Coastal Living in Visakhapatnam',
+    snippet: 'Infrastructure projects along the scenic Vizag-Bheemili beach road are driving luxury residential villa projects and coastal holiday home investments.'
+  },
+  {
+    topic: 'Vizag New Showrooms and Retail Growth',
+    title: 'Retail Boom in Visakhapatnam: New Showrooms and Commercial Hubs on VIP Road',
+    snippet: 'The launch of premium lifestyle, jewelry, and automobile showrooms on VIP Road and Gajuwaka highlights the surging purchasing power and commercial real estate potential of Vizag.'
+  },
+  {
+    topic: 'Vizag Cinema Halls and Entertainment',
+    title: 'New Multiplexes and Entertainment Centers Opening Across Visakhapatnam',
+    snippet: 'With new cinema halls and multiplexes launching in growing suburban zones, neighborhood entertainment hubs are boosting adjacent residential land prices.'
+  },
+  {
+    topic: 'New Roads and Infrastructure Flyovers',
+    title: 'Road Infrastructure Upgrades: New Flyovers and Highways Easing Vizag Traffic',
+    snippet: 'The completion of major flyovers and highway expansions along the Anandapuram-Pendurthi-Anakapalli stretch is opening up new areas for housing developments.'
+  },
+  {
+    topic: 'Vizag Steelplant Industrial Impact',
+    title: 'Vizag Steel Plant and Its Role in the Local Economy and Real Estate',
+    snippet: 'The industrial presence of the Visakhapatnam Steel Plant continues to sustain high residential demand in Gajuwaka, Kurmannapalem, and Duvvada areas.'
+  },
+  {
+    topic: 'Pharma City Parawada',
+    title: 'Jawaharlal Nehru Pharma City Parawada: Industrial Expansion and Housing Demand',
+    snippet: 'The expansion of pharma companies in Parawada is creating thousands of jobs, driving demand for affordable housing, rental apartments, and plots in Anakapalli.'
   }
-});
+]
+
+// --- HELPERS ---
+function shuffleArray<T>(arr: T[]): T[] {
+  return [...arr].sort(() => Math.random() - 0.5)
+}
+
+function makeSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+    .substring(0, 80) + '-' + Date.now()
+}
+
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/gm, '')
+}
+
+// --- MAIN HANDLER ---
+Deno.serve(async (_req) => {
+  try {
+    // 1. Check environment variables
+    if (!GEMINI_API_KEY) throw new Error('GEMINI_API_KEY secret is not set in Supabase Edge Function Secrets.')
+    if (!SUPABASE_URL) throw new Error('SUPABASE_URL secret is missing.')
+    if (!SUPABASE_KEY) throw new Error('SUPABASE_SERVICE_ROLE_KEY secret is missing.')
+
+    // 2. Try Google News RSS to find a real news item
+    let query = ''
+    let newsTitle = ''
+    let newsSnippet = ''
+
+    for (const topic of shuffleArray(TOPICS)) {
+      try {
+        const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(topic)}&hl=te&gl=IN&ceid=IN:te`
+        const rssRes = await fetch(rssUrl, { signal: AbortSignal.timeout(5000) })
+        const xml = await rssRes.text()
+
+        const itemStart = xml.indexOf('<item>')
+        const itemEnd = xml.indexOf('</item>', itemStart)
+
+        if (itemStart !== -1 && itemEnd !== -1) {
+          const item = xml.substring(itemStart, itemEnd)
+          const titleMatch = item.match(/<title>(.*?)<\/title>/)
+          const descMatch = item.match(/<description>(.*?)<\/description>/)
+          query = topic
+          newsTitle = titleMatch ? titleMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1') : topic
+          newsSnippet = descMatch ? descMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').replace(/<[^>]*>/gm, '') : ''
+          console.log(`Found news for topic: ${topic}`)
+          break
+        }
+      } catch (_e) {
+        // RSS timeout or parse error — try next topic
+      }
+    }
+
+    // 3. If RSS failed, use a rich fallback topic
+    if (!query) {
+      console.warn('Google RSS blocked or returned empty. Using fallback topic.')
+      const f = FALLBACK_TOPICS[Math.floor(Math.random() * FALLBACK_TOPICS.length)]
+      query = f.topic
+      newsTitle = f.title
+      newsSnippet = f.snippet
+    }
+
+    // 4. Build the Gemini prompt
+    const prompt = `You are an expert real estate and city development journalist based in Visakhapatnam (Vizag).
+
+Here is the latest trending topic regarding "${query}":
+Headline: ${newsTitle}
+Summary: ${newsSnippet}
+
+Task: Write a highly engaging, SEO-optimized blog article in ENGLISH about this topic. Expand on how this impacts the local real estate market, plot values, or property investments in Vizag.
+
+Strict Requirements:
+1. Output ONLY valid HTML. No markdown code blocks (no \`\`\`html).
+2. Include a catchy <h1> title, followed by at least two <h2> subheadings.
+3. Include at least 3 contextual HTML links to https://vizagproperty.co.in/ using natural anchor texts like "flats for sale in Vizag" or "plots in Visakhapatnam".
+4. End with a strong Call to Action paragraph.
+5. Minimum 600 words.`
+
+    // 5. Call Gemini API using native fetch (v1beta, gemini-1.5-flash)
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`
+    const geminiRes = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
+      })
+    })
+
+    if (!geminiRes.ok) {
+      const errBody = await geminiRes.text()
+      throw new Error(`Gemini API error ${geminiRes.status}: ${errBody}`)
+    }
+
+    const geminiData = await geminiRes.json()
+    let generatedHtml = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? ''
+
+    if (!generatedHtml) throw new Error('Gemini returned empty content.')
+
+    // Clean up any markdown fences Gemini may still add
+    generatedHtml = generatedHtml.replace(/^```html\n?/, '').replace(/\n?```$/, '').trim()
+
+    // 6. Extract title and build slug/excerpt
+    const h1Match = generatedHtml.match(/<h1[^>]*>(.*?)<\/h1>/i)
+    const finalTitle = h1Match ? h1Match[1].replace(/<[^>]*>/g, '') : newsTitle
+    const slug = makeSlug(finalTitle)
+    const excerpt = stripHtml(generatedHtml).substring(0, 160) + '...'
+
+    // 7. Insert into Supabase using native fetch
+    const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/blog_posts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        topic: query,
+        title: finalTitle,
+        content: generatedHtml,
+        slug: slug,
+        excerpt: excerpt,
+        published: true,
+        category: 'news',
+        author_name: 'AI Autoblogger',
+        reading_time_min: Math.ceil(stripHtml(generatedHtml).split(/\s+/).length / 200)
+      })
+    })
+
+    if (!insertRes.ok) {
+      const insertErr = await insertRes.text()
+      throw new Error(`Supabase insert error ${insertRes.status}: ${insertErr}`)
+    }
+
+    return new Response(JSON.stringify({ success: true, topic: query, title: finalTitle, slug }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 200
+    })
+
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error('Autoblogging Error:', msg)
+    return new Response(JSON.stringify({ success: false, error: msg }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 200  // Return 200 so Supabase Dashboard can read the JSON error body
+    })
+  }
+})
