@@ -100,6 +100,16 @@ Deno.serve(async (_req) => {
     if (!SUPABASE_URL) throw new Error('SUPABASE_URL secret is missing.')
     if (!SUPABASE_KEY) throw new Error('SUPABASE_SERVICE_ROLE_KEY secret is missing.')
 
+    // 1b. DIAGNOSTIC: List available Gemini models to validate the API key
+    const listRes = await fetch(`https://generativelanguage.googleapis.com/v1/models?key=${GEMINI_API_KEY}`)
+    if (!listRes.ok) {
+      const listErr = await listRes.text()
+      throw new Error(`GEMINI_API_KEY is invalid or rejected. ListModels error ${listRes.status}: ${listErr}`)
+    }
+    const listData = await listRes.json()
+    const availableModels = (listData.models || []).map((m: any) => m.name)
+    console.log('Available Gemini models:', JSON.stringify(availableModels))
+
     // 2. Try Google News RSS to find a real news item
     let query = ''
     let newsTitle = ''
