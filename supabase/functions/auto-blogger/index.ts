@@ -154,26 +154,45 @@ Strict Requirements:
 4. End with a strong Call to Action paragraph.
 5. Minimum 600 words.`
 
-    // 5. Call Gemini API using native fetch (v1beta, gemini-1.5-flash)
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`
-    const geminiRes = await fetch(geminiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
-      })
-    })
+    // 5. Call Gemini API — try models in order until one works
+    const GEMINI_MODELS = [
+      { version: 'v1',     model: 'gemini-2.0-flash' },
+      { version: 'v1',     model: 'gemini-2.0-flash-lite' },
+      { version: 'v1',     model: 'gemini-1.5-flash' },
+      { version: 'v1beta', model: 'gemini-1.5-flash' },
+      { version: 'v1beta', model: 'gemini-1.5-flash-8b' },
+    ]
 
-    if (!geminiRes.ok) {
-      const errBody = await geminiRes.text()
-      throw new Error(`Gemini API error ${geminiRes.status}: ${errBody}`)
+    let generatedHtml = ''
+    let lastError = ''
+
+    for (const { version, model } of GEMINI_MODELS) {
+      const geminiUrl = `https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${GEMINI_API_KEY}`
+      console.log(`Trying model: ${model} (${version})`)
+      const geminiRes = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
+        })
+      })
+
+      if (!geminiRes.ok) {
+        lastError = `${model}(${version}): ${geminiRes.status} ${await geminiRes.text()}`
+        console.warn(`Failed: ${lastError}`)
+        continue
+      }
+
+      const geminiData = await geminiRes.json()
+      generatedHtml = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? ''
+      if (generatedHtml) {
+        console.log(`Success with model: ${model}`)
+        break
+      }
     }
 
-    const geminiData = await geminiRes.json()
-    let generatedHtml = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? ''
-
-    if (!generatedHtml) throw new Error('Gemini returned empty content.')
+    if (!generatedHtml) throw new Error(`All Gemini models failed. Last: ${lastError}`)
 
     // Clean up any markdown fences Gemini may still add
     generatedHtml = generatedHtml.replace(/^```html\n?/, '').replace(/\n?```$/, '').trim()
