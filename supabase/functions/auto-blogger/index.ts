@@ -96,19 +96,48 @@ function stripHtml(html: string): string {
 Deno.serve(async (_req) => {
   try {
     // 1. Check environment variables
-    if (!GEMINI_API_KEY) throw new Error('GEMINI_API_KEY secret is not set in Supabase Edge Function Secrets.')
+    if (!GEMINI_API_KEY) throw new Error('GEMINI_API_KEY secret is not set.')
     if (!SUPABASE_URL) throw new Error('SUPABASE_URL secret is missing.')
     if (!SUPABASE_KEY) throw new Error('SUPABASE_SERVICE_ROLE_KEY secret is missing.')
 
-    // 1b. DIAGNOSTIC: List available Gemini models to validate the API key
-    const listRes = await fetch(`https://generativelanguage.googleapis.com/v1/models?key=${GEMINI_API_KEY}`)
-    if (!listRes.ok) {
-      const listErr = await listRes.text()
-      throw new Error(`GEMINI_API_KEY is invalid or rejected. ListModels error ${listRes.status}: ${listErr}`)
+    // 1b. Discover available models dynamically
+    let modelToUse = ''
+    const preferredModels = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']
+
+    try {
+      const listRes = await fetch(`https://generativelanguage.googleapis.com/v1/models?key=${GEMINI_API_KEY}`)
+      if (listRes.ok) {
+        const listData = await listRes.json()
+        const available: string[] = (listData.models || [])
+          .filter((m: any) => (m.supportedGenerationMethods || []).includes('generateContent'))
+          .map((m: any) => m.name.replace('models/', ''))
+        console.log('Models supporting generateContent:', JSON.stringify(available))
+
+        // Pick the best preferred model that's actually available
+        for (const pref of preferredModels) {
+          if (available.some(a => a.includes(pref.split('-').slice(0, 3).join('-')))) {
+            modelToUse = available.find(a => a.includes(pref.split('-').slice(0, 3).join('-'))) || ''
+            break
+          }
+        }
+
+        // If none of our preferred models match, just use the first available
+        if (!modelToUse && available.length > 0) {
+          modelToUse = available[0]
+        }
+
+        console.log('Selected model:', modelToUse)
+      } else {
+        const errBody = await listRes.text()
+        throw new Error(`API key rejected by Google. ListModels ${listRes.status}: ${errBody}`)
+      }
+    } catch (e: any) {
+      if (e.message.includes('API key rejected')) throw e
+      console.warn('ListModels failed, using default:', e.message)
+      modelToUse = 'gemini-1.5-flash' // fallback
     }
-    const listData = await listRes.json()
-    const availableModels = (listData.models || []).map((m: any) => m.name)
-    console.log('Available Gemini models:', JSON.stringify(availableModels))
+
+    if (!modelToUse) throw new Error('No Gemini models available for generateContent with this API key.')
 
     // 2. Try Google News RSS to find a real news item
     let query = ''
@@ -164,45 +193,28 @@ Strict Requirements:
 4. End with a strong Call to Action paragraph.
 5. Minimum 600 words.`
 
-    // 5. Call Gemini API — try models in order until one works
-    const GEMINI_MODELS = [
-      { version: 'v1',     model: 'gemini-2.0-flash' },
-      { version: 'v1',     model: 'gemini-2.0-flash-lite' },
-      { version: 'v1',     model: 'gemini-1.5-flash' },
-      { version: 'v1beta', model: 'gemini-1.5-flash' },
-      { version: 'v1beta', model: 'gemini-1.5-flash-8b' },
-    ]
+    // 5. Call Gemini API with the dynamically selected model
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1/models/${modelToUse}:generateContent?key=${GEMINI_API_KEY}`
+    console.log(`Calling Gemini with model: ${modelToUse}`)
 
-    let generatedHtml = ''
-    let lastError = ''
-
-    for (const { version, model } of GEMINI_MODELS) {
-      const geminiUrl = `https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${GEMINI_API_KEY}`
-      console.log(`Trying model: ${model} (${version})`)
-      const geminiRes = await fetch(geminiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
-        })
+    const geminiRes = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
       })
+    })
 
-      if (!geminiRes.ok) {
-        lastError = `${model}(${version}): ${geminiRes.status} ${await geminiRes.text()}`
-        console.warn(`Failed: ${lastError}`)
-        continue
-      }
-
-      const geminiData = await geminiRes.json()
-      generatedHtml = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? ''
-      if (generatedHtml) {
-        console.log(`Success with model: ${model}`)
-        break
-      }
+    if (!geminiRes.ok) {
+      const errBody = await geminiRes.text()
+      throw new Error(`Gemini API error ${geminiRes.status} for model ${modelToUse}: ${errBody}`)
     }
 
-    if (!generatedHtml) throw new Error(`All Gemini models failed. Last: ${lastError}`)
+    const geminiData = await geminiRes.json()
+    let generatedHtml = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? ''
+
+    if (!generatedHtml) throw new Error('Gemini returned empty content.')
 
     // Clean up any markdown fences Gemini may still add
     generatedHtml = generatedHtml.replace(/^```html\n?/, '').replace(/\n?```$/, '').trim()
