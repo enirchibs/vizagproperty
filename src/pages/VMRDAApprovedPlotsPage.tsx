@@ -582,6 +582,102 @@ export default function VMRDAApprovedPlotsPage() {
                 </div>
               </div>
             </Link>
+
+            <Link to="/search?locality=rushikonda&property_type=plot" className="block group">
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all border-2 border-gray-200 hover:border-primary-500">
+                <div className="bg-gradient-to-br from-teal-600 to-teal-700 p-6 text-white">
+                  <MapPin className="h-8 w-8 mb-2" />
+                  <h3 className="text-2xl font-bold">Rushikonda</h3>
+                  <p className="text-teal-100 text-sm">Coastal Paradise</p>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-700 mb-4">Scenic coastal locality with premium sea-facing plots and resort-style living.</p>
+                  <div className="flex items-center text-teal-600 font-semibold group-hover:gap-2 transition-all">
+                    View Properties <ArrowRight className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            <Link to="/search?locality=kommadi&property_type=plot" className="block group">
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all border-2 border-gray-200 hover:border-primary-500">
+                <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 p-6 text-white">
+                  <MapPin className="h-8 w-8 mb-2" />
+                  <h3 className="text-2xl font-bold">Kommadi</h3>
+                  <p className="text-indigo-100 text-sm">Upcoming Growth Zone</p>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-700 mb-4">Rapidly developing area near Madhurawada with affordable plots and high appreciation.</p>
+                  <div className="flex items-center text-indigo-600 font-semibold group-hover:gap-2 transition-all">
+                    View Properties <ArrowRight className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            <Link to="/search?locality=bheemunipatnam&property_type=plot" className="block group">
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all border-2 border-gray-200 hover:border-primary-500">
+                <div className="bg-gradient-to-br from-cyan-600 to-cyan-700 p-6 text-white">
+                  <MapPin className="h-8 w-8 mb-2" />
+                  <h3 className="text-2xl font-bold">Bheemunipatnam</h3>
+                  <p className="text-cyan-100 text-sm">Beach Town Plots</p>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-700 mb-4">Serene beach town with affordable open plots — ideal for weekend homes and investment.</p>
+                  <div className="flex items-center text-cyan-600 font-semibold group-hover:gap-2 transition-all">
+                    View Properties <ArrowRight className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            <Link to="/search?locality=pendurthi&property_type=plot" className="block group">
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all border-2 border-gray-200 hover:border-primary-500">
+                <div className="bg-gradient-to-br from-amber-600 to-amber-700 p-6 text-white">
+                  <MapPin className="h-8 w-8 mb-2" />
+                  <h3 className="text-2xl font-bold">Pendurthi</h3>
+                  <p className="text-amber-100 text-sm">North Vizag Growth Corridor</p>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-700 mb-4">Affordable plots in a fast-growing suburb with new industrial and residential projects.</p>
+                  <div className="flex items-center text-amber-600 font-semibold group-hover:gap-2 transition-all">
+                    View Properties <ArrowRight className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            <Link to="/search?locality=tagarapuvalasa&property_type=plot" className="block group">
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all border-2 border-gray-200 hover:border-primary-500">
+                <div className="bg-gradient-to-br from-rose-600 to-rose-700 p-6 text-white">
+                  <MapPin className="h-8 w-8 mb-2" />
+                  <h3 className="text-2xl font-bold">Tagarapuvalasa</h3>
+                  <p className="text-rose-100 text-sm">Industrial Corridor</p>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-700 mb-4">Growing town near Bheemunipatnam with budget plots and strong industrial demand.</p>
+                  <div className="flex items-center text-rose-600 font-semibold group-hover:gap-2 transition-all">
+                    View Properties <ArrowRight className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            <Link to="/search?locality=seethammadhara&property_type=plot" className="block group">
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all border-2 border-gray-200 hover:border-primary-500">
+                <div className="bg-gradient-to-br from-lime-600 to-lime-700 p-6 text-white">
+                  <MapPin className="h-8 w-8 mb-2" />
+                  <h3 className="text-2xl font-bold">Seethammadhara</h3>
+                  <p className="text-lime-100 text-sm">Central Prime Location</p>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-700 mb-4">Central Vizag locality with excellent schools, hospitals, and connectivity to all parts.</p>
+                  <div className="flex items-center text-lime-600 font-semibold group-hover:gap-2 transition-all">
+                    View Properties <ArrowRight className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
       </section>
