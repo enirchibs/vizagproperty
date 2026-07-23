@@ -13,6 +13,7 @@ import { SEOHead } from '../components/SEOHead'
 import { HeatMap } from '../components/HeatMap'
 import { CallBanner } from '../components/CallBanner'
 import { SponsoredBanners } from '../components/SponsoredBanners'
+import { SeoKeywordsSection } from '../components/SeoKeywordsSection'
 
 export function HomePage() {
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
@@ -253,6 +254,9 @@ export function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* SEO Keywords Section - Magicbricks style */}
+      <SeoKeywordsSection />
 
       {/* 8. Latest Blogs */}
       <div className="border-t border-gray-200">
