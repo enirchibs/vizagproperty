@@ -217,7 +217,11 @@ export function PropertiesPage() {
         }
 
         if (filters.locality_id) {
-          queryBuilder = queryBuilder.ilike('localities.name', `%${filters.locality_id}%`)
+          if (filters.locality_id.length === 36 && filters.locality_id.includes('-')) {
+            queryBuilder = queryBuilder.eq('locality_id', filters.locality_id)
+          } else {
+            queryBuilder = queryBuilder.ilike('localities.name', `%${filters.locality_id}%`)
+          }
         }
 
         if (filters.bedrooms && filters.bedrooms > 0) {
@@ -300,6 +304,7 @@ export function PropertiesPage() {
       // 2. Fetch coordinate details for current locality to find nearby properties
       let nearbyList: Property[] = []
       let canExpandFurther = false
+      let activeSearchRadius = currentMaxDistance
 
       if (filters.locality_id) {
         // Get coordinates of the queried locality
@@ -317,54 +322,78 @@ export function PropertiesPage() {
             .eq('city', 'Visakhapatnam')
 
           if (allLocalities) {
-            // Find locality IDs within current range and next range
-            const nearbyLocalityIds: string[] = []
-            const nextTierLocalityIds: string[] = []
+            const fetchNearbyForRadius = async (radius: number) => {
+              const nearbyLocalityIds: string[] = []
+              const nextTierLocalityIds: string[] = []
 
-            allLocalities.forEach((loc) => {
-              if (loc.id === filters.locality_id || !loc.latitude || !loc.longitude) return
-              const dist = calculateDistance(
-                localityData.latitude!,
-                localityData.longitude!,
-                loc.latitude,
-                loc.longitude
-              )
+              allLocalities.forEach((loc) => {
+                if (loc.id === filters.locality_id || !loc.latitude || !loc.longitude) return
+                const dist = calculateDistance(
+                  localityData.latitude!,
+                  localityData.longitude!,
+                  loc.latitude,
+                  loc.longitude
+                )
 
-              if (dist <= currentMaxDistance) {
-                nearbyLocalityIds.push(loc.id)
-              } else if (dist <= currentMaxDistance + 5) {
-                nextTierLocalityIds.push(loc.id)
-              }
-            })
-
-            // Query properties in the nearby localities
-            if (nearbyLocalityIds.length > 0) {
-              const { data: nData, error: nErr } = await buildUnifiedPropertyQuery({
-                ...searchParams
+                if (dist <= radius) {
+                  nearbyLocalityIds.push(loc.id)
+                } else if (dist <= radius + 5) {
+                  nextTierLocalityIds.push(loc.id)
+                }
               })
-                .in('locality_id', nearbyLocalityIds)
-                .limit(50)
 
-              if (nErr) throw nErr
-              nearbyList = nData || []
+              let currentNearbyList: Property[] = []
+              let currentCanExpand = false
+
+              // Query properties in the nearby localities
+              if (nearbyLocalityIds.length > 0) {
+                const { data: nData, error: nErr } = await buildUnifiedPropertyQuery({
+                  ...searchParams
+                })
+                  .in('locality_id', nearbyLocalityIds)
+                  .limit(50)
+
+                if (nErr) throw nErr
+                currentNearbyList = nData || []
+              }
+
+              // Check if there are any properties available in the next expansion tier (radius + 5km)
+              if (nextTierLocalityIds.length > 0) {
+                const { data: checkData } = await buildUnifiedPropertyQuery({
+                  ...searchParams
+                })
+                  .in('locality_id', nextTierLocalityIds)
+                  .limit(1)
+
+                if (checkData && checkData.length > 0) {
+                  currentCanExpand = true
+                }
+              }
+
+              return { currentNearbyList, currentCanExpand }
             }
 
-            // Check if there are any properties available in the next expansion tier (currentMaxDistance + 5km)
-            if (nextTierLocalityIds.length > 0) {
-              const { data: checkData } = await buildUnifiedPropertyQuery({
-                ...searchParams
-              })
-                .in('locality_id', nextTierLocalityIds)
-                .limit(1)
+            // Auto-expand logic: if we found 0 exact matches, try 5km, then 10km, then 30km
+            let tiersToTry = [currentMaxDistance]
+            if (exactList.length === 0 && currentMaxDistance === 5) {
+              tiersToTry = [5, 10, 30]
+            }
 
-              if (checkData && checkData.length > 0) {
-                canExpandFurther = true
+            for (const radius of tiersToTry) {
+              activeSearchRadius = radius
+              const { currentNearbyList, currentCanExpand } = await fetchNearbyForRadius(radius)
+              nearbyList = currentNearbyList
+              canExpandFurther = currentCanExpand
+
+              if (exactList.length > 0 || nearbyList.length > 0) {
+                break // Found something, stop expanding
               }
             }
           }
         }
       }
 
+      setSearchTier(activeSearchRadius)
       setExactProperties(exactList)
       setNearbyProperties(nearbyList)
       setProperties([...exactList, ...nearbyList])
