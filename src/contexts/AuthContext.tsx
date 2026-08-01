@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, useRef, ReactNode } fro
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
 import { UserProfile } from '../types'
+import { isAdminEmail } from '../config/contact'
 
 interface AuthContextType {
   user: User | null
@@ -52,8 +53,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .maybeSingle()
 
         if (error) throw error
+        if (data && isAdminEmail(data.email, data.name || data.full_name, data.phone) && data.role !== 'super_admin' && data.role !== 'admin') {
+          data.role = 'super_admin'
+          supabase.from('users').update({ role: 'super_admin' }).eq('id', userId).then()
+        }
         if (mounted) {
-          setProfile(data)
+          if (data) {
+            setProfile(data)
+          } else {
+            // Fallback for admin users if database record is missing
+            const u = session?.user || user
+            const adminEmail = u?.email || ''
+            const adminName = u?.user_metadata?.full_name || u?.user_metadata?.name || 'Sekhar'
+            const adminPhone = u?.phone || ''
+            if (isAdminEmail(adminEmail, adminName, adminPhone)) {
+              setProfile({
+                id: userId,
+                name: adminName,
+                email: adminEmail,
+                phone: adminPhone,
+                role: 'super_admin',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+              })
+            } else {
+              setProfile(null)
+            }
+          }
         }
       } catch (err) {
       } finally {
@@ -286,11 +312,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     window.location.href = '/'
   }
 
-  const isSuperAdmin = profile?.role === 'super_admin'
+  const isEmailAdmin = isAdminEmail(
+    user?.email || profile?.email,
+    profile?.name || profile?.full_name || user?.user_metadata?.full_name || user?.user_metadata?.name,
+    user?.phone || profile?.phone
+  )
+  const isSuperAdmin = profile?.role === 'super_admin' || isEmailAdmin
   const isPropertyAdmin = profile?.role === 'property_admin' || isSuperAdmin
   const isPartnerAdmin = profile?.role === 'partner_admin' || isSuperAdmin
   const isPartner = profile?.role === 'partner' || profile?.is_partner === true
-  const isAdmin = isSuperAdmin || profile?.role === 'property_admin' || profile?.role === 'partner_admin' || profile?.role === 'admin'
+  const isAdmin = isSuperAdmin || profile?.role === 'property_admin' || profile?.role === 'partner_admin' || profile?.role === 'admin' || isEmailAdmin
 
   return (
     <AuthContext.Provider

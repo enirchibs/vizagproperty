@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { MapPin, X, AlertCircle } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+
+import { fuzzySearchLocalities } from '../lib/fuzzySearch'
 
 interface LocalityResult {
   id: string
@@ -20,7 +21,6 @@ interface LocationAutocompleteProps {
 }
 
 const localityCache = new Map<string, LocalityResult[]>()
-let popularLocalities: LocalityResult[] = []
 
 export function LocationAutocomplete({ value, onChange, placeholder, className }: LocationAutocompleteProps) {
   const [query, setQuery] = useState(value)
@@ -34,28 +34,6 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
   }, [value])
 
   useEffect(() => {
-    const loadPopularLocalities = async () => {
-      if (popularLocalities.length > 0) return
-
-      try {
-        const { data } = await supabase
-          .from('localities')
-          .select('id, name, slug')
-          .eq('city', 'Visakhapatnam')
-          .order('name')
-          .limit(10)
-
-        if (data) {
-          popularLocalities = data
-        }
-      } catch (error) {
-      }
-    }
-
-    loadPopularLocalities()
-  }, [])
-
-  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
         setShowResults(false)
@@ -67,7 +45,7 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
   }, [])
 
   useEffect(() => {
-    if (query.trim().length < 2) {
+    if (query.trim().length < 3) {
       setResults([])
       setShowResults(false)
       return
@@ -85,20 +63,14 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
 
       setLoading(true)
       try {
-        const { data, error } = await supabase.functions.invoke('location-autocomplete', {
-          body: { query: searchTerm, limit: 10 }
-        })
+        const data = await fuzzySearchLocalities(searchTerm, 10)
 
-        if (error) throw error
-
-        const localities = (data || []).map((item: any) => ({
+        const localities = data.map((item) => ({
           id: item.id,
-          name: item.display_name,
-          slug: item.id,
-          match_type: item.similarity_score > 0.8 ? 'exact' : 'fuzzy',
-          similarity_score: item.similarity_score,
-          rank_score: item.rank_score,
-          entity_type: item.entity_type
+          name: item.name,
+          slug: item.slug,
+          match_type: 'exact',
+          entity_type: 'locality'
         }))
 
         localityCache.set(cacheKey, localities)
@@ -116,10 +88,7 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
   }, [query])
 
   const handleFocus = () => {
-    if (query.length >= 2 && results.length > 0) {
-      setShowResults(true)
-    } else if (query.length < 2 && popularLocalities.length > 0) {
-      setResults(popularLocalities)
+    if (query.length >= 3 && results.length > 0) {
       setShowResults(true)
     }
   }
@@ -139,7 +108,7 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value
     setQuery(newValue)
-    if (newValue.length < 2) {
+    if (newValue.length < 3) {
       onChange(newValue)
     }
   }
@@ -153,7 +122,7 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
           value={query}
           onChange={handleInputChange}
           onFocus={handleFocus}
-          placeholder={placeholder || 'Type 2+ characters to search localities'}
+          placeholder={placeholder || 'Type 3+ characters to search localities'}
           className={`w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${className || ''}`}
         />
         {query && (
@@ -174,12 +143,7 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
               <div className="animate-spin h-5 w-5 border-2 border-primary-600 border-t-transparent rounded-full mx-auto"></div>
             </div>
           )}
-          {!loading && query.length < 2 && (
-            <div className="px-4 py-2 bg-gradient-to-r from-primary-50 to-primary-100 border-b border-primary-200">
-              <div className="text-sm font-semibold text-primary-800">Popular Localities</div>
-            </div>
-          )}
-          {!loading && query.length >= 2 && results.length > 0 && results[0]?.match_type === 'fuzzy' && (
+          {!loading && query.length >= 3 && results.length > 0 && results[0]?.match_type === 'fuzzy' && (
             <div className="px-4 py-2.5 bg-amber-50 border-b border-amber-200">
               <div className="flex items-center gap-2 text-amber-800">
                 <AlertCircle className="h-4 w-4 flex-shrink-0" />
@@ -217,7 +181,7 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
         </div>
       )}
 
-      {showResults && !loading && query.length >= 2 && results.length === 0 && (
+      {showResults && !loading && query.length >= 3 && results.length === 0 && (
         <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-4 text-center text-gray-500">
           No matching localities found
         </div>

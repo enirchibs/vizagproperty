@@ -3,17 +3,20 @@ import { Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
-import { MapPin, Bed, Bath, Maximize, FileEdit as Edit, Trash2, AlertCircle, Clock, CheckCircle, XCircle } from 'lucide-react'
+import { MapPin, Bed, Bath, Maximize, FileEdit as Edit, Trash2, AlertCircle, Clock, CheckCircle, XCircle, Shield } from 'lucide-react'
+import { isAdminEmail } from '../config/contact'
 
 export function MyListingsPage() {
-  const { user, profile, loading: authLoading } = useAuth()
+  const { user, profile, isAdmin, isSuperAdmin, isPropertyAdmin, loading: authLoading } = useAuth()
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
 
+  const isUserAdmin = isAdmin || isSuperAdmin || isPropertyAdmin || isAdminEmail(user?.email, profile?.name)
+
   useEffect(() => {
-    if (user && profile?.role === 'owner') {
+    if (user) {
       loadMyProperties()
     }
   }, [user, profile])
@@ -103,7 +106,7 @@ export function MyListingsPage() {
     )
   }
 
-  if (!profile || profile.role !== 'owner') {
+  if (!profile && !isUserAdmin) {
     return <Navigate to="/" />
   }
 
@@ -111,7 +114,7 @@ export function MyListingsPage() {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <div className="bg-gradient-to-r from-primary-900 to-primary-700 rounded-3xl p-8 md:p-12 text-white shadow-xl mb-8 relative overflow-hidden">
+          <div className="bg-gradient-to-r from-primary-900 to-primary-700 rounded-3xl p-8 md:p-12 text-white shadow-xl mb-6 relative overflow-hidden">
             <div className="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 -mb-16 -ml-16 w-64 h-64 bg-accent-400 opacity-10 rounded-full blur-3xl"></div>
             <div className="relative z-10 max-w-2xl">
@@ -124,6 +127,27 @@ export function MyListingsPage() {
               </p>
             </div>
           </div>
+
+          {isUserAdmin && (
+            <div className="p-6 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 rounded-2xl text-gray-900 shadow-xl border-2 border-amber-300 flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="p-3.5 bg-gray-900 text-amber-400 rounded-2xl shadow-md">
+                  <Shield className="h-8 w-8" />
+                </div>
+                <div>
+                  <h2 className="font-extrabold text-xl text-gray-900">Admin Listing Approval Access</h2>
+                  <p className="text-sm font-semibold text-gray-800">You have admin permissions to review, approve, or reject property listings on VizagProperty.</p>
+                </div>
+              </div>
+              <a
+                href="/admin/properties"
+                className="bg-gray-900 text-white font-extrabold px-8 py-3.5 rounded-full hover:bg-gray-800 transition-all text-sm md:text-base whitespace-nowrap shadow-lg flex items-center gap-2 border border-gray-700"
+              >
+                <Shield className="h-5 w-5 text-amber-400" />
+                <span>Go to Approve Listings →</span>
+              </a>
+            </div>
+          )}
         </div>
 
         {properties.length === 0 ? (

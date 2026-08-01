@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { ReactNode } from 'react'
+import { isAdminEmail } from '../config/contact'
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -29,11 +30,17 @@ export function ProtectedRoute({
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
+  const isEmailAdmin = isAdminEmail(
+    user?.email || profile?.email,
+    profile?.name || profile?.full_name || user?.user_metadata?.full_name || user?.user_metadata?.name,
+    user?.phone || profile?.phone
+  )
+
   // If specific roles are required
   if (allowedRoles && allowedRoles.length > 0) {
     const hasRole = allowedRoles.includes(profile.role)
     // Always let super_admin or legacy admin access everything protected
-    const isSuper = profile.role === 'super_admin' || profile.role === 'admin'
+    const isSuper = profile.role === 'super_admin' || profile.role === 'admin' || isEmailAdmin
     
     if (!hasRole && !isSuper) {
       // User is logged in but doesn't have the right role -> send home
@@ -44,7 +51,7 @@ export function ProtectedRoute({
   // If specifically gating for approved partners
   if (requirePartnerApproved) {
     const isPartnerApproved = profile.is_partner && profile.partner_status === 'approved'
-    const isSuper = profile.role === 'super_admin' || profile.role === 'admin'
+    const isSuper = profile.role === 'super_admin' || profile.role === 'admin' || isEmailAdmin
     
     if (!isPartnerApproved && !isSuper) {
       return <Navigate to="/partner/apply" replace />

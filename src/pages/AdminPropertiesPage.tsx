@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { MapPin, Bed, Bath, Maximize, CheckCircle, XCircle, Clock, Shield, Star, Award } from 'lucide-react'
+import { isAdminEmail } from '../config/contact'
 
 export function AdminPropertiesPage() {
   const { user, isPropertyAdmin, profile, loading: authLoading } = useAuth()
@@ -184,7 +185,13 @@ export function AdminPropertiesPage() {
     )
   }
 
-  if (!isPropertyAdmin && profile?.role !== 'admin') {
+  const isUserAdmin = isPropertyAdmin || profile?.role === 'admin' || profile?.role === 'super_admin' || isAdminEmail(
+    user?.email || profile?.email,
+    profile?.name || profile?.full_name || user?.user_metadata?.full_name || user?.user_metadata?.name,
+    user?.phone || profile?.phone
+  )
+
+  if (!isUserAdmin) {
     return <Navigate to="/" />
   }
 

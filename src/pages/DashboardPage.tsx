@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react'
-import { Heart, User, History, Bell } from 'lucide-react'
+import { Heart, User, History, Bell, Shield } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { NotificationsPanel } from '../components/NotificationsPanel'
+import { isAdminEmail } from '../config/contact'
 
 export function DashboardPage() {
-  const { user, profile } = useAuth()
+  const { user, profile, isAdmin, isSuperAdmin, isPropertyAdmin } = useAuth()
   const [activeTab, setActiveTab] = useState<'favorites' | 'profile' | 'history' | 'notifications'>('favorites')
   const [favorites, setFavorites] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
+
+  const isUserAdmin = isAdmin || isSuperAdmin || isPropertyAdmin || isAdminEmail(user?.email, profile?.name)
 
   useEffect(() => {
     if (user && activeTab === 'favorites') {
@@ -63,14 +66,26 @@ export function DashboardPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-8">
-          <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center">
-              <User className="h-8 w-8 text-primary-600" />
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center space-x-4">
+              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center">
+                <User className="h-8 w-8 text-primary-600" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">{profile?.name || profile?.full_name || 'Admin User'}</h1>
+                <p className="text-gray-600 capitalize">{isUserAdmin ? 'Super Admin / Property Moderator' : profile?.role}</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">{profile?.name || profile?.full_name}</h1>
-              <p className="text-gray-600 capitalize">{profile?.role}</p>
-            </div>
+
+            {isUserAdmin && (
+              <a
+                href="/admin/properties"
+                className="bg-gradient-to-r from-amber-400 to-yellow-500 text-gray-900 font-extrabold px-6 py-3 rounded-full hover:brightness-110 transition-all text-sm whitespace-nowrap shadow-lg flex items-center gap-2 border border-amber-300"
+              >
+                <Shield className="h-5 w-5 text-gray-900" />
+                <span>Open Admin Approval Hub →</span>
+              </a>
+            )}
           </div>
         </div>
 

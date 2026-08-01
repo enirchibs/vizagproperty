@@ -1,14 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, MapPin, Home, IndianRupee, X, ChevronDown, Check } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
 
-const VIZAG_LOCALITIES = [
-  'Madhurawada', 'Yendada', 'MVP Colony', 'Gajuwaka', 'Rushikonda', 
-  'Seethammadhara', 'PM Palem', 'Lawsons Bay Colony', 'Akkayyapalem', 
-  'Kancharapalem', 'Bheemili', 'Pendurthi', 'Bhogapuram', 'Kurmannapalem',
-  'Sujatha Nagar', 'NAD Junction', 'Murali Nagar'
-];
+
+import { fuzzySearchLocalities } from '../lib/fuzzySearch';
 
 type TabType = 'Buy' | 'Rent' | 'New Projects' | 'PG' | 'Plot' | 'Commercial';
 
@@ -79,16 +74,7 @@ export function HeroSearch({ onDropdownToggle }: { onDropdownToggle?: (open: boo
   };
 
   useEffect(() => {
-    if (!query.trim()) {
-      setFilteredLocalities(VIZAG_LOCALITIES
-        .filter(loc => !selectedLocations.includes(loc))
-        .slice(0, 8)
-        .map(loc => ({ name: loc, subtitle: 'Visakhapatnam', entityType: 'locality' }))
-      );
-      return;
-    }
-
-    if (query.trim().length < 2) {
+    if (query.trim().length < 3) {
       setFilteredLocalities([]);
       return;
     }
@@ -96,19 +82,15 @@ export function HeroSearch({ onDropdownToggle }: { onDropdownToggle?: (open: boo
     const searchLocations = async () => {
       setIsLoading(true);
       try {
-        const { data, error } = await supabase.functions.invoke('location-autocomplete', {
-          body: { query: query.trim(), limit: 15 }
-        });
-        if (error) throw error;
-
-        const suggestions: LocationSuggestion[] = (data || [])
-          .map((item: any) => {
-            const parts = item.display_name.split(',').map((p: string) => p.trim());
-            const name = parts[0];
-            const subtitle = parts.slice(1).join(', ') || 'Visakhapatnam';
-            return { name, subtitle, entityType: item.entity_type || 'locality' };
-          })
-          .filter((s: LocationSuggestion) => !selectedLocations.includes(s.name));
+        const results = await fuzzySearchLocalities(query.trim(), 15);
+        
+        const suggestions: LocationSuggestion[] = results
+          .map(item => ({
+            name: item.name,
+            subtitle: 'Visakhapatnam',
+            entityType: 'locality'
+          }))
+          .filter(s => !selectedLocations.includes(s.name));
 
         setFilteredLocalities(suggestions);
       } catch (err) {

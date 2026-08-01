@@ -44,7 +44,7 @@ function detectListingTypeFromKeyword(keyword: string): string | null {
 
 // Sort results so the matched property type comes first, then others
 function sortByRelevance(data: Property[], preferredType: string | null): Property[] {
-  const typeOrder: Record<string, number> = { flat: 1, plot: 2, villa: 3, commercial: 4, pg: 5 }
+  const typeOrder: Record<string, number> = { plot: 1, flat: 2, villa: 3, commercial: 4, pg: 5 }
   return [...data].sort((a, b) => {
     const aType = a.property_type?.toLowerCase() || ''
     const bType = b.property_type?.toLowerCase() || ''

@@ -1,5 +1,6 @@
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { useState } from 'react';
+import { VIZAG_PROPERTY_EMAIL } from '../config/contact';
 
 export function ContactUsPage() {
   const [formData, setFormData] = useState({
@@ -53,7 +54,9 @@ export function ContactUsPage() {
                   <Mail className="w-6 h-6 text-primary-300 mt-1 mr-4" />
                   <div>
                     <h3 className="font-semibold text-lg">Email</h3>
-                    <p className="text-primary-100 mt-1">support@vizagproperty.co.in</p>
+                    <a href={`mailto:${VIZAG_PROPERTY_EMAIL}`} className="text-primary-100 mt-1 hover:underline block">
+                      {VIZAG_PROPERTY_EMAIL}
+                    </a>
                   </div>
                 </div>
 

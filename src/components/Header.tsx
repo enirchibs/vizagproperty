@@ -6,13 +6,16 @@ import { UsernameModal } from './UsernameModal'
 import { trackEvent } from '../lib/analytics'
 import { openWhatsApp } from '../lib/whatsapp'
 import { useNotifications } from '../hooks/useNotifications'
+import { isAdminEmail } from '../config/contact'
 
 export function Header() {
   const navigate = useNavigate()
-  const { user, profile, loading, isSuperAdmin, isPropertyAdmin, isPartnerAdmin, isPartner, signOut } = useAuth()
+  const { user, profile, loading, isAdmin, isSuperAdmin, isPropertyAdmin, isPartnerAdmin, isPartner, signOut } = useAuth()
   const { unreadCount } = useNotifications()
   const [showUsernameModal, setShowUsernameModal] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
+
+  const isUserAdmin = isAdmin || isSuperAdmin || isPropertyAdmin || isAdminEmail(user?.email, profile?.name)
 
   useEffect(() => {
     if (user && profile && !loading && !profile.username) {
@@ -132,6 +135,15 @@ export function Header() {
               <a href="/contact" className="text-white hover:text-primary-100 transition-colors font-medium text-sm lg:text-base whitespace-nowrap">
                 Contact Us
               </a>
+              {isUserAdmin && (
+                <a
+                  href="/admin"
+                  className="bg-gradient-to-r from-amber-400 to-yellow-500 text-gray-900 px-3 py-1 rounded-full font-bold text-xs lg:text-sm whitespace-nowrap flex items-center gap-1 shadow-md hover:brightness-110 border border-amber-300 animate-pulse"
+                >
+                  <Shield className="h-4 w-4 text-gray-900" />
+                  <span>Admin Panel</span>
+                </a>
+              )}
               
               {/* Social Links */}
               <div className="hidden lg:flex items-center gap-3 ml-2 pl-4 border-l border-white/20">
@@ -185,14 +197,10 @@ export function Header() {
                       &#x1F446;
                     </span>
                   </a>
-                  {isSuperAdmin && (
-                    <a href="/admin/properties" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors" title="Moderate Properties">
-                      <Shield className="h-5 w-5" />
-                    </a>
-                  )}
-                  {isPropertyAdmin && !isSuperAdmin && (
-                    <a href="/property-admin" className="hidden md:flex w-10 h-10 rounded-full border-2 border-white/30 bg-primary-500/30 items-center justify-center text-white hover:bg-primary-500/50 transition-colors" title="Property Admin">
-                      <Building2 className="h-5 w-5" />
+                  {isUserAdmin && (
+                    <a href="/admin" className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-full bg-amber-400 text-gray-900 font-extrabold text-xs shadow-md hover:bg-amber-300 transition-all border border-amber-200" title="Admin Dashboard & Approvals">
+                      <Shield className="h-4 w-4 text-gray-900" />
+                      <span>Admin Dashboard</span>
                     </a>
                   )}
                   {isPartnerAdmin && !isSuperAdmin && (
@@ -359,10 +367,10 @@ export function Header() {
 
               {user && (
                 <>
-                  {isSuperAdmin && (
-                    <a href="/admin/properties" className="text-white hover:text-primary-100 py-3 min-h-[44px] flex items-center space-x-2 border-t border-primary-500 mt-2" onClick={() => setShowMenu(false)}>
+                  {isUserAdmin && (
+                    <a href="/admin" className="bg-amber-500 text-gray-900 font-extrabold py-3 px-4 rounded-lg flex items-center space-x-2 border-t border-primary-500 mt-2 shadow-md" onClick={() => setShowMenu(false)}>
                       <Shield className="h-5 w-5" />
-                      <span>Moderate Properties</span>
+                      <span>Admin Dashboard & Approvals</span>
                     </a>
                   )}
                   {isPropertyAdmin && !isSuperAdmin && (

@@ -47,6 +47,7 @@ const FlatsForRentPage = lazyWithRetry(() => import('./pages/FlatsForRentPage'))
 const PGHostelsPage = lazyWithRetry(() => import('./pages/PGHostelsPage'))
 const GatedCommunityPlotsPage = lazyWithRetry(() => import('./pages/GatedCommunityPlotsPage'))
 const MyListingsPage = lazyWithRetry(() => import('./pages/MyListingsPage').then(m => ({ default: m.MyListingsPage })))
+const AdminDashboardPage = lazyWithRetry(() => import('./pages/AdminDashboardPage').then(m => ({ default: m.AdminDashboardPage })))
 const AdminPropertiesPage = lazyWithRetry(() => import('./pages/AdminPropertiesPage').then(m => ({ default: m.AdminPropertiesPage })))
 const EditPropertyPage = lazyWithRetry(() => import('./pages/EditPropertyPage').then(m => ({ default: m.EditPropertyPage })))
 const SearchPage = lazyWithRetry(() => import('./pages/SearchPage').then(m => ({ default: m.SearchPage })))
@@ -142,8 +143,8 @@ function AppContent() {
               <Route path="/edit-property/:id" element={<ProtectedRoute><EditPropertyPage /></ProtectedRoute>} />
 
               {/* Super Admin Routes */}
-              <Route path="/admin" element={<ProtectedRoute allowedRoles={['super_admin', 'admin']}><AdminPropertiesPage /></ProtectedRoute>} />
-              <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['super_admin', 'admin']}><AdminPropertiesPage /></ProtectedRoute>} />
+              <Route path="/admin" element={<ProtectedRoute allowedRoles={['super_admin', 'admin', 'property_admin']}><AdminDashboardPage /></ProtectedRoute>} />
+              <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['super_admin', 'admin', 'property_admin']}><AdminDashboardPage /></ProtectedRoute>} />
 
               {/* Property Admin Routes */}
               <Route path="/property-admin" element={<ProtectedRoute allowedRoles={['super_admin', 'property_admin', 'admin']}><AdminPropertiesPage /></ProtectedRoute>} />
