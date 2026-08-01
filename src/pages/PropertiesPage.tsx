@@ -59,13 +59,13 @@ export function PropertiesPage() {
     const params = new URLSearchParams(window.location.search)
     const query = params.get('keyword') || params.get('q')
     const propertyTypeRaw = params.get('propertyType') || params.get('category')
-    const listingType = params.get('listingType') || params.get('type')
+    const listingTypeRaw = params.get('listingType') || params.get('listing_type') || params.get('type')
     const localityId = params.get('localityId')
-    const localityName = params.get('locality')
-    const bhk = params.get('bhk')
-    const status = params.get('status')
-    const minPrice = params.get('minPrice')
-    const maxPrice = params.get('maxPrice')
+    const localityName = params.get('locality') || params.get('location')
+    const bhk = params.get('bhk') || params.get('bedrooms')
+    const status = params.get('status') || params.get('property_status')
+    const minPrice = params.get('minPrice') || params.get('min_price')
+    const maxPrice = params.get('maxPrice') || params.get('max_price')
 
     if (query) {
       setSearchQuery(query)
@@ -73,7 +73,7 @@ export function PropertiesPage() {
 
     const initialFilters: SearchFilters = {}
 
-    // Map mobile category names to search API property types
+    // Map category names to search API property types
     const categoryMap: Record<string, string> = {
       'full_house': 'villa',
       'flat_apartment': 'flat',
@@ -88,16 +88,23 @@ export function PropertiesPage() {
     }
 
     if (propertyTypeRaw) {
-      initialFilters.property_type = categoryMap[propertyTypeRaw] || propertyTypeRaw
+      initialFilters.property_type = categoryMap[propertyTypeRaw.toLowerCase()] || propertyTypeRaw.toLowerCase()
+    } else if (listingTypeRaw && ['plot', 'pg', 'commercial', 'flat', 'villa'].includes(listingTypeRaw.toLowerCase())) {
+      initialFilters.property_type = listingTypeRaw.toLowerCase()
     }
 
-    if (listingType) {
-      initialFilters.listing_type = listingType === 'buy' || listingType === 'commercial' || listingType === 'projects' ? 'sale' : listingType as 'sale' | 'rent'
+    if (listingTypeRaw) {
+      const lower = listingTypeRaw.toLowerCase()
+      if (lower === 'rent' || lower === 'pg') {
+        initialFilters.listing_type = 'rent'
+      } else if (lower === 'buy' || lower === 'sale' || lower === 'commercial' || lower === 'projects' || lower === 'new projects' || lower === 'plot') {
+        initialFilters.listing_type = 'sale'
+      }
     }
 
     if (localityId) {
       initialFilters.locality_id = localityId
-    } else if (localityName) {
+    } else if (localityName && localityName.toLowerCase() !== 'vizag') {
       initialFilters.locality_id = localityName
     }
 
@@ -172,19 +179,44 @@ export function PropertiesPage() {
       // Detect property type from keyword if no explicit filter
       const keywordDetectedType = detectPropertyTypeFromKeyword(searchQuery)
 
-      // If no property_type filter, fetch all then sort by keyword relevance
+      // If no property_type filter, query with optional listing_type & locality filters
       if (!filters.property_type) {
-        const { data, error } = await supabase
+        let queryBuilder = supabase
           .from('properties')
           .select('*, localities!inner(name, slug, city)')
           .eq('localities.city', 'Visakhapatnam')
           .eq('status', 'approved')
+
+        if (filters.listing_type) {
+          queryBuilder = queryBuilder.eq('listing_type', filters.listing_type)
+        }
+
+        if (filters.locality_id) {
+          queryBuilder = queryBuilder.ilike('localities.name', `%${filters.locality_id}%`)
+        }
+
+        if (filters.bedrooms && filters.bedrooms > 0) {
+          queryBuilder = queryBuilder.eq('bedrooms', filters.bedrooms)
+        }
+
+        if (filters.min_price) {
+          queryBuilder = queryBuilder.gte('price', filters.min_price)
+        }
+
+        if (filters.max_price) {
+          queryBuilder = queryBuilder.lte('price', filters.max_price)
+        }
+
+        if (searchQuery && searchQuery.trim().length > 0) {
+          queryBuilder = queryBuilder.or(`title.ilike.%${searchQuery.trim()}%,description.ilike.%${searchQuery.trim()}%`)
+        }
+
+        const { data, error } = await queryBuilder
           .order('created_at', { ascending: false })
           .limit(100)
 
         if (error) throw error
 
-        // Sort: matching type first (flat → plot → others)
         const sorted = sortByRelevance(data || [], keywordDetectedType)
         setProperties(sorted)
         setExactProperties(sorted)

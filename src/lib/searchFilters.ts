@@ -343,7 +343,8 @@ export function buildUnifiedPropertyQuery(params: UnifiedSearchParams) {
   query = query.eq('status', 'approved')
 
   const dbPropertyType = DB_PROPERTY_TYPE_MAP[params.propertyType] || params.propertyType
-  query = query.eq('property_type', dbPropertyType)
+  const typeVariants = Array.from(new Set([params.propertyType, dbPropertyType]))
+  query = query.in('property_type', typeVariants)
 
   // OPTIONAL FILTERS - Only applied if value exists
   if (params.listingType) {
