@@ -8,6 +8,7 @@ import { GoogleMapView } from '../components/GoogleMapView'
 import { AdSenseInFeedCard } from '../components/AdSenseInFeedCard'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp } from '../lib/whatsapp'
+import { buildUnifiedPropertyQuery } from '../lib/searchFilters'
 
 // Detect property type from free-text keyword (e.g. "flat" → "flat")
 const KEYWORD_TYPE_MAP: Record<string, string[]> = {
@@ -251,8 +252,6 @@ export function PropertiesPage() {
       }
 
       // Use unified query builder for filtered search
-      const { buildUnifiedPropertyQuery } = await import('../lib/searchFilters')
-
       const searchParams: any = {
         propertyType: filters.property_type as 'flat' | 'plot' | 'villa' | 'pg' | 'commercial'
       }
@@ -371,6 +370,9 @@ export function PropertiesPage() {
       setProperties([...exactList, ...nearbyList])
       setHasMoreTiers(canExpandFurther)
     } catch (error) {
+      console.error('Error in loadProperties:', error)
+      setProperties([])
+      setExactProperties([])
     } finally {
       setLoading(false)
     }
