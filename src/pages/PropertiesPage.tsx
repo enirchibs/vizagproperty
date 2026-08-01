@@ -9,6 +9,39 @@ import { AdSenseInFeedCard } from '../components/AdSenseInFeedCard'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp } from '../lib/whatsapp'
 
+// Detect property type from free-text keyword (e.g. "flat" → "flat")
+const KEYWORD_TYPE_MAP: Record<string, string[]> = {
+  'flat': ['flat', 'apartment', 'flats', 'apartments', 'bhk', '1bhk', '2bhk', '3bhk', '4bhk'],
+  'plot': ['plot', 'plots', 'land', 'open plot', 'vmrda', 'gated'],
+  'villa': ['villa', 'villas', 'independent house', 'duplex', 'row house'],
+  'pg': ['pg', 'hostel', 'paying guest', 'bachelor'],
+  'commercial': ['commercial', 'office', 'shop', 'showroom', 'warehouse'],
+}
+
+function detectPropertyTypeFromKeyword(keyword: string): string | null {
+  if (!keyword) return null
+  const lower = keyword.toLowerCase().trim()
+  for (const [type, variants] of Object.entries(KEYWORD_TYPE_MAP)) {
+    if (variants.some(v => lower.includes(v))) return type
+  }
+  return null
+}
+
+// Sort results so the matched property type comes first, then others
+function sortByRelevance(data: Property[], preferredType: string | null): Property[] {
+  if (!preferredType) return data
+  const typeOrder: Record<string, number> = { flat: 1, plot: 2, villa: 3, pg: 4, commercial: 5 }
+  return [...data].sort((a, b) => {
+    const aType = a.property_type?.toLowerCase() || ''
+    const bType = b.property_type?.toLowerCase() || ''
+    const aMatch = aType.includes(preferredType) ? 0 : (typeOrder[preferredType] || 99)
+    const bMatch = bType.includes(preferredType) ? 0 : (typeOrder[preferredType] || 99)
+    if (aMatch !== bMatch) return aMatch - bMatch
+    // secondary sort: newest first
+    return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
+  })
+}
+
 export function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
@@ -136,7 +169,10 @@ export function PropertiesPage() {
   const loadProperties = async (currentMaxDistance = 5) => {
     setLoading(true)
     try {
-      // If no property_type, show all approved properties (browse mode)
+      // Detect property type from keyword if no explicit filter
+      const keywordDetectedType = detectPropertyTypeFromKeyword(searchQuery)
+
+      // If no property_type filter, fetch all then sort by keyword relevance
       if (!filters.property_type) {
         const { data, error } = await supabase
           .from('properties')
@@ -144,11 +180,14 @@ export function PropertiesPage() {
           .eq('localities.city', 'Visakhapatnam')
           .eq('status', 'approved')
           .order('created_at', { ascending: false })
-          .limit(50)
+          .limit(100)
 
         if (error) throw error
-        setProperties(data || [])
-        setExactProperties(data || [])
+
+        // Sort: matching type first (flat → plot → others)
+        const sorted = sortByRelevance(data || [], keywordDetectedType)
+        setProperties(sorted)
+        setExactProperties(sorted)
         setNearbyProperties([])
         setHasMoreTiers(false)
         setLoading(false)
