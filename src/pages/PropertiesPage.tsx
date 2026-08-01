@@ -12,10 +12,15 @@ import { openWhatsApp } from '../lib/whatsapp'
 // Detect property type from free-text keyword (e.g. "flat" → "flat")
 const KEYWORD_TYPE_MAP: Record<string, string[]> = {
   'flat': ['flat', 'apartment', 'flats', 'apartments', 'bhk', '1bhk', '2bhk', '3bhk', '4bhk'],
-  'plot': ['plot', 'plots', 'land', 'open plot', 'vmrda', 'gated'],
+  'plot': ['plot', 'plots', 'land', 'open plot', 'vmrda', 'gated', 'ploat', 'plt'],
   'villa': ['villa', 'villas', 'independent house', 'duplex', 'row house'],
   'pg': ['pg', 'hostel', 'paying guest', 'bachelor'],
   'commercial': ['commercial', 'office', 'shop', 'showroom', 'warehouse'],
+}
+
+const KEYWORD_LISTING_TYPE_MAP: Record<string, string[]> = {
+  'rent': ['rent', 'lease', 'tenant', 'to let'],
+  'sale': ['sale', 'buy', 'purchase', 'selling']
 }
 
 function detectPropertyTypeFromKeyword(keyword: string): string | null {
@@ -27,16 +32,33 @@ function detectPropertyTypeFromKeyword(keyword: string): string | null {
   return null
 }
 
+function detectListingTypeFromKeyword(keyword: string): string | null {
+  if (!keyword) return null
+  const lower = keyword.toLowerCase().trim()
+  for (const [type, variants] of Object.entries(KEYWORD_LISTING_TYPE_MAP)) {
+    if (variants.some(v => lower.includes(v))) return type
+  }
+  return null
+}
+
 // Sort results so the matched property type comes first, then others
 function sortByRelevance(data: Property[], preferredType: string | null): Property[] {
-  if (!preferredType) return data
-  const typeOrder: Record<string, number> = { flat: 1, plot: 2, villa: 3, pg: 4, commercial: 5 }
+  const typeOrder: Record<string, number> = { flat: 1, plot: 2, villa: 3, commercial: 4, pg: 5 }
   return [...data].sort((a, b) => {
     const aType = a.property_type?.toLowerCase() || ''
     const bType = b.property_type?.toLowerCase() || ''
-    const aMatch = aType.includes(preferredType) ? 0 : (typeOrder[preferredType] || 99)
-    const bMatch = bType.includes(preferredType) ? 0 : (typeOrder[preferredType] || 99)
-    if (aMatch !== bMatch) return aMatch - bMatch
+    
+    if (preferredType) {
+      const aIsPreferred = aType.includes(preferredType)
+      const bIsPreferred = bType.includes(preferredType)
+      if (aIsPreferred && !bIsPreferred) return -1
+      if (!aIsPreferred && bIsPreferred) return 1
+    }
+    
+    const aBaseOrder = Object.entries(typeOrder).find(([k]) => aType.includes(k))?.[1] || 99
+    const bBaseOrder = Object.entries(typeOrder).find(([k]) => bType.includes(k))?.[1] || 99
+    if (aBaseOrder !== bBaseOrder) return aBaseOrder - bBaseOrder
+    
     // secondary sort: newest first
     return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
   })
@@ -178,6 +200,7 @@ export function PropertiesPage() {
     try {
       // Detect property type from keyword if no explicit filter
       const keywordDetectedType = detectPropertyTypeFromKeyword(searchQuery)
+      const keywordDetectedListingType = detectListingTypeFromKeyword(searchQuery)
 
       // If no property_type filter, query with optional listing_type & locality filters
       if (!filters.property_type) {
@@ -187,8 +210,9 @@ export function PropertiesPage() {
           .eq('localities.city', 'Visakhapatnam')
           .eq('status', 'approved')
 
-        if (filters.listing_type) {
-          queryBuilder = queryBuilder.eq('listing_type', filters.listing_type)
+        const effectiveListingType = filters.listing_type || keywordDetectedListingType
+        if (effectiveListingType) {
+          queryBuilder = queryBuilder.eq('listing_type', effectiveListingType)
         }
 
         if (filters.locality_id) {
@@ -233,8 +257,9 @@ export function PropertiesPage() {
         propertyType: filters.property_type as 'flat' | 'plot' | 'villa' | 'pg' | 'commercial'
       }
 
-      if (filters.listing_type) {
-        searchParams.listingType = filters.listing_type as 'sale' | 'rent'
+      const effectiveListingType = filters.listing_type || keywordDetectedListingType
+      if (effectiveListingType) {
+        searchParams.listingType = effectiveListingType as 'sale' | 'rent'
       }
 
       if (filters.bedrooms && filters.bedrooms > 0) {
