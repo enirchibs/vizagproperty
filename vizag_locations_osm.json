@@ -1,0 +1,182 @@
+[
+  {
+    "id": 1,
+    "type": "node",
+    "name": "Madhurawada",
+    "name_te": "మధురవాడ",
+    "place": "suburb",
+    "lat": 17.8205,
+    "lon": 83.3421
+  },
+  {
+    "id": 2,
+    "type": "node",
+    "name": "MVP Colony",
+    "name_te": "ఎం.వి.పి కాలనీ",
+    "place": "neighbourhood",
+    "lat": 17.7441,
+    "lon": 83.3312
+  },
+  {
+    "id": 3,
+    "type": "node",
+    "name": "Gajuwaka",
+    "name_te": "గాజువాక",
+    "place": "suburb",
+    "lat": 17.6917,
+    "lon": 83.1755
+  },
+  {
+    "id": 4,
+    "type": "node",
+    "name": "Rushikonda",
+    "name_te": "రుషికొండ",
+    "place": "suburb",
+    "lat": 17.7801,
+    "lon": 83.3855
+  },
+  {
+    "id": 5,
+    "type": "node",
+    "name": "Seethammadhara",
+    "name_te": "సీతమ్మధార",
+    "place": "neighbourhood",
+    "lat": 17.7380,
+    "lon": 83.3150
+  },
+  {
+    "id": 6,
+    "type": "node",
+    "name": "Bheemili (Bheemunipatnam)",
+    "name_te": "భీమిలి",
+    "place": "suburb",
+    "lat": 17.8885,
+    "lon": 83.4475
+  },
+  {
+    "id": 7,
+    "type": "node",
+    "name": "Pendurthi",
+    "name_te": "పెందుర్తి",
+    "place": "suburb",
+    "lat": 17.8097,
+    "lon": 83.2081
+  },
+  {
+    "id": 8,
+    "type": "node",
+    "name": "PM Palem (Pothinamallayya Palem)",
+    "name_te": "పి.ఎం.పాలెం",
+    "place": "neighbourhood",
+    "lat": 17.7963,
+    "lon": 83.3465
+  },
+  {
+    "id": 9,
+    "type": "node",
+    "name": "Akkayyapalem",
+    "name_te": "అక్కయ్యపాలెం",
+    "place": "neighbourhood",
+    "lat": 17.7291,
+    "lon": 83.3039
+  },
+  {
+    "id": 10,
+    "type": "node",
+    "name": "NAD X Road",
+    "name_te": "ఎన్.ఎ.డి. క్రాస్ రోడ్స్",
+    "place": "suburb",
+    "lat": 17.7470,
+    "lon": 83.2201
+  },
+  {
+    "id": 11,
+    "type": "node",
+    "name": "Yendada",
+    "name_te": "ఎండాడ",
+    "place": "neighbourhood",
+    "lat": 17.7651,
+    "lon": 83.3512
+  },
+  {
+    "id": 12,
+    "type": "node",
+    "name": "Muralinagar",
+    "name_te": "మురళీనగర్",
+    "place": "neighbourhood",
+    "lat": 17.7547,
+    "lon": 83.2458
+  },
+  {
+    "id": 13,
+    "type": "node",
+    "name": "Kancharapalem",
+    "name_te": "కంచరపాలెం",
+    "place": "suburb",
+    "lat": 17.7279,
+    "lon": 83.2758
+  },
+  {
+    "id": 14,
+    "type": "node",
+    "name": "Kurmannapalem",
+    "name_te": "కూర్మన్నపాలెం",
+    "place": "suburb",
+    "lat": 17.6521,
+    "lon": 83.1610
+  },
+  {
+    "id": 15,
+    "type": "node",
+    "name": "Siripuram",
+    "name_te": "సిరిపురం",
+    "place": "neighbourhood",
+    "lat": 17.7188,
+    "lon": 83.3217
+  },
+  {
+    "id": 16,
+    "type": "node",
+    "name": "Dwaraka Nagar",
+    "name_te": "ద్వారకానగర్",
+    "place": "neighbourhood",
+    "lat": 17.7262,
+    "lon": 83.3033
+  },
+  {
+    "id": 17,
+    "type": "node",
+    "name": "Sagar Nagar",
+    "name_te": "సాగర్ నగర్",
+    "place": "neighbourhood",
+    "lat": 17.7600,
+    "lon": 83.3582
+  },
+  {
+    "id": 18,
+    "type": "node",
+    "name": "Kapuluppada",
+    "name_te": "కాపులుప్పాడ",
+    "place": "village",
+    "lat": 17.8540,
+    "lon": 83.3850
+  },
+  {
+    "id": 19,
+    "type": "node",
+    "name": "Thagarapuvalasa",
+    "name_te": "తగరపువలస",
+    "place": "suburb",
+    "lat": 17.9155,
+    "lon": 83.4243
+  },
+  {
+    "id": 20,
+    "type": "node",
+    "name": "Sujatha Nagar",
+    "name_te": "సుజాతానగర్",
+    "place": "neighbourhood",
+    "lat": 17.7818,
+    "lon": 83.2201
+  }
+]

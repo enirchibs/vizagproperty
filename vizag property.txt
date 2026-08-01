@@ -1,0 +1,41 @@
+7207550499
+
+VITE_WHATSAPP_BUSINESS_NUMBER=917207550499
+
+
+NEXT (OPTIONAL, BUT STRONG)
+
+Once this is stable, I can help you add:
+
+🔍 Type-ahead locality search (strict, 3-letter rule)
+
+📍 Auto-fill pincode from locality
+
+📊 Avg price per sqft per locality
+
+🤖 AI price suggestion banner
+
+🔑 API Key — Have you enabled the Maps JavaScript API in your GCP console yet? If not, I can walk you through it.
+
+📍 Property coordinates — Do your properties in Supabase actually have latitude/longitude filled in, or are they mostly empty? (This determines whether we need to fall back to locality coordinates.)
+
+🗺️ Map layout preference on the listings page:
+
+Split view (map + list side by side) — like Airbnb
+Toggle view (full map OR full grid, switch between) — like 99acres
+
+OTP auto-read (Android)
+2️⃣ One-tap Google sign-in
+3️⃣ Login success animation
+4️⃣ WhatsApp “Post without login” shortcutShort Version (For LinkedIn Message / Naukri Quick Apply)
+
+
+🔑 API Key — Have you enabled the Maps JavaScript API in your GCP console yet? If not, I can walk you through it.
+
+📍 Property coordinates — Do your properties in Supabase actually have latitude/longitude filled in, or are they mostly empty? (This determines whether we need to fall back to locality coordinates.)
+
+🗺️ Map layout preference on the listings page:
+
+Split view (map + list side by side) — like Airbnb
+Toggle view (full map OR full grid, switch between) — like 99acres
+Split View (Desktop) + Toggle (Mobile) ⭐⭐⭐⭐⭐

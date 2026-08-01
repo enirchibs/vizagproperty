@@ -1,0 +1,8296 @@
+[
+  {
+    "id": 1472290462,
+    "name": "Siva Sivani Public School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3315061,
+        17.7209547
+      ]
+    }
+  },
+  {
+    "id": 1474046817,
+    "name": "Visakha Homeo Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3094001,
+        17.7224616
+      ]
+    }
+  },
+  {
+    "id": 1474440233,
+    "name": "Nikitha Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3145614,
+        17.7426752
+      ]
+    }
+  },
+  {
+    "id": 1474854465,
+    "name": "Dolphin Park",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2828576,
+        17.6711304
+      ]
+    }
+  },
+  {
+    "id": 1815807448,
+    "name": "More",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3185424,
+        17.7240164
+      ]
+    }
+  },
+  {
+    "id": 1815810168,
+    "name": "Karachiwala Departmental stores",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3175827,
+        17.723211
+      ]
+    }
+  },
+  {
+    "id": 1824367457,
+    "name": "Reliance Fresh",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3374862,
+        17.7434599
+      ]
+    }
+  },
+  {
+    "id": 2332924898,
+    "name": "More",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3163851,
+        17.7436406
+      ]
+    }
+  },
+  {
+    "id": 2332948921,
+    "name": "Padmaja Hospital - Seethammadhara",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3146125,
+        17.7436298
+      ]
+    }
+  },
+  {
+    "id": 3265317980,
+    "name": "Jyothi Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3229595,
+        17.739081
+      ]
+    }
+  },
+  {
+    "id": 3913956905,
+    "name": "Baba bazaar",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3381185,
+        17.7312094
+      ]
+    }
+  },
+  {
+    "id": 3923033484,
+    "name": "Skml Kirana Shop",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3353712,
+        17.7313299
+      ]
+    }
+  },
+  {
+    "id": 4148730059,
+    "name": "More",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3535582,
+        17.8035909
+      ]
+    }
+  },
+  {
+    "id": 4148730060,
+    "name": "Vijetha",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3498782,
+        17.8039867
+      ]
+    }
+  },
+  {
+    "id": 4150869071,
+    "name": "Hotel Beach Paradise",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4095376,
+        17.8469583
+      ]
+    }
+  },
+  {
+    "id": 4267548789,
+    "name": "Durga Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2713316,
+        17.7362275
+      ]
+    }
+  },
+  {
+    "id": 4300545253,
+    "name": "Vasu Deva Rao Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3339991,
+        17.7249342
+      ]
+    }
+  },
+  {
+    "id": 4353502490,
+    "name": "Systems Design",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3270212,
+        17.7230565
+      ]
+    }
+  },
+  {
+    "id": 4518976290,
+    "name": "Rakul Followers",
+    "poi_category": "tourism",
+    "poi_type": "Guest House",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2447981,
+        17.6877043
+      ]
+    }
+  },
+  {
+    "id": 4541095944,
+    "name": "Rama Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3071191,
+        17.7375272
+      ]
+    }
+  },
+  {
+    "id": 4568276771,
+    "name": "kalavathi hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2706719,
+        17.7824442
+      ]
+    }
+  },
+  {
+    "id": 4568465189,
+    "name": "LV Prasad Eye Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3309144,
+        17.7568569
+      ]
+    }
+  },
+  {
+    "id": 4616237480,
+    "name": "Govt High School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.5489993,
+        18.091722
+      ]
+    }
+  },
+  {
+    "id": 4616237481,
+    "name": "Govt. Junior college",
+    "poi_category": "amenity",
+    "poi_type": "College",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.5483488,
+        18.0916138
+      ]
+    }
+  },
+  {
+    "id": 4616246822,
+    "name": "Govt. primary School, Rellivalasa",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.5254293,
+        18.0914055
+      ]
+    }
+  },
+  {
+    "id": 4616246824,
+    "name": "Govt. Guest house",
+    "poi_category": "tourism",
+    "poi_type": "Guest House",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.5208833,
+        18.0951376
+      ]
+    }
+  },
+  {
+    "id": 4616246825,
+    "name": "Govt. High school",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.5205726,
+        18.0966378
+      ]
+    }
+  },
+  {
+    "id": 4635870145,
+    "name": "KIMS (formerly Queens NRI Hospital)",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3080536,
+        17.7404353
+      ]
+    }
+  },
+  {
+    "id": 4691977419,
+    "name": "Hotel Blue Moon",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.299453,
+        17.7130524
+      ]
+    }
+  },
+  {
+    "id": 4799206480,
+    "name": "Sri Venkateshwara Nursing Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.307414,
+        17.7147802
+      ]
+    }
+  },
+  {
+    "id": 4801326524,
+    "name": "More",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3090981,
+        17.7152616
+      ]
+    }
+  },
+  {
+    "id": 4801326526,
+    "name": "Amulya Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3086985,
+        17.7154685
+      ]
+    }
+  },
+  {
+    "id": 4896583363,
+    "name": "Kala Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3056846,
+        17.7288521
+      ]
+    }
+  },
+  {
+    "id": 5007138350,
+    "name": "Hirawats",
+    "poi_category": "shop",
+    "poi_type": "Mall",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2360742,
+        17.7428021
+      ]
+    }
+  },
+  {
+    "id": 5007138371,
+    "name": "Vijetha",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2491207,
+        17.7503873
+      ]
+    }
+  },
+  {
+    "id": 5154404421,
+    "name": "Nalco guest house",
+    "poi_category": "tourism",
+    "poi_type": "Guest House",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.311481,
+        17.7158399
+      ]
+    }
+  },
+  {
+    "id": 5621300190,
+    "name": "Chaitanya Public School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.132655,
+        17.6574107
+      ]
+    }
+  },
+  {
+    "id": 5621349030,
+    "name": "Delhi Public School Visakhapatnam",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1360611,
+        17.653747
+      ]
+    }
+  },
+  {
+    "id": 5798458939,
+    "name": "Dr. VJs Cosmetic Surgery& Hair Transplantation Centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2984784,
+        17.7236037
+      ]
+    }
+  },
+  {
+    "id": 6122597739,
+    "name": "Padmavathi Nagar",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2323093,
+        17.7755482
+      ]
+    }
+  },
+  {
+    "id": 6227145441,
+    "name": "Visakhapatnam Central",
+    "poi_category": "shop",
+    "poi_type": "Mall",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3009257,
+        17.7096842
+      ]
+    }
+  },
+  {
+    "id": 6435403855,
+    "name": "sri gawri degree and PG College",
+    "poi_category": "amenity",
+    "poi_type": "College",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2716113,
+        17.7354822
+      ]
+    }
+  },
+  {
+    "id": 6478169129,
+    "name": "Smiles Dental",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3026853,
+        17.7261703
+      ]
+    }
+  },
+  {
+    "id": 6628808944,
+    "name": "St. Joseph's Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3120581,
+        17.7113427
+      ]
+    }
+  },
+  {
+    "id": 6628809070,
+    "name": "AMCOSA functional hall",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3111783,
+        17.7119764
+      ]
+    }
+  },
+  {
+    "id": 6628820476,
+    "name": "shantiniketan mental health centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3118425,
+        17.710893
+      ]
+    }
+  },
+  {
+    "id": 6628861067,
+    "name": "Mycure hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3146963,
+        17.7120173
+      ]
+    }
+  },
+  {
+    "id": 6628946789,
+    "name": "Surya skin care",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3143316,
+        17.7141226
+      ]
+    }
+  },
+  {
+    "id": 6629019201,
+    "name": "NBM law college",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3136878,
+        17.7135912
+      ]
+    }
+  },
+  {
+    "id": 6629033364,
+    "name": "Krishna Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3109627,
+        17.7100754
+      ]
+    }
+  },
+  {
+    "id": 6629035082,
+    "name": "Aaradhya fertility centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3128724,
+        17.7149198
+      ]
+    }
+  },
+  {
+    "id": 6629035261,
+    "name": "Jublee home",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3121858,
+        17.712467
+      ]
+    }
+  },
+  {
+    "id": 6629036947,
+    "name": "Sagar Durga Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3109667,
+        17.7086688
+      ]
+    }
+  },
+  {
+    "id": 6629071967,
+    "name": "Shri Venkataramana Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3111357,
+        17.7090399
+      ]
+    }
+  },
+  {
+    "id": 6629380280,
+    "name": "Bethany school",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3137921,
+        17.7105591
+      ]
+    }
+  },
+  {
+    "id": 6629401462,
+    "name": "beach view guest house",
+    "poi_category": "tourism",
+    "poi_type": "Guest House",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3146182,
+        17.7095166
+      ]
+    }
+  },
+  {
+    "id": 6629411925,
+    "name": "Trinity holy church",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3137492,
+        17.7089034
+      ]
+    }
+  },
+  {
+    "id": 6629420822,
+    "name": "Zion house of prayer",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3129231,
+        17.7100583
+      ]
+    }
+  },
+  {
+    "id": 6629428979,
+    "name": "ABC hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3090178,
+        17.7070739
+      ]
+    }
+  },
+  {
+    "id": 6629457613,
+    "name": "Apex hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3089749,
+        17.7075645
+      ]
+    }
+  },
+  {
+    "id": 6629460182,
+    "name": "Usa hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3087882,
+        17.7078558
+      ]
+    }
+  },
+  {
+    "id": 6629471924,
+    "name": "Apna bazar",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3091465,
+        17.7080551
+      ]
+    }
+  },
+  {
+    "id": 6635493113,
+    "name": "Simhadri Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3104939,
+        17.7082343
+      ]
+    }
+  },
+  {
+    "id": 6635506599,
+    "name": "Apollow pharmacy",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3099146,
+        17.7082036
+      ]
+    }
+  },
+  {
+    "id": 6635515144,
+    "name": "Nature cure hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3111377,
+        17.7076415
+      ]
+    }
+  },
+  {
+    "id": 6635545548,
+    "name": "Life  medical centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.308198,
+        17.7076108
+      ]
+    }
+  },
+  {
+    "id": 6635549621,
+    "name": "Doctors care medical centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3093781,
+        17.7079072
+      ]
+    }
+  },
+  {
+    "id": 6635561459,
+    "name": "Sriddha hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3094103,
+        17.7081218
+      ]
+    }
+  },
+  {
+    "id": 6711948950,
+    "name": "Pinnacle",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3082425,
+        17.7636985
+      ]
+    }
+  },
+  {
+    "id": 6711993032,
+    "name": "Q1 Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3078726,
+        17.7624241
+      ]
+    }
+  },
+  {
+    "id": 6712009588,
+    "name": "GIMS",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3116458,
+        17.7620819
+      ]
+    }
+  },
+  {
+    "id": 6743836382,
+    "name": "Triangle Gym and Park",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9986596,
+        17.700263
+      ]
+    }
+  },
+  {
+    "id": 6743867287,
+    "name": "park ketcric",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9991988,
+        17.6989303
+      ]
+    }
+  },
+  {
+    "id": 6743886486,
+    "name": "samyuktha public school",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9986088,
+        17.7006249
+      ]
+    }
+  },
+  {
+    "id": 6743886487,
+    "name": "samyuktha degree college",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9988644,
+        17.7004791
+      ]
+    }
+  },
+  {
+    "id": 6755526826,
+    "name": "Apex Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3090204,
+        17.7067706
+      ]
+    }
+  },
+  {
+    "id": 6758443699,
+    "name": "Dj Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3354643,
+        17.7440297
+      ]
+    }
+  },
+  {
+    "id": 6758468632,
+    "name": "Ramyasai Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0016124,
+        17.6861622
+      ]
+    }
+  },
+  {
+    "id": 6758665270,
+    "name": "Vision Care Centre (Super Speciality Eye Hospital)",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.295486,
+        17.7277139
+      ]
+    }
+  },
+  {
+    "id": 6758677177,
+    "name": "Apoorva Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3075653,
+        17.7300554
+      ]
+    }
+  },
+  {
+    "id": 6758686628,
+    "name": "Anapoorna Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3047865,
+        17.7273371
+      ]
+    }
+  },
+  {
+    "id": 6758705097,
+    "name": "Maxivision Super Speciality Eye Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.304584,
+        17.7269219
+      ]
+    }
+  },
+  {
+    "id": 6758710664,
+    "name": "Care Dental Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.307247,
+        17.7363435
+      ]
+    }
+  },
+  {
+    "id": 6758717165,
+    "name": "M.G.R. Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3309823,
+        17.7325361
+      ]
+    }
+  },
+  {
+    "id": 6758735188,
+    "name": "Rhea Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3041777,
+        17.7092414
+      ]
+    }
+  },
+  {
+    "id": 6758743207,
+    "name": "Adarsha Orthopaedic Center",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3117884,
+        17.7109406
+      ]
+    }
+  },
+  {
+    "id": 6758772439,
+    "name": "Prabha Clinic and Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3041039,
+        17.7162921
+      ]
+    }
+  },
+  {
+    "id": 6758784627,
+    "name": "Mythri Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3089118,
+        17.7071258
+      ]
+    }
+  },
+  {
+    "id": 6758813629,
+    "name": "Gowtami Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2063977,
+        17.6825514
+      ]
+    }
+  },
+  {
+    "id": 6761009918,
+    "name": "Satyam Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2187018,
+        17.7499948
+      ]
+    }
+  },
+  {
+    "id": 6761017583,
+    "name": "Venkatarama Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3031356,
+        17.7278327
+      ]
+    }
+  },
+  {
+    "id": 6761020424,
+    "name": "SR Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2173438,
+        17.752968
+      ]
+    }
+  },
+  {
+    "id": 6761040532,
+    "name": "Good Health New Central Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3055443,
+        17.7379611
+      ]
+    }
+  },
+  {
+    "id": 6761060209,
+    "name": "Dr Rama Rao Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2790163,
+        17.7332163
+      ]
+    }
+  },
+  {
+    "id": 6761079196,
+    "name": "Vijetha Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3030283,
+        17.7106199
+      ]
+    }
+  },
+  {
+    "id": 6768028772,
+    "name": "Sun Multi Speciality Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.277593,
+        17.7350755
+      ]
+    }
+  },
+  {
+    "id": 6768332127,
+    "name": "Abc Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3092725,
+        17.7061715
+      ]
+    }
+  },
+  {
+    "id": 6768383856,
+    "name": "Suma Maternity Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2642758,
+        17.7463633
+      ]
+    }
+  },
+  {
+    "id": 6768386211,
+    "name": "Lion Dist 324 C, Cancer Treatment and Research Center",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3083713,
+        17.7443962
+      ]
+    }
+  },
+  {
+    "id": 6768387728,
+    "name": "Amg Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3146349,
+        17.7382076
+      ]
+    }
+  },
+  {
+    "id": 6768451188,
+    "name": "Indus Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3026153,
+        17.7108601
+      ]
+    }
+  },
+  {
+    "id": 6768545567,
+    "name": "St.Ann's Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8137411,
+        17.9135879
+      ]
+    }
+  },
+  {
+    "id": 6768577352,
+    "name": "Visakha Ent Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3107545,
+        17.7264096
+      ]
+    }
+  },
+  {
+    "id": 6768715568,
+    "name": "Susruta Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.208107,
+        17.6853215
+      ]
+    }
+  },
+  {
+    "id": 6768741999,
+    "name": "R K Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1970797,
+        17.6824479
+      ]
+    }
+  },
+  {
+    "id": 6768783710,
+    "name": "Padmasri Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3036815,
+        17.7382447
+      ]
+    }
+  },
+  {
+    "id": 6770856512,
+    "name": "Raghavendra Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3041066,
+        17.739964
+      ]
+    }
+  },
+  {
+    "id": 6770857209,
+    "name": "Sujatha Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1985898,
+        17.6840514
+      ]
+    }
+  },
+  {
+    "id": 6770861724,
+    "name": "Centre For Sight",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3044016,
+        17.7364998
+      ]
+    }
+  },
+  {
+    "id": 6773497407,
+    "name": "Krishna Maternity And Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.293823,
+        17.7288061
+      ]
+    }
+  },
+  {
+    "id": 6773519885,
+    "name": "Amrutha Nursing Home Private Limited",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2960858,
+        17.69981
+      ]
+    }
+  },
+  {
+    "id": 6773613228,
+    "name": "Padmaja Hospital - Gajuwaka",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.203619,
+        17.6867743
+      ]
+    }
+  },
+  {
+    "id": 6773652312,
+    "name": "Care Hospital - Maharanipet",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3054544,
+        17.7097505
+      ]
+    }
+  },
+  {
+    "id": 6778457455,
+    "name": "Samudra Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3037458,
+        17.7103989
+      ]
+    }
+  },
+  {
+    "id": 6778538692,
+    "name": "Vikram Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0013013,
+        17.6870707
+      ]
+    }
+  },
+  {
+    "id": 6778593240,
+    "name": "Abhaya Critical Care",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3043534,
+        17.7102328
+      ]
+    }
+  },
+  {
+    "id": 6778878343,
+    "name": "Sunita Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3115497,
+        17.7362763
+      ]
+    }
+  },
+  {
+    "id": 6778891203,
+    "name": "Waltair Multicare Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.333627,
+        17.7320085
+      ]
+    }
+  },
+  {
+    "id": 6778921290,
+    "name": "Siddharth Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3038954,
+        17.7118451
+      ]
+    }
+  },
+  {
+    "id": 6782119569,
+    "name": "Visakha Children Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3125274,
+        17.7108448
+      ]
+    }
+  },
+  {
+    "id": 6787301791,
+    "name": "Sraddha Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3086663,
+        17.7083599
+      ]
+    }
+  },
+  {
+    "id": 6787401750,
+    "name": "Tirumala Vijaya Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3352873,
+        17.7440143
+      ]
+    }
+  },
+  {
+    "id": 6789523012,
+    "name": "Aarif Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.309819,
+        17.7224323
+      ]
+    }
+  },
+  {
+    "id": 6789535761,
+    "name": "Vijaya Medical Centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3107518,
+        17.7099032
+      ]
+    }
+  },
+  {
+    "id": 6789549353,
+    "name": "OMNI RK Super Specialty Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3116168,
+        17.7186287
+      ]
+    }
+  },
+  {
+    "id": 6789576725,
+    "name": "Sri Rama Mother and Child Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9366171,
+        17.8269229
+      ]
+    }
+  },
+  {
+    "id": 6789680553,
+    "name": "Vasan Eye Care Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3087254,
+        17.7168287
+      ]
+    }
+  },
+  {
+    "id": 6789720253,
+    "name": "Lazarus Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3083036,
+        17.7171512
+      ]
+    }
+  },
+  {
+    "id": 6789830343,
+    "name": "Sai Satya Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3147241,
+        17.7685126
+      ]
+    }
+  },
+  {
+    "id": 6791809450,
+    "name": "Bharathi Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3085356,
+        17.7108505
+      ]
+    }
+  },
+  {
+    "id": 6791968309,
+    "name": "Lawrance and Mayo Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.302677,
+        17.7124353
+      ]
+    }
+  },
+  {
+    "id": 6794593273,
+    "name": "Prema Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3740931,
+        17.8796711
+      ]
+    }
+  },
+  {
+    "id": 6798143867,
+    "name": "City Care Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3090506,
+        17.7066084
+      ]
+    }
+  },
+  {
+    "id": 6801191501,
+    "name": "Kamala Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.250969,
+        17.7404309
+      ]
+    }
+  },
+  {
+    "id": 6804727620,
+    "name": "Kalavathi Surgical Hospital and Laparoscopic Centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2990453,
+        17.7265297
+      ]
+    }
+  },
+  {
+    "id": 6804768866,
+    "name": "Subham Prema Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3123571,
+        17.728124
+      ]
+    }
+  },
+  {
+    "id": 6804932700,
+    "name": "Care Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3127339,
+        17.7203686
+      ]
+    }
+  },
+  {
+    "id": 6822830986,
+    "name": "Narayana Em school",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3004644,
+        17.7360659
+      ]
+    }
+  },
+  {
+    "id": 6843473422,
+    "name": "MyCure Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3023683,
+        17.7109237
+      ]
+    }
+  },
+  {
+    "id": 6849353985,
+    "name": "Ravi Super Market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2998139,
+        17.7359767
+      ]
+    }
+  },
+  {
+    "id": 6868668696,
+    "name": "SKML Retail Store",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2344675,
+        17.770826
+      ]
+    }
+  },
+  {
+    "id": 6880920785,
+    "name": "SKML junior college gotivada sabbavaram",
+    "poi_category": "amenity",
+    "poi_type": "College",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1094283,
+        17.7972825
+      ]
+    }
+  },
+  {
+    "id": 7065039085,
+    "name": "Budhil Hotel",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3068515,
+        17.7257976
+      ]
+    }
+  },
+  {
+    "id": 7114008034,
+    "name": "Government Hospital,Viyyampeta",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1486536,
+        17.9231609
+      ]
+    }
+  },
+  {
+    "id": 7114008044,
+    "name": "Government Hospital,Bheemili",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4513908,
+        17.8877592
+      ]
+    }
+  },
+  {
+    "id": 7114008052,
+    "name": "Government Hospital,Cheedikada",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8931162,
+        17.927342
+      ]
+    }
+  },
+  {
+    "id": 7114008055,
+    "name": "GVMC hospital,FRU Arilova",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3172347,
+        17.7686588
+      ]
+    }
+  },
+  {
+    "id": 7114008080,
+    "name": "Government Hospital, Jami",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2657175,
+        18.0515574
+      ]
+    }
+  },
+  {
+    "id": 7114008083,
+    "name": "Government Hospital,Lakkavarapukota",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1526432,
+        18.0184435
+      ]
+    }
+  },
+  {
+    "id": 7114008085,
+    "name": "Government hospital, Rambili",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9301819,
+        17.465312
+      ]
+    }
+  },
+  {
+    "id": 7114008086,
+    "name": "Government Hospital,Pusapatirega",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.552523,
+        18.0917189
+      ]
+    }
+  },
+  {
+    "id": 7114008093,
+    "name": "NTR Government Hospital,Anakapalle",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0067163,
+        17.6845257
+      ]
+    }
+  },
+  {
+    "id": 7114008116,
+    "name": "Government Hospital, Munagapaka",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.986613,
+        17.633837
+      ]
+    }
+  },
+  {
+    "id": 7114008147,
+    "name": "Government Hospital,Govindapuram",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.6129037,
+        18.0938621
+      ]
+    }
+  },
+  {
+    "id": 7114008149,
+    "name": "Government Hospital, K Kotapadu",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0408116,
+        17.8883305
+      ]
+    }
+  },
+  {
+    "id": 7114008152,
+    "name": "Government Hospital,Madugula",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8185393,
+        17.9183224
+      ]
+    }
+  },
+  {
+    "id": 7114008168,
+    "name": "Government Hospital,Regupalem",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.816752,
+        17.5178218
+      ]
+    }
+  },
+  {
+    "id": 7229614385,
+    "name": "Cghs wellness centre",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3323437,
+        17.7285015
+      ]
+    }
+  },
+  {
+    "id": 7236646217,
+    "name": "Hotel Sai national",
+    "poi_category": "tourism",
+    "poi_type": "Guest House",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2983783,
+        17.7255262
+      ]
+    }
+  },
+  {
+    "id": 7244129738,
+    "name": "dipolama college",
+    "poi_category": "amenity",
+    "poi_type": "College",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4184802,
+        18.0999984
+      ]
+    }
+  },
+  {
+    "id": 7246516633,
+    "name": "Canteen",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4010232,
+        18.0197117
+      ]
+    }
+  },
+  {
+    "id": 7786891157,
+    "name": "Ashwini Health Centre",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1845199,
+        17.8959143
+      ]
+    }
+  },
+  {
+    "id": 7786891170,
+    "name": "Physiotherapy Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1875211,
+        17.8993085
+      ]
+    }
+  },
+  {
+    "id": 7786891185,
+    "name": "Sri Venkata Sai Multi Specialty Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1863316,
+        17.8951943
+      ]
+    }
+  },
+  {
+    "id": 7786891201,
+    "name": "Niharika Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1856362,
+        17.8999331
+      ]
+    }
+  },
+  {
+    "id": 7786891220,
+    "name": "Simhachalam Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.5535387,
+        18.093818
+      ]
+    }
+  },
+  {
+    "id": 7786891223,
+    "name": "Dr. B Ramarao Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1862515,
+        17.8976322
+      ]
+    }
+  },
+  {
+    "id": 7786956541,
+    "name": "Government Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3866502,
+        18.0944637
+      ]
+    }
+  },
+  {
+    "id": 7786956559,
+    "name": "Leprosy Mission Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.39122,
+        18.064523
+      ]
+    }
+  },
+  {
+    "id": 7786956565,
+    "name": "Swamy Eye Hospial",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4014713,
+        18.0998794
+      ]
+    }
+  },
+  {
+    "id": 7786956587,
+    "name": "Surya Homoeo Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3879929,
+        18.0913973
+      ]
+    }
+  },
+  {
+    "id": 7786956599,
+    "name": "Dr. Y. V. Siva Sankara Murty Children Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4163525,
+        18.0990583
+      ]
+    }
+  },
+  {
+    "id": 7786956603,
+    "name": "Dhanvantari Piles Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.388523,
+        18.0919675
+      ]
+    }
+  },
+  {
+    "id": 7787057180,
+    "name": "Bethany Christian Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.347569,
+        17.8027947
+      ]
+    }
+  },
+  {
+    "id": 7787057181,
+    "name": "Dr. Adams Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3508178,
+        17.7998444
+      ]
+    }
+  },
+  {
+    "id": 7787057182,
+    "name": "Medinar Polyclinics",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.293382,
+        17.7267225
+      ]
+    }
+  },
+  {
+    "id": 7787057183,
+    "name": "Jishnu Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4058416,
+        17.8386364
+      ]
+    }
+  },
+  {
+    "id": 7787057184,
+    "name": "Master Homeo Vaidyalayam",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.298429,
+        17.7341833
+      ]
+    }
+  },
+  {
+    "id": 7787057185,
+    "name": "Dr. Hedgewar School Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3251813,
+        17.8830152
+      ]
+    }
+  },
+  {
+    "id": 7787057186,
+    "name": "Gayatri Health Care",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3362101,
+        17.7452893
+      ]
+    }
+  },
+  {
+    "id": 7787057187,
+    "name": "Usha Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3561911,
+        17.8112947
+      ]
+    }
+  },
+  {
+    "id": 7787057188,
+    "name": "Ramakrishna ENT Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3557704,
+        17.8118168
+      ]
+    }
+  },
+  {
+    "id": 7787057189,
+    "name": "Dr. Ramarao Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4529898,
+        17.8896873
+      ]
+    }
+  },
+  {
+    "id": 7787057190,
+    "name": "Piles Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3600858,
+        17.819961
+      ]
+    }
+  },
+  {
+    "id": 7787057191,
+    "name": "Day & Night Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.310741,
+        17.7289618
+      ]
+    }
+  },
+  {
+    "id": 7787057192,
+    "name": "NRI General Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.426394,
+        17.921695
+      ]
+    }
+  },
+  {
+    "id": 7787057193,
+    "name": "ESI Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.423953,
+        17.927652
+      ]
+    }
+  },
+  {
+    "id": 7787057194,
+    "name": "Dr. Perumallu Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.452386,
+        17.8892578
+      ]
+    }
+  },
+  {
+    "id": 7787057195,
+    "name": "Anand Piles Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4500642,
+        17.8944854
+      ]
+    }
+  },
+  {
+    "id": 7787057196,
+    "name": "Sanjivi Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.328678,
+        17.743927
+      ]
+    }
+  },
+  {
+    "id": 7787057197,
+    "name": "Bhagavathi Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3042268,
+        17.7433959
+      ]
+    }
+  },
+  {
+    "id": 7787057198,
+    "name": "Sri Venkateswara Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4123172,
+        17.8338229
+      ]
+    }
+  },
+  {
+    "id": 7787057199,
+    "name": "Government Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.296865,
+        17.735493
+      ]
+    }
+  },
+  {
+    "id": 7787057200,
+    "name": "Kundan Family Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.357939,
+        17.783556
+      ]
+    }
+  },
+  {
+    "id": 7787057201,
+    "name": "Sai Spoorthy Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3043823,
+        17.7274681
+      ]
+    }
+  },
+  {
+    "id": 7787057202,
+    "name": "Amma Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3307524,
+        17.7468553
+      ]
+    }
+  },
+  {
+    "id": 7787057203,
+    "name": "Sandhya Eye Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3169337,
+        17.7322507
+      ]
+    }
+  },
+  {
+    "id": 7787057204,
+    "name": "Arogya Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.427302,
+        17.9310994
+      ]
+    }
+  },
+  {
+    "id": 7787057206,
+    "name": "Cure Speciality Clinics",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3535511,
+        17.8025027
+      ]
+    }
+  },
+  {
+    "id": 7787057207,
+    "name": "Sri Krishna Hospital And Mrudula Kidney Centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3381086,
+        17.7398696
+      ]
+    }
+  },
+  {
+    "id": 7787057208,
+    "name": "Ramkumar Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2989253,
+        17.7347439
+      ]
+    }
+  },
+  {
+    "id": 7787057209,
+    "name": "Reddy Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3099357,
+        17.7295515
+      ]
+    }
+  },
+  {
+    "id": 7787057210,
+    "name": "Kalavathy Maternity Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2912686,
+        17.7301424
+      ]
+    }
+  },
+  {
+    "id": 7787057211,
+    "name": "S.V Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2982102,
+        17.7315298
+      ]
+    }
+  },
+  {
+    "id": 7787057212,
+    "name": "Naidu Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4480273,
+        17.8948381
+      ]
+    }
+  },
+  {
+    "id": 7787057213,
+    "name": "Sri Sai Pallavi First Aid Centre and Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4461276,
+        17.8952546
+      ]
+    }
+  },
+  {
+    "id": 7787057214,
+    "name": "Lakshmi Gayathri Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2988976,
+        17.7360864
+      ]
+    }
+  },
+  {
+    "id": 7787057215,
+    "name": "Dr. Ravi Child Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3136747,
+        17.7380085
+      ]
+    }
+  },
+  {
+    "id": 7787057217,
+    "name": "Saroja Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.300686,
+        17.733482
+      ]
+    }
+  },
+  {
+    "id": 7787057218,
+    "name": "Surya Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3397326,
+        17.8059869
+      ]
+    }
+  },
+  {
+    "id": 7787057219,
+    "name": "Aman Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3621718,
+        17.8213674
+      ]
+    }
+  },
+  {
+    "id": 7787057220,
+    "name": "A1 Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2994272,
+        17.739424
+      ]
+    }
+  },
+  {
+    "id": 7787057221,
+    "name": "Mukhyamantri Arogya Kendram",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3206661,
+        17.7437712
+      ]
+    }
+  },
+  {
+    "id": 7787057222,
+    "name": "Mukyamantri Arogya Kendram",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4451285,
+        17.8952319
+      ]
+    }
+  },
+  {
+    "id": 7787057223,
+    "name": "CARE Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.294103,
+        17.7275716
+      ]
+    }
+  },
+  {
+    "id": 7787057224,
+    "name": "Surya Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.423704,
+        17.9321277
+      ]
+    }
+  },
+  {
+    "id": 7787057225,
+    "name": "Medi Cos Den Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3591053,
+        17.7636399
+      ]
+    }
+  },
+  {
+    "id": 7787057226,
+    "name": "Sri Surya Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.340338,
+        17.7427806
+      ]
+    }
+  },
+  {
+    "id": 7787057227,
+    "name": "Aruna ENT Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3002306,
+        17.737158
+      ]
+    }
+  },
+  {
+    "id": 7787057228,
+    "name": "Sri Krishna Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3003628,
+        17.7346615
+      ]
+    }
+  },
+  {
+    "id": 7787057230,
+    "name": "Sri Sai Sanjeevani Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3577903,
+        17.7792428
+      ]
+    }
+  },
+  {
+    "id": 7787057231,
+    "name": "Sri Sai Piles Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3665288,
+        17.8695422
+      ]
+    }
+  },
+  {
+    "id": 7787057232,
+    "name": "Ujhwal Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3555939,
+        17.8131242
+      ]
+    }
+  },
+  {
+    "id": 7787057233,
+    "name": "Navratna Kesava Rao Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4536651,
+        17.8900803
+      ]
+    }
+  },
+  {
+    "id": 7787057234,
+    "name": "Dr. Kamalamma Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2936785,
+        17.7289528
+      ]
+    }
+  },
+  {
+    "id": 7787057235,
+    "name": "National Orthopaedic Centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3116732,
+        17.7364007
+      ]
+    }
+  },
+  {
+    "id": 7787057236,
+    "name": "Raphah Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.31229,
+        17.735531
+      ]
+    }
+  },
+  {
+    "id": 7787057239,
+    "name": "Sri Sai Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4034376,
+        17.8397834
+      ]
+    }
+  },
+  {
+    "id": 7787057240,
+    "name": "Vivekanandha Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2982472,
+        17.7318218
+      ]
+    }
+  },
+  {
+    "id": 7787057241,
+    "name": "Government ENT Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3141989,
+        17.745865
+      ]
+    }
+  },
+  {
+    "id": 7787057242,
+    "name": "Padmavathi Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3075918,
+        17.7414689
+      ]
+    }
+  },
+  {
+    "id": 7787057245,
+    "name": "GITAM Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3746555,
+        17.7846774
+      ]
+    }
+  },
+  {
+    "id": 7787057246,
+    "name": "Shanthi Maternity and Infertility Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3316373,
+        17.745914
+      ]
+    }
+  },
+  {
+    "id": 7787057247,
+    "name": "Sri Chandra Ortho Care",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2950164,
+        17.739513
+      ]
+    }
+  },
+  {
+    "id": 7787057248,
+    "name": "Smar City Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.30115,
+        17.7325871
+      ]
+    }
+  },
+  {
+    "id": 7787057249,
+    "name": "Krishnaveni Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2947484,
+        17.7301583
+      ]
+    }
+  },
+  {
+    "id": 7787057250,
+    "name": "Visakha Multispeciality Clinics",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3649326,
+        17.8147685
+      ]
+    }
+  },
+  {
+    "id": 7787057251,
+    "name": "Aditya Physiotherapy And First Aid Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4530473,
+        17.8895311
+      ]
+    }
+  },
+  {
+    "id": 7787057253,
+    "name": "Lb Prasad Medical",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2941227,
+        17.7298279
+      ]
+    }
+  },
+  {
+    "id": 7787057255,
+    "name": "Guru Ayurcare",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3546555,
+        17.8098904
+      ]
+    }
+  },
+  {
+    "id": 7787057256,
+    "name": "Morpheus Padmasri International IVF Centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3034712,
+        17.7380243
+      ]
+    }
+  },
+  {
+    "id": 7787057257,
+    "name": "Amrutha Clinic & Lab",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3644588,
+        17.8118167
+      ]
+    }
+  },
+  {
+    "id": 7787057259,
+    "name": "GK's Rainbow Dental Superspeciality Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3535257,
+        17.8024524
+      ]
+    }
+  },
+  {
+    "id": 7787057260,
+    "name": "Krishna Children Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.293632,
+        17.7289115
+      ]
+    }
+  },
+  {
+    "id": 7787057261,
+    "name": "Master Homoeo Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3077406,
+        17.7274279
+      ]
+    }
+  },
+  {
+    "id": 7787057262,
+    "name": "Sri Sai Ram Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2918881,
+        17.7322439
+      ]
+    }
+  },
+  {
+    "id": 7787057263,
+    "name": "Dr. Ramakrishna Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4260617,
+        17.9309318
+      ]
+    }
+  },
+  {
+    "id": 7787057264,
+    "name": "Dr. P.P.Srinivas Murthy Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2988909,
+        17.7415765
+      ]
+    }
+  },
+  {
+    "id": 7787057267,
+    "name": "Visakha Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3574768,
+        17.8153454
+      ]
+    }
+  },
+  {
+    "id": 7787057268,
+    "name": "Soham ENT Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.297657,
+        17.7442418
+      ]
+    }
+  },
+  {
+    "id": 7787057270,
+    "name": "Keerthana Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3467145,
+        17.8040379
+      ]
+    }
+  },
+  {
+    "id": 7787057271,
+    "name": "Padmavathi Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4191803,
+        17.9307079
+      ]
+    }
+  },
+  {
+    "id": 7787057272,
+    "name": "Sri Gayatri Nursing Home & Kasturi Maternity Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3331524,
+        17.7244631
+      ]
+    }
+  },
+  {
+    "id": 7787449678,
+    "name": "Paja Jyorhi Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9840972,
+        17.6827281
+      ]
+    }
+  },
+  {
+    "id": 7787449679,
+    "name": "Phani Poly Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.001288,
+        17.6861511
+      ]
+    }
+  },
+  {
+    "id": 7787449681,
+    "name": "Tirumala Poly Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0435664,
+        17.8860664
+      ]
+    }
+  },
+  {
+    "id": 7787449684,
+    "name": "Tirumala Jyoti Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.001827,
+        17.683136
+      ]
+    }
+  },
+  {
+    "id": 7787449685,
+    "name": "Government Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9560418,
+        17.7467671
+      ]
+    }
+  },
+  {
+    "id": 7787449686,
+    "name": "Dr. Soma Raju Children Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0101255,
+        17.6882064
+      ]
+    }
+  },
+  {
+    "id": 7787449687,
+    "name": "Sitarama Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.933252,
+        17.8277971
+      ]
+    }
+  },
+  {
+    "id": 7787449688,
+    "name": "Kalyani Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.001839,
+        17.687728
+      ]
+    }
+  },
+  {
+    "id": 7787449689,
+    "name": "Annapurna Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.011245,
+        17.6842691
+      ]
+    }
+  },
+  {
+    "id": 7787449691,
+    "name": "SS Dental Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.009283,
+        17.688264
+      ]
+    }
+  },
+  {
+    "id": 7787449692,
+    "name": "Maternity Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0101274,
+        17.6848737
+      ]
+    }
+  },
+  {
+    "id": 7787449694,
+    "name": "Sai Teja Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.00072,
+        17.686424
+      ]
+    }
+  },
+  {
+    "id": 7787449695,
+    "name": "Benargy Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0010632,
+        17.6753904
+      ]
+    }
+  },
+  {
+    "id": 7787449696,
+    "name": "Sri Sagar Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0021022,
+        17.6892581
+      ]
+    }
+  },
+  {
+    "id": 7787449698,
+    "name": "R.K Medical Centre",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0032805,
+        17.6863639
+      ]
+    }
+  },
+  {
+    "id": 7787449699,
+    "name": "Abhay Arogya Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9368591,
+        17.8278456
+      ]
+    }
+  },
+  {
+    "id": 7787449701,
+    "name": "Sri Vijaya Lakshmi Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9274015,
+        17.8297069
+      ]
+    }
+  },
+  {
+    "id": 7787449702,
+    "name": "Sri Srinivasa Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8128916,
+        17.9169656
+      ]
+    }
+  },
+  {
+    "id": 7787449704,
+    "name": "Srinivasa Children's Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.002889,
+        17.688484
+      ]
+    }
+  },
+  {
+    "id": 7787449705,
+    "name": "Government Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9828155,
+        17.9925538
+      ]
+    }
+  },
+  {
+    "id": 7787449708,
+    "name": "Thummapala Primary Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9985248,
+        17.7092053
+      ]
+    }
+  },
+  {
+    "id": 7787449709,
+    "name": "London Children's Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0024749,
+        17.6852716
+      ]
+    }
+  },
+  {
+    "id": 7787449710,
+    "name": "Arogyaraksha Polyclinic and Diagnostics",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8601424,
+        17.5498362
+      ]
+    }
+  },
+  {
+    "id": 7787449711,
+    "name": "Gollaprolu Children's Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8529786,
+        17.5478426
+      ]
+    }
+  },
+  {
+    "id": 7787449712,
+    "name": "Usha Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.856505,
+        17.5478222
+      ]
+    }
+  },
+  {
+    "id": 7787449713,
+    "name": "Lakshmi Children Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9417718,
+        17.8250127
+      ]
+    }
+  },
+  {
+    "id": 7787449715,
+    "name": "Nirmala Maternity Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.00227,
+        17.6854923
+      ]
+    }
+  },
+  {
+    "id": 7787449716,
+    "name": "Ayyappa Gupta Eye Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0037356,
+        17.6916683
+      ]
+    }
+  },
+  {
+    "id": 7787449719,
+    "name": "Government Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9988148,
+        17.8402661
+      ]
+    }
+  },
+  {
+    "id": 7787449720,
+    "name": "Usha Prime Multispeciality Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.001744,
+        17.687618
+      ]
+    }
+  },
+  {
+    "id": 7787449723,
+    "name": "Janaseva Eye Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8533103,
+        17.5516438
+      ]
+    }
+  },
+  {
+    "id": 7787449724,
+    "name": "Dr. K. Venkatesh Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8906247,
+        17.9272601
+      ]
+    }
+  },
+  {
+    "id": 7787449726,
+    "name": "Satyadev ENT Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.001365,
+        17.684444
+      ]
+    }
+  },
+  {
+    "id": 7787449728,
+    "name": "Spark Dental Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9391521,
+        17.82508
+      ]
+    }
+  },
+  {
+    "id": 7787449731,
+    "name": "Sree Seshapadma Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8517581,
+        17.5534898
+      ]
+    }
+  },
+  {
+    "id": 7787449732,
+    "name": "Gadam Dental Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.002401,
+        17.687646
+      ]
+    }
+  },
+  {
+    "id": 7787449736,
+    "name": "Medikon Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.001142,
+        17.680999
+      ]
+    }
+  },
+  {
+    "id": 7787449737,
+    "name": "Devi Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.981522,
+        17.990629
+      ]
+    }
+  },
+  {
+    "id": 7787449739,
+    "name": "Ravi Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.009456,
+        17.686005
+      ]
+    }
+  },
+  {
+    "id": 7787449741,
+    "name": "Laxmi Orthopaedic Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.005706,
+        17.68721
+      ]
+    }
+  },
+  {
+    "id": 7787449744,
+    "name": "Sai Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0429259,
+        17.8868669
+      ]
+    }
+  },
+  {
+    "id": 7787449747,
+    "name": "Sapthagiri Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0099047,
+        17.69098
+      ]
+    }
+  },
+  {
+    "id": 7787449748,
+    "name": "Sri Surya Homoeo Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9401635,
+        17.8246446
+      ]
+    }
+  },
+  {
+    "id": 7787449749,
+    "name": "Dr. Thrinadh Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8498751,
+        17.5452357
+      ]
+    }
+  },
+  {
+    "id": 7787449750,
+    "name": "SS Physiotherapy Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8561331,
+        17.5480898
+      ]
+    }
+  },
+  {
+    "id": 7787449754,
+    "name": "Dr. Ram Mohan Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0015806,
+        17.685712
+      ]
+    }
+  },
+  {
+    "id": 7787449757,
+    "name": "Mother and Child Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.001269,
+        17.685934
+      ]
+    }
+  },
+  {
+    "id": 7787449758,
+    "name": "Siddhartha Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0022801,
+        17.6843742
+      ]
+    }
+  },
+  {
+    "id": 7787449759,
+    "name": "Vijaya Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.849726,
+        17.544446
+      ]
+    }
+  },
+  {
+    "id": 7787449760,
+    "name": "Sri Venkateswara Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.000991,
+        17.690373
+      ]
+    }
+  },
+  {
+    "id": 7787449764,
+    "name": "Krishna Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9342467,
+        17.8280367
+      ]
+    }
+  },
+  {
+    "id": 7787449765,
+    "name": "Sri Venkateswara Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0006719,
+        17.6777911
+      ]
+    }
+  },
+  {
+    "id": 7787647583,
+    "name": "Kanakadurga Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.312939,
+        17.7101086
+      ]
+    }
+  },
+  {
+    "id": 7787647584,
+    "name": "Sunrise Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2662977,
+        17.7409007
+      ]
+    }
+  },
+  {
+    "id": 7787647585,
+    "name": "Sunrise Childern Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2053903,
+        17.687897
+      ]
+    }
+  },
+  {
+    "id": 7787647586,
+    "name": "Sri Krishna Orthopaedic Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.193854,
+        17.6843101
+      ]
+    }
+  },
+  {
+    "id": 7787647587,
+    "name": "Sandhya Sree Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.201472,
+        17.6830346
+      ]
+    }
+  },
+  {
+    "id": 7787647588,
+    "name": "A N Beach Hospital - Multi Speciality Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3197589,
+        17.7129243
+      ]
+    }
+  },
+  {
+    "id": 7787647590,
+    "name": "Lakshmi Nursing Home",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2128855,
+        17.6868428
+      ]
+    }
+  },
+  {
+    "id": 7787647591,
+    "name": "Dr. Mangamma Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3045397,
+        17.7100946
+      ]
+    }
+  },
+  {
+    "id": 7787647592,
+    "name": "Sri Lakhmi ENT Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1975029,
+        17.6829789
+      ]
+    }
+  },
+  {
+    "id": 7787647593,
+    "name": "BHEL Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.199526,
+        17.702135
+      ]
+    }
+  },
+  {
+    "id": 7787647594,
+    "name": "Visakha Child Care Centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2016314,
+        17.6846529
+      ]
+    }
+  },
+  {
+    "id": 7787647598,
+    "name": "Durga Bhavani Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8037473,
+        17.4534855
+      ]
+    }
+  },
+  {
+    "id": 7787647599,
+    "name": "Piles Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2133794,
+        17.6871805
+      ]
+    }
+  },
+  {
+    "id": 7787647600,
+    "name": "Visakha Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.304361,
+        17.710144
+      ]
+    }
+  },
+  {
+    "id": 7787647602,
+    "name": "Sreenivasa Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2060963,
+        17.8231815
+      ]
+    }
+  },
+  {
+    "id": 7787647603,
+    "name": "Simhagiri Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2127666,
+        17.6863477
+      ]
+    }
+  },
+  {
+    "id": 7787647604,
+    "name": "City Hospital Ortho & Specialities",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2053196,
+        17.6852466
+      ]
+    }
+  },
+  {
+    "id": 7787647605,
+    "name": "Medicover Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.313972,
+        17.712323
+      ]
+    }
+  },
+  {
+    "id": 7787647606,
+    "name": "Rotary Free Homeo Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2011967,
+        17.6723936
+      ]
+    }
+  },
+  {
+    "id": 7787647608,
+    "name": "KIMS ICON Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1956548,
+        17.7141817
+      ]
+    }
+  },
+  {
+    "id": 7787647609,
+    "name": "Life Spring Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.243601,
+        17.688339
+      ]
+    }
+  },
+  {
+    "id": 7787647610,
+    "name": "Sri Krishna Pavan Homeo Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.211053,
+        17.796478
+      ]
+    }
+  },
+  {
+    "id": 7787647611,
+    "name": "Starzen Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9771482,
+        17.562306
+      ]
+    }
+  },
+  {
+    "id": 7787647612,
+    "name": "Sri Lakshmi Children Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2078579,
+        17.6854195
+      ]
+    }
+  },
+  {
+    "id": 7787647613,
+    "name": "Vijaya Krishna Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.311491,
+        17.710948
+      ]
+    }
+  },
+  {
+    "id": 7787647614,
+    "name": "Ankitha Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1989654,
+        17.6827868
+      ]
+    }
+  },
+  {
+    "id": 7787647615,
+    "name": "Jai Srikrishna Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9768678,
+        17.5619762
+      ]
+    }
+  },
+  {
+    "id": 7787647618,
+    "name": "Hymavathi Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2192385,
+        17.7480338
+      ]
+    }
+  },
+  {
+    "id": 7787647619,
+    "name": "Pujitha Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2100702,
+        17.6844753
+      ]
+    }
+  },
+  {
+    "id": 7787647620,
+    "name": "Sarojini Children's Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2265444,
+        17.7445712
+      ]
+    }
+  },
+  {
+    "id": 7787647621,
+    "name": "SMS Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2261912,
+        17.7452036
+      ]
+    }
+  },
+  {
+    "id": 7787647622,
+    "name": "Padmaja Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2158252,
+        17.6826577
+      ]
+    }
+  },
+  {
+    "id": 7787647623,
+    "name": "Navaratnam - Kesava Rao Charitable Health Centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2049981,
+        17.6872165
+      ]
+    }
+  },
+  {
+    "id": 7787647624,
+    "name": "Visakha Gynaec & Obst Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2042804,
+        17.8148001
+      ]
+    }
+  },
+  {
+    "id": 7787647625,
+    "name": "Sri Sai Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9268567,
+        17.4679094
+      ]
+    }
+  },
+  {
+    "id": 7787647626,
+    "name": "Suryanarayana Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2186331,
+        17.7508459
+      ]
+    }
+  },
+  {
+    "id": 7787647627,
+    "name": "Simhadri Women & Child Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2256151,
+        17.7656255
+      ]
+    }
+  },
+  {
+    "id": 7787647628,
+    "name": "Usha Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1229765,
+        17.789817
+      ]
+    }
+  },
+  {
+    "id": 7787647629,
+    "name": "Vizag Ortho & Spine Centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.312442,
+        17.7104
+      ]
+    }
+  },
+  {
+    "id": 7787647630,
+    "name": "Sri Amrutha Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.302862,
+        17.710327
+      ]
+    }
+  },
+  {
+    "id": 7787647631,
+    "name": "Mukhyamantri Arogya Kendram",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2336948,
+        17.6836262
+      ]
+    }
+  },
+  {
+    "id": 7787647632,
+    "name": "Mamata Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2079845,
+        17.6869092
+      ]
+    }
+  },
+  {
+    "id": 7787647633,
+    "name": "Sri Surya Dental Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3103498,
+        17.709779
+      ]
+    }
+  },
+  {
+    "id": 7787647634,
+    "name": "Sri Surya Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.309857,
+        17.708149
+      ]
+    }
+  },
+  {
+    "id": 7787647636,
+    "name": "Bhajrang Skin Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2069228,
+        17.6861162
+      ]
+    }
+  },
+  {
+    "id": 7787647637,
+    "name": "Madhu Skin Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2060364,
+        17.6860455
+      ]
+    }
+  },
+  {
+    "id": 7787647638,
+    "name": "Lata Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.205361,
+        17.6877091
+      ]
+    }
+  },
+  {
+    "id": 7787647639,
+    "name": "Janani Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2073838,
+        17.6865547
+      ]
+    }
+  },
+  {
+    "id": 7787647640,
+    "name": "Geetha Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2145015,
+        17.6860522
+      ]
+    }
+  },
+  {
+    "id": 7787647641,
+    "name": "Shree Krishna Health Centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3105799,
+        17.7104023
+      ]
+    }
+  },
+  {
+    "id": 7787647642,
+    "name": "Aditya Obstetrics & Gynecology Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.269641,
+        17.745985
+      ]
+    }
+  },
+  {
+    "id": 7787647643,
+    "name": "ENT Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3103685,
+        17.7098153
+      ]
+    }
+  },
+  {
+    "id": 7787647644,
+    "name": "Suresh Children's Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2098576,
+        17.7998618
+      ]
+    }
+  },
+  {
+    "id": 7787647645,
+    "name": "NTPC Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0939853,
+        17.5685137
+      ]
+    }
+  },
+  {
+    "id": 7787647646,
+    "name": "Rotary Netra Rural Eye Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.202451,
+        17.831088
+      ]
+    }
+  },
+  {
+    "id": 7787647647,
+    "name": "Sri Surya Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2092812,
+        17.6849028
+      ]
+    }
+  },
+  {
+    "id": 7787647648,
+    "name": "Harshitha Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2101897,
+        17.6863384
+      ]
+    }
+  },
+  {
+    "id": 7787647649,
+    "name": "Mother and Child Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.12163,
+        17.790161
+      ]
+    }
+  },
+  {
+    "id": 7787647650,
+    "name": "Pendurthi Govt Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2070778,
+        17.8094151
+      ]
+    }
+  },
+  {
+    "id": 7787647651,
+    "name": "Sri Sai Balaji Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2368507,
+        17.7418536
+      ]
+    }
+  },
+  {
+    "id": 7787647652,
+    "name": "Sri Sai Aditya Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.269671,
+        17.746278
+      ]
+    }
+  },
+  {
+    "id": 7787647653,
+    "name": "Srikanth's Speech & Hearing Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3022707,
+        17.710622
+      ]
+    }
+  },
+  {
+    "id": 7787647654,
+    "name": "Gothis Doctor Chambers",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.312125,
+        17.710382
+      ]
+    }
+  },
+  {
+    "id": 7787647655,
+    "name": "Harini Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2055093,
+        17.6795765
+      ]
+    }
+  },
+  {
+    "id": 7787647656,
+    "name": "Janaki Polyclinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2049423,
+        17.6930517
+      ]
+    }
+  },
+  {
+    "id": 7787647657,
+    "name": "Heritage Kerala Ayurveda Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2120798,
+        17.7671455
+      ]
+    }
+  },
+  {
+    "id": 7787647658,
+    "name": "Ashok Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2059135,
+        17.8220019
+      ]
+    }
+  },
+  {
+    "id": 7787647659,
+    "name": "GSR Chest Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1961794,
+        17.6848418
+      ]
+    }
+  },
+  {
+    "id": 7787647660,
+    "name": "Sharan Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.077059,
+        17.6297105
+      ]
+    }
+  },
+  {
+    "id": 7787647661,
+    "name": "Ramya Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.304302,
+        17.710544
+      ]
+    }
+  },
+  {
+    "id": 7787647663,
+    "name": "Sanjevani Mega Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3103812,
+        17.7098493
+      ]
+    }
+  },
+  {
+    "id": 7787647664,
+    "name": "Sri Sapthagiri Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.213061,
+        17.805851
+      ]
+    }
+  },
+  {
+    "id": 7787647666,
+    "name": "Government Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2161371,
+        17.7524734
+      ]
+    }
+  },
+  {
+    "id": 7787647667,
+    "name": "Raghavendra Eye Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2199593,
+        17.7476896
+      ]
+    }
+  },
+  {
+    "id": 7787647668,
+    "name": "ENT Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.218258,
+        17.75108
+      ]
+    }
+  },
+  {
+    "id": 7787647669,
+    "name": "Syamala Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9809284,
+        17.6183718
+      ]
+    }
+  },
+  {
+    "id": 7787647670,
+    "name": "Asha Hospital Diabetes & Multi Speciality",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.08184,
+        17.6212637
+      ]
+    }
+  },
+  {
+    "id": 7787647671,
+    "name": "Muddu Krishna Children Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2046951,
+        17.6852715
+      ]
+    }
+  },
+  {
+    "id": 7787647672,
+    "name": "Surya Teja Multispeciality Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9784452,
+        17.5659385
+      ]
+    }
+  },
+  {
+    "id": 7787647673,
+    "name": "Sarojini Devi Skin Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3090277,
+        17.7166466
+      ]
+    }
+  },
+  {
+    "id": 7787647675,
+    "name": "Ramsaranya Child Care Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3143316,
+        17.7102508
+      ]
+    }
+  },
+  {
+    "id": 7787647676,
+    "name": "Baba Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.308867,
+        17.708177
+      ]
+    }
+  },
+  {
+    "id": 7787647677,
+    "name": "Triveni Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2064302,
+        17.8177533
+      ]
+    }
+  },
+  {
+    "id": 7787647678,
+    "name": "Amma Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0901428,
+        17.6288271
+      ]
+    }
+  },
+  {
+    "id": 7787647680,
+    "name": "Aditya Multi Care Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3046802,
+        17.7100474
+      ]
+    }
+  },
+  {
+    "id": 7916820571,
+    "name": "M.B. Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3106082,
+        17.763448
+      ]
+    }
+  },
+  {
+    "id": 7917282168,
+    "name": "ApolloHospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3091374,
+        17.7171444
+      ]
+    }
+  },
+  {
+    "id": 7930495900,
+    "name": "HCG Cancer Centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3057236,
+        17.7638753
+      ]
+    }
+  },
+  {
+    "id": 7931043211,
+    "name": "Star Pinnacle Heart Centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3078391,
+        17.7632652
+      ]
+    }
+  },
+  {
+    "id": 7934165413,
+    "name": "Homi Bhabha Cancer Hospital & Research Centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1144238,
+        17.6898831
+      ]
+    }
+  },
+  {
+    "id": 7951547049,
+    "name": "Ramsaranya Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3106734,
+        17.7097535
+      ]
+    }
+  },
+  {
+    "id": 7951595809,
+    "name": "Visakha Hospitals And Diagnostics",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3130073,
+        17.7202856
+      ]
+    }
+  },
+  {
+    "id": 7969038055,
+    "name": "SevenHills Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3094245,
+        17.7173631
+      ]
+    }
+  },
+  {
+    "id": 7999688946,
+    "name": "St Anns Jubilee Memorial Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2377236,
+        17.6843531
+      ]
+    }
+  },
+  {
+    "id": 8128267855,
+    "name": "Bhanu's house",
+    "poi_category": "tourism",
+    "poi_type": "Guest House",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8939112,
+        17.7396747
+      ]
+    }
+  },
+  {
+    "id": 8128298855,
+    "name": "govt.primaryschool",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8906965,
+        17.7361067
+      ]
+    }
+  },
+  {
+    "id": 8128327309,
+    "name": "High school",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8880807,
+        17.7396843
+      ]
+    }
+  },
+  {
+    "id": 8194717117,
+    "name": "Sri Narayana Defence Academy Junior & Degree College",
+    "poi_category": "amenity",
+    "poi_type": "College",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2975325,
+        17.8934834
+      ]
+    }
+  },
+  {
+    "id": 8318371134,
+    "name": "Rockdale",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3083471,
+        17.7163638
+      ]
+    }
+  },
+  {
+    "id": 8318460386,
+    "name": "Four Points by Sheraton",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3123966,
+        17.7208884
+      ]
+    }
+  },
+  {
+    "id": 8318854765,
+    "name": "Green Park",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.306264,
+        17.7153753
+      ]
+    }
+  },
+  {
+    "id": 8318894344,
+    "name": "Royal Fort",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3093748,
+        17.7231319
+      ]
+    }
+  },
+  {
+    "id": 8319434582,
+    "name": "Meghalaya",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3097133,
+        17.7233686
+      ]
+    }
+  },
+  {
+    "id": 8319509627,
+    "name": "Ambica Sea Green",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3312158,
+        17.718696
+      ]
+    }
+  },
+  {
+    "id": 8643806769,
+    "name": "Vijnana Vihara Residential School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3240093,
+        17.8832002
+      ]
+    }
+  },
+  {
+    "id": 8644557536,
+    "name": "Vijnana Vihara Residential School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3239894,
+        17.8832006
+      ]
+    }
+  },
+  {
+    "id": 8767763195,
+    "name": "Suraksha Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2555653,
+        17.7396152
+      ]
+    }
+  },
+  {
+    "id": 8767818502,
+    "name": "Varma Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3113995,
+        17.7640286
+      ]
+    }
+  },
+  {
+    "id": 8767908843,
+    "name": "Sai Spoorthy Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.309347,
+        17.7295406
+      ]
+    }
+  },
+  {
+    "id": 8767992101,
+    "name": "Government Regional Eye Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3113942,
+        17.7304744
+      ]
+    }
+  },
+  {
+    "id": 8768007090,
+    "name": "LG Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3045894,
+        17.710174
+      ]
+    }
+  },
+  {
+    "id": 8768034019,
+    "name": "Omega Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3124349,
+        17.763791
+      ]
+    }
+  },
+  {
+    "id": 8768039075,
+    "name": "Medicover Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3121251,
+        17.7638179
+      ]
+    }
+  },
+  {
+    "id": 8768045905,
+    "name": "Ramsaranya Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3109067,
+        17.7100054
+      ]
+    }
+  },
+  {
+    "id": 8768062261,
+    "name": "GJ Hospitals And Trauma Centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3324401,
+        17.7336653
+      ]
+    }
+  },
+  {
+    "id": 8768067733,
+    "name": "Sankar Foundation Eye Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2159491,
+        17.6812931
+      ]
+    }
+  },
+  {
+    "id": 8790992838,
+    "name": "Government Hospital, Rakodu",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3410607,
+        18.0924766
+      ]
+    }
+  },
+  {
+    "id": 9772561605,
+    "name": "Chest Hospital and Medical Store",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2191542,
+        17.7493798
+      ]
+    }
+  },
+  {
+    "id": 9936546722,
+    "name": "Runway 5",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.89964,
+        17.6393015
+      ]
+    }
+  },
+  {
+    "id": 10300976122,
+    "name": "Hi In",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3410775,
+        17.7363567
+      ]
+    }
+  },
+  {
+    "id": 10880955399,
+    "name": "Indu's dental specialities",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3076925,
+        17.7361705
+      ]
+    }
+  },
+  {
+    "id": 10892732501,
+    "name": "OYO 60899 V3 Comforts",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2080963,
+        17.8078592
+      ]
+    }
+  },
+  {
+    "id": 10892765464,
+    "name": "Vishal Mega Mart",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2088455,
+        17.8075766
+      ]
+    }
+  },
+  {
+    "id": 10892780888,
+    "name": "Eye Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2082462,
+        17.809861
+      ]
+    }
+  },
+  {
+    "id": 11359571713,
+    "name": "Raja Super Market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1860605,
+        17.9072822
+      ]
+    }
+  },
+  {
+    "id": 11491683239,
+    "name": "DMart",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.387921,
+        18.0892135
+      ]
+    }
+  },
+  {
+    "id": 11499958564,
+    "name": "New Hope Jeevan Jyothi High School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1943513,
+        17.9315806
+      ]
+    }
+  },
+  {
+    "id": 11504889354,
+    "name": "Visvam Healthcare Center",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2171766,
+        17.9582444
+      ]
+    }
+  },
+  {
+    "id": 11505882748,
+    "name": "NCN Lodge",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1861729,
+        17.9079002
+      ]
+    }
+  },
+  {
+    "id": 11533318979,
+    "name": "ZPHS High School Atchutapuram",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9780492,
+        17.5671463
+      ]
+    }
+  },
+  {
+    "id": 11568843827,
+    "name": "Lakshmi Mini Super Market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1890038,
+        17.8801264
+      ]
+    }
+  },
+  {
+    "id": 11568858421,
+    "name": "More",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2063908,
+        17.8178635
+      ]
+    }
+  },
+  {
+    "id": 11568880937,
+    "name": "MPP school",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2163785,
+        17.777915
+      ]
+    }
+  },
+  {
+    "id": 11568884060,
+    "name": "Reliance Fresh",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.25693,
+        17.7391215
+      ]
+    }
+  },
+  {
+    "id": 11568906519,
+    "name": "Vijetha",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2291939,
+        17.7441197
+      ]
+    }
+  },
+  {
+    "id": 11585567239,
+    "name": "Ravindra Bharathi School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2096569,
+        17.79843
+      ]
+    }
+  },
+  {
+    "id": 11586128072,
+    "name": "Sri Chaitanya Techno School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3287958,
+        17.7428792
+      ]
+    }
+  },
+  {
+    "id": 11601247509,
+    "name": "Inspiiro",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.389795,
+        18.0710838
+      ]
+    }
+  },
+  {
+    "id": 11601290178,
+    "name": "NC supermarket",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3159165,
+        18.0452492
+      ]
+    }
+  },
+  {
+    "id": 11601290180,
+    "name": "Kasturiba Gandi",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3275218,
+        18.0509155
+      ]
+    }
+  },
+  {
+    "id": 11608970082,
+    "name": "Centurion English Medium School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1955969,
+        17.9072453
+      ]
+    }
+  },
+  {
+    "id": 11609359601,
+    "name": "Vidya vikas",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1876426,
+        17.8867958
+      ]
+    }
+  },
+  {
+    "id": 11609601861,
+    "name": "Burley Cottage",
+    "poi_category": "tourism",
+    "poi_type": "Guest House",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3178831,
+        17.724955
+      ]
+    }
+  },
+  {
+    "id": 11609614464,
+    "name": "ViniS",
+    "poi_category": "shop",
+    "poi_type": "Mall",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3132472,
+        17.7249339
+      ]
+    }
+  },
+  {
+    "id": 11609618817,
+    "name": "Neerus",
+    "poi_category": "shop",
+    "poi_type": "Mall",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3137038,
+        17.7246226
+      ]
+    }
+  },
+  {
+    "id": 11609626426,
+    "name": "Dr.Mohan's Diabetes Specialities Centre",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3147147,
+        17.7251141
+      ]
+    }
+  },
+  {
+    "id": 11610201184,
+    "name": "Sri Lakshmi Lodge",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.235134,
+        17.7431577
+      ]
+    }
+  },
+  {
+    "id": 11647371241,
+    "name": "DMart",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1876161,
+        17.684095
+      ]
+    }
+  },
+  {
+    "id": 11647435222,
+    "name": "Reliance Fresh",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.142915,
+        17.6875641
+      ]
+    }
+  },
+  {
+    "id": 11664594819,
+    "name": "A P Model School patipalli",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0329025,
+        17.6364789
+      ]
+    }
+  },
+  {
+    "id": 11664738369,
+    "name": "Hotel Harita",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2930015,
+        17.7191431
+      ]
+    }
+  },
+  {
+    "id": 11688050172,
+    "name": "OYO Sindhura Guest House",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3049037,
+        17.7391879
+      ]
+    }
+  },
+  {
+    "id": 11688050181,
+    "name": "Sri Viswa School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3058704,
+        17.739898
+      ]
+    }
+  },
+  {
+    "id": 11690446188,
+    "name": "AMG Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3118352,
+        17.7414668
+      ]
+    }
+  },
+  {
+    "id": 11690804151,
+    "name": "ZP High School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0145646,
+        17.7322705
+      ]
+    }
+  },
+  {
+    "id": 11699172293,
+    "name": "kailasagiri park",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3403614,
+        17.7499266
+      ]
+    }
+  },
+  {
+    "id": 11711398033,
+    "name": "Children Multi Speciality Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1881834,
+        17.899753
+      ]
+    }
+  },
+  {
+    "id": 11720145425,
+    "name": "Savera Restaurant",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3085072,
+        17.7247839
+      ]
+    }
+  },
+  {
+    "id": 11720290771,
+    "name": "Athidhi devo bava",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3364845,
+        17.7314747
+      ]
+    }
+  },
+  {
+    "id": 11740567974,
+    "name": "Medicover Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3318795,
+        17.7478206
+      ]
+    }
+  },
+  {
+    "id": 11741089415,
+    "name": "Dr BR Ambedkar Gurukulam",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2812434,
+        17.7695657
+      ]
+    }
+  },
+  {
+    "id": 11830210676,
+    "name": "Royal Stay Inn",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2068411,
+        17.8169821
+      ]
+    }
+  },
+  {
+    "id": 11831483587,
+    "name": "Manikanta Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1877019,
+        17.8994395
+      ]
+    }
+  },
+  {
+    "id": 11851269089,
+    "name": "Suneetha Hospital Dr V Anand Rao",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2535864,
+        17.7401303
+      ]
+    }
+  },
+  {
+    "id": 11851269476,
+    "name": "Sri Chaitanya Techno School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2375401,
+        17.7413557
+      ]
+    }
+  },
+  {
+    "id": 11982618764,
+    "name": "Vijayam School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3524502,
+        17.8239752
+      ]
+    }
+  },
+  {
+    "id": 11982638678,
+    "name": "Super Market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3542294,
+        17.8241723
+      ]
+    }
+  },
+  {
+    "id": 12060674042,
+    "name": "A P Model School,Tegada",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9353145,
+        17.6417417
+      ]
+    }
+  },
+  {
+    "id": 12060674043,
+    "name": "KGBV school, Tegada",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9349009,
+        17.6412605
+      ]
+    }
+  },
+  {
+    "id": 12104199803,
+    "name": "Sai Ram Traders",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4050145,
+        18.047261
+      ]
+    }
+  },
+  {
+    "id": 12104199805,
+    "name": "RK Mart",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4048907,
+        18.0469502
+      ]
+    }
+  },
+  {
+    "id": 12104199810,
+    "name": "Saranya gereral stores, articles footware and fancy store",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4047947,
+        18.0461654
+      ]
+    }
+  },
+  {
+    "id": 12104314145,
+    "name": "Sri Krishna Grammar School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3296454,
+        17.7639754
+      ]
+    }
+  },
+  {
+    "id": 12104314147,
+    "name": "Sree Arunodaya School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3309447,
+        17.7632507
+      ]
+    }
+  },
+  {
+    "id": 12104314149,
+    "name": "Reliance Super Mart",
+    "poi_category": "shop",
+    "poi_type": "Mall",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3328855,
+        17.7620655
+      ]
+    }
+  },
+  {
+    "id": 12171321612,
+    "name": "Sree krishna Grammar School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3294722,
+        17.7637595
+      ]
+    }
+  },
+  {
+    "id": 12171321613,
+    "name": "Sree Krishna Grammar School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3293192,
+        17.7656345
+      ]
+    }
+  },
+  {
+    "id": 12171321614,
+    "name": "Sree Krishna Grammar School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3292387,
+        17.7654285
+      ]
+    }
+  },
+  {
+    "id": 12171321625,
+    "name": "Aditya Degree College",
+    "poi_category": "amenity",
+    "poi_type": "College",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3172009,
+        17.7318803
+      ]
+    }
+  },
+  {
+    "id": 12203546604,
+    "name": "Mithraa super market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2109208,
+        17.7990164
+      ]
+    }
+  },
+  {
+    "id": 12203554981,
+    "name": "Smart point",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2103999,
+        17.8017036
+      ]
+    }
+  },
+  {
+    "id": 12213464286,
+    "name": "Sai Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2093877,
+        17.8046265
+      ]
+    }
+  },
+  {
+    "id": 12213464390,
+    "name": "Saadhana Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2105594,
+        17.8009047
+      ]
+    }
+  },
+  {
+    "id": 12213911037,
+    "name": "Surabhi Clinics",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2092659,
+        17.8032146
+      ]
+    }
+  },
+  {
+    "id": 12213911074,
+    "name": "Damayanthi Super Market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2094601,
+        17.8025234
+      ]
+    }
+  },
+  {
+    "id": 12213911077,
+    "name": "Sarat Chandras Speciality Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2094537,
+        17.8024276
+      ]
+    }
+  },
+  {
+    "id": 12252198661,
+    "name": "More",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.333577,
+        17.7226117
+      ]
+    }
+  },
+  {
+    "id": 12252527618,
+    "name": "Sunflower childrens clinic",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.185985,
+        17.8972279
+      ]
+    }
+  },
+  {
+    "id": 12450634118,
+    "name": "Damayanthi Super Market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2286534,
+        17.7744129
+      ]
+    }
+  },
+  {
+    "id": 12458292864,
+    "name": "APSWERIS School , Elamanchili",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8595913,
+        17.5664082
+      ]
+    }
+  },
+  {
+    "id": 12460699379,
+    "name": "Yalamarty Pharmacy College",
+    "poi_category": "amenity",
+    "poi_type": "College",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3342476,
+        17.899835
+      ]
+    }
+  },
+  {
+    "id": 12460699380,
+    "name": "Yalamarty Polytechnic College",
+    "poi_category": "amenity",
+    "poi_type": "College",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3339016,
+        17.8990155
+      ]
+    }
+  },
+  {
+    "id": 12470766214,
+    "name": "Dr BV Adinarayana Childrens Specialist",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2719764,
+        17.7350078
+      ]
+    }
+  },
+  {
+    "id": 12470766353,
+    "name": "Big Mart",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2694538,
+        17.7350947
+      ]
+    }
+  },
+  {
+    "id": 12470766366,
+    "name": "Rightway School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2700271,
+        17.7349954
+      ]
+    }
+  },
+  {
+    "id": 12470766407,
+    "name": "Sri Vagdevi School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.270296,
+        17.7354555
+      ]
+    }
+  },
+  {
+    "id": 12531568516,
+    "name": "Satyam Super Market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3305245,
+        17.7310219
+      ]
+    }
+  },
+  {
+    "id": 12531568517,
+    "name": "Hotel Sowbhagya",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3060968,
+        17.7189563
+      ]
+    }
+  },
+  {
+    "id": 12531591388,
+    "name": "Teeny boppers",
+    "poi_category": "amenity",
+    "poi_type": "Kindergarten",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3606792,
+        17.7644749
+      ]
+    }
+  },
+  {
+    "id": 12531593373,
+    "name": "Ayushman arogya mandir",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3294672,
+        17.729599
+      ]
+    }
+  },
+  {
+    "id": 12531598710,
+    "name": "Pantaloons",
+    "poi_category": "shop",
+    "poi_type": "Mall",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3274016,
+        17.7433809
+      ]
+    }
+  },
+  {
+    "id": 12531604493,
+    "name": "More",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3354688,
+        17.7369469
+      ]
+    }
+  },
+  {
+    "id": 12614929412,
+    "name": "GVMC Primary School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2785659,
+        17.7313197
+      ]
+    }
+  },
+  {
+    "id": 12638517786,
+    "name": "Piles Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1874128,
+        17.8986495
+      ]
+    }
+  },
+  {
+    "id": 12711070098,
+    "name": "Delhi Public School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2396113,
+        17.7425283
+      ]
+    }
+  },
+  {
+    "id": 12836704941,
+    "name": "Govt High School Sabbavaram",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1293272,
+        17.7926393
+      ]
+    }
+  },
+  {
+    "id": 12836704944,
+    "name": "BR Ambedkar Gurukulam",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1284063,
+        17.7924301
+      ]
+    }
+  },
+  {
+    "id": 12837010586,
+    "name": "More",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2092433,
+        17.6854821
+      ]
+    }
+  },
+  {
+    "id": 12837274562,
+    "name": "Signature Hotels",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2035517,
+        17.7162647
+      ]
+    }
+  },
+  {
+    "id": 12894983186,
+    "name": "Vani Lodge",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2973532,
+        17.7123132
+      ]
+    }
+  },
+  {
+    "id": 12894983187,
+    "name": "Hotel Wonderful Inn",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2970687,
+        17.7126113
+      ]
+    }
+  },
+  {
+    "id": 12894983191,
+    "name": "Hotel Taj Mahal",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2981621,
+        17.7125116
+      ]
+    }
+  },
+  {
+    "id": 12953180149,
+    "name": "Kotha Doctor",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.8613024,
+        17.9162546
+      ]
+    }
+  },
+  {
+    "id": 12953215230,
+    "name": "My Room Luxury Stay",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3271854,
+        17.7411216
+      ]
+    }
+  },
+  {
+    "id": 12953215244,
+    "name": "Guest House",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3273443,
+        17.7416501
+      ]
+    }
+  },
+  {
+    "id": 12959403113,
+    "name": "Dr. Gunturu Indira",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2081267,
+        17.8095921
+      ]
+    }
+  },
+  {
+    "id": 12959403118,
+    "name": "Sri SNK Grand",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2086438,
+        17.8083242
+      ]
+    }
+  },
+  {
+    "id": 12959403130,
+    "name": "Maathrusree",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2087422,
+        17.8079141
+      ]
+    }
+  },
+  {
+    "id": 12959438394,
+    "name": "Mothers Care Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.211095,
+        17.7982745
+      ]
+    }
+  },
+  {
+    "id": 12959438400,
+    "name": "Shyam Sundar Medical Care",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2112363,
+        17.7977167
+      ]
+    }
+  },
+  {
+    "id": 12986990370,
+    "name": "The School of Autism",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3310416,
+        17.7437218
+      ]
+    }
+  },
+  {
+    "id": 12992712252,
+    "name": "Sri Orthopedic & Physiotheraphy Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3339276,
+        17.7361703
+      ]
+    }
+  },
+  {
+    "id": 12992712257,
+    "name": "KIMS Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3353795,
+        17.7373995
+      ]
+    }
+  },
+  {
+    "id": 12992712258,
+    "name": "KIMS Fertility",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3354205,
+        17.7374553
+      ]
+    }
+  },
+  {
+    "id": 12992712259,
+    "name": "Smart Health Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3355691,
+        17.7375464
+      ]
+    }
+  },
+  {
+    "id": 12992712262,
+    "name": "Veera Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.336297,
+        17.7377773
+      ]
+    }
+  },
+  {
+    "id": 12992712263,
+    "name": "Dr. Ram's Heart & Multispeciality Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3364167,
+        17.7383032
+      ]
+    }
+  },
+  {
+    "id": 12992712278,
+    "name": "Hotel Square Inn",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3316729,
+        17.7467352
+      ]
+    }
+  },
+  {
+    "id": 12992712281,
+    "name": "SR Medical Center",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3316544,
+        17.7457642
+      ]
+    }
+  },
+  {
+    "id": 12992712284,
+    "name": "Khazana Supermarket",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3319932,
+        17.7459698
+      ]
+    }
+  },
+  {
+    "id": 13065369413,
+    "name": "Avinash Neuro Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3513809,
+        17.8040265
+      ]
+    }
+  },
+  {
+    "id": 13065369459,
+    "name": "Beyond Autism",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3478371,
+        17.8040622
+      ]
+    }
+  },
+  {
+    "id": 13065369485,
+    "name": "M.V.R. Super Market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3429252,
+        17.8045291
+      ]
+    }
+  },
+  {
+    "id": 13065369486,
+    "name": "M.M.M. Super Market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3428152,
+        17.8045369
+      ]
+    }
+  },
+  {
+    "id": 13065378810,
+    "name": "Lotus English Medium School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3425095,
+        17.8051004
+      ]
+    }
+  },
+  {
+    "id": 13084988857,
+    "name": "Hotel Morya",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2929835,
+        17.7178828
+      ]
+    }
+  },
+  {
+    "id": 13084988863,
+    "name": "Sai Jutika Grand Lodge",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2934989,
+        17.7161427
+      ]
+    }
+  },
+  {
+    "id": 13084988864,
+    "name": "Sree Kanya Lodge",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2934927,
+        17.7160765
+      ]
+    }
+  },
+  {
+    "id": 13084988884,
+    "name": "KNR Residency",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2938829,
+        17.7196071
+      ]
+    }
+  },
+  {
+    "id": 13085046820,
+    "name": "Hotel Golden Tulip",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3027017,
+        17.7197822
+      ]
+    }
+  },
+  {
+    "id": 13085046846,
+    "name": "North Way Hotel",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3024369,
+        17.718278
+      ]
+    }
+  },
+  {
+    "id": 13086305445,
+    "name": "Greenfield Organics",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3261828,
+        17.7277241
+      ]
+    }
+  },
+  {
+    "id": 13086305479,
+    "name": "SVS Super Market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3280185,
+        17.7289222
+      ]
+    }
+  },
+  {
+    "id": 13086308323,
+    "name": "Shoulder & Knee Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3306733,
+        17.7311817
+      ]
+    }
+  },
+  {
+    "id": 13096498937,
+    "name": "Apollo Clinic",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3063491,
+        17.7298529
+      ]
+    }
+  },
+  {
+    "id": 13096777774,
+    "name": "Hotel Akshara",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2931205,
+        17.7280211
+      ]
+    }
+  },
+  {
+    "id": 13096777785,
+    "name": "More",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2939206,
+        17.7279881
+      ]
+    }
+  },
+  {
+    "id": 13098139558,
+    "name": "More",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3041453,
+        17.7308293
+      ]
+    }
+  },
+  {
+    "id": 13108171657,
+    "name": "Indus Hospitals",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3075353,
+        17.7625271
+      ]
+    }
+  },
+  {
+    "id": 13108171659,
+    "name": "Narayana Medicity",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3119581,
+        17.7621246
+      ]
+    }
+  },
+  {
+    "id": 13109119282,
+    "name": "More",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3001574,
+        17.7383253
+      ]
+    }
+  },
+  {
+    "id": 13109119812,
+    "name": "Mitra Supermarket",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3001286,
+        17.7369671
+      ]
+    }
+  },
+  {
+    "id": 13140554976,
+    "name": "More",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2600504,
+        17.7438224
+      ]
+    }
+  },
+  {
+    "id": 13162997833,
+    "name": "Keerthi Residency",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3207236,
+        17.735358
+      ]
+    }
+  },
+  {
+    "id": 13162997837,
+    "name": "Hotel Ambica Grand",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3155401,
+        17.7347789
+      ]
+    }
+  },
+  {
+    "id": 13179727729,
+    "name": "Hotel Lata Grand",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3134939,
+        17.7244441
+      ]
+    }
+  },
+  {
+    "id": 13179727750,
+    "name": "Podar Jumbo Kids",
+    "poi_category": "amenity",
+    "poi_type": "Kindergarten",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.31371,
+        17.7233208
+      ]
+    }
+  },
+  {
+    "id": 13179825626,
+    "name": "Amul Milk Parlour",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2385983,
+        17.7416535
+      ]
+    }
+  },
+  {
+    "id": 13179825649,
+    "name": "Sanjivani Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2464417,
+        17.7403603
+      ]
+    }
+  },
+  {
+    "id": 13179825669,
+    "name": "Government School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2426355,
+        17.7400572
+      ]
+    }
+  },
+  {
+    "id": 13179884736,
+    "name": "CMR Green Fields Park-1",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3855955,
+        18.0755565
+      ]
+    }
+  },
+  {
+    "id": 13182337487,
+    "name": "Lendi Grounds",
+    "poi_category": "amenity",
+    "poi_type": "College",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4018174,
+        18.0191238
+      ]
+    }
+  },
+  {
+    "id": 13204630047,
+    "name": "hfdb",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3818514,
+        17.7960081
+      ]
+    }
+  },
+  {
+    "id": 13204631586,
+    "name": "forest",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.393281,
+        17.804183
+      ]
+    }
+  },
+  {
+    "id": 13204632652,
+    "name": "Gandhi",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3963328,
+        17.7989437
+      ]
+    }
+  },
+  {
+    "id": 13204635135,
+    "name": "Area",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3886204,
+        17.7951956
+      ]
+    }
+  },
+  {
+    "id": 13204637343,
+    "name": "forest",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3893022,
+        17.7952383
+      ]
+    }
+  },
+  {
+    "id": 13204637687,
+    "name": "Foresht",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3881312,
+        17.7990255
+      ]
+    }
+  },
+  {
+    "id": 13204638818,
+    "name": "forest",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3890616,
+        17.7953651
+      ]
+    }
+  },
+  {
+    "id": 13204639830,
+    "name": "forest",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3882361,
+        17.7989074
+      ]
+    }
+  },
+  {
+    "id": 13204646618,
+    "name": "Park",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3810777,
+        17.7941264
+      ]
+    }
+  },
+  {
+    "id": 13204658544,
+    "name": "Timapuram forest",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4013324,
+        17.8173918
+      ]
+    }
+  },
+  {
+    "id": 13204669109,
+    "name": "Dmart",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.4110732,
+        17.853197
+      ]
+    }
+  },
+  {
+    "id": 13245182629,
+    "name": "Gandhi Statue",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3771811,
+        17.7808943
+      ]
+    }
+  },
+  {
+    "id": 13253888220,
+    "name": "School of Law",
+    "poi_category": "amenity",
+    "poi_type": "College",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3779809,
+        17.7830802
+      ]
+    }
+  },
+  {
+    "id": 13281158415,
+    "name": "Sri Brundavan Grand Inn",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0160201,
+        17.6874369
+      ]
+    }
+  },
+  {
+    "id": 13281158433,
+    "name": "Vishal Mega Mart",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.014016,
+        17.6873832
+      ]
+    }
+  },
+  {
+    "id": 13281158467,
+    "name": "Geetha Eye & Orthopaedic Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0127619,
+        17.6872398
+      ]
+    }
+  },
+  {
+    "id": 13312857697,
+    "name": "Hotel Geetha Inn",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3014099,
+        17.7261812
+      ]
+    }
+  },
+  {
+    "id": 13312902006,
+    "name": "Hotel Simhadri Lodge",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3014144,
+        17.7259238
+      ]
+    }
+  },
+  {
+    "id": 13313009609,
+    "name": "Lakshmi Residency",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3016743,
+        17.7265454
+      ]
+    }
+  },
+  {
+    "id": 13314245140,
+    "name": "Bal Vikasa Foundation Bridge School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3015825,
+        17.6995098
+      ]
+    }
+  },
+  {
+    "id": 13316385331,
+    "name": "Sri Basara Junior College",
+    "poi_category": "amenity",
+    "poi_type": "College",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3006752,
+        17.7347281
+      ]
+    }
+  },
+  {
+    "id": 13316889160,
+    "name": "RR Inn Lodge",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2990178,
+        17.7264139
+      ]
+    }
+  },
+  {
+    "id": 13316892855,
+    "name": "Daliraju Super Market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2995126,
+        17.7315294
+      ]
+    }
+  },
+  {
+    "id": 13316892882,
+    "name": "SKML Super Market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2995786,
+        17.7329269
+      ]
+    }
+  },
+  {
+    "id": 13319047215,
+    "name": "Siva Sivani Play School",
+    "poi_category": "amenity",
+    "poi_type": "Kindergarten",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2485929,
+        17.7501102
+      ]
+    }
+  },
+  {
+    "id": 13319047221,
+    "name": "More",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2497226,
+        17.7500837
+      ]
+    }
+  },
+  {
+    "id": 13319047240,
+    "name": "Sri Gayatri Vidya Nilayam",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2513306,
+        17.7499395
+      ]
+    }
+  },
+  {
+    "id": 13319047246,
+    "name": "PEN School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2525354,
+        17.7497761
+      ]
+    }
+  },
+  {
+    "id": 13319047249,
+    "name": "PEN Kids",
+    "poi_category": "amenity",
+    "poi_type": "Kindergarten",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2528028,
+        17.7500963
+      ]
+    }
+  },
+  {
+    "id": 13319047294,
+    "name": "Durga Laxmi Super Market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2565794,
+        17.7487088
+      ]
+    }
+  },
+  {
+    "id": 13325847916,
+    "name": "R.K. Super Market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9824413,
+        17.9904583
+      ]
+    }
+  },
+  {
+    "id": 13325847947,
+    "name": "HCG Cancer Centre",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        82.9807745,
+        17.9904961
+      ]
+    }
+  },
+  {
+    "id": 13369321117,
+    "name": "Primary Health Center Kothavalasa",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1897275,
+        17.900578
+      ]
+    }
+  },
+  {
+    "id": 13388162296,
+    "name": "Sri Srinivasa Guest House",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3039766,
+        17.7162258
+      ]
+    }
+  },
+  {
+    "id": 13410448979,
+    "name": "Hotel Ocean Spice",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3443006,
+        17.7432821
+      ]
+    }
+  },
+  {
+    "id": 13410448983,
+    "name": "BIG Market",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3417199,
+        17.7423882
+      ]
+    }
+  },
+  {
+    "id": 13418563619,
+    "name": "Urban Primary Health Center",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3874603,
+        18.0860629
+      ]
+    }
+  },
+  {
+    "id": 13418621552,
+    "name": "Vijaya Medical Center",
+    "poi_category": "amenity",
+    "poi_type": "Clinic",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3397236,
+        17.7401504
+      ]
+    }
+  },
+  {
+    "id": 13420003755,
+    "name": "DMart",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2583995,
+        17.744253
+      ]
+    }
+  },
+  {
+    "id": 13429829515,
+    "name": "PEN School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3011546,
+        17.7149959
+      ]
+    }
+  },
+  {
+    "id": 13429886341,
+    "name": "Hotel New Prince",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2997851,
+        17.7152359
+      ]
+    }
+  },
+  {
+    "id": 13429886345,
+    "name": "Hotel Rajdhani",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2995554,
+        17.7153208
+      ]
+    }
+  },
+  {
+    "id": 13429886347,
+    "name": "Sree Surya Residency",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2993114,
+        17.7156502
+      ]
+    }
+  },
+  {
+    "id": 13429886348,
+    "name": "Jai Krishna Residency",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2992327,
+        17.7152142
+      ]
+    }
+  },
+  {
+    "id": 13429886349,
+    "name": "Ashoka Residency",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2991825,
+        17.7150584
+      ]
+    }
+  },
+  {
+    "id": 13429886359,
+    "name": "Hotel Rajdhani Grand",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2997418,
+        17.7140095
+      ]
+    }
+  },
+  {
+    "id": 13429886360,
+    "name": "Hotel Orange",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2998291,
+        17.7143162
+      ]
+    }
+  },
+  {
+    "id": 13429892342,
+    "name": "Hotel Sai Central",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3006949,
+        17.7152076
+      ]
+    }
+  },
+  {
+    "id": 13429892344,
+    "name": "Vijaya Luke College Of Nursing",
+    "poi_category": "amenity",
+    "poi_type": "College",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3002167,
+        17.7151867
+      ]
+    }
+  },
+  {
+    "id": 13429892345,
+    "name": "P.E.N. School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3008254,
+        17.7157107
+      ]
+    }
+  },
+  {
+    "id": 13483798890,
+    "name": "DMart",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.0204962,
+        17.6905917
+      ]
+    }
+  },
+  {
+    "id": 13484148501,
+    "name": "Hotel Sinka Grand",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2969024,
+        17.7278481
+      ]
+    }
+  },
+  {
+    "id": 13533632601,
+    "name": "Doctors colony park",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3165921,
+        17.7465662
+      ]
+    }
+  },
+  {
+    "id": 13565870438,
+    "name": "Saraswathi Park",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3002794,
+        17.7141847
+      ]
+    }
+  },
+  {
+    "id": 13569143201,
+    "name": "KRM colony park",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.316983,
+        17.7424587
+      ]
+    }
+  },
+  {
+    "id": 13569164301,
+    "name": "NBM Law college",
+    "poi_category": "amenity",
+    "poi_type": "College",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3118887,
+        17.7390226
+      ]
+    }
+  },
+  {
+    "id": 13577550449,
+    "name": "Vizvit Lodge",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1855158,
+        17.8967926
+      ]
+    }
+  },
+  {
+    "id": 13594781001,
+    "name": "MMTC Colony Park",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3181993,
+        17.7452896
+      ]
+    }
+  },
+  {
+    "id": 13703071988,
+    "name": "OYO Flagship Hotel Gayatri",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3085639,
+        17.7151624
+      ]
+    }
+  },
+  {
+    "id": 13703652259,
+    "name": "Rise Hospital",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.2022417,
+        17.6846933
+      ]
+    }
+  },
+  {
+    "id": 13703652289,
+    "name": "Celest Mall",
+    "poi_category": "shop",
+    "poi_type": "Mall",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1990397,
+        17.6839171
+      ]
+    }
+  },
+  {
+    "id": 13705932180,
+    "name": "The Royal Comforts",
+    "poi_category": "tourism",
+    "poi_type": "Hotel",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3278813,
+        17.7376255
+      ]
+    }
+  },
+  {
+    "id": 13719054470,
+    "name": "Vishal Mega Mart",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.1873283,
+        17.8991242
+      ]
+    }
+  },
+  {
+    "id": 13720611001,
+    "name": "Sujani Park",
+    "poi_category": "leisure",
+    "poi_type": "Park",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.313395,
+        17.7447985
+      ]
+    }
+  },
+  {
+    "id": 13800470090,
+    "name": "Urban Primary Health Center Dondaparthy",
+    "poi_category": "amenity",
+    "poi_type": "Hospital",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3007641,
+        17.7291423
+      ]
+    }
+  },
+  {
+    "id": 13800472528,
+    "name": "GVMC Primary School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3020386,
+        17.7282409
+      ]
+    }
+  },
+  {
+    "id": 13822217575,
+    "name": "Sisira Organics",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.312978,
+        17.7351441
+      ]
+    }
+  },
+  {
+    "id": 13822235671,
+    "name": "Kasyap Home Needs",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3133124,
+        17.7398039
+      ]
+    }
+  },
+  {
+    "id": 13901121244,
+    "name": "DMart",
+    "poi_category": "shop",
+    "poi_type": "Supermarket",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3417641,
+        17.7382614
+      ]
+    }
+  },
+  {
+    "id": 13953432356,
+    "name": "Sri Basara Junior College",
+    "poi_category": "amenity",
+    "poi_type": "College",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.328155,
+        17.7423517
+      ]
+    }
+  },
+  {
+    "id": 13953432366,
+    "name": "Akshara English Medium School",
+    "poi_category": "amenity",
+    "poi_type": "School",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        83.3245672,
+        17.7415823
+      ]
+    }
+  }
+]
