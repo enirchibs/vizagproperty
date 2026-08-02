@@ -662,6 +662,61 @@ export function PropertiesPage() {
       </div>
 
       <div className={`max-w-7xl mx-auto px-4 py-8 ${viewMode === 'map' ? 'max-w-full' : ''}`}>
+        
+        {/* 1-Touch Category Pills */}
+        <div className="flex flex-wrap items-center gap-2 mb-6 pb-2 overflow-x-auto scrollbar-hide">
+          <button
+            onClick={() => setFilters(prev => ({ ...prev, property_type: undefined }))}
+            className={`px-4 py-2 rounded-full text-xs md:text-sm font-extrabold transition-all shadow-sm ${
+              !filters.property_type
+                ? 'bg-primary-600 text-white shadow-md'
+                : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+            }`}
+          >
+            🔥 All Latest
+          </button>
+          <button
+            onClick={() => setFilters(prev => ({ ...prev, property_type: 'plot' }))}
+            className={`px-4 py-2 rounded-full text-xs md:text-sm font-extrabold transition-all shadow-sm ${
+              filters.property_type === 'plot'
+                ? 'bg-orange-600 text-white shadow-md'
+                : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+            }`}
+          >
+            📍 Plots & Land
+          </button>
+          <button
+            onClick={() => setFilters(prev => ({ ...prev, property_type: 'villa' }))}
+            className={`px-4 py-2 rounded-full text-xs md:text-sm font-extrabold transition-all shadow-sm ${
+              filters.property_type === 'villa'
+                ? 'bg-green-600 text-white shadow-md'
+                : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+            }`}
+          >
+            🏡 Villas & Houses
+          </button>
+          <button
+            onClick={() => setFilters(prev => ({ ...prev, property_type: 'flat' }))}
+            className={`px-4 py-2 rounded-full text-xs md:text-sm font-extrabold transition-all shadow-sm ${
+              filters.property_type === 'flat'
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+            }`}
+          >
+            🏢 Flats & Apartments
+          </button>
+          <button
+            onClick={() => setFilters(prev => ({ ...prev, property_type: 'commercial' }))}
+            className={`px-4 py-2 rounded-full text-xs md:text-sm font-extrabold transition-all shadow-sm ${
+              filters.property_type === 'commercial'
+                ? 'bg-purple-600 text-white shadow-md'
+                : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+            }`}
+          >
+            🏪 Commercial
+          </button>
+        </div>
+
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-gray-900">
             {properties.length} Properties Found

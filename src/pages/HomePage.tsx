@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Shield, MapPin, Building2, TrendingUp, Search, MessageCircle, Star, Quote } from 'lucide-react'
+import { Shield, Building2, TrendingUp, Search, MessageCircle, Star, Quote } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { HeroSearch } from '../components/HeroSearch'
@@ -15,27 +15,30 @@ import { CallBanner } from '../components/CallBanner'
 import { SponsoredBanners } from '../components/SponsoredBanners'
 import { SeoKeywordsSection } from '../components/SeoKeywordsSection'
 
+import { PropertyCard } from '../components/PropertyCard'
+
 export function HomePage() {
-  const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
+  const [latestProperties, setLatestProperties] = useState<Property[]>([])
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [loading, setLoading] = useState(true)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [searchDropdownOpen, setSearchDropdownOpen] = useState(false)
 
   useEffect(() => {
-    loadFeaturedProperties()
+    loadLatestProperties()
   }, [])
 
-  const loadFeaturedProperties = async () => {
+  const loadLatestProperties = async () => {
     try {
       const { data, error } = await supabase
         .from('properties')
-        .select('*')
+        .select('*, localities(name, slug, city)')
         .eq('status', 'approved')
         .order('created_at', { ascending: false })
-        .limit(3) // Top 3 featured
+        .limit(12)
 
       if (error) throw error
-      setFeaturedProperties(data || [])
+      setLatestProperties(data || [])
     } catch (error) {
       console.error(error)
     } finally {
@@ -126,53 +129,112 @@ export function HomePage() {
       {/* Premium Partners / Sponsored Banners */}
       <SponsoredBanners />
 
-      {/* 4. Featured Projects / Properties */}
+      {/* 4. Latest Properties (Instant Display without Search) */}
       <section className="py-16 bg-gray-50 border-y border-gray-200">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-end mb-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
             <div>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">Featured Projects</h2>
-              <p className="text-gray-600">Handpicked premium properties from trusted builders</p>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                  Latest Verified Listings
+                </span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">
+                Latest Plots, Villas & Flats in Vizag
+              </h2>
+              <p className="text-gray-600 mt-1">
+                Explore real estate directly in Visakhapatnam — instant call or WhatsApp owners & builders with 1 tap.
+              </p>
             </div>
-            <Link to="/properties" className="hidden md:flex items-center gap-2 text-primary-600 font-bold hover:text-primary-800 transition-colors">
-              View All <TrendingUp className="w-5 h-5" />
+            <Link to="/properties" className="inline-flex items-center gap-2 text-primary-600 font-extrabold hover:text-primary-800 transition-colors text-base bg-white px-5 py-2.5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md">
+              View All Properties <TrendingUp className="w-5 h-5" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* 1-Touch Category Quick Pills */}
+          <div className="flex flex-wrap items-center gap-2.5 mb-8 pb-2 overflow-x-auto scrollbar-hide">
+            <button
+              onClick={() => setSelectedCategory('all')}
+              className={`px-5 py-2.5 rounded-full text-xs md:text-sm font-extrabold transition-all shadow-sm ${
+                selectedCategory === 'all'
+                  ? 'bg-primary-600 text-white shadow-md scale-105'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+              }`}
+            >
+              🔥 All Properties ({latestProperties.length})
+            </button>
+            <button
+              onClick={() => setSelectedCategory('plot')}
+              className={`px-5 py-2.5 rounded-full text-xs md:text-sm font-extrabold transition-all shadow-sm ${
+                selectedCategory === 'plot'
+                  ? 'bg-orange-600 text-white shadow-md scale-105'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+              }`}
+            >
+              📍 Plots & VMRDA Land
+            </button>
+            <button
+              onClick={() => setSelectedCategory('villa')}
+              className={`px-5 py-2.5 rounded-full text-xs md:text-sm font-extrabold transition-all shadow-sm ${
+                selectedCategory === 'villa'
+                  ? 'bg-green-600 text-white shadow-md scale-105'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+              }`}
+            >
+              🏡 Villas & Houses
+            </button>
+            <button
+              onClick={() => setSelectedCategory('flat')}
+              className={`px-5 py-2.5 rounded-full text-xs md:text-sm font-extrabold transition-all shadow-sm ${
+                selectedCategory === 'flat'
+                  ? 'bg-blue-600 text-white shadow-md scale-105'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+              }`}
+            >
+              🏢 Flats & Apartments
+            </button>
+            <button
+              onClick={() => setSelectedCategory('commercial')}
+              className={`px-5 py-2.5 rounded-full text-xs md:text-sm font-extrabold transition-all shadow-sm ${
+                selectedCategory === 'commercial'
+                  ? 'bg-purple-600 text-white shadow-md scale-105'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+              }`}
+            >
+              🏪 Commercial
+            </button>
+          </div>
+
+          {/* Properties Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {loading ? (
-              [1, 2, 3].map(i => <div key={i} className="h-96 bg-gray-200 rounded-3xl animate-pulse"></div>)
+              [1, 2, 3, 4].map(i => <div key={i} className="h-96 bg-gray-200 rounded-2xl animate-pulse"></div>)
             ) : (
-              featuredProperties.map(property => (
-                <Link key={property.id} to={`/property/${property.id}`} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 group block">
-                  <div className="relative h-64 overflow-hidden bg-gray-100">
-                    {property.images?.[0] ? (
-                      <img src={property.images[0]} alt={property.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
-                    )}
-                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-gray-900 shadow-sm">
-                      {property.property_type.replace('_', ' ').toUpperCase()}
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="font-bold text-xl text-gray-900 mb-2 line-clamp-1 group-hover:text-primary-600 transition-colors">{property.title}</h3>
-                    <div className="flex items-center text-gray-500 text-sm mb-4">
-                      <MapPin className="w-4 h-4 mr-1 text-accent-500" />
-                      {property.location || property.city}
-                    </div>
-                    <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-                      <div className="text-2xl font-black text-primary-700">
-                        ₹{property.price?.toLocaleString('en-IN')}
-                      </div>
-                      <span className="px-4 py-2 bg-primary-50 text-primary-700 font-semibold rounded-xl group-hover:bg-primary-600 group-hover:text-white transition-colors">
-                        View Details
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))
+              latestProperties
+                .filter(p => {
+                  if (selectedCategory === 'all') return true
+                  const pt = p.property_type?.toLowerCase() || ''
+                  if (selectedCategory === 'plot') return pt.includes('plot') || pt.includes('land')
+                  if (selectedCategory === 'villa') return pt.includes('villa') || pt.includes('house')
+                  if (selectedCategory === 'flat') return pt.includes('flat') || pt.includes('apartment')
+                  if (selectedCategory === 'commercial') return pt.includes('commercial') || pt.includes('shop') || pt.includes('office')
+                  return true
+                })
+                .slice(0, 8)
+                .map(property => (
+                  <PropertyCard key={property.id} property={property} />
+                ))
             )}
+          </div>
+
+          <div className="mt-10 text-center">
+            <Link
+              to="/properties"
+              className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-extrabold px-8 py-4 rounded-2xl text-base shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-0.5"
+            >
+              Browse All Properties in Visakhapatnam ({latestProperties.length}+ Available) →
+            </Link>
           </div>
         </div>
       </section>
