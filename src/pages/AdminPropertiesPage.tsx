@@ -116,12 +116,17 @@ export function AdminPropertiesPage() {
         updateData.admin_notes = adminNotes.trim()
       }
 
-      const { error } = await supabase
+      const { data: updatedRows, error } = await supabase
         .from('properties')
         .update(updateData)
         .eq('id', propertyId)
+        .select()
 
       if (error) throw error
+
+      if (!updatedRows || updatedRows.length === 0) {
+        throw new Error('Database permission check failed: Supabase Row Level Security (RLS) blocked updating this property. Please run the 11_fix_admin_property_rls.sql migration script in Supabase SQL Editor.')
+      }
 
       setProperties(prev => prev.map(p =>
         p.id === propertyId ? { ...p, status: newStatus, approved_at: updateData.approved_at, rejection_reason: updateData.rejection_reason, admin_notes: updateData.admin_notes } : p
@@ -130,8 +135,10 @@ export function AdminPropertiesPage() {
       setActionType(null)
       setRejectionReason('')
       setAdminNotes('')
-    } catch (err) {
-      alert('Failed to update property. Please try again.')
+      alert(`Property status updated to ${newStatus.toUpperCase()}!`)
+    } catch (err: any) {
+      console.error('Property update error:', err)
+      alert(err.message || 'Failed to update property. Please try again.')
     } finally {
       setProcessing(false)
     }
@@ -328,12 +335,12 @@ export function AdminPropertiesPage() {
                       <span className="line-clamp-1">{property.location}, {property.city}</span>
                     </div>
 
-                    {property.users && (
-                      <div className="mb-3 space-y-2">
-                        <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1.5 rounded border border-gray-200">
-                          <span className="font-medium">Owner: </span>
-                          {property.users.email || property.users.phone || property.users.name}
-                        </div>
+                    <div className="mb-3 space-y-2">
+                      <div className="text-xs text-gray-600 bg-gray-50 px-2 py-1.5 rounded border border-gray-200">
+                        <span className="font-semibold text-gray-700">Owner/Contact: </span>
+                        {property.users?.email || property.users?.phone || property.users?.name || `${property.agent_name || 'Owner'} ${property.agent_phone ? `(${property.agent_phone})` : ''}`}
+                      </div>
+                      {property.users && (
                         <div className="flex items-center gap-2">
                           {property.users.trusted ? (
                             <div className="flex items-center gap-1 bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-700 px-2 py-1 rounded-lg text-xs font-semibold border border-amber-200">
@@ -375,16 +382,8 @@ export function AdminPropertiesPage() {
                             )}
                           </button>
                         </div>
-                        {property.users.trusted && property.status === 'pending' && (
-                          <div className="bg-amber-50 border border-amber-200 rounded-lg p-2">
-                            <p className="text-xs text-amber-700 flex items-center gap-1">
-                              <Award className="h-3 w-3" />
-                              This owner is trusted. Their future properties will be auto-approved.
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                      )}
+                    </div>
 
                     <div className="flex items-center gap-4 text-gray-600 text-sm mb-3 pb-3 border-b border-gray-100">
                       {property.bedrooms && property.bedrooms > 0 && (
@@ -428,61 +427,75 @@ export function AdminPropertiesPage() {
                       </div>
                     )}
 
-                    {property.status === 'pending' && (
+                    <div className="space-y-2">
                       <div className="flex gap-2">
-                        <button
-                          onClick={() => {
-                            setActionId(property.id)
-                            setActionType('approve')
-                            setAdminNotes(property.admin_notes || '')
-                          }}
-                          className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all text-sm font-semibold"
-                        >
-                          <CheckCircle className="h-4 w-4" />
-                          <span>Approve</span>
-                        </button>
-                        <button
-                          onClick={() => {
-                            setActionId(property.id)
-                            setActionType('reject')
-                            setAdminNotes(property.admin_notes || '')
-                          }}
-                          className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all text-sm font-semibold border border-red-200"
-                        >
-                          <XCircle className="h-4 w-4" />
-                          <span>Reject</span>
-                        </button>
-                      </div>
-                    )}
+                        {property.status !== 'approved' ? (
+                          <button
+                            onClick={() => {
+                              setActionId(property.id)
+                              setActionType('approve')
+                              setAdminNotes(property.admin_notes || '')
+                            }}
+                            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all text-xs font-bold shadow-sm"
+                          >
+                            <CheckCircle className="h-4 w-4" />
+                            <span>Approve</span>
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              setActionId(property.id)
+                              setActionType('reject')
+                              setAdminNotes(property.admin_notes || '')
+                            }}
+                            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all text-xs font-bold border border-red-200"
+                          >
+                            <XCircle className="h-4 w-4" />
+                            <span>Reject</span>
+                          </button>
+                        )}
 
-                    {property.status !== 'pending' && (
-                      <div className="flex gap-2">
-                        <a
-                          href={`/property/${property.id}`}
-                          className="flex-1 text-center px-4 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-all text-sm font-semibold flex items-center justify-center gap-1.5"
-                        >
-                          View Details
-                        </a>
                         <button
                           onClick={() => toggleFeaturedStatus(property.id, !!property.featured)}
                           disabled={togglingFeatureId === property.id}
-                          className={`flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg transition-all text-sm font-semibold ${
+                          className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg transition-all text-xs font-bold ${
                             property.featured
                               ? 'bg-amber-100 text-amber-700 hover:bg-amber-200 border border-amber-300'
                               : 'bg-white text-amber-600 hover:bg-amber-50 border border-amber-200'
                           } disabled:opacity-50`}
                         >
                           {togglingFeatureId === property.id ? (
-                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent"></div>
+                            <div className="animate-spin rounded-full h-3 w-3 border-2 border-current border-t-transparent"></div>
                           ) : (
                             <>
-                              <Star className={`h-4 w-4 ${property.featured ? 'fill-amber-600' : ''}`} />
-                              <span>{property.featured ? 'Unfeature' : 'Feature'}</span>
+                              <Star className={`h-3.5 w-3.5 ${property.featured ? 'fill-amber-600' : ''}`} />
+                              <span>{property.featured ? 'Featured' : 'Feature'}</span>
                             </>
                           )}
                         </button>
                       </div>
-                    )}
+
+                      <div className="flex gap-2">
+                        <a
+                          href={`/property/${property.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 text-center px-3 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg transition-all text-xs font-semibold flex items-center justify-center gap-1"
+                        >
+                          View Listing ↗
+                        </a>
+                        <button
+                          onClick={() => {
+                            setActionId(property.id)
+                            setActionType(property.status === 'approved' ? 'reject' : 'approve')
+                            setAdminNotes(property.admin_notes || '')
+                          }}
+                          className="flex-1 px-3 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition-all text-xs font-semibold border border-blue-200"
+                        >
+                          Edit Notes
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )

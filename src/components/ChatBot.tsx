@@ -6,6 +6,8 @@ import { ChatMessage, Property } from '../types'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { useNavigate, useLocation } from 'react-router-dom'
 
+import { processChatMessage } from '../services/aiChatService'
+
 interface ChatMessageWithProperties extends ChatMessage {
   properties?: Property[]
 }
@@ -67,52 +69,53 @@ export function ChatBot({ externalTrigger }: ChatBotProps = {}) {
     setLoading(true)
 
     try {
-      await supabase.from('chat_messages').insert({
-        user_id: user?.id,
-        session_id: sessionId,
-        role: 'user',
-        message: userMessage.message
-      })
+      if (user?.id) {
+        try {
+          await supabase.from('chat_messages').insert({
+            user_id: user.id,
+            session_id: sessionId,
+            role: 'user',
+            message: userMessage.message
+          })
+        } catch (dbErr) {
+          console.warn('Failed to insert user chat message:', dbErr)
+        }
+      }
 
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: userMessage.message,
-          session_id: sessionId
-        })
-      })
-
-      const data = await response.json()
+      const chatResult = await processChatMessage(userMessage.message, sessionId)
 
       const assistantMessage: ChatMessageWithProperties = {
         id: crypto.randomUUID(),
         user_id: user?.id,
         session_id: sessionId,
         role: 'assistant',
-        message: data.response || 'I apologize, but I encountered an error. Please try again.',
-        properties: data.properties || [],
+        message: chatResult.response || 'I am here to help you find properties in Vizag!',
+        properties: chatResult.properties || [],
         created_at: new Date().toISOString()
       }
 
       setMessages(prev => [...prev, assistantMessage])
 
-      await supabase.from('chat_messages').insert({
-        user_id: user?.id,
-        session_id: sessionId,
-        role: 'assistant',
-        message: assistantMessage.message
-      })
+      if (user?.id) {
+        try {
+          await supabase.from('chat_messages').insert({
+            user_id: user.id,
+            session_id: sessionId,
+            role: 'assistant',
+            message: assistantMessage.message
+          })
+        } catch (dbErr) {
+          console.warn('Failed to insert assistant chat message:', dbErr)
+        }
+      }
     } catch (error) {
+      console.error('Chat error:', error)
       const errorMessage: ChatMessageWithProperties = {
         id: crypto.randomUUID(),
         user_id: user?.id,
         session_id: sessionId,
         role: 'assistant',
-        message: 'I can help you find properties! Try asking me about available properties in a specific area or with certain features.',
+        message: 'I can help you find properties! Try asking me about available plots, flats, or villas in Madhurawada, PM Palem, MVP Colony, or Gajuwaka.',
         created_at: new Date().toISOString()
       }
       setMessages(prev => [...prev, errorMessage])
@@ -142,10 +145,10 @@ export function ChatBot({ externalTrigger }: ChatBotProps = {}) {
   }
 
   const suggestions = [
-    "Plots in Madhurawada under 30L",
-    "VMRDA approved plots in Vizag",
-    "Flats near IT SEZ Vizag",
-    "Best areas to invest in Vizag"
+    "Flats in Madhurawada",
+    "Plots in Bhogapuram",
+    "Villas in Vizag",
+    "Flats for rent in Vizag"
   ]
 
   const handleSuggestionClick = (suggestion: string) => {
