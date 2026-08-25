@@ -164,7 +164,7 @@ export function ChatBot({ externalTrigger }: ChatBotProps = {}) {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-24 right-4 md:bottom-6 md:right-24 bg-primary-600 text-white p-4 rounded-full shadow-2xl hover:bg-primary-700 transition-all hover:scale-110 z-40 min-h-[56px] min-w-[56px] flex items-center justify-center"
+          className="hidden md:flex fixed bottom-6 right-6 bg-primary-600 text-white p-4 rounded-full shadow-2xl hover:bg-primary-700 transition-all hover:scale-110 z-40 min-h-[56px] min-w-[56px] items-center justify-center"
           aria-label="Open AI Chat Assistant"
         >
           <MessageCircle className="h-6 w-6" />

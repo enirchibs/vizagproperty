@@ -6,9 +6,7 @@ import { ErrorBoundary } from './components/ErrorBoundary'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { ChatBot } from './components/ChatBot'
-import { FloatingWhatsAppButton } from './components/FloatingWhatsAppButton'
 import { ProtectedRoute } from './components/ProtectedRoute'
-import { FloatingSocialShare } from './components/FloatingSocialShare'
 import { UsernameModal } from './components/UsernameModal'
 import { HomePage } from './pages/HomePage'
 
@@ -196,8 +194,6 @@ function AppContent() {
         </Suspense>
         <Footer />
         <ChatBot />
-        <FloatingWhatsAppButton />
-        <FloatingSocialShare />
 
         {showUsernamePrompt && (
           <UsernameModal onClose={() => setShowUsernamePrompt(false)} />

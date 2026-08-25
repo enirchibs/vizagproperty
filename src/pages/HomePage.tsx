@@ -6,12 +6,10 @@ import { Property } from '../types'
 import { HeroSearch } from '../components/HeroSearch'
 import { CategoryCards } from '../components/CategoryCards'
 import { StickyMobileNav } from '../components/StickyMobileNav'
-import { ChatBot } from '../components/ChatBot'
 import { AuthModal } from '../components/AuthModal'
 import { HomeBlogSection } from '../components/HomeBlogSection'
 import { SEOHead } from '../components/SEOHead'
 import { HeatMap } from '../components/HeatMap'
-import { CallBanner } from '../components/CallBanner'
 import { SponsoredBanners } from '../components/SponsoredBanners'
 import { SeoKeywordsSection } from '../components/SeoKeywordsSection'
 
@@ -297,12 +295,10 @@ export function HomePage() {
         <HomeBlogSection />
       </div>
 
-      <ChatBot />
       {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
       
       {/* 9. Sticky Bottom Mobile CTA */}
       <StickyMobileNav />
-      <CallBanner />
     </div>
   )
 }
