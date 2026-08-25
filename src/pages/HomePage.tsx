@@ -22,7 +22,6 @@ export function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [loading, setLoading] = useState(true)
   const [showAuthModal, setShowAuthModal] = useState(false)
-  const [searchDropdownOpen, setSearchDropdownOpen] = useState(false)
 
   useEffect(() => {
     loadLatestProperties()
@@ -91,46 +90,15 @@ export function HomePage() {
             <span className="flex items-center gap-1"><Shield className="w-4 h-4 text-success-500" /> Verified Listings</span>
           </p>
 
-          {/* New Search Component */}
+          {/* Search Component */}
           <div className="w-full pt-4">
-            <HeroSearch onDropdownToggle={setSearchDropdownOpen} />
+            <HeroSearch />
           </div>
         </div>
       </div>
 
-      {/* 2. Statistics Bar — hidden while location search dropdown is open */}
-      <div
-        className="w-full bg-primary-900 py-8 border-t-4 border-accent-500 relative z-20 -mt-2 transition-all duration-300"
-        style={searchDropdownOpen ? { opacity: 0, pointerEvents: 'none', maxHeight: 0, padding: 0, overflow: 'hidden' } : { opacity: 1, maxHeight: '200px' }}
-      >
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/10">
-          <div className="space-y-1">
-            <div className="text-3xl md:text-5xl font-black text-white">15,000+</div>
-            <div className="text-sm font-semibold text-primary-200 uppercase tracking-wider">Verified Properties</div>
-          </div>
-          <div className="space-y-1">
-            <div className="text-3xl md:text-5xl font-black text-white">500+</div>
-            <div className="text-sm font-semibold text-primary-200 uppercase tracking-wider">Top Builders</div>
-          </div>
-          <div className="space-y-1">
-            <div className="text-3xl md:text-5xl font-black text-white">120+</div>
-            <div className="text-sm font-semibold text-primary-200 uppercase tracking-wider">Localities Covered</div>
-          </div>
-          <div className="space-y-1">
-            <div className="text-3xl md:text-5xl font-black text-white">200+</div>
-            <div className="text-sm font-semibold text-primary-200 uppercase tracking-wider">New Projects</div>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. Browse By Category */}
-      <CategoryCards />
-
-      {/* Premium Partners / Sponsored Banners */}
-      <SponsoredBanners />
-
-      {/* 4. Latest Properties (Instant Display without Search) */}
-      <section className="py-16 bg-gray-50 border-y border-gray-200">
+      {/* 2. All Properties Listed in the Website (Instant Display below Hero) */}
+      <section className="py-12 bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
             <div>
@@ -141,7 +109,7 @@ export function HomePage() {
                 </span>
               </div>
               <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">
-                Latest Plots, Villas & Flats in Vizag
+                Properties Listed in Visakhapatnam
               </h2>
               <p className="text-gray-600 mt-1">
                 Explore real estate directly in Visakhapatnam — instant call or WhatsApp owners & builders with 1 tap.
@@ -238,6 +206,34 @@ export function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* 3. Browse Visakhapatnam Property by Category (Image 2 Section) */}
+      <CategoryCards />
+
+      {/* Premium Partners / Sponsored Banners */}
+      <SponsoredBanners />
+
+      {/* 4. Statistics Bar (Image 3 Section - Moved further down) */}
+      <div className="w-full bg-primary-900 py-10 border-y-4 border-accent-500 my-8">
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/10">
+          <div className="space-y-1">
+            <div className="text-3xl md:text-5xl font-black text-white">15,000+</div>
+            <div className="text-sm font-semibold text-primary-200 uppercase tracking-wider">Verified Properties</div>
+          </div>
+          <div className="space-y-1">
+            <div className="text-3xl md:text-5xl font-black text-white">500+</div>
+            <div className="text-sm font-semibold text-primary-200 uppercase tracking-wider">Top Builders</div>
+          </div>
+          <div className="space-y-1">
+            <div className="text-3xl md:text-5xl font-black text-white">120+</div>
+            <div className="text-sm font-semibold text-primary-200 uppercase tracking-wider">Localities Covered</div>
+          </div>
+          <div className="space-y-1">
+            <div className="text-3xl md:text-5xl font-black text-white">200+</div>
+            <div className="text-sm font-semibold text-primary-200 uppercase tracking-wider">New Projects</div>
+          </div>
+        </div>
+      </div>
 
       {/* 5. Interactive Map Placeholder */}
       <section className="py-20 px-4 bg-white">

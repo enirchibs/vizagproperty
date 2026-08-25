@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
-import { MapPin, Bed, Bath, Maximize, CheckCircle, XCircle, Clock, Shield, Star, Award } from 'lucide-react'
+import { MapPin, Bed, Bath, Maximize, CheckCircle, XCircle, Clock, Shield, Star, Award, Trash2 } from 'lucide-react'
 import { isAdminEmail } from '../config/contact'
 
 export function AdminPropertiesPage() {
@@ -139,6 +139,34 @@ export function AdminPropertiesPage() {
     } catch (err: any) {
       console.error('Property update error:', err)
       alert(err.message || 'Failed to update property. Please try again.')
+    } finally {
+      setProcessing(false)
+    }
+  }
+
+  const handleDeleteProperty = async (propertyId: string) => {
+    if (!window.confirm('Are you sure you want to PERMANENTLY delete this property listing? This action cannot be undone.')) return
+    setProcessing(true)
+    try {
+      await supabase.from('property_details').delete().eq('property_id', propertyId)
+      await supabase.from('favorites').delete().eq('property_id', propertyId)
+
+      const { data, error } = await supabase
+        .from('properties')
+        .delete()
+        .eq('id', propertyId)
+        .select()
+
+      if (error) throw error
+
+      if (!data || data.length === 0) {
+        throw new Error('Database permission check failed: Supabase Row Level Security (RLS) blocked deleting this property. Please run 12_delete_property.sql in Supabase SQL Editor.')
+      }
+
+      setProperties(prev => prev.filter(p => p.id !== propertyId))
+      alert('Property listing deleted successfully!')
+    } catch (err: any) {
+      alert(err.message || 'Failed to delete property.')
     } finally {
       setProcessing(false)
     }
@@ -493,6 +521,14 @@ export function AdminPropertiesPage() {
                           className="flex-1 px-3 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition-all text-xs font-semibold border border-blue-200"
                         >
                           Edit Notes
+                        </button>
+                        <button
+                          onClick={() => handleDeleteProperty(property.id)}
+                          className="px-3 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-all text-xs font-semibold border border-red-200 flex items-center gap-1"
+                          title="Delete Listing"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                          <span>Delete</span>
                         </button>
                       </div>
                     </div>
