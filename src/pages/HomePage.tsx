@@ -19,7 +19,6 @@ import { PropertyCard } from '../components/PropertyCard'
 
 export function HomePage() {
   const [latestProperties, setLatestProperties] = useState<Property[]>([])
-  const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [loading, setLoading] = useState(true)
   const [showAuthModal, setShowAuthModal] = useState(false)
 
@@ -34,7 +33,7 @@ export function HomePage() {
         .select('*, localities(name, slug, city)')
         .eq('status', 'approved')
         .order('created_at', { ascending: false })
-        .limit(12)
+        .limit(200)
 
       if (error) throw error
       setLatestProperties(data || [])
@@ -120,79 +119,14 @@ export function HomePage() {
             </Link>
           </div>
 
-          {/* 1-Touch Category Quick Pills */}
-          <div className="flex flex-wrap items-center gap-2.5 mb-8 pb-2 overflow-x-auto scrollbar-hide">
-            <button
-              onClick={() => setSelectedCategory('all')}
-              className={`px-5 py-2.5 rounded-full text-xs md:text-sm font-extrabold transition-all shadow-sm ${
-                selectedCategory === 'all'
-                  ? 'bg-primary-600 text-white shadow-md scale-105'
-                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-              }`}
-            >
-              🔥 All Properties ({latestProperties.length})
-            </button>
-            <button
-              onClick={() => setSelectedCategory('plot')}
-              className={`px-5 py-2.5 rounded-full text-xs md:text-sm font-extrabold transition-all shadow-sm ${
-                selectedCategory === 'plot'
-                  ? 'bg-orange-600 text-white shadow-md scale-105'
-                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-              }`}
-            >
-              📍 Plots & VMRDA Land
-            </button>
-            <button
-              onClick={() => setSelectedCategory('villa')}
-              className={`px-5 py-2.5 rounded-full text-xs md:text-sm font-extrabold transition-all shadow-sm ${
-                selectedCategory === 'villa'
-                  ? 'bg-green-600 text-white shadow-md scale-105'
-                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-              }`}
-            >
-              🏡 Villas & Houses
-            </button>
-            <button
-              onClick={() => setSelectedCategory('flat')}
-              className={`px-5 py-2.5 rounded-full text-xs md:text-sm font-extrabold transition-all shadow-sm ${
-                selectedCategory === 'flat'
-                  ? 'bg-blue-600 text-white shadow-md scale-105'
-                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-              }`}
-            >
-              🏢 Flats & Apartments
-            </button>
-            <button
-              onClick={() => setSelectedCategory('commercial')}
-              className={`px-5 py-2.5 rounded-full text-xs md:text-sm font-extrabold transition-all shadow-sm ${
-                selectedCategory === 'commercial'
-                  ? 'bg-purple-600 text-white shadow-md scale-105'
-                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-              }`}
-            >
-              🏪 Commercial
-            </button>
-          </div>
-
           {/* Properties Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {loading ? (
               [1, 2, 3, 4].map(i => <div key={i} className="h-96 bg-gray-200 rounded-2xl animate-pulse"></div>)
             ) : (
-              latestProperties
-                .filter(p => {
-                  if (selectedCategory === 'all') return true
-                  const pt = p.property_type?.toLowerCase() || ''
-                  if (selectedCategory === 'plot') return pt.includes('plot') || pt.includes('land')
-                  if (selectedCategory === 'villa') return pt.includes('villa') || pt.includes('house')
-                  if (selectedCategory === 'flat') return pt.includes('flat') || pt.includes('apartment')
-                  if (selectedCategory === 'commercial') return pt.includes('commercial') || pt.includes('shop') || pt.includes('office')
-                  return true
-                })
-                .slice(0, 8)
-                .map(property => (
-                  <PropertyCard key={property.id} property={property} />
-                ))
+              latestProperties.map(property => (
+                <PropertyCard key={property.id} property={property} />
+              ))
             )}
           </div>
 
