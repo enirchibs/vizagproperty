@@ -10,28 +10,12 @@ import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp } from '../lib/whatsapp'
 import { buildUnifiedPropertyQuery } from '../lib/searchFilters'
 
-// Detect property type from free-text keyword (e.g. "flat" → "flat")
-const KEYWORD_TYPE_MAP: Record<string, string[]> = {
-  'flat': ['flat', 'apartment', 'flats', 'apartments', 'bhk', '1bhk', '2bhk', '3bhk', '4bhk'],
-  'plot': ['plot', 'plots', 'land', 'open plot', 'vmrda', 'gated', 'ploat', 'plt'],
-  'villa': ['villa', 'villas', 'independent house', 'duplex', 'row house'],
-  'pg': ['pg', 'hostel', 'paying guest', 'bachelor'],
-  'commercial': ['commercial', 'office', 'shop', 'showroom', 'warehouse'],
-}
-
 const KEYWORD_LISTING_TYPE_MAP: Record<string, string[]> = {
   'rent': ['rent', 'lease', 'tenant', 'to let'],
   'sale': ['sale', 'buy', 'purchase', 'selling']
 }
 
-function detectPropertyTypeFromKeyword(keyword: string): string | null {
-  if (!keyword) return null
-  const lower = keyword.toLowerCase().trim()
-  for (const [type, variants] of Object.entries(KEYWORD_TYPE_MAP)) {
-    if (variants.some(v => lower.includes(v))) return type
-  }
-  return null
-}
+// Detect property type from free-text keyword
 
 function detectListingTypeFromKeyword(keyword: string): string | null {
   if (!keyword) return null
@@ -43,26 +27,37 @@ function detectListingTypeFromKeyword(keyword: string): string | null {
 }
 
 // Sort results so the matched property type comes first, then others
-function sortByRelevance(data: Property[], preferredType: string | null): Property[] {
-  const typeOrder: Record<string, number> = { plot: 1, flat: 2, villa: 3, commercial: 4, pg: 5 }
-  return [...data].sort((a, b) => {
-    const aType = a.property_type?.toLowerCase() || ''
-    const bType = b.property_type?.toLowerCase() || ''
-    
-    if (preferredType) {
-      const aIsPreferred = aType.includes(preferredType)
-      const bIsPreferred = bType.includes(preferredType)
-      if (aIsPreferred && !bIsPreferred) return -1
-      if (!aIsPreferred && bIsPreferred) return 1
+function sortPropertiesByAreaPreference(data: Property[], query: string, localityName?: string): Property[] {
+  if (!data || data.length === 0) return []
+
+  const cleanQuery = (localityName || query || '').toLowerCase().trim()
+
+  const matchesArea = (p: any, areaKeyword: string): boolean => {
+    if (!areaKeyword) return false
+    const locObj = Array.isArray(p.localities) ? p.localities[0] : p.localities
+    const locName = (locObj?.name || p.location || '').toLowerCase()
+    const title = (p.title || '').toLowerCase()
+    const desc = (p.description || '').toLowerCase()
+    return locName.includes(areaKeyword) || title.includes(areaKeyword) || desc.includes(areaKeyword)
+  }
+
+  // 1. If user typed/selected an area
+  if (cleanQuery.length >= 2) {
+    const typedAreaMatches = data.filter(p => matchesArea(p, cleanQuery))
+
+    // If properties exist for typed area, display typed area first!
+    if (typedAreaMatches.length > 0) {
+      const remainingProps = data.filter(p => !typedAreaMatches.includes(p))
+      return [...typedAreaMatches, ...remainingProps]
     }
-    
-    const aBaseOrder = Object.entries(typeOrder).find(([k]) => aType.includes(k))?.[1] || 99
-    const bBaseOrder = Object.entries(typeOrder).find(([k]) => bType.includes(k))?.[1] || 99
-    if (aBaseOrder !== bBaseOrder) return aBaseOrder - bBaseOrder
-    
-    // secondary sort: newest first
-    return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
-  })
+  }
+
+  // 2. Fallback: "if area is not there, display madhuwada first, then bogapuram"
+  const madhurawadaProps = data.filter(p => matchesArea(p, 'madhurawada') || matchesArea(p, 'madhurwada'))
+  const bhogapuramProps = data.filter(p => !madhurawadaProps.includes(p) && (matchesArea(p, 'bhogapuram') || matchesArea(p, 'bogapuram')))
+  const remainingProps = data.filter(p => !madhurawadaProps.includes(p) && !bhogapuramProps.includes(p))
+
+  return [...madhurawadaProps, ...bhogapuramProps, ...remainingProps]
 }
 
 export function PropertiesPage() {
@@ -199,8 +194,6 @@ export function PropertiesPage() {
   const loadProperties = async (currentMaxDistance = 5) => {
     setLoading(true)
     try {
-      // Detect property type from keyword if no explicit filter
-      const keywordDetectedType = detectPropertyTypeFromKeyword(searchQuery)
       const keywordDetectedListingType = detectListingTypeFromKeyword(searchQuery)
 
       // If no property_type filter, query with optional listing_type & locality filters
@@ -246,7 +239,7 @@ export function PropertiesPage() {
 
         if (error) throw error
 
-        const sorted = sortByRelevance(data || [], keywordDetectedType)
+        const sorted = sortPropertiesByAreaPreference(data || [], searchQuery, localityName)
         setProperties(sorted)
         setExactProperties(sorted)
         setNearbyProperties([])
@@ -393,10 +386,11 @@ export function PropertiesPage() {
         }
       }
 
+      const combinedSorted = sortPropertiesByAreaPreference([...exactList, ...nearbyList], searchQuery, localityName)
       setSearchTier(activeSearchRadius)
-      setExactProperties(exactList)
-      setNearbyProperties(nearbyList)
-      setProperties([...exactList, ...nearbyList])
+      setExactProperties(combinedSorted.filter(p => exactList.includes(p)))
+      setNearbyProperties(combinedSorted.filter(p => nearbyList.includes(p)))
+      setProperties(combinedSorted)
       setHasMoreTiers(canExpandFurther)
     } catch (error) {
       console.error('Error in loadProperties:', error)
@@ -437,17 +431,21 @@ export function PropertiesPage() {
       <div className="bg-white border-b border-gray-200 sticky top-16 z-30">
         <div className="max-w-7xl mx-auto px-4 py-3 md:py-4">
           <div className="flex items-center space-x-2">
-            <div className="flex-1 flex items-center space-x-2 bg-gray-50 rounded-lg px-3 md:px-4 py-2.5 md:py-2 border border-gray-200 min-h-[44px]">
-              <Search className="h-5 w-5 text-gray-400 flex-shrink-0" />
-              <input
-                type="text"
+            <div className="flex-1 flex items-center bg-gray-50 rounded-lg px-2 md:px-3 py-1 border border-gray-200 min-h-[44px]">
+              <LocationAutocomplete
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                placeholder="Search properties..."
-                className="flex-1 bg-transparent focus:outline-none text-base"
+                onChange={(val, locId) => {
+                  setSearchQuery(val)
+                  if (locId) {
+                    setFilters(prev => ({ ...prev, locality_id: locId }))
+                  } else {
+                    setFilters(prev => ({ ...prev, locality_id: undefined }))
+                  }
+                }}
+                placeholder="Type area (e.g. Madhurawada, Bhogapuram)..."
+                className="bg-transparent border-0 focus:ring-0 text-base"
               />
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 ml-2">
                 {isSupported && (
                   <button
                     onClick={handleVoiceToggle}
