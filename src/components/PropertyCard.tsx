@@ -1,6 +1,6 @@
 import { Heart, Phone, MessageCircle, MapPin, BedDouble, Maximize2, Star, CheckCircle, ChevronLeft, ChevronRight, Camera } from 'lucide-react'
 import { Property } from '../types'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { openWhatsApp } from '../lib/whatsapp'
@@ -15,28 +15,28 @@ export function PropertyCard({ property }: PropertyCardProps) {
   const [isFavorited, setIsFavorited] = useState(false)
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [isHovered, setIsHovered] = useState(false)
-  const autoPlayTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const images = property.images && property.images.length > 0 ? property.images : ['/placeholder-property.jpg']
 
-  // Auto-loop image slideshow on hover for multi-image properties
+  // Continuous auto-loop slideshow for multi-image properties (always active)
   useEffect(() => {
-    if (isHovered && images.length > 1) {
-      autoPlayTimerRef.current = setInterval(() => {
+    if (images.length <= 1) return
+
+    // Stagger start slightly per card for organic visual flow
+    const staggerMs = (String(property.id || '').charCodeAt(0) % 5) * 400
+    let intervalId: ReturnType<typeof setInterval> | null = null
+
+    const timeoutId = setTimeout(() => {
+      intervalId = setInterval(() => {
         setCurrentImageIndex((prev) => (prev + 1) % images.length)
-      }, 2500)
-    } else {
-      if (autoPlayTimerRef.current) {
-        clearInterval(autoPlayTimerRef.current)
-      }
-    }
+      }, 3000)
+    }, staggerMs)
+
     return () => {
-      if (autoPlayTimerRef.current) {
-        clearInterval(autoPlayTimerRef.current)
-      }
+      clearTimeout(timeoutId)
+      if (intervalId) clearInterval(intervalId)
     }
-  }, [isHovered, images.length])
+  }, [images.length, property.id])
 
   const handleNextImage = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -121,11 +121,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
       href={`/property/${property.id}`}
       className="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-200 hover:border-primary-500 flex flex-col hover:-translate-y-0.5"
     >
-      <div 
-        className="relative aspect-[16/10] overflow-hidden bg-gray-100 group/image"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
+      <div className="relative aspect-[16/10] overflow-hidden bg-gray-100 group/image">
         <img
           key={images[currentImageIndex]}
           src={images[currentImageIndex]}
