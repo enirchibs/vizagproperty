@@ -126,7 +126,9 @@ export function PropertyCard({ property }: PropertyCardProps) {
           key={images[currentImageIndex]}
           src={images[currentImageIndex]}
           alt={`${property.title} - Photo ${currentImageIndex + 1}`}
-          className="w-full h-full object-cover group-hover/image:scale-105 transition-all duration-500"
+          className={`w-full h-full object-cover transition-all duration-500 ${
+            images.length === 1 ? 'animate-single-image-action' : 'group-hover/image:scale-105'
+          }`}
           loading="lazy"
         />
 
