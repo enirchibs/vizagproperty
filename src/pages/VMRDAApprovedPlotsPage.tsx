@@ -4,7 +4,7 @@ import { Search, MapPin, Shield, TrendingUp, Home, Building2, CheckCircle2, Arro
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { supabase } from '../lib/supabase'
 import type { Property } from '../types'
-import { buildStrictQuery, CATEGORY_CONTEXTS } from '../lib/searchFilters'
+import { buildStrictQuery, CATEGORY_CONTEXTS, sortPropertiesGlobalPreference } from '../lib/searchFilters'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 import { FixedWhatsAppCTA } from '../components/FixedWhatsAppCTA'
@@ -82,7 +82,8 @@ export default function VMRDAApprovedPlotsPage() {
       const { data, error } = await query
 
       if (error) throw error
-      setProperties(data || [])
+      const sorted = sortPropertiesGlobalPreference(data || [], searchQuery, selectedLocality)
+      setProperties(sorted)
 
       if (data && data.length === 0) {
         setShowZeroResultsModal(true)

@@ -5,7 +5,7 @@ import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { WhatsAppButton } from '../components/WhatsAppButton'
 import { supabase } from '../lib/supabase'
 import type { Property } from '../types'
-import { buildStrictQuery, CATEGORY_CONTEXTS } from '../lib/searchFilters'
+import { buildStrictQuery, CATEGORY_CONTEXTS, sortPropertiesGlobalPreference } from '../lib/searchFilters'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 
@@ -71,7 +71,8 @@ export default function VillasPage() {
       const { data, error } = await query
 
       if (error) throw error
-      setProperties(data || [])
+      const sorted = sortPropertiesGlobalPreference(data || [], searchQuery)
+      setProperties(sorted)
     } catch (error) {
     } finally {
       setLoading(false)

@@ -5,6 +5,7 @@ import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { supabase } from '../lib/supabase'
 import type { Property } from '../types'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
+import { sortPropertiesGlobalPreference } from '../lib/searchFilters'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 
 export default function ResidentialPropertyPage() {
@@ -72,7 +73,8 @@ export default function ResidentialPropertyPage() {
         .limit(50)
 
       if (error) throw error
-      setProperties(data || [])
+      const sorted = sortPropertiesGlobalPreference(data || [], searchQuery, selectedLocality)
+      setProperties(sorted)
     } catch (error) {
     } finally {
       setLoading(false)

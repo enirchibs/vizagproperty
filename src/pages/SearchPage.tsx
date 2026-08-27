@@ -9,6 +9,7 @@ import { GoogleMapView } from '../components/GoogleMapView'
 import { VIZAG_PROPERTY_PHONE_WITH_CODE } from '../config/contact'
 import { useSearch } from '../contexts/SearchContext'
 import { saveLastSearch } from '../lib/searchMemory'
+import { sortPropertiesGlobalPreference } from '../lib/searchFilters'
 import MapRadiusToggle from '../components/MapRadiusToggle'
 
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -229,19 +230,20 @@ export function SearchPage() {
 
 
   const displayedProperties = useMemo(() => {
-    if (!radiusEnabled || properties.length === 0) return properties;
-    
-    const centerLat = properties[0].latitude;
-    const centerLng = properties[0].longitude;
-    
-    if (centerLat == null || centerLng == null) return properties;
-    
-    return properties.filter(p => {
-      if (p.latitude == null || p.longitude == null) return false;
-      const distance = calculateDistance(centerLat, centerLng, p.latitude, p.longitude);
-      return distance <= radiusKm;
-    });
-  }, [properties, radiusEnabled, radiusKm]);
+    let list = properties;
+    if (radiusEnabled && properties.length > 0) {
+      const centerLat = properties[0].latitude;
+      const centerLng = properties[0].longitude;
+      if (centerLat != null && centerLng != null) {
+        list = properties.filter(p => {
+          if (p.latitude == null || p.longitude == null) return false;
+          const distance = calculateDistance(centerLat, centerLng, p.latitude, p.longitude);
+          return distance <= radiusKm;
+        });
+      }
+    }
+    return sortPropertiesGlobalPreference(list, locality);
+  }, [properties, radiusEnabled, radiusKm, locality]);
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">

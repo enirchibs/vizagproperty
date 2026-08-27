@@ -4,7 +4,7 @@ import { Search, MapPin, Key, CheckCircle2, ArrowRight, Phone, Building2, Mic, M
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { supabase } from '../lib/supabase'
 import type { Property } from '../types'
-import { buildStrictQuery, CATEGORY_CONTEXTS } from '../lib/searchFilters'
+import { buildStrictQuery, CATEGORY_CONTEXTS, sortPropertiesGlobalPreference } from '../lib/searchFilters'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 import { FixedWhatsAppCTA } from '../components/FixedWhatsAppCTA'
@@ -71,7 +71,8 @@ export default function FlatsForRentPage() {
       const { data, error } = await query
 
       if (error) throw error
-      setProperties(data || [])
+      const sorted = sortPropertiesGlobalPreference(data || [], searchQuery)
+      setProperties(sorted)
 
       if (data && data.length === 0) {
         setShowZeroResultsModal(true)

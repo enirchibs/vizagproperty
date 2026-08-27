@@ -8,7 +8,7 @@ import { GoogleMapView } from '../components/GoogleMapView'
 import { AdSenseInFeedCard } from '../components/AdSenseInFeedCard'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp } from '../lib/whatsapp'
-import { buildUnifiedPropertyQuery } from '../lib/searchFilters'
+import { buildUnifiedPropertyQuery, sortPropertiesGlobalPreference } from '../lib/searchFilters'
 
 const KEYWORD_LISTING_TYPE_MAP: Record<string, string[]> = {
   'rent': ['rent', 'lease', 'tenant', 'to let'],
@@ -27,38 +27,7 @@ function detectListingTypeFromKeyword(keyword: string): string | null {
 }
 
 // Sort results so the matched property type comes first, then others
-function sortPropertiesByAreaPreference(data: Property[], query: string, localityName?: string): Property[] {
-  if (!data || data.length === 0) return []
 
-  const cleanQuery = (localityName || query || '').toLowerCase().trim()
-
-  const matchesArea = (p: any, areaKeyword: string): boolean => {
-    if (!areaKeyword) return false
-    const locObj = Array.isArray(p.localities) ? p.localities[0] : p.localities
-    const locName = (locObj?.name || p.location || '').toLowerCase()
-    const title = (p.title || '').toLowerCase()
-    const desc = (p.description || '').toLowerCase()
-    return locName.includes(areaKeyword) || title.includes(areaKeyword) || desc.includes(areaKeyword)
-  }
-
-  // 1. If user typed/selected an area
-  if (cleanQuery.length >= 2) {
-    const typedAreaMatches = data.filter(p => matchesArea(p, cleanQuery))
-
-    // If properties exist for typed area, display typed area first!
-    if (typedAreaMatches.length > 0) {
-      const remainingProps = data.filter(p => !typedAreaMatches.includes(p))
-      return [...typedAreaMatches, ...remainingProps]
-    }
-  }
-
-  // 2. Fallback: "if area is not there, display madhuwada first, then bogapuram"
-  const madhurawadaProps = data.filter(p => matchesArea(p, 'madhurawada') || matchesArea(p, 'madhurwada'))
-  const bhogapuramProps = data.filter(p => !madhurawadaProps.includes(p) && (matchesArea(p, 'bhogapuram') || matchesArea(p, 'bogapuram')))
-  const remainingProps = data.filter(p => !madhurawadaProps.includes(p) && !bhogapuramProps.includes(p))
-
-  return [...madhurawadaProps, ...bhogapuramProps, ...remainingProps]
-}
 
 export function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([])
@@ -209,14 +178,6 @@ export function PropertiesPage() {
           queryBuilder = queryBuilder.eq('listing_type', effectiveListingType)
         }
 
-        if (filters.locality_id) {
-          if (filters.locality_id.length === 36 && filters.locality_id.includes('-')) {
-            queryBuilder = queryBuilder.eq('locality_id', filters.locality_id)
-          } else {
-            queryBuilder = queryBuilder.ilike('localities.name', `%${filters.locality_id}%`)
-          }
-        }
-
         if (filters.bedrooms && filters.bedrooms > 0) {
           queryBuilder = queryBuilder.eq('bedrooms', filters.bedrooms)
         }
@@ -229,17 +190,13 @@ export function PropertiesPage() {
           queryBuilder = queryBuilder.lte('price', filters.max_price)
         }
 
-        if (searchQuery && searchQuery.trim().length > 0) {
-          queryBuilder = queryBuilder.or(`title.ilike.%${searchQuery.trim()}%,description.ilike.%${searchQuery.trim()}%`)
-        }
-
         const { data, error } = await queryBuilder
           .order('created_at', { ascending: false })
           .limit(100)
 
         if (error) throw error
 
-        const sorted = sortPropertiesByAreaPreference(data || [], searchQuery, localityName)
+        const sorted = sortPropertiesGlobalPreference(data || [], searchQuery, localityName)
         setProperties(sorted)
         setExactProperties(sorted)
         setNearbyProperties([])
@@ -386,7 +343,7 @@ export function PropertiesPage() {
         }
       }
 
-      const combinedSorted = sortPropertiesByAreaPreference([...exactList, ...nearbyList], searchQuery, localityName)
+      const combinedSorted = sortPropertiesGlobalPreference([...exactList, ...nearbyList], searchQuery, localityName)
       setSearchTier(activeSearchRadius)
       setExactProperties(combinedSorted.filter(p => exactList.includes(p)))
       setNearbyProperties(combinedSorted.filter(p => nearbyList.includes(p)))

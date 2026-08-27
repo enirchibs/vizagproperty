@@ -25,42 +25,45 @@ export function HomePage() {
   }, [])
 
   const sortPropertiesByRequestedOrder = (props: Property[]): Property[] => {
-    const getPriority = (p: Property): number => {
+    const getAreaPriority = (p: Property): number => {
+      const locObj = Array.isArray((p as any).localities) ? (p as any).localities[0] : (p as any).localities
+      const locName = ((locObj?.name) || p.location || '').toLowerCase()
+      const title = (p.title || '').toLowerCase()
+      const desc = (p.description || '').toLowerCase()
+      if (locName.includes('madhurawada') || locName.includes('madhurwada') || title.includes('madhurawada') || desc.includes('madhurawada')) return 1
+      if (locName.includes('bhogapuram') || locName.includes('bogapuram') || title.includes('bhogapuram') || desc.includes('bhogapuram')) return 2
+      return 3
+    }
+
+    const getTypePriority = (p: Property): number => {
       const pt = (p.property_type || '').toLowerCase()
       const lt = (p.listing_type || '').toLowerCase()
       const title = (p.title || '').toLowerCase()
 
       // 1. Plots first
-      if (pt.includes('plot') || pt.includes('land') || title.includes('plot') || title.includes('land')) {
-        return 1
-      }
+      if (pt.includes('plot') || pt.includes('land') || title.includes('plot') || title.includes('land')) return 1
       // 2. Flats second
-      if (pt.includes('flat') || pt.includes('apartment') || title.includes('flat') || title.includes('bhk') || title.includes('apartment')) {
-        return 2
-      }
+      if (pt.includes('flat') || pt.includes('apartment') || title.includes('flat') || title.includes('bhk') || title.includes('apartment')) return 2
       // 3. Villas third
-      if (pt.includes('villa') || pt.includes('house') || title.includes('villa') || title.includes('house') || title.includes('building')) {
-        return 3
-      }
+      if (pt.includes('villa') || pt.includes('house') || title.includes('villa') || title.includes('house') || title.includes('building')) return 3
       // 4. Shops for rent fourth
-      if ((pt.includes('shop') || pt.includes('commercial') || pt.includes('office') || pt.includes('showroom') || pt.includes('warehouse') || title.includes('shop') || title.includes('godown')) && (lt === 'rent' || lt === 'lease')) {
-        return 4
-      }
+      if ((pt.includes('shop') || pt.includes('commercial') || pt.includes('office') || pt.includes('showroom') || pt.includes('warehouse') || title.includes('shop') || title.includes('godown')) && (lt === 'rent' || lt === 'lease')) return 4
       // 5. Hostels for rent fifth
-      if (pt.includes('pg') || pt.includes('hostel') || title.includes('hostel') || title.includes('pg')) {
-        return 5
-      }
+      if (pt.includes('pg') || pt.includes('hostel') || title.includes('hostel') || title.includes('pg')) return 5
       // 6. Other commercial
-      if (pt.includes('shop') || pt.includes('commercial') || pt.includes('office') || pt.includes('showroom') || pt.includes('warehouse')) {
-        return 6
-      }
+      if (pt.includes('shop') || pt.includes('commercial') || pt.includes('office') || pt.includes('showroom') || pt.includes('warehouse')) return 6
       return 7
     }
 
     return [...props].sort((a, b) => {
-      const pA = getPriority(a)
-      const pB = getPriority(b)
-      if (pA !== pB) return pA - pB
+      const areaA = getAreaPriority(a)
+      const areaB = getAreaPriority(b)
+      if (areaA !== areaB) return areaA - areaB
+
+      const typeA = getTypePriority(a)
+      const typeB = getTypePriority(b)
+      if (typeA !== typeB) return typeA - typeB
+
       return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
     })
   }

@@ -32,6 +32,54 @@ export async function searchLocalities(query: string, limit: number = 10): Promi
   return await fuzzySearchLocalities(query, limit)
 }
 
+// Global area-priority property sorter for all categories:
+// 1st: Typed Area Properties
+// 2nd: Madhurawada Properties
+// 3rd: Bhogapuram Properties
+// 4th: All Other Areas Properties
+export function sortPropertiesGlobalPreference<T extends Record<string, any>>(data: T[], query?: string, localityName?: string): T[] {
+  if (!data || data.length === 0) return []
+
+  const cleanQuery = (localityName || query || '').toLowerCase().trim()
+
+  const matchesArea = (p: any, areaKeyword: string): boolean => {
+    if (!areaKeyword) return false
+    const locObj = Array.isArray(p.localities) ? p.localities[0] : p.localities
+    const locName = ((locObj?.name) || p.location || p.locality_name || '').toLowerCase()
+    const title = (p.title || '').toLowerCase()
+    const desc = (p.description || '').toLowerCase()
+    return locName.includes(areaKeyword) || title.includes(areaKeyword) || desc.includes(areaKeyword)
+  }
+
+  // 1st Priority: Typed Area Matches (if user typed an area name e.g. "yendada", "mvp colony", "gajuwaka")
+  let typedAreaMatches: T[] = []
+  if (cleanQuery.length >= 2) {
+    typedAreaMatches = data.filter(p => matchesArea(p, cleanQuery))
+  }
+
+  // 2nd Priority: Madhurawada
+  const madhurawadaMatches = data.filter(p => 
+    !typedAreaMatches.includes(p) && 
+    (matchesArea(p, 'madhurawada') || matchesArea(p, 'madhurwada'))
+  )
+
+  // 3rd Priority: Bhogapuram
+  const bhogapuramMatches = data.filter(p => 
+    !typedAreaMatches.includes(p) && 
+    !madhurawadaMatches.includes(p) && 
+    (matchesArea(p, 'bhogapuram') || matchesArea(p, 'bogapuram'))
+  )
+
+  // 4th Priority: All Other Areas
+  const otherMatches = data.filter(p => 
+    !typedAreaMatches.includes(p) && 
+    !madhurawadaMatches.includes(p) && 
+    !bhogapuramMatches.includes(p)
+  )
+
+  return [...typedAreaMatches, ...madhurawadaMatches, ...bhogapuramMatches, ...otherMatches]
+}
+
 // Property type normalization
 export const PROPERTY_TYPE_MAP: Record<string, string[]> = {
   'flat': ['flat', 'apartment', 'flats', 'apartments', '2 bhk', '3 bhk', 'bhk'],
@@ -351,9 +399,7 @@ export function buildUnifiedPropertyQuery(params: UnifiedSearchParams) {
     query = query.eq('listing_type', params.listingType)
   }
 
-  if (params.localityId) {
-    query = query.eq('locality_id', params.localityId)
-  }
+  // Note: localityId and keyword filtering are omitted from strict DB filtering so ALL category properties remain available to render and sort by area priority (Typed Area -> Madhurawada -> Bhogapuram -> Other Areas)
 
   if (params.bedrooms) {
     if (Array.isArray(params.bedrooms)) {
@@ -385,10 +431,6 @@ export function buildUnifiedPropertyQuery(params: UnifiedSearchParams) {
 
   if (params.propertyStatus) {
     query = query.eq('property_status', params.propertyStatus)
-  }
-
-  if (params.keyword) {
-    query = query.or(`title.ilike.%${params.keyword}%,description.ilike.%${params.keyword}%`)
   }
 
   if (params.possessionStatus?.length) {

@@ -7,6 +7,7 @@ import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 import { FixedWhatsAppCTA } from '../components/FixedWhatsAppCTA'
 import { ScrollWhatsAppIcon } from '../components/ScrollWhatsAppIcon'
+import { buildUnifiedPropertyQuery, sortPropertiesGlobalPreference } from '../lib/searchFilters'
 import { WhatsAppZeroResultsModal } from '../components/WhatsAppZeroResultsModal'
 
 export default function FlatsForSalePage() {
@@ -66,8 +67,6 @@ export default function FlatsForSalePage() {
 
   const loadProperties = async () => {
     try {
-      const { buildUnifiedPropertyQuery } = await import('../lib/searchFilters')
-
       const searchParams: any = {
         propertyType: 'flat' as const,
         listingType: 'sale' as const
@@ -96,7 +95,8 @@ export default function FlatsForSalePage() {
       const { data, error } = await query.limit(50)
 
       if (error) throw error
-      setProperties(data || [])
+      const sorted = sortPropertiesGlobalPreference(data || [], searchQuery)
+      setProperties(sorted)
 
       if (data && data.length === 0) {
         setShowZeroResultsModal(true)

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, MapPin, Building2, CheckCircle2, ArrowRight, Phone, Shield, Zap, Users, TrendingUp, Mic, MicOff, X, MessageCircle } from 'lucide-react'
 import type { Property } from '../types'
+import { sortPropertiesGlobalPreference } from '../lib/searchFilters'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 
@@ -70,7 +71,8 @@ export default function GatedCommunityPlotsPage() {
       const { data, error } = await query.limit(50)
 
       if (error) throw error
-      setProperties(data || [])
+      const sorted = sortPropertiesGlobalPreference(data || [], searchQuery, selectedLocation)
+      setProperties(sorted)
     } catch (error) {
     } finally {
       setLoading(false)
