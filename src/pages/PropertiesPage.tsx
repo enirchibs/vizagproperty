@@ -350,16 +350,35 @@ export function PropertiesPage() {
         }
       }
 
-      const combinedSorted = sortPropertiesGlobalPreference([...exactList, ...nearbyList], searchQuery, localityName)
+      let datasetToUse = [...exactList, ...nearbyList]
+      if (datasetToUse.length === 0) {
+        const { data: fallbackData } = await supabase
+          .from('properties')
+          .select('*, localities!inner(name, slug, city)')
+          .eq('localities.city', 'Visakhapatnam')
+          .eq('status', 'approved')
+          .order('created_at', { ascending: false })
+          .limit(200)
+        datasetToUse = fallbackData || []
+      }
+
+      const combinedSorted = sortPropertiesGlobalPreference(datasetToUse, searchQuery, localityName, filters.property_type)
       setSearchTier(activeSearchRadius)
-      setExactProperties(combinedSorted.filter(p => exactList.includes(p)))
-      setNearbyProperties(combinedSorted.filter(p => nearbyList.includes(p)))
+      setExactProperties(combinedSorted)
       setProperties(combinedSorted)
       setHasMoreTiers(canExpandFurther)
     } catch (error) {
       console.error('Error in loadProperties:', error)
-      setProperties([])
-      setExactProperties([])
+      const { data: fallbackData } = await supabase
+        .from('properties')
+        .select('*, localities!inner(name, slug, city)')
+        .eq('localities.city', 'Visakhapatnam')
+        .eq('status', 'approved')
+        .order('created_at', { ascending: false })
+        .limit(200)
+      const sortedFallback = sortPropertiesGlobalPreference(fallbackData || [], searchQuery, localityName, filters.property_type)
+      setProperties(sortedFallback)
+      setExactProperties(sortedFallback)
     } finally {
       setLoading(false)
     }

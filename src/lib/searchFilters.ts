@@ -46,7 +46,13 @@ export function sortPropertiesGlobalPreference<T extends Record<string, any>>(
   if (!data || data.length === 0) return []
 
   const cleanQuery = (localityName || query || '').toLowerCase().trim()
-  const selCat = (selectedCategory || '').toLowerCase().trim()
+  let selCat = (selectedCategory || '').toLowerCase().trim()
+  if (!selCat && cleanQuery) {
+    if (cleanQuery.includes('flat') || cleanQuery.includes('apartment') || cleanQuery.includes('bhk')) selCat = 'flat'
+    else if (cleanQuery.includes('plot') || cleanQuery.includes('land') || cleanQuery.includes('vmrda')) selCat = 'plot'
+    else if (cleanQuery.includes('villa') || cleanQuery.includes('house')) selCat = 'villa'
+    else if (cleanQuery.includes('rent') || cleanQuery.includes('lease') || cleanQuery.includes('pg') || cleanQuery.includes('hostel')) selCat = 'rent'
+  }
 
   const matchesArea = (p: any, areaKeyword: string): boolean => {
     if (!areaKeyword) return false
