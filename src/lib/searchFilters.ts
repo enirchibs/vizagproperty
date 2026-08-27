@@ -32,15 +32,21 @@ export async function searchLocalities(query: string, limit: number = 10): Promi
   return await fuzzySearchLocalities(query, limit)
 }
 
-// Global area-priority property sorter for all categories:
-// 1st: Typed Area Properties
-// 2nd: Madhurawada Properties
-// 3rd: Bhogapuram Properties
-// 4th: All Other Areas Properties
-export function sortPropertiesGlobalPreference<T extends Record<string, any>>(data: T[], query?: string, localityName?: string): T[] {
+// Global area-priority property sorter:
+// 1. PLOTS in typed area -> PLOTS in Madhurawada -> PLOTS in Bhogapuram -> PLOTS in other areas
+// 2. FLATS in typed area -> FLATS in Madhurawada -> FLATS in Bhogapuram -> FLATS in other areas
+// 3. VILLAS in typed area -> VILLAS in Madhurawada -> VILLAS in Bhogapuram -> VILLAS in other areas
+// 4. RENT for typed area -> RENT in Madhurawada -> RENT in Bhogapuram -> ALL OTHER RENT & AREAS
+export function sortPropertiesGlobalPreference<T extends Record<string, any>>(
+  data: T[],
+  query?: string,
+  localityName?: string,
+  selectedCategory?: string
+): T[] {
   if (!data || data.length === 0) return []
 
   const cleanQuery = (localityName || query || '').toLowerCase().trim()
+  const selCat = (selectedCategory || '').toLowerCase().trim()
 
   const matchesArea = (p: any, areaKeyword: string): boolean => {
     if (!areaKeyword) return false
@@ -51,33 +57,75 @@ export function sortPropertiesGlobalPreference<T extends Record<string, any>>(da
     return locName.includes(areaKeyword) || title.includes(areaKeyword) || desc.includes(areaKeyword)
   }
 
-  // 1st Priority: Typed Area Matches (if user typed an area name e.g. "yendada", "mvp colony", "gajuwaka")
-  let typedAreaMatches: T[] = []
-  if (cleanQuery.length >= 2) {
-    typedAreaMatches = data.filter(p => matchesArea(p, cleanQuery))
+  const getGroupType = (p: any): string => {
+    const pt = (p.property_type || '').toLowerCase()
+    const lt = (p.listing_type || '').toLowerCase()
+    const title = (p.title || '').toLowerCase()
+
+    if (lt === 'rent' || lt === 'lease' || pt.includes('pg') || pt.includes('hostel') || title.includes('hostel') || title.includes('pg')) {
+      return 'rent'
+    }
+    if (pt.includes('plot') || pt.includes('land') || title.includes('plot') || title.includes('land')) {
+      return 'plot'
+    }
+    if (pt.includes('flat') || pt.includes('apartment') || title.includes('flat') || title.includes('bhk') || title.includes('apartment')) {
+      return 'flat'
+    }
+    if (pt.includes('villa') || pt.includes('house') || title.includes('villa') || title.includes('house')) {
+      return 'villa'
+    }
+    return 'other'
   }
 
-  // 2nd Priority: Madhurawada
-  const madhurawadaMatches = data.filter(p => 
-    !typedAreaMatches.includes(p) && 
-    (matchesArea(p, 'madhurawada') || matchesArea(p, 'madhurwada'))
-  )
+  const getAreaScore = (p: any): number => {
+    if (cleanQuery.length >= 2 && matchesArea(p, cleanQuery)) return 1
+    if (matchesArea(p, 'madhurawada') || matchesArea(p, 'madhurwada')) return 2
+    if (matchesArea(p, 'bhogapuram') || matchesArea(p, 'bogapuram')) return 3
+    return 4
+  }
 
-  // 3rd Priority: Bhogapuram
-  const bhogapuramMatches = data.filter(p => 
-    !typedAreaMatches.includes(p) && 
-    !madhurawadaMatches.includes(p) && 
-    (matchesArea(p, 'bhogapuram') || matchesArea(p, 'bogapuram'))
-  )
+  const getGroupRank = (groupType: string): number => {
+    if (selCat.includes('flat') || selCat.includes('apartment')) {
+      if (groupType === 'flat') return 1
+      if (groupType === 'plot') return 2
+      if (groupType === 'villa') return 3
+      if (groupType === 'rent') return 4
+      return 5
+    }
+    if (selCat.includes('villa') || selCat.includes('house')) {
+      if (groupType === 'villa') return 1
+      if (groupType === 'plot') return 2
+      if (groupType === 'flat') return 3
+      if (groupType === 'rent') return 4
+      return 5
+    }
+    if (selCat.includes('rent') || selCat.includes('lease') || selCat.includes('pg') || selCat.includes('hostel')) {
+      if (groupType === 'rent') return 1
+      if (groupType === 'plot') return 2
+      if (groupType === 'flat') return 3
+      if (groupType === 'villa') return 4
+      return 5
+    }
+    // Default order when plot/land or no category selected:
+    // 1. PLOTS -> 2. FLATS -> 3. VILLAS -> 4. RENT -> 5. OTHER
+    if (groupType === 'plot') return 1
+    if (groupType === 'flat') return 2
+    if (groupType === 'villa') return 3
+    if (groupType === 'rent') return 4
+    return 5
+  }
 
-  // 4th Priority: All Other Areas
-  const otherMatches = data.filter(p => 
-    !typedAreaMatches.includes(p) && 
-    !madhurawadaMatches.includes(p) && 
-    !bhogapuramMatches.includes(p)
-  )
+  return [...data].sort((a, b) => {
+    const groupRankA = getGroupRank(getGroupType(a))
+    const groupRankB = getGroupRank(getGroupType(b))
+    if (groupRankA !== groupRankB) return groupRankA - groupRankB
 
-  return [...typedAreaMatches, ...madhurawadaMatches, ...bhogapuramMatches, ...otherMatches]
+    const areaScoreA = getAreaScore(a)
+    const areaScoreB = getAreaScore(b)
+    if (areaScoreA !== areaScoreB) return areaScoreA - areaScoreB
+
+    return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
+  })
 }
 
 // Property type normalization
