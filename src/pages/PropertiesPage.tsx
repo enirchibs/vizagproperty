@@ -89,10 +89,17 @@ export function PropertiesPage() {
       }
     }
 
-    if (localityId) {
+    const isUUID = (str: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str)
+
+    if (localityId && isUUID(localityId)) {
       initialFilters.locality_id = localityId
     } else if (localityName && localityName.toLowerCase() !== 'vizag') {
-      initialFilters.locality_id = localityName
+      if (isUUID(localityName)) {
+        initialFilters.locality_id = localityName
+      } else {
+        setLocalityName(localityName)
+        setSearchQuery(localityName)
+      }
     }
 
     if (bhk) {

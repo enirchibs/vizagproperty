@@ -442,12 +442,16 @@ export function buildUnifiedPropertyQuery(params: UnifiedSearchParams) {
   const typeVariants = Array.from(new Set([params.propertyType, dbPropertyType]))
   query = query.in('property_type', typeVariants)
 
-  // OPTIONAL FILTERS - Only applied if value exists
   if (params.listingType) {
-    query = query.eq('listing_type', params.listingType)
+    const lType = params.listingType as string
+    const listingVariants = (lType === 'sale' || lType === 'buy') ? ['sale', 'buy'] : [params.listingType]
+    query = query.in('listing_type', listingVariants)
   }
 
-  // Note: localityId and keyword filtering are omitted from strict DB filtering so ALL category properties remain available to render and sort by area priority (Typed Area -> Madhurawada -> Bhogapuram -> Other Areas)
+  const isUUID = (str: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str)
+  if (params.localityId && isUUID(params.localityId)) {
+    query = query.eq('locality_id', params.localityId)
+  }
 
   if (params.bedrooms) {
     if (Array.isArray(params.bedrooms)) {
