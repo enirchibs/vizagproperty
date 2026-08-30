@@ -28,83 +28,83 @@ export interface HubPageConfig {
 const HUB_CONFIGS: Record<string, HubPageConfig> = {
   'property-in-vizag': {
     slug: 'property-in-vizag',
-    title: 'Property in Vizag',
-    metaTitle: 'Property in Vizag | Best Verified Real Estate & Land in Visakhapatnam',
-    metaDesc: 'Explore top verified property in Vizag & Visakhapatnam. Buy flats, VMRDA approved plots, luxury villas, commercial spaces and houses across Madhurawada, Yendada, MVP Colony.',
-    keywords: 'property in vizag, property in visakhapatnam, vizag real estate, buy property vizag, vizag properties for sale',
-    headline: 'Explore Verified Property in Vizag',
-    subheadline: 'Visakhapatnam’s #1 digital marketplace for buying, selling, and investing in premier coastal real estate.',
+    title: 'Property in Vizag (Visakhapatnam)',
+    metaTitle: 'Property in Vizag (Visakhapatnam) | Verified Real Estate, Flats & Land',
+    metaDesc: 'Explore top verified property in Vizag (officially Visakhapatnam). Buy 2 & 3 BHK flats, VMRDA approved plots, luxury villas, commercial spaces across Madhurawada, Yendada, MVP Colony.',
+    keywords: 'property in vizag, property in visakhapatnam, vizag real estate, buy property vizag, vizag properties for sale, visakhapatnam real estate',
+    headline: 'Property in Vizag / Visakhapatnam',
+    subheadline: 'Visakhapatnam’s (Vizag) #1 digital real estate marketplace for buying, selling, and investing in coastal properties.',
     editorialText: [
-      'Visakhapatnam (Vizag) has emerged as one of South India’s premier real estate growth engines. Driven by IT expansion in Madhurawada and Rushikonda, major industrial corridors in Gajuwaka, and upcoming infrastructure like the Bhogapuram International Airport, Vizag property offers unmatched appreciation.',
-      'Whether you are looking for ready-to-move 2 & 3 BHK apartments, high-yield VMRDA approved open plots, luxury seaside villas, or commercial spaces, VizagProperty provides 100% transparent listings directly from owners and reputed developers.'
+      'Vizag, officially Visakhapatnam (also historically known as Waltair), is the executive capital, largest port city, and economic growth engine of Andhra Pradesh. Real estate in Vizag / Visakhapatnam offers unmatched capital appreciation driven by IT SEZ expansion in Madhurawada and Rushikonda, heavy industrial hubs in Gajuwaka, and the upcoming Bhogapuram International Airport.',
+      'Whether you are searching for ready-to-move 2 & 3 BHK flats in Visakhapatnam, high-yield VMRDA approved plots in Vizag, luxury sea-facing villas, or commercial spaces, VizagProperty provides 100% verified listings directly from owners and reputed developers.'
     ],
     faqs: [
       {
-        question: 'Why is investing in Vizag property considered lucrative?',
-        answer: 'Vizag is Andhra Pradesh’s executive and commercial capital, benefiting from IT SEZ expansion, port connectivity, metro rail planning, and Bhogapuram Airport construction.'
+        question: 'Is Vizag and Visakhapatnam the same entity for real estate search?',
+        answer: 'Yes. Vizag is the widely used popular name for Visakhapatnam, the financial capital of Andhra Pradesh. Properties listed under Vizag or Visakhapatnam cover identical municipal and VMRDA master plan areas.'
       },
       {
-        question: 'What are the top localities to buy property in Vizag?',
-        answer: 'Madhurawada, Yendada, PM Palem, MVP Colony, Rushikonda, and Bhogapuram are the top growth corridors with excellent connectivity and high ROI.'
+        question: 'Why is investing in Vizag (Visakhapatnam) property considered lucrative?',
+        answer: 'Visakhapatnam is Andhra Pradesh’s commercial capital, benefiting from IT SEZ expansion, port connectivity, metro rail planning, and Bhogapuram Airport construction.'
       }
     ]
   },
   'property-for-sale-vizag': {
     slug: 'property-for-sale-vizag',
-    title: 'Property for Sale in Vizag',
-    metaTitle: 'Property for Sale in Vizag | Verified Houses, Flats & Land Visakhapatnam',
-    metaDesc: 'Find top property for sale in Vizag & Visakhapatnam. Direct owner listings for gated flats, open residential plots, villas & commercial properties.',
-    keywords: 'property for sale in vizag, vizag property for sale, buy house in vizag, flats for sale in visakhapatnam',
+    title: 'Property for Sale in Vizag (Visakhapatnam)',
+    metaTitle: 'Property for Sale in Vizag (Visakhapatnam) | Verified Houses, Flats & Land',
+    metaDesc: 'Find top property for sale in Vizag / Visakhapatnam. Direct owner listings for gated flats, open residential plots, villas & commercial properties.',
+    keywords: 'property for sale in vizag, vizag property for sale, buy house in vizag, flats for sale in visakhapatnam, property for sale in visakhapatnam',
     listingTypeFilter: 'sale',
-    headline: 'Property for Sale in Vizag',
-    subheadline: 'Browse verified residential plots, apartments, independent houses, and commercial property for sale.',
+    headline: 'Property for Sale in Vizag / Visakhapatnam',
+    subheadline: 'Browse verified residential plots, apartments, independent houses, and commercial property for sale in Visakhapatnam (Vizag).',
     editorialText: [
-      'Finding the right property for sale in Vizag requires access to genuine listings, verified title deeds, and clear market pricing. VizagProperty brings you direct access to properties for sale across all major Visakhapatnam neighborhoods.',
+      'Finding the right property for sale in Vizag (Visakhapatnam) requires access to genuine listings, verified title deeds, and clear market pricing. VizagProperty brings you direct access to properties for sale across all major Visakhapatnam neighborhoods.',
       'From budget-friendly 2 BHK flats under 45 Lakhs in Madhurawada to premium VMRDA open plots near Bhogapuram highway, filter by budget, area, and configuration to connect with sellers instantly.'
     ],
     faqs: [
       {
-        question: 'How do I verify a property for sale in Vizag before buying?',
+        question: 'How do I verify a property for sale in Vizag (Visakhapatnam) before buying?',
         answer: 'Always verify VMRDA or DTCP layout approval numbers, AP RERA registration status, EC (Encumbrance Certificate), and title deed history before purchase.'
       }
     ]
   },
   'real-estate-vizag': {
     slug: 'real-estate-vizag',
-    title: 'Real Estate Vizag',
-    metaTitle: 'Real Estate Vizag | Visakhapatnam Property Market & Investment',
-    metaDesc: 'Comprehensive guide to Vizag real estate. Discover property rates, price trends, top builders, VMRDA layouts, and prime residential localities in Visakhapatnam.',
-    keywords: 'real estate vizag, visakhapatnam real estate, vizag real estate market, real estate developers in vizag',
-    headline: 'Vizag Real Estate Market Overview',
-    subheadline: 'Your definitive guide to property investment, market trends, and developer projects in Visakhapatnam.',
+    title: 'Real Estate Vizag (Visakhapatnam)',
+    metaTitle: 'Real Estate Vizag (Visakhapatnam) | Property Market & Investment 2026',
+    metaDesc: 'Comprehensive guide to Vizag / Visakhapatnam real estate. Discover property rates, price trends, top builders, VMRDA layouts, and prime residential localities.',
+    keywords: 'real estate vizag, visakhapatnam real estate, vizag real estate market, real estate developers in vizag, visakhapatnam real estate market',
+    headline: 'Vizag / Visakhapatnam Real Estate Market',
+    subheadline: 'Your definitive guide to property investment, market trends, and developer projects in Visakhapatnam (Vizag).',
     editorialText: [
-      'The real estate landscape in Visakhapatnam has witnessed consistent 12-18% annual capital appreciation across prime coastal and IT corridors. With major infrastructure developments underway, early-stage plot and apartment buyers enjoy high rental yields and long-term equity growth.',
+      'The real estate landscape in Visakhapatnam (Vizag) has witnessed consistent 12-18% annual capital appreciation across prime coastal and IT corridors. With major infrastructure developments underway, early-stage plot and apartment buyers enjoy high rental yields and long-term equity growth.',
       'Explore verified property listings, compare builder reputations, evaluate locality price trends, and calculate loan eligibility directly on VizagProperty.'
     ],
     faqs: [
       {
-        question: 'What is the average real estate price growth in Vizag?',
+        question: 'What is the average real estate price growth in Vizag (Visakhapatnam)?',
         answer: 'Prime areas like Madhurawada and Yendada have experienced 15-20% appreciation over 3 years due to IT hub development and beach corridor demand.'
       }
     ]
   },
   'plots-for-sale-vizag': {
     slug: 'plots-for-sale-vizag',
-    title: 'Plots for Sale in Vizag',
-    metaTitle: 'Plots for Sale in Vizag | Open & VMRDA Approved Plots Visakhapatnam',
-    metaDesc: 'Buy open plots for sale in Vizag & Visakhapatnam. Verified VMRDA, DTCP approved residential plots in Madhurawada, PM Palem, Bhogapuram, Kothavalasa.',
-    keywords: 'plots for sale in vizag, vizag plots, open plots in vizag, vmrda plots in vizag, residential land for sale in visakhapatnam',
+    title: 'Plots for Sale in Vizag (Visakhapatnam)',
+    metaTitle: 'Plots for Sale in Vizag (Visakhapatnam) | Open & VMRDA Approved Land',
+    metaDesc: 'Buy open plots for sale in Vizag / Visakhapatnam. Verified VMRDA, DTCP approved residential plots in Madhurawada, PM Palem, Bhogapuram, Kothavalasa.',
+    keywords: 'plots for sale in vizag, vizag plots, open plots in vizag, vmrda plots in vizag, residential land for sale in visakhapatnam, plots for sale in visakhapatnam',
     categoryFilter: 'plot',
     listingTypeFilter: 'sale',
-    headline: 'Plots for Sale in Vizag',
-    subheadline: 'Invest in VMRDA approved residential layouts, open land, and gated community plots across Visakhapatnam.',
+    headline: 'Plots for Sale in Vizag / Visakhapatnam',
+    subheadline: 'Invest in VMRDA approved residential layouts, open land, and gated community plots across Visakhapatnam (Vizag).',
     editorialText: [
-      'Land ownership in Vizag is one of the safest and highest-yielding asset classes in Andhra Pradesh. VMRDA approved layouts ensure proper road width, underground drainage, electricity infrastructure, and clear legal titles.',
+      'Land ownership in Vizag (Visakhapatnam) is one of the safest and highest-yielding asset classes in Andhra Pradesh. VMRDA approved layouts ensure proper road width, underground drainage, electricity infrastructure, and clear legal titles.',
       'Explore residential plots in Madhurawada, highway-facing plots in Bhogapuram, and prime investment land near Kothavalasa and Anandapuram.'
     ],
     faqs: [
       {
-        question: 'What is the price of land per square yard in Vizag?',
+        question: 'What is the price of land per square yard in Vizag (Visakhapatnam)?',
         answer: 'Plot prices range from ₹15,000 to ₹35,000 per sq. yd. in developing corridors like Bhogapuram, and ₹40,000 to ₹80,000 per sq. yd. in Madhurawada and Yendada.'
       }
     ]
@@ -342,6 +342,22 @@ export function HubLandingPage() {
       "name": config.metaTitle,
       "description": config.metaDesc,
       "url": canonicalUrl
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Place",
+      "name": "Visakhapatnam (Vizag)",
+      "alternateName": ["Vizag", "Visakhapatnam", "Waltair"],
+      "sameAs": [
+        "https://en.wikipedia.org/wiki/Visakhapatnam",
+        "https://www.wikidata.org/wiki/Q200016"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Visakhapatnam",
+        "addressRegion": "Andhra Pradesh",
+        "addressCountry": "IN"
+      }
     },
     {
       "@context": "https://schema.org",
