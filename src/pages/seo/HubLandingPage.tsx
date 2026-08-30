@@ -72,12 +72,12 @@ const HUB_CONFIGS: Record<string, HubPageConfig> = {
   },
   'real-estate-vizag': {
     slug: 'real-estate-vizag',
-    title: 'Real Estate Vizag (Visakhapatnam)',
-    metaTitle: 'Real Estate Vizag (Visakhapatnam) | Property Market & Investment 2026',
-    metaDesc: 'Comprehensive guide to Vizag / Visakhapatnam real estate. Discover property rates, price trends, top builders, VMRDA layouts, and prime residential localities.',
-    keywords: 'real estate vizag, visakhapatnam real estate, vizag real estate market, real estate developers in vizag, visakhapatnam real estate market',
-    headline: 'Vizag / Visakhapatnam Real Estate Market',
-    subheadline: 'Your definitive guide to property investment, market trends, and developer projects in Visakhapatnam (Vizag).',
+    title: 'Vizag Real Estate (Visakhapatnam)',
+    metaTitle: 'Vizag Real Estate (Visakhapatnam) | Verified Properties & Market Rates 2026',
+    metaDesc: 'Search 100% verified Vizag real estate. Explore properties for sale in Visakhapatnam, VMRDA approved plots, 2 & 3 BHK flats & locality price trends 2026.',
+    keywords: 'vizag real estate, visakhapatnam real estate, real estate vizag, real estate in vizag, vizag real estate market, real estate developers in vizag',
+    headline: 'Vizag Real Estate / Visakhapatnam Property Market',
+    subheadline: 'Your definitive guide to property investment, market rates, verified plots, and developer projects in Visakhapatnam (Vizag).',
     editorialText: [
       'The real estate landscape in Visakhapatnam (Vizag) has witnessed consistent 12-18% annual capital appreciation across prime coastal and IT corridors. With major infrastructure developments underway, early-stage plot and apartment buyers enjoy high rental yields and long-term equity growth.',
       'Explore verified property listings, compare builder reputations, evaluate locality price trends, and calculate loan eligibility directly on VizagProperty.'
