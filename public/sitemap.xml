@@ -112,40 +112,88 @@
     <loc>https://vizagproperty.co.in/localities/madhurawada</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.90</priority>
+    <priority>0.92</priority>
   </url>
   <url>
     <loc>https://vizagproperty.co.in/localities/yendada</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.90</priority>
+    <priority>0.92</priority>
   </url>
   <url>
     <loc>https://vizagproperty.co.in/localities/rushikonda</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.90</priority>
+    <priority>0.92</priority>
   </url>
   <url>
     <loc>https://vizagproperty.co.in/localities/pm-palem</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.90</priority>
+    <priority>0.92</priority>
   </url>
   <url>
     <loc>https://vizagproperty.co.in/localities/gajuwaka</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.90</priority>
+    <priority>0.92</priority>
   </url>
   <url>
     <loc>https://vizagproperty.co.in/localities/mvp-colony</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.90</priority>
+    <priority>0.92</priority>
+  </url>
+  <url>
+    <loc>https://vizagproperty.co.in/localities/seethammadhara</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.88</priority>
   </url>
   <url>
     <loc>https://vizagproperty.co.in/localities/kommadi</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.88</priority>
+  </url>
+  <url>
+    <loc>https://vizagproperty.co.in/localities/bheemili</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.88</priority>
+  </url>
+  <url>
+    <loc>https://vizagproperty.co.in/localities/bheemunipatnam</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.88</priority>
+  </url>
+  <url>
+    <loc>https://vizagproperty.co.in/localities/pendurthi</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.88</priority>
+  </url>
+  <url>
+    <loc>https://vizagproperty.co.in/localities/tagarapuvalasa</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.88</priority>
+  </url>
+  <url>
+    <loc>https://vizagproperty.co.in/localities/duvvada</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.88</priority>
+  </url>
+  <url>
+    <loc>https://vizagproperty.co.in/localities/visalakshi-nagar</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.88</priority>
+  </url>
+  <url>
+    <loc>https://vizagproperty.co.in/localities/bhogapuram</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.90</priority>

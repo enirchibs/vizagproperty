@@ -83,12 +83,92 @@ const LOCALITY_DATA: Record<string, LocalityDetails> = {
   'kommadi': {
     name: 'Kommadi',
     metaTitle: 'Property in Kommadi Vizag | VMRDA Approved Plots & Apartments',
-    metaDesc: 'Explore property in Kommadi, Vizag. High-appreciation VMRDA approved plots, open layouts & modern gated apartments near Madhurawada Junction.',
+    metaDesc: 'Explore property in Kommadi, Vizag. High-appreciation VMRDA approved plots, open layouts & modern 2/3 BHK flats near Madhurawada Junction.',
     keywords: 'kommadi property, plots for sale in kommadi vizag, flats in kommadi, kommadi real estate',
     avgPriceSqFt: '₹3,500 - ₹5,000 / sq.ft.',
     topHighlights: ['Rapidly Developing Educational Hub', 'Direct NH16 Highway Access', 'Affordable Land & Layout Prices', 'Proximity to IT Expansion Zone'],
     description: 'Kommadi is one of Vizag’s fastest-growing affordable residential corridors located immediately north of Madhurawada. It is an investment hot-spot for open layout plots and upcoming gated apartment complexes.',
     priceTrends: '16.7% appreciation over 3 years driven by plot layout developments.'
+  },
+  'seethammadhara': {
+    name: 'Seethammadhara',
+    metaTitle: 'Property in Seethammadhara Vizag | Premium Flats, Houses & Plots',
+    metaDesc: 'Find verified property in Seethammadhara, Vizag. Luxury 2 & 3 BHK flats for sale, independent houses & commercial spaces near HB Colony.',
+    keywords: 'seethammadhara property, flats in seethammadhara vizag, house for sale in seethammadhara',
+    avgPriceSqFt: '₹6,200 - ₹8,800 / sq.ft.',
+    topHighlights: ['Prime Central Vizag Location', 'Top Schools & Specialty Hospitals', 'HB Colony & Maddilapalem Proximity', 'High Resale & Rental Liquidity'],
+    description: 'Seethammadhara is a highly coveted central residential neighborhood in Visakhapatnam. Offering quiet green residential streets alongside top commercial centers, property here commands premium appreciation.',
+    priceTrends: '13.2% annual growth with strong demand for 3 BHK luxury apartments.'
+  },
+  'bheemili': {
+    name: 'Bheemili',
+    metaTitle: 'Property in Bheemili Vizag | Beachfront Plots, Villas & Land for Sale',
+    metaDesc: 'Explore property in Bheemili (Bheemunipatnam), Vizag. Beach Road open plots, VMRDA approved layouts & sea view villas along the coastal corridor.',
+    keywords: 'bheemili property, plots for sale in bheemili vizag, bheemunipatnam property, beach land bheemili',
+    avgPriceSqFt: '₹3,200 - ₹5,500 / sq.ft.',
+    topHighlights: ['Historic Beachfront Heritage Town', 'Scenic Vizag-Bheemili Beach Road', 'Bhogapuram Airport Corridor Access', 'Rapid Coastal Tourism Growth'],
+    description: 'Bheemili (Bheemunipatnam) is a historic coastal enclave undergoing dramatic infrastructure expansion. Located along the world-famous Vizag Beach Road, Bheemili land and plot developments offer huge long-term upside.',
+    priceTrends: '22.4% appreciation over 3 years due to Beach Road widening and airport proximity.'
+  },
+  'bheemunipatnam': {
+    name: 'Bheemunipatnam',
+    metaTitle: 'Property in Bheemunipatnam Vizag | Beach Layout Plots & Houses',
+    metaDesc: 'Buy land & flats in Bheemunipatnam, Vizag. Verified VMRDA open plots, beach view land & independent houses along the Bheemili coastal highway.',
+    keywords: 'bheemunipatnam property, plots in bheemunipatnam vizag, bheemili real estate',
+    avgPriceSqFt: '₹3,200 - ₹5,500 / sq.ft.',
+    topHighlights: ['Beach Highway Corridor', 'High Plot Capital Growth', 'VMRDA Approved Layout Townships', 'Serene Coastal Living'],
+    description: 'Bheemunipatnam offers prime coastal real estate opportunities for open plot investors and holiday villa buyers looking for long-term appreciation in the VMRDA master plan region.',
+    priceTrends: '22.4% capital growth rate along the coastal highway corridor.'
+  },
+  'pendurthi': {
+    name: 'Pendurthi',
+    metaTitle: 'Property in Pendurthi Vizag | Budget Plots, Flats & Houses for Sale',
+    metaDesc: 'Find top property in Pendurthi, Vizag. Affordable 2 BHK flats, VMRDA approved residential plots, independent houses near Pendurthi Railway Station.',
+    keywords: 'pendurthi property, plots for sale in pendurthi vizag, flats in pendurthi, pendurthi real estate',
+    avgPriceSqFt: '₹3,200 - ₹4,800 / sq.ft.',
+    topHighlights: ['Pendurthi Junction & Railway Station', 'BRTS Road Corridor Connectivity', 'Affordable Mid-Segment Housing', 'Fast-Growing Residential Belt'],
+    description: 'Pendurthi is a major residential and transit junction in western Visakhapatnam. With excellent BRTS bus corridor connectivity, Pendurthi offers affordable apartments and plot layouts for budget-conscious buyers.',
+    priceTrends: '13.8% steady capital growth driven by transit connectivity upgrades.'
+  },
+  'tagarapuvalasa': {
+    name: 'Tagarapuvalasa',
+    metaTitle: 'Property in Tagarapuvalasa Vizag | VMRDA Plots & Highway Property',
+    metaDesc: 'Explore property in Tagarapuvalasa, Vizag. Highway plots for sale, VMRDA approved layouts & affordable housing near Anandapuram & Bhogapuram highway.',
+    keywords: 'tagarapuvalasa property, plots in tagarapuvalasa vizag, tagarapuvalasa real estate',
+    avgPriceSqFt: '₹2,800 - ₹4,200 / sq.ft.',
+    topHighlights: ['NH16 Kolkata Highway Frontage', 'Anandapuram Junction Proximity', 'Bhogapuram Airport Access Corridor', 'High Land Appreciation Yield'],
+    description: 'Tagarapuvalasa is a strategic northern entrance corridor to Visakhapatnam along NH16. Popular for VMRDA approved open plots and gated residential layouts, Tagarapuvalasa offers exceptional multi-year ROI.',
+    priceTrends: '19.5% capital growth driven by airport corridor land acquisitions.'
+  },
+  'duvvada': {
+    name: 'Duvvada',
+    metaTitle: 'Property in Duvvada Vizag | Flats & Houses near Duvvada Railway Station',
+    metaDesc: 'Buy property in Duvvada, Vizag. Affordable 2 & 3 BHK flats for sale, independent houses & plots near Duvvada Railway Station & VSEZ.',
+    keywords: 'duvvada property, flats in duvvada vizag, house for sale in duvvada, vsez duvvada real estate',
+    avgPriceSqFt: '₹3,400 - ₹4,800 / sq.ft.',
+    topHighlights: ['Duvvada Express Railway Station', 'Visakhapatnam Special Economic Zone (VSEZ)', 'Vignan Engineering University', 'Gajuwaka Industrial Proximity'],
+    description: 'Duvvada is a thriving residential and transit hub anchored by Duvvada Railway Station and VSEZ IT/manufacturing zone. It provides high rental yields from railway, IT, and industrial employees.',
+    priceTrends: '12.9% consistent annual rental and capital growth.'
+  },
+  'visalakshi-nagar': {
+    name: 'Visalakshi Nagar',
+    metaTitle: 'Property in Visalakshi Nagar Vizag | Luxury Sea View Flats & Houses',
+    metaDesc: 'Explore property in Visalakshi Nagar, Vizag. Premium 3 BHK sea view apartments, independent houses & plots near Kailasagiri & Health City.',
+    keywords: 'visalakshi nagar property, flats in visalakshi nagar vizag, sea view flats vizag',
+    avgPriceSqFt: '₹6,000 - ₹8,500 / sq.ft.',
+    topHighlights: ['Kailasagiri Hilltop Ocean View', 'Health City Arilova Proximity', '5 Mins to Beach Road & Tenneti Park', 'Exclusive Upscale Residential Hillside'],
+    description: 'Visalakshi Nagar is an upscale hilltop residential neighborhood overlooking the Bay of Bengal and Kailasagiri. Renowned for luxury sea-facing apartments and peaceful surroundings near Health City.',
+    priceTrends: '16.2% annual value growth with high luxury demand.'
+  },
+  'bhogapuram': {
+    name: 'Property in Bhogapuram',
+    metaTitle: 'Plots for Sale in Bhogapuram Vizag | Airport Highway VMRDA Layouts',
+    metaDesc: 'Buy open plots for sale in Bhogapuram, Vizag. Verified VMRDA & DTCP layouts near Bhogapuram International Airport & 6-lane beach expressway.',
+    keywords: 'bhogapuram plots, property in bhogapuram vizag, land in bhogapuram, vmrda plots bhogapuram',
+    avgPriceSqFt: '₹2,500 - ₹4,200 / sq.ft.',
+    topHighlights: ['Upcoming Bhogapuram International Airport', '6-Lane Beach Expressway', 'VMRDA Master Plan Megacity Zone', '25%+ Annual Land Appreciation'],
+    description: 'Bhogapuram is Andhra Pradesh’s top real estate investment corridor. Anchored by the greenfield Bhogapuram International Airport construction, land plots here offer explosive capital growth.',
+    priceTrends: '24.6% rapid appreciation year-over-year.'
   }
 };
 
@@ -239,33 +319,113 @@ export function LocalityHubPage() {
           )}
         </div>
 
-        {/* Cross-Locality Navigation */}
-        <div className="mt-16 bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
+        {/* Locality Market Guide & Search Intent Section */}
+        <section className="mt-14 bg-white p-6 md:p-10 rounded-3xl border border-gray-200 shadow-sm space-y-8">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 border-b border-gray-100 pb-4">
+            Complete Real Estate & Property Guide for {info.name}, Vizag
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-3">
+              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                🏢 Apartments & Flats in {info.name}
+              </h3>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                Looking for <strong>flats for sale in {info.name}</strong>? Home buyers can explore a wide variety of <strong>2 BHK flats in {info.name}</strong> (950 - 1,250 sq.ft.) and spacious <strong>3 BHK flats in {info.name}</strong> (1,450 - 2,100 sq.ft.). Modern gated communities in {info.name} come equipped with 24/7 security, elevators, power backup, covered car parking, and clubhouse facilities.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                🏞️ Open Plots & VMRDA Layouts in {info.name}
+              </h3>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                Searching for <strong>plots for sale in {info.name}</strong>? Land investment in <strong>{info.name} plots</strong> offers strong long-term capital growth. Most residential layouts are <strong>VMRDA approved</strong> with 40-foot blacktop roads, underground drainage, electricity, and clear title deeds for safe legal ownership.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                🏡 Villas & Independent Houses in {info.name}
+              </h3>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                For buyers seeking luxury living and private open spaces, <strong>villas in {info.name}</strong> provide high-end multi-storey independent duplexes and gated villa communities featuring private gardens and premium fittings.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                💰 Property Prices & Rental Market in {info.name}
+              </h3>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                Current <strong>property prices in {info.name}</strong> average <strong>{info.avgPriceSqFt}</strong>, with 3-year historical capital appreciation standing at <strong>{info.priceTrends}</strong>. High demand from IT employees and university faculty also makes <strong>property for rent in {info.name}</strong> a steady monthly cash-flow generator for landlords.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* P0 & P1 Cross-Locality Navigation */}
+        <div className="mt-10 bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
           <h3 className="text-xl font-bold text-gray-900 mb-4">
-            Explore Nearby Neighborhoods in Vizag
+            Explore All Top Localities & Neighborhoods in Visakhapatnam
           </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-            {[
-              { name: 'Madhurawada', slug: '/localities/madhurawada' },
-              { name: 'Yendada', slug: '/localities/yendada' },
-              { name: 'Rushikonda', slug: '/localities/rushikonda' },
-              { name: 'PM Palem', slug: '/localities/pm-palem' },
-              { name: 'Gajuwaka', slug: '/localities/gajuwaka' },
-              { name: 'MVP Colony', slug: '/localities/mvp-colony' },
-              { name: 'Kommadi', slug: '/localities/kommadi' }
-            ].map(l => (
-              <Link
-                key={l.name}
-                to={l.slug}
-                className={`p-3 rounded-xl text-center text-xs font-bold border transition-all ${
-                  l.slug.endsWith(slug)
-                    ? 'bg-primary-600 text-white border-primary-600'
-                    : 'bg-gray-50 text-gray-800 border-gray-200 hover:bg-gray-100'
-                }`}
-              >
-                {l.name}
-              </Link>
-            ))}
+
+          <div className="mb-4">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-primary-700 bg-primary-50 px-2.5 py-1 rounded-md border border-primary-200">
+              P0 Primary Growth Corridors
+            </span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mt-3">
+              {[
+                { name: 'Madhurawada', slug: '/localities/madhurawada' },
+                { name: 'Yendada', slug: '/localities/yendada' },
+                { name: 'Rushikonda', slug: '/localities/rushikonda' },
+                { name: 'PM Palem', slug: '/localities/pm-palem' },
+                { name: 'Gajuwaka', slug: '/localities/gajuwaka' },
+                { name: 'MVP Colony', slug: '/localities/mvp-colony' }
+              ].map(l => (
+                <Link
+                  key={l.name}
+                  to={l.slug}
+                  className={`p-3 rounded-xl text-center text-xs font-bold border transition-all ${
+                    l.slug.endsWith(slug)
+                      ? 'bg-primary-600 text-white border-primary-600 shadow-sm'
+                      : 'bg-gray-50 text-gray-800 border-gray-200 hover:bg-gray-100'
+                  }`}
+                >
+                  {l.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+              P1 High Growth Localities
+            </span>
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2.5 mt-3">
+              {[
+                { name: 'Seethammadhara', slug: '/localities/seethammadhara' },
+                { name: 'Kommadi', slug: '/localities/kommadi' },
+                { name: 'Bheemili', slug: '/localities/bheemili' },
+                { name: 'Bheemunipatnam', slug: '/localities/bheemunipatnam' },
+                { name: 'Pendurthi', slug: '/localities/pendurthi' },
+                { name: 'Tagarapuvalasa', slug: '/localities/tagarapuvalasa' },
+                { name: 'Duvvada', slug: '/localities/duvvada' },
+                { name: 'Visalakshi Nagar', slug: '/localities/visalakshi-nagar' }
+              ].map(l => (
+                <Link
+                  key={l.name}
+                  to={l.slug}
+                  className={`p-2.5 rounded-xl text-center text-xs font-bold border transition-all ${
+                    l.slug.endsWith(slug)
+                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+                      : 'bg-gray-50 text-gray-800 border-gray-200 hover:bg-gray-100'
+                  }`}
+                >
+                  {l.name}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </main>
