@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { MapPin, Bed, Bath, Maximize, Heart, Share2, Phone, MessageCircle, Check, MessageSquare } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
@@ -346,6 +346,22 @@ export function PropertyDetailsPage() {
                 </div>
               )}
             </div>
+
+            {/* Step 17 Property Lifecycle Status Banner */}
+            {((property as any).status === 'sold' || (property as any).status === 'rented' || (property as any).status === 'inactive') && (
+              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 text-amber-900 flex items-center justify-between text-xs md:text-sm font-medium">
+                <div>
+                  <strong className="block font-bold">⚠️ Property Availability Update</strong>
+                  This listing is currently marked as <span className="uppercase font-extrabold">{(property as any).status}</span>. You can still explore active listings in {localityName || property.location || 'Visakhapatnam'} below.
+                </div>
+                <Link
+                  to={`/properties?search=${encodeURIComponent(localityName || 'Vizag')}`}
+                  className="bg-amber-600 hover:bg-amber-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap ml-4 transition-all"
+                >
+                  View Active Properties
+                </Link>
+              </div>
+            )}
 
             <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100 mb-6">
               <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4 gap-3">
