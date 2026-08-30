@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { Property } from '../../types';
+import { CategorySiloBar } from '../../components/CategorySiloBar';
 import { PropertyCard } from '../../components/PropertyCard';
 import { SEOHead } from '../../components/SEOHead';
 import { sortPropertiesGlobalPreference } from '../../lib/searchFilters';
@@ -415,7 +416,10 @@ export function HubLandingPage() {
       </section>
 
       {/* Listings Section */}
-      <main className="max-w-7xl mx-auto px-4 py-10">
+      <main className="max-w-7xl mx-auto px-4 py-10 space-y-10">
+        {/* Phase 11 Category Internal Linking Graph Silo Bar */}
+        <CategorySiloBar categoryTitle={config.title} />
+
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-2 border-b border-gray-200 pb-4">
           <div>
             <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900">

@@ -4,6 +4,7 @@ import { supabase } from '../../lib/supabase';
 import { Property } from '../../types';
 import { PropertyCard } from '../../components/PropertyCard';
 import { SEOHead } from '../../components/SEOHead';
+import { LocalitySiloBar } from '../../components/LocalitySiloBar';
 import { sortPropertiesGlobalPreference } from '../../lib/searchFilters';
 import { openWhatsApp } from '../../lib/whatsapp';
 import { MapPin, MessageCircle } from 'lucide-react';
@@ -287,7 +288,10 @@ export function LocalityHubPage() {
       </section>
 
       {/* Content Body */}
-      <main className="max-w-7xl mx-auto px-4 py-10">
+      <main className="max-w-7xl mx-auto px-4 py-10 space-y-10">
+        {/* Phase 11 Locality Internal Linking Graph Silo Bar */}
+        <LocalitySiloBar localityName={info.name} localitySlug={slug} />
+
         {/* Connectivity Metrics Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-10">
           <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm text-center">
