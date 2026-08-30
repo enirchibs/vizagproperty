@@ -10,6 +10,7 @@ import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 import { FixedWhatsAppCTA } from '../components/FixedWhatsAppCTA'
 import { ScrollWhatsAppIcon } from '../components/ScrollWhatsAppIcon'
 import { WhatsAppZeroResultsModal } from '../components/WhatsAppZeroResultsModal'
+import { SEOHead } from '../components/SEOHead'
 
 export default function VMRDAApprovedPlotsPage() {
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
@@ -129,6 +130,13 @@ export default function VMRDAApprovedPlotsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <SEOHead 
+        title="VMRDA Approved Plots in Vizag | Open Plots for Sale in Visakhapatnam"
+        description="Buy 100% legal VMRDA approved plots in Vizag & Visakhapatnam. Verified open plots, residential layouts & gated community plots in Madhurawada, PM Palem, Bhogapuram."
+        canonicalUrl="https://vizagproperty.co.in/vmrda-approved-plots-vizag"
+        url="https://vizagproperty.co.in/vmrda-approved-plots-vizag"
+        keywords="vmrda plots in vizag, vmrda approved plots in vizag, plots for sale in vizag, open plots in visakhapatnam, gated community plots vizag, land for sale in vizag"
+      />
       <section className="relative bg-gradient-to-r from-primary-600 to-primary-700 text-white py-20 px-4">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="relative max-w-7xl mx-auto">

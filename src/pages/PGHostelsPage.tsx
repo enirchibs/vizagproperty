@@ -4,6 +4,7 @@ import { Search, MapPin, Users, CheckCircle2, Home, Wifi, Utensils, ShieldCheck,
 import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { getWhatsAppLink } from '../lib/whatsapp'
+import { SEOHead } from '../components/SEOHead'
 
 export default function PGHostelsPage() {
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
@@ -125,6 +126,13 @@ export default function PGHostelsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <SEOHead 
+        title="PG & Hostels in Vizag | Best Paying Guest Accommodation in Visakhapatnam"
+        description="Find men's & women's PG hostels in Vizag & Visakhapatnam from ₹3,000/month with food, WiFi & security. Affordable PG in Madhurawada, MVP Colony, Gajuwaka."
+        canonicalUrl="https://vizagproperty.co.in/pg-hostels-in-vizag"
+        url="https://vizagproperty.co.in/pg-hostels-in-vizag"
+        keywords="pg in vizag, hostels in vizag, girls pg in vizag, gents hostel vizag, paying guest accommodation visakhapatnam, madhurawada pg hostels"
+      />
       <section className="relative bg-gradient-to-r from-blue-600 to-blue-700 text-white py-20 px-4">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="relative max-w-7xl mx-auto">

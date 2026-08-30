@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { WhatsAppButton } from '../components/WhatsAppButton'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
+import { SEOHead } from '../components/SEOHead'
 
 export function MadhurawadaPage() {
   const [properties, setProperties] = useState<Property[]>([])
@@ -45,6 +46,13 @@ export function MadhurawadaPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <SEOHead 
+        title="Property in Madhurawada Vizag | Flats, Villas & VMRDA Plots for Sale"
+        description="Find verified flats, gated villas, and VMRDA approved plots for sale in Madhurawada, Vizag. Explore 2 BHK & 3 BHK apartments near IT SEZ with price trends."
+        canonicalUrl="https://vizagproperty.co.in/madhurawada"
+        url="https://vizagproperty.co.in/madhurawada"
+        keywords="property in madhurawada, flats for sale in madhurawada vizag, plots for sale in madhurawada, madhurawada real estate, madhurawada plot price per sq yard"
+      />
       <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <a

@@ -9,6 +9,7 @@ import { FixedWhatsAppCTA } from '../components/FixedWhatsAppCTA'
 import { ScrollWhatsAppIcon } from '../components/ScrollWhatsAppIcon'
 import { buildUnifiedPropertyQuery, sortPropertiesGlobalPreference } from '../lib/searchFilters'
 import { WhatsAppZeroResultsModal } from '../components/WhatsAppZeroResultsModal'
+import { SEOHead } from '../components/SEOHead'
 
 export default function FlatsForSalePage() {
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
@@ -142,6 +143,13 @@ export default function FlatsForSalePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <SEOHead 
+        title="Flats for Sale in Vizag | 2 BHK & 3 BHK Apartments in Visakhapatnam"
+        description="Explore 2 BHK & 3 BHK flats for sale in Vizag & Visakhapatnam. Find verified gated community apartments in Madhurawada, MVP Colony, PM Palem, Yendada with price details."
+        canonicalUrl="https://vizagproperty.co.in/flats-for-sale-in-vizag"
+        url="https://vizagproperty.co.in/flats-for-sale-in-vizag"
+        keywords="flats for sale in vizag, apartments in vizag, 2 bhk flats in vizag, 3 bhk flats in visakhapatnam, buy flat in vizag, ready to move flats vizag"
+      />
       <section className="relative bg-gradient-to-r from-blue-600 to-blue-700 text-white py-20 px-4">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="relative max-w-7xl mx-auto">

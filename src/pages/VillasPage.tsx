@@ -8,6 +8,7 @@ import type { Property } from '../types'
 import { buildStrictQuery, CATEGORY_CONTEXTS, sortPropertiesGlobalPreference } from '../lib/searchFilters'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
+import { SEOHead } from '../components/SEOHead'
 
 export default function VillasPage() {
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
@@ -113,6 +114,13 @@ export default function VillasPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <SEOHead 
+        title="Villas in Vizag | Luxury Gated Community Villas for Sale in Visakhapatnam"
+        description="Discover luxury villas for sale in Vizag & Visakhapatnam. Explore independent houses, gated community villas, sea view villas in Rushikonda, Madhurawada, Yendada."
+        canonicalUrl="https://vizagproperty.co.in/villas-in-vizag"
+        url="https://vizagproperty.co.in/villas-in-vizag"
+        keywords="villas in vizag, luxury villas in vizag, villas for sale in visakhapatnam, gated community villas vizag, independent house for sale vizag, beach villas vizag"
+      />
       <section className="relative bg-gradient-to-r from-primary-600 to-primary-700 text-white py-20 px-4">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="relative max-w-7xl mx-auto">

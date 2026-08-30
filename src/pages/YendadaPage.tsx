@@ -5,6 +5,7 @@ import { Property } from '../types'
 import { WhatsAppButton } from '../components/WhatsAppButton'
 import { buildStrictQuery, getLocalityContextBySlug } from '../lib/searchFilters'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
+import { SEOHead } from '../components/SEOHead'
 
 export function YendadaPage() {
   const [properties, setProperties] = useState<Property[]>([])
@@ -46,6 +47,13 @@ export function YendadaPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <SEOHead 
+        title="Property in Yendada Vizag | Premium Flats, Villas & Plots for Sale"
+        description="Find luxury flats, beachside villas, and VMRDA approved plots for sale in Yendada, Vizag. Premium apartments near Law University & IT SEZ with price details."
+        canonicalUrl="https://vizagproperty.co.in/yendada"
+        url="https://vizagproperty.co.in/yendada"
+        keywords="property in yendada, flats for sale in yendada vizag, plots for sale in yendada, yendada real estate, apartments in yendada vizag"
+      />
       <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <a

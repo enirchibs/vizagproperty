@@ -10,6 +10,7 @@ import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 import { FixedWhatsAppCTA } from '../components/FixedWhatsAppCTA'
 import { ScrollWhatsAppIcon } from '../components/ScrollWhatsAppIcon'
 import { WhatsAppZeroResultsModal } from '../components/WhatsAppZeroResultsModal'
+import { SEOHead } from '../components/SEOHead'
 
 export default function FlatsForRentPage() {
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
@@ -118,6 +119,13 @@ export default function FlatsForRentPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <SEOHead 
+        title="Flats for Rent in Vizag | 1, 2, 3 BHK Apartments for Rent in Visakhapatnam"
+        description="Find flats for rent in Vizag & Visakhapatnam. Explore 1 BHK, 2 BHK, 3 BHK rental apartments and houses in Madhurawada, MVP Colony, PM Palem, Seethammadhara."
+        canonicalUrl="https://vizagproperty.co.in/flats-for-rent-vizag"
+        url="https://vizagproperty.co.in/flats-for-rent-vizag"
+        keywords="flats for rent in vizag, apartments for rent in visakhapatnam, 2 bhk flat for rent in vizag, house for rent in vizag, rental properties vizag"
+      />
       <section className="relative bg-gradient-to-r from-orange-600 to-orange-700 text-white py-20 px-4">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="relative max-w-7xl mx-auto">

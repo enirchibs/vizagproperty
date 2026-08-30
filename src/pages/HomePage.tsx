@@ -66,7 +66,10 @@ export function HomePage() {
     <div className="min-h-screen bg-white pb-16 md:pb-0"> {/* Padding bottom for sticky nav on mobile */}
       <SEOHead 
         title="Vizag Real Estate & Properties for Sale | Visakhapatnam Property"
-        description="Find your dream property in Vizag. Explore the best Vizag real estate, verified properties for sale, VMRDA plots, and flats. Leading Visakhapatnam property platform."
+        description="Search verified property in Vizag & Visakhapatnam. Explore VMRDA plots, 2 & 3 BHK flats for sale, gated villas, and house rentals across Madhurawada, Yendada, MVP Colony & PM Palem."
+        canonicalUrl="https://vizagproperty.co.in/"
+        url="https://vizagproperty.co.in/"
+        keywords="vizag real estate, visakhapatnam property, property in vizag, plots for sale in vizag, flats for sale in vizag, villas in vizag, VMRDA plots vizag, vizag property"
         schema={homeSchema}
       />
       
