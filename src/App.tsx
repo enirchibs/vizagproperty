@@ -92,6 +92,7 @@ const NewProjectsPage = lazyWithRetry(() => import('./pages/seo/NewProjectsPage'
 const GuidesPage = lazyWithRetry(() => import('./pages/seo/GuidesPage').then(m => ({ default: m.GuidesPage })))
 const VMRDAAuthorityPage = lazyWithRetry(() => import('./pages/seo/VMRDAAuthorityPage').then(m => ({ default: m.VMRDAAuthorityPage })))
 const RERAAuthorityPage = lazyWithRetry(() => import('./pages/seo/RERAAuthorityPage').then(m => ({ default: m.RERAAuthorityPage })))
+const SEODashboardPage = lazyWithRetry(() => import('./pages/admin/SEODashboardPage').then(m => ({ default: m.SEODashboardPage })))
 function ScrollToTop() {
   const { pathname } = useLocation()
 
@@ -229,6 +230,9 @@ function AppContent() {
               <Route path="/partner/apply" element={<PartnerApplyPage />} />
               <Route path="/partner/dashboard" element={<ProtectedRoute requirePartnerApproved><PartnerDashboardPage /></ProtectedRoute>} />
               <Route path="/partner/referrals/:id" element={<ProtectedRoute requirePartnerApproved><PartnerReferralDetailsPage /></ProtectedRoute>} />
+
+              {/* Admin Internal SEO Health Dashboard */}
+              <Route path="/admin/seo-dashboard" element={<SEODashboardPage />} />
 
               {/* 404 Catch-All Fallback */}
               <Route path="*" element={<Navigate to="/" replace />} />
