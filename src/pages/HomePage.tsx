@@ -176,7 +176,7 @@ export function HomePage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: Shield, title: 'Verified Listings', desc: 'Every property is manually checked and verified for 100% legal safety.' },
+              { icon: Shield, title: 'Verified Listings', desc: 'Properties are reviewed against our verification checklist, including available ownership, project and listing information. Buyers should independently verify legal documents before purchase.' },
               { icon: Search, title: 'AI Search', desc: 'Find properties using natural language, exactly like you talk.' },
               { icon: MessageCircle, title: 'WhatsApp Integration', desc: 'Get instant alerts, details, and connect with owners via WhatsApp.' },
               { icon: Building2, title: 'No Brokerage', desc: 'Connect directly with owners and builders to save on commission.' }
