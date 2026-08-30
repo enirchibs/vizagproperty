@@ -83,6 +83,13 @@ const StampDutyCalculatorPage = lazyWithRetry(() => import('./pages/homeloans/ca
 const DocumentChecklistPage = lazyWithRetry(() => import('./pages/homeloans/DocumentChecklistPage').then(m => ({ default: m.DocumentChecklistPage })))
 const HomeLoanGuidePage = lazyWithRetry(() => import('./pages/homeloans/HomeLoanGuidePage').then(m => ({ default: m.HomeLoanGuidePage })))
 const ProgrammaticSEOLandingPage = lazyWithRetry(() => import('./pages/seo/ProgrammaticSEOLandingPage').then(m => ({ default: m.ProgrammaticSEOLandingPage })))
+const HubLandingPage = lazyWithRetry(() => import('./pages/seo/HubLandingPage').then(m => ({ default: m.HubLandingPage })))
+const LocalityHubPage = lazyWithRetry(() => import('./pages/seo/LocalityHubPage').then(m => ({ default: m.LocalityHubPage })))
+const PropertyPricesPage = lazyWithRetry(() => import('./pages/seo/PropertyPricesPage').then(m => ({ default: m.PropertyPricesPage })))
+const LocalityDirectoryPage = lazyWithRetry(() => import('./pages/seo/LocalityDirectoryPage').then(m => ({ default: m.LocalityDirectoryPage })))
+const AgentsPage = lazyWithRetry(() => import('./pages/seo/AgentsPage').then(m => ({ default: m.AgentsPage })))
+const NewProjectsPage = lazyWithRetry(() => import('./pages/seo/NewProjectsPage').then(m => ({ default: m.NewProjectsPage })))
+const GuidesPage = lazyWithRetry(() => import('./pages/seo/GuidesPage').then(m => ({ default: m.GuidesPage })))
 function ScrollToTop() {
   const { pathname } = useLocation()
 
@@ -183,6 +190,33 @@ function AppContent() {
               <Route path="/residential/madhurawada" element={<MadhurawadaResidentialPage />} />
               <Route path="/commercial/office-space" element={<OfficeSpacePage />} />
               <Route path="/insights/bhogapuram-airport-impact" element={<BhogapuramImpactPage />} />
+              
+              {/* PHASE 2 — Master SEO Website Architecture Routes */}
+              <Route path="/property-in-vizag" element={<HubLandingPage />} />
+              <Route path="/property-for-sale-vizag" element={<HubLandingPage />} />
+              <Route path="/real-estate-vizag" element={<HubLandingPage />} />
+              
+              <Route path="/plots-for-sale-vizag" element={<HubLandingPage />} />
+              <Route path="/villas-for-sale-vizag" element={<HubLandingPage />} />
+              <Route path="/houses-for-sale-vizag" element={<HubLandingPage />} />
+              <Route path="/commercial-property-vizag" element={<HubLandingPage />} />
+              <Route path="/property-for-rent-vizag" element={<HubLandingPage />} />
+              
+              <Route path="/property-prices-vizag" element={<PropertyPricesPage />} />
+              <Route path="/plot-prices-vizag" element={<PropertyPricesPage />} />
+              <Route path="/flat-prices-vizag" element={<PropertyPricesPage />} />
+              <Route path="/vizag-real-estate-market" element={<PropertyPricesPage />} />
+              <Route path="/property-investment-vizag" element={<PropertyPricesPage />} />
+              
+              <Route path="/vmrda-approved-layouts-vizag" element={<HubLandingPage />} />
+              <Route path="/rera-approved-projects-vizag" element={<HubLandingPage />} />
+              
+              <Route path="/localities" element={<LocalityDirectoryPage />} />
+              <Route path="/localities/:localitySlug" element={<LocalityHubPage />} />
+              
+              <Route path="/projects" element={<NewProjectsPage />} />
+              <Route path="/agents" element={<AgentsPage />} />
+              <Route path="/guides" element={<GuidesPage />} />
               
               {/* Partners */}
               <Route path="/partners" element={<PartnersPage />} />
