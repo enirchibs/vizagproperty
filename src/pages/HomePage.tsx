@@ -152,27 +152,7 @@ export function HomePage() {
       {/* Premium Partners / Sponsored Banners */}
       <SponsoredBanners />
 
-      {/* 4. Statistics Bar (Image 3 Section - Moved further down) */}
-      <div className="w-full bg-primary-900 py-10 border-y-4 border-accent-500 my-8">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/10">
-          <div className="space-y-1">
-            <div className="text-3xl md:text-5xl font-black text-white">15,000+</div>
-            <div className="text-sm font-semibold text-primary-200 uppercase tracking-wider">Verified Properties</div>
-          </div>
-          <div className="space-y-1">
-            <div className="text-3xl md:text-5xl font-black text-white">500+</div>
-            <div className="text-sm font-semibold text-primary-200 uppercase tracking-wider">Top Builders</div>
-          </div>
-          <div className="space-y-1">
-            <div className="text-3xl md:text-5xl font-black text-white">120+</div>
-            <div className="text-sm font-semibold text-primary-200 uppercase tracking-wider">Localities Covered</div>
-          </div>
-          <div className="space-y-1">
-            <div className="text-3xl md:text-5xl font-black text-white">200+</div>
-            <div className="text-sm font-semibold text-primary-200 uppercase tracking-wider">New Projects</div>
-          </div>
-        </div>
-      </div>
+
 
       {/* 5. Interactive Map Placeholder */}
       <section className="py-20 px-4 bg-white">
