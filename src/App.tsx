@@ -90,6 +90,8 @@ const LocalityDirectoryPage = lazyWithRetry(() => import('./pages/seo/LocalityDi
 const AgentsPage = lazyWithRetry(() => import('./pages/seo/AgentsPage').then(m => ({ default: m.AgentsPage })))
 const NewProjectsPage = lazyWithRetry(() => import('./pages/seo/NewProjectsPage').then(m => ({ default: m.NewProjectsPage })))
 const GuidesPage = lazyWithRetry(() => import('./pages/seo/GuidesPage').then(m => ({ default: m.GuidesPage })))
+const VMRDAAuthorityPage = lazyWithRetry(() => import('./pages/seo/VMRDAAuthorityPage').then(m => ({ default: m.VMRDAAuthorityPage })))
+const RERAAuthorityPage = lazyWithRetry(() => import('./pages/seo/RERAAuthorityPage').then(m => ({ default: m.RERAAuthorityPage })))
 function ScrollToTop() {
   const { pathname } = useLocation()
 
@@ -208,8 +210,12 @@ function AppContent() {
               <Route path="/vizag-real-estate-market" element={<PropertyPricesPage />} />
               <Route path="/property-investment-vizag" element={<PropertyPricesPage />} />
               
-              <Route path="/vmrda-approved-layouts-vizag" element={<HubLandingPage />} />
-              <Route path="/rera-approved-projects-vizag" element={<HubLandingPage />} />
+              <Route path="/vmrda-approved-layouts-vizag" element={<VMRDAAuthorityPage />} />
+              <Route path="/vmrda-approved-plots-vizag" element={<VMRDAAuthorityPage />} />
+              <Route path="/vmrda-plots" element={<VMRDAAuthorityPage />} />
+              <Route path="/rera-approved-projects-vizag" element={<RERAAuthorityPage />} />
+              <Route path="/rera-approved-flats" element={<RERAAuthorityPage />} />
+              <Route path="/rera-projects-vizag" element={<RERAAuthorityPage />} />
               
               <Route path="/localities" element={<LocalityDirectoryPage />} />
               <Route path="/localities/:localitySlug" element={<LocalityHubPage />} />
