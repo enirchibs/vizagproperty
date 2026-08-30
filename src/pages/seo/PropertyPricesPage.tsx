@@ -173,7 +173,7 @@ export function PropertyPricesPage() {
         </div>
 
         {/* Investment Advice Banner */}
-        <div className="bg-gradient-to-r from-primary-900 to-indigo-900 text-white p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="bg-gradient-to-r from-primary-900 to-indigo-900 text-white p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 mb-10">
           <div>
             <h3 className="text-xl font-bold mb-2">Need Expert Investment Guidance in Vizag?</h3>
             <p className="text-sm text-gray-200 max-w-xl">
@@ -186,6 +186,35 @@ export function PropertyPricesPage() {
           >
             Speak to Advisor
           </button>
+        </div>
+
+        {/* Tier 1 Money Pages Linking Silo Bar */}
+        <div className="bg-white p-6 md:p-8 rounded-3xl border border-gray-200 shadow-sm">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">
+            Tier 1 Real Estate Money Pages in Vizag
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+            {[
+              { name: 'Property in Vizag', slug: '/property-in-vizag' },
+              { name: 'Real Estate Vizag', slug: '/real-estate-vizag' },
+              { name: 'Property for Sale', slug: '/property-for-sale-vizag' },
+              { name: 'Plots for Sale', slug: '/plots-for-sale-vizag' },
+              { name: 'Flats for Sale', slug: '/flats-for-sale-vizag' },
+              { name: 'Villas for Sale', slug: '/villas-for-sale-vizag' },
+              { name: 'Property for Rent', slug: '/property-for-rent-vizag' },
+              { name: 'Property Prices', slug: '/property-prices-vizag' },
+              { name: 'Real Estate Market', slug: '/vizag-real-estate-market' },
+              { name: 'Property Investment', slug: '/property-investment-vizag' }
+            ].map(tier => (
+              <Link
+                key={tier.name}
+                to={tier.slug}
+                className="bg-emerald-50/60 hover:bg-emerald-100 border border-emerald-200 p-2.5 rounded-xl text-center text-xs font-extrabold text-emerald-900 transition-all"
+              >
+                {tier.name}
+              </Link>
+            ))}
+          </div>
         </div>
       </main>
     </div>

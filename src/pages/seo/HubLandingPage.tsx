@@ -93,7 +93,7 @@ const HUB_CONFIGS: Record<string, HubPageConfig> = {
     title: 'Plots for Sale in Vizag',
     metaTitle: 'Plots for Sale in Vizag | Open & VMRDA Approved Plots Visakhapatnam',
     metaDesc: 'Buy open plots for sale in Vizag & Visakhapatnam. Verified VMRDA, DTCP approved residential plots in Madhurawada, PM Palem, Bhogapuram, Kothavalasa.',
-    keywords: 'plots for sale in vizag, open plots in vizag, vmrda plots in vizag, residential land for sale in visakhapatnam',
+    keywords: 'plots for sale in vizag, vizag plots, open plots in vizag, vmrda plots in vizag, residential land for sale in visakhapatnam',
     categoryFilter: 'plot',
     listingTypeFilter: 'sale',
     headline: 'Plots for Sale in Vizag',
@@ -106,6 +106,48 @@ const HUB_CONFIGS: Record<string, HubPageConfig> = {
       {
         question: 'What is the price of land per square yard in Vizag?',
         answer: 'Plot prices range from ₹15,000 to ₹35,000 per sq. yd. in developing corridors like Bhogapuram, and ₹40,000 to ₹80,000 per sq. yd. in Madhurawada and Yendada.'
+      }
+    ]
+  },
+  'flats-for-sale-vizag': {
+    slug: 'flats-for-sale-vizag',
+    title: 'Flats for Sale in Vizag',
+    metaTitle: 'Flats for Sale in Vizag | 2 BHK & 3 BHK Apartments in Visakhapatnam',
+    metaDesc: 'Explore 2 BHK & 3 BHK flats for sale in Vizag & Visakhapatnam. Find verified gated community apartments in Madhurawada, MVP Colony, PM Palem, Yendada with price details.',
+    keywords: 'flats for sale in vizag, vizag flats, apartments in vizag, 2 bhk flats in vizag, 3 bhk flats in visakhapatnam, buy flat in vizag, ready to move flats vizag',
+    categoryFilter: 'flat',
+    listingTypeFilter: 'sale',
+    headline: 'Flats for Sale in Vizag',
+    subheadline: 'Discover 2 BHK & 3 BHK ready-to-move and under-construction gated community apartments across Visakhapatnam.',
+    editorialText: [
+      'Buying an apartment or flat in Vizag offers excellent living comfort combined with high rental demand from IT SEZ professionals and university faculty. Madhurawada, Yendada, and PM Palem are top choices for 2 & 3 BHK gated community flats.',
+      'Explore verified apartment listings with elevators, 24/7 power backup, covered car parking, and clubhouse amenities directly on VizagProperty.'
+    ],
+    faqs: [
+      {
+        question: 'What is the average price of 2 BHK flat in Vizag?',
+        answer: '2 BHK flat prices in Madhurawada range from ₹45 Lakhs to ₹65 Lakhs, while 2 BHKs in premium areas like Yendada and MVP Colony range from ₹70 Lakhs to ₹95 Lakhs.'
+      }
+    ]
+  },
+  'flats-for-sale-in-vizag': {
+    slug: 'flats-for-sale-in-vizag',
+    title: 'Flats for Sale in Vizag',
+    metaTitle: 'Flats for Sale in Vizag | 2 BHK & 3 BHK Apartments in Visakhapatnam',
+    metaDesc: 'Explore 2 BHK & 3 BHK flats for sale in Vizag & Visakhapatnam. Find verified gated community apartments in Madhurawada, MVP Colony, PM Palem, Yendada with price details.',
+    keywords: 'flats for sale in vizag, vizag flats, apartments in vizag, 2 bhk flats in vizag, 3 bhk flats in visakhapatnam, buy flat in vizag, ready to move flats vizag',
+    categoryFilter: 'flat',
+    listingTypeFilter: 'sale',
+    headline: 'Flats for Sale in Vizag',
+    subheadline: 'Discover 2 BHK & 3 BHK ready-to-move and under-construction gated community apartments across Visakhapatnam.',
+    editorialText: [
+      'Buying an apartment or flat in Vizag offers excellent living comfort combined with high rental demand from IT SEZ professionals and university faculty. Madhurawada, Yendada, and PM Palem are top choices for 2 & 3 BHK gated community flats.',
+      'Explore verified apartment listings with elevators, 24/7 power backup, covered car parking, and clubhouse amenities directly on VizagProperty.'
+    ],
+    faqs: [
+      {
+        question: 'What is the average price of 2 BHK flat in Vizag?',
+        answer: '2 BHK flat prices in Madhurawada range from ₹45 Lakhs to ₹65 Lakhs, while 2 BHKs in premium areas like Yendada and MVP Colony range from ₹70 Lakhs to ₹95 Lakhs.'
       }
     ]
   },
@@ -414,6 +456,35 @@ export function HubLandingPage() {
                   className="bg-gray-50 hover:bg-primary-50 hover:border-primary-300 border border-gray-200 p-3 rounded-xl text-center text-xs font-bold text-gray-800 transition-all"
                 >
                   {loc.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Tier 1 Money Pages Linking Silo Bar */}
+          <div className="pt-6 border-t border-gray-100 mt-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">
+              Tier 1 Real Estate Money Pages in Vizag
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+              {[
+                { name: 'Property in Vizag', slug: '/property-in-vizag' },
+                { name: 'Real Estate Vizag', slug: '/real-estate-vizag' },
+                { name: 'Property for Sale', slug: '/property-for-sale-vizag' },
+                { name: 'Plots for Sale', slug: '/plots-for-sale-vizag' },
+                { name: 'Flats for Sale', slug: '/flats-for-sale-vizag' },
+                { name: 'Villas for Sale', slug: '/villas-for-sale-vizag' },
+                { name: 'Property for Rent', slug: '/property-for-rent-vizag' },
+                { name: 'Property Prices', slug: '/property-prices-vizag' },
+                { name: 'Real Estate Market', slug: '/vizag-real-estate-market' },
+                { name: 'Property Investment', slug: '/property-investment-vizag' }
+              ].map(tier => (
+                <Link
+                  key={tier.name}
+                  to={tier.slug}
+                  className="bg-primary-50/60 hover:bg-primary-100 border border-primary-200 p-2.5 rounded-xl text-center text-xs font-extrabold text-primary-900 transition-all"
+                >
+                  {tier.name}
                 </Link>
               ))}
             </div>
