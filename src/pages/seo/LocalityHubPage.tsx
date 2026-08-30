@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { Property } from '../../types';
 import { PropertyCard } from '../../components/PropertyCard';
@@ -175,9 +175,21 @@ const LOCALITY_DATA: Record<string, LocalityDetails> = {
 
 export function LocalityHubPage() {
   const { localitySlug } = useParams<{ localitySlug?: string }>();
+  const location = useLocation();
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedTab, setSelectedTab] = useState<'all' | 'flat' | 'plot' | 'villa' | 'rent'>('all');
+  const [selectedTab, setSelectedTab] = useState<'all' | 'flat' | 'plot' | 'villa' | 'house' | 'commercial' | 'rent'>('all');
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const typeParam = params.get('type') || params.get('category') || params.get('listing');
+    if (typeParam) {
+      const lower = typeParam.toLowerCase();
+      if (['flat', 'plot', 'villa', 'house', 'commercial', 'rent'].includes(lower)) {
+        setSelectedTab(lower as any);
+      }
+    }
+  }, [location.search]);
 
   const slug = localitySlug ? localitySlug.toLowerCase() : 'madhurawada';
   const info = LOCALITY_DATA[slug] || {
@@ -232,6 +244,8 @@ export function LocalityHubPage() {
     if (selectedTab === 'flat') return p.property_type === 'flat_apartment';
     if (selectedTab === 'plot') return p.property_type === 'plot_land' || p.property_type === 'industrial_land' || p.property_type === 'commercial_plot';
     if (selectedTab === 'villa') return p.property_type === 'independent_house_villa' || p.property_type === 'farmhouse';
+    if (selectedTab === 'house') return p.property_type === 'independent_house_villa';
+    if (selectedTab === 'commercial') return p.category === 'commercial' || p.property_type === 'office' || p.property_type === 'shop' || p.property_type === 'showroom' || p.property_type === 'commercial_plot';
     if (selectedTab === 'rent') return p.listing_type === 'rent';
     return true;
   });
@@ -400,7 +414,9 @@ export function LocalityHubPage() {
               { id: 'all', label: 'All Listings' },
               { id: 'flat', label: 'Flats (2 & 3 BHK)' },
               { id: 'plot', label: 'Plots & Land' },
-              { id: 'villa', label: 'Villas & Houses' },
+              { id: 'villa', label: 'Villas' },
+              { id: 'house', label: 'Houses' },
+              { id: 'commercial', label: 'Commercial' },
               { id: 'rent', label: 'Rentals' }
             ].map(tab => (
               <button
