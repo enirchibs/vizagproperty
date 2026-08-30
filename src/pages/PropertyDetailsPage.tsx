@@ -266,16 +266,12 @@ export function PropertyDetailsPage() {
           "value": property.property_type.replace('_', ' ')
         }] : [])
       ]
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": ((property.title.length % 10) / 10 + 4.1).toFixed(1), // e.g. 4.1 to 5.0
-      "reviewCount": ((property.title.length * 7) % 150 + 24).toString() // e.g. 24 to 174
     }
   };
 
   const pageTitle = `${property.title} - ${property.location ?? property.city ?? 'Visakhapatnam'} | VizagProperty`;
   const pageDesc = `${property.title} in ${property.location ?? property.city ?? 'Visakhapatnam'}. ${property.bedrooms ? property.bedrooms + ' BHK, ' : ''}${property.area_sqft} sqft. ${property.listing_type === 'sale' ? 'For Sale' : 'For Rent'}. Contact now for more details.`;
+  const canonicalUrl = `https://vizagproperty.co.in/property/${property.id}`;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -283,7 +279,8 @@ export function PropertyDetailsPage() {
         title={pageTitle} 
         description={pageDesc} 
         schema={realEstateSchema} 
-        url={window.location.href} 
+        url={canonicalUrl} 
+        canonicalUrl={canonicalUrl}
         ogImage={images[0]} 
       />
       <div className="max-w-7xl mx-auto px-4 py-8">

@@ -9,6 +9,7 @@ import { AdSenseInFeedCard } from '../components/AdSenseInFeedCard'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp } from '../lib/whatsapp'
 import { buildUnifiedPropertyQuery, sortPropertiesGlobalPreference } from '../lib/searchFilters'
+import { SEOHead } from '../components/SEOHead'
 
 const KEYWORD_LISTING_TYPE_MAP: Record<string, string[]> = {
   'rent': ['rent', 'lease', 'tenant', 'to let'],
@@ -411,6 +412,13 @@ export function PropertiesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEOHead 
+        title="Properties for Sale & Rent in Vizag | Visakhapatnam Real Estate"
+        description="Search all verified properties for sale & rent in Vizag. Find flats, VMRDA approved plots, villas, and commercial spaces across Visakhapatnam."
+        canonicalUrl="https://vizagproperty.co.in/properties"
+        url="https://vizagproperty.co.in/properties"
+        keywords="properties in vizag, vizag real estate, property for sale in visakhapatnam, buy property vizag, rent property vizag"
+      />
       <div className="bg-white border-b border-gray-200 sticky top-16 z-30">
         <div className="max-w-7xl mx-auto px-4 py-3 md:py-4">
           <div className="flex items-center space-x-2">

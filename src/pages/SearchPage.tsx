@@ -11,6 +11,7 @@ import { useSearch } from '../contexts/SearchContext'
 import { saveLastSearch } from '../lib/searchMemory'
 import { sortPropertiesGlobalPreference } from '../lib/searchFilters'
 import MapRadiusToggle from '../components/MapRadiusToggle'
+import { SEOHead } from '../components/SEOHead'
 
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371; // km
@@ -247,6 +248,11 @@ export function SearchPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
+      <SEOHead 
+        title="Search Properties in Vizag | Vizag Property"
+        description="Filter and search verified real estate properties in Visakhapatnam."
+        noindex={true}
+      />
       <div className="sticky top-0 z-40 bg-white px-3 pt-3 pb-2 shadow-sm">
         <div>
           <div className="flex items-center gap-2 mb-2">

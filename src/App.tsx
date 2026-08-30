@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { SearchProvider } from './contexts/SearchContext'
 import { ErrorBoundary } from './components/ErrorBoundary'
@@ -189,6 +189,9 @@ function AppContent() {
               <Route path="/partner/apply" element={<PartnerApplyPage />} />
               <Route path="/partner/dashboard" element={<ProtectedRoute requirePartnerApproved><PartnerDashboardPage /></ProtectedRoute>} />
               <Route path="/partner/referrals/:id" element={<ProtectedRoute requirePartnerApproved><PartnerReferralDetailsPage /></ProtectedRoute>} />
+
+              {/* 404 Catch-All Fallback */}
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </ErrorBoundary>
         </Suspense>

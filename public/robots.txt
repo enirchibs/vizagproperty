@@ -1,3 +1,13 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /my-listings
+Disallow: /add-property
+Disallow: /post-property
+Disallow: /edit-property/
+Disallow: /login
+Disallow: /mobile-search
+Disallow: /recommendations
+
 Sitemap: https://vizagproperty.co.in/sitemap.xml
