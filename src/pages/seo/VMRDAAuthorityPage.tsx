@@ -89,8 +89,8 @@ export function VMRDAAuthorityPage() {
   return (
     <div className="min-h-screen bg-gray-50 pb-16">
       <SEOHead
-        title="VMRDA Approved Plots & Layouts Vizag | L.P. Number Search Guide 2026"
-        description="Verify VMRDA approved plots in Vizag. Official L.P. number verification guide, VMRDA plot rules, layout approval checklist, and verified plot inventory."
+        title="VMRDA Approved Layouts & Plots in Vizag | L.P. Number Search Online 2026"
+        description="Search 100% VMRDA approved plots in Vizag. Official L.P. number verification guide, VMRDA layout approval status check, 15% mortgage rules & verified land rates."
         canonicalUrl={canonicalUrl}
         url={canonicalUrl}
         keywords="vmrda, vmrda plots in vizag, vmrda approved plots, vmrda approved layouts, vmrda layout search, how to verify vmrda approval, vmrda plot rules, vmrda plot buying checklist"
