@@ -35,7 +35,7 @@ export function AboutUsPage() {
               We take trust seriously. Every property listed on our platform undergoes a verification process to ensure authenticity and safety for our buyers.
             </p>
           </div>
-          
+
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
             <div className="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mb-6">
               <Zap className="w-8 h-8" />
@@ -64,6 +64,24 @@ export function AboutUsPage() {
             <p className="text-gray-600">
               Your satisfaction is our priority. We provide seamless communication via WhatsApp and a dedicated support team to assist you at every step.
             </p>
+          </div>
+        </div>
+
+        {/* E-E-A-T Data & Verification Methodology Section */}
+        <div className="bg-gradient-to-r from-blue-900 to-slate-900 text-white rounded-3xl p-8 sm:p-12 mb-16 shadow-md">
+          <h2 className="text-2xl font-extrabold mb-4">📊 Data Methodology & Verification Disclaimer</h2>
+          <p className="text-gray-200 text-sm leading-relaxed mb-6">
+            All price metrics, locality land rates, and market trends published on VizagProperty are derived from asking price data of verified active listings on our platform (Period: Q3 2026).
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-gray-300">
+            <div className="bg-white/10 p-4 rounded-xl border border-white/10">
+              <strong className="text-white block font-bold mb-1">Asking Price vs Transaction Price</strong>
+              Published statistics reflect asking seller prices and benchmark valuation ranges. They do not constitute official government registered sale price data.
+            </div>
+            <div className="bg-white/10 p-4 rounded-xl border border-white/10">
+              <strong className="text-white block font-bold mb-1">Legal Verification Checklist</strong>
+              Buyers are strongly advised to independently verify Encumbrance Certificates (EC), VMRDA L.P. layout approval numbers, and AP RERA registration status before executing any financial transaction.
+            </div>
           </div>
         </div>
       </div>
