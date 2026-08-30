@@ -249,6 +249,30 @@ export function LocalityHubPage() {
         "addressRegion": "Andhra Pradesh",
         "addressCountry": "IN"
       }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://vizagproperty.co.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Vizag Localities",
+          "item": "https://vizagproperty.co.in/localities"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": info.name,
+          "item": canonicalUrl
+        }
+      ]
     }
   ];
 
