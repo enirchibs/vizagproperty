@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { SEOHead } from '../../components/SEOHead';
-import { TrendingUp, ArrowRight } from 'lucide-react';
+import { TrendingUp, ArrowRight, Calculator, CheckCircle2 } from 'lucide-react';
 import { openWhatsApp } from '../../lib/whatsapp';
 
 interface MarketPriceConfig {
@@ -97,6 +98,27 @@ export function PropertyPricesPage() {
   const config = MARKET_CONFIGS[slug] || MARKET_CONFIGS['property-prices-vizag'];
   const canonicalUrl = `https://vizagproperty.co.in/${config.slug}`;
 
+  // Price Valuation Estimator State
+  const [calcLocality, setCalcLocality] = useState('Madhurawada');
+  const [calcCategory, setCalcCategory] = useState<'flat' | 'plot' | 'villa'>('flat');
+  const [calcArea, setCalcArea] = useState(1200);
+
+  const baseRates: Record<string, number> = {
+    'Madhurawada': 5500,
+    'Yendada': 7000,
+    'Rushikonda': 8000,
+    'PM Palem': 4900,
+    'MVP Colony': 8750,
+    'Gajuwaka': 4650,
+    'Bhogapuram': 3800,
+    'Seethammadhara': 7500
+  };
+
+  const currentRate = baseRates[calcLocality] || 5000;
+  const calculatedValuation = calcCategory === 'plot' ? currentRate * 6 * (calcArea / 9) : calcCategory === 'villa' ? currentRate * 1.35 * calcArea : currentRate * calcArea;
+  const estimatedEmi = Math.round((calculatedValuation * 0.8 * 0.085 / 12) / (1 - Math.pow(1 + 0.085/12, -240)));
+  const estimatedRent = Math.round(calculatedValuation * 0.0035);
+
   return (
     <div className="min-h-screen bg-gray-50 pb-16">
       <SEOHead
@@ -169,6 +191,117 @@ export function PropertyPricesPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+
+        {/* Vizag Property Valuation & Price Estimator Calculator Widget */}
+        <div className="bg-white p-6 md:p-10 rounded-3xl border border-gray-200 shadow-sm mb-10">
+          <div className="flex items-center gap-2 text-primary-600 text-xs font-bold uppercase tracking-wider mb-2">
+            <Calculator className="w-4 h-4" /> Instant 2026 Price Engine
+          </div>
+          <h2 className="text-2xl font-extrabold text-gray-900 mb-2">
+            Vizag Property Valuation Estimator
+          </h2>
+          <p className="text-sm text-gray-600 mb-6">
+            Calculate instant benchmark property valuation, estimated monthly EMI, and expected rental yields for any Vizag locality.
+          </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-5">
+              <div>
+                <label className="block text-xs font-bold uppercase text-gray-700 mb-2">Select Locality</label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {['Madhurawada', 'Yendada', 'Rushikonda', 'PM Palem', 'MVP Colony', 'Gajuwaka', 'Bhogapuram', 'Seethammadhara'].map(loc => (
+                    <button
+                      key={loc}
+                      onClick={() => setCalcLocality(loc)}
+                      className={`p-2.5 rounded-xl text-xs font-bold border transition-all ${
+                        calcLocality === loc
+                          ? 'bg-primary-600 text-white border-primary-600 shadow-sm'
+                          : 'bg-gray-50 text-gray-800 border-gray-200 hover:bg-gray-100'
+                      }`}
+                    >
+                      {loc}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase text-gray-700 mb-2">Property Category</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { id: 'flat', label: 'Apartment Flat' },
+                    { id: 'plot', label: 'Open Plot Land' },
+                    { id: 'villa', label: 'Luxury Villa' }
+                  ].map(cat => (
+                    <button
+                      key={cat.id}
+                      onClick={() => setCalcCategory(cat.id as any)}
+                      className={`p-2.5 rounded-xl text-xs font-bold border transition-all ${
+                        calcCategory === cat.id
+                          ? 'bg-primary-600 text-white border-primary-600 shadow-sm'
+                          : 'bg-gray-50 text-gray-800 border-gray-200 hover:bg-gray-100'
+                      }`}
+                    >
+                      {cat.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <label className="text-xs font-bold uppercase text-gray-700">Area Size</label>
+                  <span className="text-xs font-extrabold text-primary-700">
+                    {calcArea} {calcCategory === 'plot' ? 'Sq.Yd.' : 'Sq.Ft.'}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={calcCategory === 'plot' ? 50 : 600}
+                  max={calcCategory === 'plot' ? 1000 : 4000}
+                  step={calcCategory === 'plot' ? 10 : 50}
+                  value={calcArea}
+                  onChange={e => setCalcArea(Number(e.target.value))}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary-600"
+                />
+              </div>
+            </div>
+
+            {/* Valuation Result Box */}
+            <div className="bg-gradient-to-br from-slate-900 via-primary-950 to-slate-900 text-white p-6 rounded-2xl flex flex-col justify-between shadow-lg">
+              <div>
+                <div className="text-xs font-bold text-accent-400 uppercase tracking-wider mb-1">
+                  Estimated Property Value ({calcLocality})
+                </div>
+                <div className="text-3xl font-extrabold text-white mb-4">
+                  ₹{(calculatedValuation / 100000).toFixed(2)} Lakhs
+                </div>
+
+                <div className="space-y-2 border-t border-white/10 pt-4 text-xs text-gray-200">
+                  <div className="flex justify-between">
+                    <span>Benchmark Rate:</span>
+                    <strong className="text-yellow-300">₹{currentRate.toLocaleString('en-IN')}/{calcCategory === 'plot' ? 'sq.yd' : 'sq.ft'}</strong>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Est. Loan EMI (8.5%, 20y):</span>
+                    <strong className="text-emerald-300">₹{estimatedEmi.toLocaleString('en-IN')}/mo</strong>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Est. Monthly Rental Income:</span>
+                    <strong className="text-emerald-300">₹{estimatedRent.toLocaleString('en-IN')}/mo</strong>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => openWhatsApp(`Hi Vizag Property Experts, I calculated a valuation of ₹${(calculatedValuation / 100000).toFixed(2)} Lakhs for a ${calcCategory} in ${calcLocality}. Can you send me available options?`)}
+                className="mt-6 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all shadow-md"
+              >
+                <CheckCircle2 className="w-4 h-4" /> Get Listings in Budget
+              </button>
+            </div>
           </div>
         </div>
 
