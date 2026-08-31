@@ -94,24 +94,27 @@ export function HomePage() {
 
         <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center text-center space-y-3">
           
-          {/* Pulsing Call Badge for 7207550499 */}
+          {/* Pulsing Shrink & Expand Call Badge for 7207550499 */}
           <a
             href="tel:7207550499"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 text-white font-extrabold px-4 py-1.5 rounded-full shadow-lg border border-emerald-400/40 text-xs md:text-sm animate-bounce hover:scale-105 transition-all group"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 text-white font-extrabold px-5 py-2 rounded-full shadow-xl border border-emerald-400/50 text-xs md:text-sm animate-pulse hover:scale-110 transition-all duration-700 transform hover:-translate-y-0.5 group cursor-pointer"
           >
-            <span className="relative flex h-2.5 w-2.5">
+            <span className="relative flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-400"></span>
             </span>
-            <Phone className="w-3.5 h-3.5 text-amber-300 group-hover:rotate-12 transition-transform" />
+            <Phone className="w-4 h-4 text-amber-300 group-hover:rotate-12 transition-transform" />
             <span>Call Now:</span>
             <span className="tracking-wider font-black text-yellow-300 underline">7207550499</span>
           </a>
 
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-xl">
-            Find Your <span className="text-yellow-400 drop-shadow-md">Dream Property</span> <br className="md:hidden" />
-            <span className="text-teal-400 drop-shadow-md">in Vizag</span>
-          </h1>
+          {/* Shrink and Expand Breathing Title */}
+          <div className="animate-pulse duration-1000">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-xl transform hover:scale-105 transition-transform duration-500">
+              Find Your <span className="text-yellow-400 drop-shadow-md">Dream Property</span> <br className="md:hidden" />
+              <span className="text-teal-400 drop-shadow-md">in Vizag</span>
+            </h1>
+          </div>
 
           <p className="text-sm md:text-lg text-gray-200 font-semibold max-w-3xl flex flex-wrap justify-center gap-x-4 gap-y-1">
             <span>Visakhapatnam Real Estate • Top Verified Properties for Sale</span>
