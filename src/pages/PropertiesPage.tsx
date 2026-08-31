@@ -8,7 +8,7 @@ import { GoogleMapView } from '../components/GoogleMapView'
 import { AdSenseInFeedCard } from '../components/AdSenseInFeedCard'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp } from '../lib/whatsapp'
-import { buildUnifiedPropertyQuery, sortPropertiesGlobalPreference } from '../lib/searchFilters'
+import { sortPropertiesGlobalPreference } from '../lib/searchFilters'
 import { SEOHead } from '../components/SEOHead'
 
 const KEYWORD_LISTING_TYPE_MAP: Record<string, string[]> = {
@@ -143,216 +143,38 @@ export function PropertiesPage() {
     }
   }, [localityMatch])
 
-  useEffect(() => {
-    loadProperties()
-  }, [filters])
-
-  // Distance helper (Haversine formula in km)
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-    const R = 6371 // Radius of the earth in km
-    const dLat = (lat2 - lat1) * (Math.PI / 180)
-    const dLon = (lon2 - lon1) * (Math.PI / 180)
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1 * (Math.PI / 180)) *
-        Math.cos(lat2 * (Math.PI / 180)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2)
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-    return R * c
-  }
-
-  // Multi-tier search state
-  const [searchTier, setSearchTier] = useState<number>(5) // Max distance threshold currently active (5km default, then 10, 15, 20...)
-  const [exactProperties, setExactProperties] = useState<Property[]>([])
-  const [nearbyProperties, setNearbyProperties] = useState<Property[]>([])
-  const [hasMoreTiers, setHasMoreTiers] = useState(false)
-
-  const loadProperties = async (currentMaxDistance = 5) => {
+  const loadProperties = async () => {
     setLoading(true)
     try {
       const keywordDetectedListingType = detectListingTypeFromKeyword(searchQuery)
+      const effectiveCategory = filters.property_type || filters.listing_type || keywordDetectedListingType || searchQuery
 
-      // If no property_type filter, query with optional listing_type & locality filters
-      if (!filters.property_type) {
-        let queryBuilder = supabase
-          .from('properties')
-          .select('*, localities!inner(name, slug, city)')
-          .eq('localities.city', 'Visakhapatnam')
-          .eq('status', 'approved')
-
-        const effectiveListingType = filters.listing_type || keywordDetectedListingType
-        if (effectiveListingType) {
-          queryBuilder = queryBuilder.eq('listing_type', effectiveListingType)
-        }
-
-        if (filters.bedrooms && filters.bedrooms > 0) {
-          queryBuilder = queryBuilder.eq('bedrooms', filters.bedrooms)
-        }
-
-        if (filters.min_price) {
-          queryBuilder = queryBuilder.gte('price', filters.min_price)
-        }
-
-        if (filters.max_price) {
-          queryBuilder = queryBuilder.lte('price', filters.max_price)
-        }
-
-        const { data, error } = await queryBuilder
-          .order('created_at', { ascending: false })
-          .limit(100)
-
-        if (error) throw error
-
-        const sorted = sortPropertiesGlobalPreference(data || [], searchQuery, localityName)
-        setProperties(sorted)
-        setExactProperties(sorted)
-        setNearbyProperties([])
-        setHasMoreTiers(false)
-        setLoading(false)
-        return
-      }
-
-      // Use unified query builder for filtered search
-      const searchParams: any = {
-        propertyType: filters.property_type as 'flat' | 'plot' | 'villa' | 'pg' | 'commercial'
-      }
-
-      const effectiveListingType = filters.listing_type || keywordDetectedListingType
-      if (effectiveListingType) {
-        searchParams.listingType = effectiveListingType as 'sale' | 'rent'
-      }
+      let queryBuilder = supabase
+        .from('properties')
+        .select('*, localities!inner(name, slug, city)')
+        .eq('localities.city', 'Visakhapatnam')
+        .eq('status', 'approved')
 
       if (filters.bedrooms && filters.bedrooms > 0) {
-        searchParams.bedrooms = filters.bedrooms
+        queryBuilder = queryBuilder.eq('bedrooms', filters.bedrooms)
       }
 
-      if (filters.min_price && filters.min_price > 0) {
-        searchParams.minPrice = filters.min_price
+      if (filters.min_price) {
+        queryBuilder = queryBuilder.gte('price', filters.min_price)
       }
 
-      if (filters.max_price && filters.max_price < 10000000) {
-        searchParams.maxPrice = filters.max_price
+      if (filters.max_price) {
+        queryBuilder = queryBuilder.lte('price', filters.max_price)
       }
 
-      if (filters.property_status && filters.property_status !== '') {
-        searchParams.propertyStatus = filters.property_status
-      }
+      const { data, error } = await queryBuilder
+        .order('created_at', { ascending: false })
+        .limit(200)
 
-      if (searchQuery && searchQuery.trim().length > 0) {
-        searchParams.keyword = searchQuery.trim()
-      }
+      if (error) throw error
+      let fetchedList = data || []
 
-      // 1. Fetch exact matching locality properties
-      let exactList: Property[] = []
-      if (filters.locality_id) {
-        const { data, error } = await buildUnifiedPropertyQuery({
-          ...searchParams,
-          localityId: filters.locality_id
-        }).limit(50)
-        if (error) throw error
-        exactList = data || []
-      } else {
-        // If no explicit locality search, fetch all matching criteria
-        const { data, error } = await buildUnifiedPropertyQuery(searchParams).limit(50)
-        if (error) throw error
-        exactList = data || []
-      }
-
-      // 2. Fetch coordinate details for current locality to find nearby properties
-      let nearbyList: Property[] = []
-      let canExpandFurther = false
-      let activeSearchRadius = currentMaxDistance
-
-      if (filters.locality_id) {
-        // Get coordinates of the queried locality
-        const { data: localityData } = await supabase
-          .from('localities')
-          .select('latitude, longitude')
-          .eq('id', filters.locality_id)
-          .maybeSingle()
-
-        if (localityData && localityData.latitude && localityData.longitude) {
-          // Fetch ALL localities in Vizag to compute distance thresholds
-          const { data: allLocalities } = await supabase
-            .from('localities')
-            .select('id, name, latitude, longitude')
-            .eq('city', 'Visakhapatnam')
-
-          if (allLocalities) {
-            const fetchNearbyForRadius = async (radius: number) => {
-              const nearbyLocalityIds: string[] = []
-              const nextTierLocalityIds: string[] = []
-
-              allLocalities.forEach((loc) => {
-                if (loc.id === filters.locality_id || !loc.latitude || !loc.longitude) return
-                const dist = calculateDistance(
-                  localityData.latitude!,
-                  localityData.longitude!,
-                  loc.latitude,
-                  loc.longitude
-                )
-
-                if (dist <= radius) {
-                  nearbyLocalityIds.push(loc.id)
-                } else if (dist <= radius + 5) {
-                  nextTierLocalityIds.push(loc.id)
-                }
-              })
-
-              let currentNearbyList: Property[] = []
-              let currentCanExpand = false
-
-              // Query properties in the nearby localities
-              if (nearbyLocalityIds.length > 0) {
-                const { data: nData, error: nErr } = await buildUnifiedPropertyQuery({
-                  ...searchParams
-                })
-                  .in('locality_id', nearbyLocalityIds)
-                  .limit(50)
-
-                if (nErr) throw nErr
-                currentNearbyList = nData || []
-              }
-
-              // Check if there are any properties available in the next expansion tier (radius + 5km)
-              if (nextTierLocalityIds.length > 0) {
-                const { data: checkData } = await buildUnifiedPropertyQuery({
-                  ...searchParams
-                })
-                  .in('locality_id', nextTierLocalityIds)
-                  .limit(1)
-
-                if (checkData && checkData.length > 0) {
-                  currentCanExpand = true
-                }
-              }
-
-              return { currentNearbyList, currentCanExpand }
-            }
-
-            // Auto-expand logic: if we found 0 exact matches, try 5km, then 10km, then 30km
-            let tiersToTry = [currentMaxDistance]
-            if (exactList.length === 0 && currentMaxDistance === 5) {
-              tiersToTry = [5, 10, 30]
-            }
-
-            for (const radius of tiersToTry) {
-              activeSearchRadius = radius
-              const { currentNearbyList, currentCanExpand } = await fetchNearbyForRadius(radius)
-              nearbyList = currentNearbyList
-              canExpandFurther = currentCanExpand
-
-              if (exactList.length > 0 || nearbyList.length > 0) {
-                break // Found something, stop expanding
-              }
-            }
-          }
-        }
-      }
-
-      let datasetToUse = [...exactList, ...nearbyList]
-      if (datasetToUse.length === 0) {
+      if (fetchedList.length < 5) {
         const { data: fallbackData } = await supabase
           .from('properties')
           .select('*, localities!inner(name, slug, city)')
@@ -360,14 +182,11 @@ export function PropertiesPage() {
           .eq('status', 'approved')
           .order('created_at', { ascending: false })
           .limit(200)
-        datasetToUse = fallbackData || []
+        fetchedList = fallbackData || []
       }
 
-      const combinedSorted = sortPropertiesGlobalPreference(datasetToUse, searchQuery, localityName, filters.property_type)
-      setSearchTier(activeSearchRadius)
-      setExactProperties(combinedSorted)
-      setProperties(combinedSorted)
-      setHasMoreTiers(canExpandFurther)
+      const sorted = sortPropertiesGlobalPreference(fetchedList, searchQuery, localityName, effectiveCategory)
+      setProperties(sorted)
     } catch (error) {
       console.error('Error in loadProperties:', error)
       const { data: fallbackData } = await supabase
@@ -377,9 +196,8 @@ export function PropertiesPage() {
         .eq('status', 'approved')
         .order('created_at', { ascending: false })
         .limit(200)
-      const sortedFallback = sortPropertiesGlobalPreference(fallbackData || [], searchQuery, localityName, filters.property_type)
+      const sortedFallback = sortPropertiesGlobalPreference(fallbackData || [], searchQuery, localityName, filters.property_type || filters.listing_type)
       setProperties(sortedFallback)
-      setExactProperties(sortedFallback)
     } finally {
       setLoading(false)
     }
@@ -652,10 +470,31 @@ export function PropertiesPage() {
 
       <div className={`max-w-7xl mx-auto px-4 py-6 ${viewMode === 'map' ? 'max-w-full' : ''}`}>
 
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">
-            {properties.length} Properties Found
-          </h1>
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-2">
+          <div>
+            <h1 className="text-2xl font-extrabold text-gray-900">
+              {properties.length} Properties Available in Visakhapatnam
+            </h1>
+            {searchQuery || filters.listing_type || filters.property_type ? (
+              <p className="text-xs md:text-sm text-emerald-800 font-semibold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 inline-block mt-1">
+                Showing {
+                  filters.listing_type === 'rent' || searchQuery.toLowerCase().includes('rent') 
+                    ? 'Rental Properties (Flats & Hostels for Rent)' 
+                    : filters.property_type === 'plot' || searchQuery.toLowerCase().includes('plot')
+                    ? 'Open Layout Plots' 
+                    : filters.property_type === 'flat' || searchQuery.toLowerCase().includes('flat')
+                    ? 'Flats & Apartments for Sale'
+                    : filters.property_type === 'villa' || searchQuery.toLowerCase().includes('villa')
+                    ? 'Villas & Houses'
+                    : 'Selected Category'
+                } first, followed by all remaining properties in Vizag.
+              </p>
+            ) : (
+              <p className="text-xs md:text-sm text-gray-600 mt-0.5">
+                Explore plots, flats, villas & rentals listed in Visakhapatnam.
+              </p>
+            )}
+          </div>
         </div>
 
         {loading ? (
@@ -719,75 +558,26 @@ export function PropertiesPage() {
                 }`} 
                 style={{ maxHeight: 'calc(100vh - 280px)' }}
               >
-                {exactProperties.length > 0 && (
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Exact Matches</h3>
-                    <div className="space-y-3">
-                      {exactProperties.map((property) => (
-                        <div
-                          key={property.id}
-                          id={`property-card-${property.id}`}
-                          className={`transition-all duration-200 rounded-xl ${
-                            selectedPropertyId === property.id
-                              ? 'ring-2 ring-primary-500 shadow-lg scale-[1.01]'
-                              : hoveredPropertyId === property.id
-                              ? 'ring-1 ring-primary-300 shadow-md'
-                              : ''
-                          }`}
-                          onMouseEnter={() => setHoveredPropertyId(property.id)}
-                          onMouseLeave={() => setHoveredPropertyId(null)}
-                          onClick={() => setSelectedPropertyId(property.id)}
-                        >
-                          <PropertyCard property={property} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {nearbyProperties.length > 0 && (
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mt-4 mb-2">
-                      Nearby Matches (Within {searchTier} km)
-                    </h3>
-                    <div className="space-y-3">
-                      {nearbyProperties.map((property) => (
-                        <div
-                          key={property.id}
-                          id={`property-card-${property.id}`}
-                          className={`transition-all duration-200 rounded-xl ${
-                            selectedPropertyId === property.id
-                              ? 'ring-2 ring-primary-500 shadow-lg scale-[1.01]'
-                              : hoveredPropertyId === property.id
-                              ? 'ring-1 ring-primary-300 shadow-md'
-                              : ''
-                          }`}
-                          onMouseEnter={() => setHoveredPropertyId(property.id)}
-                          onMouseLeave={() => setHoveredPropertyId(null)}
-                          onClick={() => setSelectedPropertyId(property.id)}
-                        >
-                          <PropertyCard property={property} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {hasMoreTiers && (
-                  <div className="p-4 bg-primary-50 rounded-xl border border-primary-200 text-center shadow-sm">
-                    <p className="text-sm font-semibold text-primary-900 mb-2">Want to see more properties?</p>
-                    <button
-                      onClick={() => {
-                        const nextTier = searchTier + 5
-                        setSearchTier(nextTier)
-                        loadProperties(nextTier)
-                      }}
-                      className="px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-semibold transition-colors shadow-sm"
+                <div className="space-y-3">
+                  {properties.map((property) => (
+                    <div
+                      key={property.id}
+                      id={`property-card-${property.id}`}
+                      className={`transition-all duration-200 rounded-xl ${
+                        selectedPropertyId === property.id
+                          ? 'ring-2 ring-primary-500 shadow-lg scale-[1.01]'
+                          : hoveredPropertyId === property.id
+                          ? 'ring-1 ring-primary-300 shadow-md'
+                          : ''
+                      }`}
+                      onMouseEnter={() => setHoveredPropertyId(property.id)}
+                      onMouseLeave={() => setHoveredPropertyId(null)}
+                      onClick={() => setSelectedPropertyId(property.id)}
                     >
-                      Show Properties within {searchTier + 5} km
-                    </button>
-                  </div>
-                )}
+                      <PropertyCard property={property} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -814,59 +604,18 @@ export function PropertiesPage() {
         ) : (
           /* Grid View (default) */
           <div>
-            {exactProperties.length > 0 && (
-              <div className="mb-8">
-                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Exact Matches</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {exactProperties.map((property, index) => (
-                    <React.Fragment key={property.id}>
-                      <PropertyCard property={property} />
-                      {(index + 1) % 6 === 0 && (
-                        <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center">
-                          <AdSenseInFeedCard />
-                        </div>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {nearbyProperties.length > 0 && (
-              <div className="mb-8">
-                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
-                  Nearby Matches (Within {searchTier} km)
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {nearbyProperties.map((property, index) => (
-                    <React.Fragment key={property.id}>
-                      <PropertyCard property={property} />
-                      {(index + 1) % 6 === 0 && (
-                        <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center">
-                          <AdSenseInFeedCard />
-                        </div>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {hasMoreTiers && (
-              <div className="max-w-md mx-auto p-6 bg-primary-50 rounded-2xl border border-primary-200 text-center shadow-sm mt-4">
-                <p className="font-semibold text-primary-900 mb-3">Want to see more properties?</p>
-                <button
-                  onClick={() => {
-                    const nextTier = searchTier + 5
-                    setSearchTier(nextTier)
-                    loadProperties(nextTier)
-                  }}
-                  className="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold transition-colors shadow-sm"
-                >
-                  Show Properties within {searchTier + 5} km
-                </button>
-              </div>
-            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {properties.map((property, index) => (
+                <React.Fragment key={property.id}>
+                  <PropertyCard property={property} />
+                  {(index + 1) % 6 === 0 && (
+                    <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center">
+                      <AdSenseInFeedCard />
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
           </div>
         )}
       </div>

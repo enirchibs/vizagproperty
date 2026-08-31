@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { MapPin, X, AlertCircle } from 'lucide-react'
+import { MapPin, X, AlertCircle, Building2 } from 'lucide-react'
 
 import { fuzzySearchLocalities } from '../lib/fuzzySearch'
 
@@ -136,54 +136,91 @@ export function LocationAutocomplete({ value, onChange, placeholder, className }
         )}
       </div>
 
-      {showResults && results.length > 0 && (
-        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-[450px] overflow-y-auto">
+      {showResults && (
+        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl max-h-[450px] overflow-y-auto divide-y divide-gray-100">
           {loading && (
             <div className="p-4 text-center text-gray-500">
               <div className="animate-spin h-5 w-5 border-2 border-primary-600 border-t-transparent rounded-full mx-auto"></div>
             </div>
           )}
-          {!loading && query.length >= 3 && results.length > 0 && results[0]?.match_type === 'fuzzy' && (
-            <div className="px-4 py-2.5 bg-amber-50 border-b border-amber-200">
-              <div className="flex items-center gap-2 text-amber-800">
-                <AlertCircle className="h-4 w-4 flex-shrink-0" />
-                <span className="text-sm font-medium">Did you mean one of these?</span>
-              </div>
-            </div>
-          )}
-          {!loading && results.map((result) => (
-            <button
-              key={result.slug}
-              type="button"
-              onClick={() => handleSelect(result)}
-              className={`w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-0 transition-colors ${
-                result.match_type === 'fuzzy' ? 'bg-amber-50/30' : ''
-              }`}
-            >
-              <div className="flex items-start">
-                <MapPin className={`h-5 w-5 mr-3 mt-0.5 flex-shrink-0 ${
-                  result.match_type === 'fuzzy' ? 'text-amber-600' : 'text-primary-600'
-                }`} />
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-gray-900">{result.name}</div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-primary-600">Visakhapatnam</span>
-                    {result.match_type === 'fuzzy' && result.similarity_score && (
-                      <span className="text-xs text-amber-600">
-                        {Math.round(result.similarity_score * 100)}% match
-                      </span>
-                    )}
+
+          {!loading && query.length >= 2 && (
+            <div>
+              {/* Category Quick Options if user is searching for rent/flat/plot/villa/pg */}
+              {(results.length === 0 || ['rent', 'lease', 'flat', 'plot', 'villa', 'pg', 'hostel', 'buy', 'house'].some(w => query.toLowerCase().includes(w))) && (
+                <div className="bg-sky-50/70 p-2 border-b border-sky-100">
+                  <div className="px-3 py-1 text-[11px] font-bold text-sky-800 uppercase tracking-wider flex items-center gap-1.5">
+                    <Building2 className="h-3.5 w-3.5 text-sky-600" /> Category Search Matches
+                  </div>
+                  <div className="grid grid-cols-1 gap-1 mt-1">
+                    {[
+                      { id: 'cat-rent', name: 'Flats & Apartments for Rent', sub: 'Rentals in Visakhapatnam', icon: '🔑', val: 'rent' },
+                      { id: 'cat-pg', name: 'PG & Hostels for Rent', sub: 'Paying Guest & Student Hostels', icon: '🏡', val: 'pg' },
+                      { id: 'cat-flats', name: 'Flats & Apartments for Sale', sub: '2 & 3 BHK Apartments', icon: '🏢', val: 'flat' },
+                      { id: 'cat-plots', name: 'Open Layout Plots for Sale', sub: 'VMRDA & Approved Plots', icon: '🏞️', val: 'plot' },
+                      { id: 'cat-villas', name: 'Villas & Independent Houses', sub: 'Luxury Gated Communities', icon: '🏰', val: 'villa' }
+                    ]
+                      .filter(item => {
+                        const lower = query.toLowerCase().trim()
+                        if (results.length === 0) return true
+                        return item.name.toLowerCase().includes(lower) || item.val.includes(lower) || lower.includes(item.val)
+                      })
+                      .slice(0, 4)
+                      .map(item => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => {
+                            setQuery(item.name)
+                            onChange(item.name)
+                            setShowResults(false)
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-lg hover:bg-white transition-colors flex items-center gap-2.5"
+                        >
+                          <span className="text-base">{item.icon}</span>
+                          <div className="min-w-0 flex-1">
+                            <div className="text-xs font-bold text-gray-900 truncate">{item.name}</div>
+                            <div className="text-[10px] text-gray-500 truncate">{item.sub}</div>
+                          </div>
+                        </button>
+                      ))}
                   </div>
                 </div>
-              </div>
-            </button>
-          ))}
-        </div>
-      )}
+              )}
 
-      {showResults && !loading && query.length >= 3 && results.length === 0 && (
-        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-4 text-center text-gray-500">
-          No matching localities found
+              {/* Fuzzy Match Warning */}
+              {results.length > 0 && results[0]?.match_type === 'fuzzy' && (
+                <div className="px-4 py-2 bg-amber-50 border-b border-amber-200">
+                  <div className="flex items-center gap-2 text-amber-800 text-xs font-medium">
+                    <AlertCircle className="h-3.5 w-3.5 flex-shrink-0" />
+                    <span>Did you mean one of these localities?</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Locality Results */}
+              {results.map((result) => (
+                <button
+                  key={result.slug}
+                  type="button"
+                  onClick={() => handleSelect(result)}
+                  className={`w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0 ${
+                    result.match_type === 'fuzzy' ? 'bg-amber-50/20' : ''
+                  }`}
+                >
+                  <div className="flex items-start">
+                    <MapPin className={`h-4 w-4 mr-2.5 mt-0.5 flex-shrink-0 ${
+                      result.match_type === 'fuzzy' ? 'text-amber-600' : 'text-primary-600'
+                    }`} />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-gray-900">{result.name}</div>
+                      <div className="text-xs text-gray-500">Visakhapatnam</div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -91,6 +91,13 @@ export function sortPropertiesGlobalPreference<T extends Record<string, any>>(
   }
 
   const getGroupRank = (groupType: string): number => {
+    if (selCat.includes('rent') || selCat.includes('lease') || selCat.includes('pg') || selCat.includes('hostel')) {
+      if (groupType === 'rent') return 1
+      if (groupType === 'flat') return 2
+      if (groupType === 'plot') return 3
+      if (groupType === 'villa') return 4
+      return 5
+    }
     if (selCat.includes('flat') || selCat.includes('apartment')) {
       if (groupType === 'flat') return 1
       if (groupType === 'plot') return 2
@@ -100,16 +107,9 @@ export function sortPropertiesGlobalPreference<T extends Record<string, any>>(
     }
     if (selCat.includes('villa') || selCat.includes('house')) {
       if (groupType === 'villa') return 1
-      if (groupType === 'plot') return 2
-      if (groupType === 'flat') return 3
+      if (groupType === 'flat') return 2
+      if (groupType === 'plot') return 3
       if (groupType === 'rent') return 4
-      return 5
-    }
-    if (selCat.includes('rent') || selCat.includes('lease') || selCat.includes('pg') || selCat.includes('hostel')) {
-      if (groupType === 'rent') return 1
-      if (groupType === 'plot') return 2
-      if (groupType === 'flat') return 3
-      if (groupType === 'villa') return 4
       return 5
     }
     // Default order when plot/land or no category selected:
