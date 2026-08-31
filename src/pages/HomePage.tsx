@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Shield, Building2, TrendingUp, Search, MessageCircle, Star, Quote } from 'lucide-react'
+import { Shield, Building2, TrendingUp, Search, MessageCircle, Star, Quote, Phone } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { HeroSearch } from '../components/HeroSearch'
@@ -28,45 +28,53 @@ export function HomePage() {
 
 
   const loadLatestProperties = async () => {
+    setLoading(true)
     try {
       const { data, error } = await supabase
         .from('properties')
-        .select('*, localities(name, slug, city)')
+        .select('*, localities!inner(name, slug, city)')
         .eq('status', 'approved')
         .order('created_at', { ascending: false })
-        .limit(200)
+        .limit(20)
 
       if (error) throw error
-      const sorted = sortPropertiesGlobalPreference(data || [], '', '', 'plot')
-      setLatestProperties(sorted)
-    } catch (error) {
-      console.error(error)
+      setLatestProperties(sortPropertiesGlobalPreference(data || [], undefined, 'visakhapatnam'))
+    } catch (err) {
+      console.error('Error loading latest properties:', err)
     } finally {
       setLoading(false)
     }
   }
 
-  const homeSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Vizag Real Estate & Properties for Sale | Visakhapatnam Property",
-    "description": "Find your dream property in Vizag. Explore the best Vizag real estate, verified properties for sale, VMRDA plots, and flats.",
-    "url": "https://vizagproperty.co.in",
-    "publisher": {
-      "@type": "Organization",
-      "name": "VizagProperty",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://vizagproperty.co.in/assets/logo/vizag-property-logo.png"
-      }
+  const homeSchema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "RealEstateAgent",
+      "name": "Vizag Property Experts",
+      "image": "https://vizagproperty.co.in/og-image.jpg",
+      "url": "https://vizagproperty.co.in",
+      "telephone": "+91 7207550499",
+      "priceRange": "₹₹ - ₹₹₹₹",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Visakhapatnam",
+        "addressRegion": "Andhra Pradesh",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 17.7231,
+        "longitude": 83.3012
+      },
+      "description": "Leading AI-powered real estate portal in Visakhapatnam for verified flats, VMRDA plots, independent villas, and commercial property."
     }
-  }
+  ];
 
   return (
-    <div className="min-h-screen bg-white pb-16 md:pb-0"> {/* Padding bottom for sticky nav on mobile */}
-      <SEOHead 
-        title="Vizag Real Estate & Properties for Sale | Visakhapatnam Property"
-        description="Search verified property in Vizag & Visakhapatnam. Explore VMRDA plots, 2 & 3 BHK flats for sale, gated villas, and house rentals across Madhurawada, Yendada, MVP Colony & PM Palem."
+    <div className="min-h-screen bg-gray-50 pb-16">
+      <SEOHead
+        title="Vizag Property | Visakhapatnam Real Estate, Plots & Flats for Sale"
+        description="Find your dream property in Vizag. Explore the best Vizag real estate, verified properties for sale, VMRDA plots, and flats."
         canonicalUrl="https://vizagproperty.co.in/"
         url="https://vizagproperty.co.in/"
         keywords="vizag real estate, visakhapatnam property, property in vizag, plots for sale in vizag, flats for sale in vizag, villas in vizag, VMRDA plots vizag, vizag property"
@@ -75,24 +83,54 @@ export function HomePage() {
       
       {/* 1. Hero Section */}
       <div 
-        className="relative flex flex-col justify-center items-center text-white px-4 pt-8 md:pt-12 pb-8 md:pb-12 bg-cover bg-center"
+        className="relative flex flex-col justify-center items-center text-white px-4 pt-8 md:pt-12 pb-10 md:pb-14 bg-cover bg-center overflow-hidden"
         style={{ backgroundImage: `url('/vizag_beach_kailasagiri.png')` }}
       >
-        <div className="absolute inset-0 bg-slate-900/70 z-0 backdrop-blur-[2px]"></div>
+        <div className="absolute inset-0 bg-slate-950/75 z-0 backdrop-blur-[2px]"></div>
 
-        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center text-center space-y-2">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-lg">
-            Find Your <span className="text-yellow-400">Dream Property</span> <br className="md:hidden" />
-            <span className="text-teal-400">in Vizag</span>
+        {/* Animated ambient glow spheres */}
+        <div className="absolute -top-20 -left-20 w-80 h-80 bg-sky-500/20 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
+        <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-amber-500/20 rounded-full blur-3xl animate-pulse pointer-events-none" style={{ animationDelay: '1.5s' }}></div>
+
+        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center text-center space-y-3">
+          
+          {/* Pulsing Call Badge for 7207550499 */}
+          <a
+            href="tel:7207550499"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 text-white font-extrabold px-4 py-1.5 rounded-full shadow-lg border border-emerald-400/40 text-xs md:text-sm animate-bounce hover:scale-105 transition-all group"
+          >
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
+            </span>
+            <Phone className="w-3.5 h-3.5 text-amber-300 group-hover:rotate-12 transition-transform" />
+            <span>Call Now:</span>
+            <span className="tracking-wider font-black text-yellow-300 underline">7207550499</span>
+          </a>
+
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-xl">
+            Find Your <span className="text-yellow-400 drop-shadow-md">Dream Property</span> <br className="md:hidden" />
+            <span className="text-teal-400 drop-shadow-md">in Vizag</span>
           </h1>
-          <p className="text-sm md:text-lg text-gray-200 font-medium max-w-3xl flex flex-wrap justify-center gap-x-4 gap-y-1">
+
+          <p className="text-sm md:text-lg text-gray-200 font-semibold max-w-3xl flex flex-wrap justify-center gap-x-4 gap-y-1">
             <span>Visakhapatnam Real Estate • Top Verified Properties for Sale</span>
           </p>
-          <p className="text-xs md:text-sm text-gray-300 font-medium max-w-3xl flex flex-wrap justify-center gap-x-4 gap-y-1">
-            <span className="flex items-center gap-1"><Search className="w-3.5 h-3.5 text-accent-500" /> AI Powered Search</span>
-            <span className="hidden md:inline">•</span>
-            <span className="flex items-center gap-1"><Shield className="w-3.5 h-3.5 text-success-500" /> Verified Listings</span>
-          </p>
+
+          <div className="flex flex-wrap justify-center items-center gap-2.5 text-xs md:text-sm text-gray-200 font-medium pt-1">
+            <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 shadow-sm">
+              <Search className="w-3.5 h-3.5 text-amber-400 animate-pulse" /> AI Powered Search
+            </span>
+            <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 shadow-sm">
+              <Shield className="w-3.5 h-3.5 text-emerald-400" /> Verified Listings
+            </span>
+            <a 
+              href="tel:7207550499" 
+              className="flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-gray-900 font-extrabold px-3.5 py-1 rounded-full shadow-md transition-all hover:scale-105 border border-amber-300"
+            >
+              <Phone className="w-3.5 h-3.5 text-gray-900 fill-current" /> Call 7207550499
+            </a>
+          </div>
 
           {/* Search Component */}
           <div className="w-full pt-2">
