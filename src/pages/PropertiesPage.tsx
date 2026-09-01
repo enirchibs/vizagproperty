@@ -482,7 +482,9 @@ export function PropertiesPage() {
             {searchQuery || filters.listing_type || filters.property_type ? (
               <p className="text-xs md:text-sm text-emerald-800 font-semibold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 inline-block mt-1">
                 Showing {
-                  filters.listing_type === 'rent' || searchQuery.toLowerCase().includes('rent') 
+                  filters.property_type === 'pg' || searchQuery.toLowerCase().includes('pg') || searchQuery.toLowerCase().includes('hostel')
+                    ? 'PG & Hostels'
+                    : filters.listing_type === 'rent' || searchQuery.toLowerCase().includes('rent') 
                     ? 'Rental Properties (Flats & Hostels for Rent)' 
                     : filters.property_type === 'plot' || searchQuery.toLowerCase().includes('plot')
                     ? 'Open Layout Plots' 

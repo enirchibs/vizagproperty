@@ -67,8 +67,12 @@ export function sortPropertiesGlobalPreference<T extends Record<string, any>>(
     const pt = (p.property_type || '').toLowerCase()
     const lt = (p.listing_type || '').toLowerCase()
     const title = (p.title || '').toLowerCase()
+    const desc = (p.description || '').toLowerCase()
 
-    if (lt === 'rent' || lt === 'lease' || pt.includes('pg') || pt.includes('hostel') || title.includes('hostel') || title.includes('pg')) {
+    if (pt.includes('pg') || pt.includes('hostel') || title.includes('hostel') || title.includes('pg') || desc.includes('hostel') || desc.includes('pg')) {
+      return 'pg'
+    }
+    if (lt === 'rent' || lt === 'lease') {
       return 'rent'
     }
     if (pt.includes('plot') || pt.includes('land') || title.includes('plot') || title.includes('land')) {
@@ -91,12 +95,21 @@ export function sortPropertiesGlobalPreference<T extends Record<string, any>>(
   }
 
   const getGroupRank = (groupType: string): number => {
-    if (selCat.includes('rent') || selCat.includes('lease') || selCat.includes('pg') || selCat.includes('hostel')) {
+    if (selCat.includes('pg') || selCat.includes('hostel')) {
+      if (groupType === 'pg') return 1
+      if (groupType === 'rent') return 2
+      if (groupType === 'flat') return 3
+      if (groupType === 'plot') return 4
+      if (groupType === 'villa') return 5
+      return 6
+    }
+    if (selCat.includes('rent') || selCat.includes('lease')) {
       if (groupType === 'rent') return 1
-      if (groupType === 'flat') return 2
-      if (groupType === 'plot') return 3
-      if (groupType === 'villa') return 4
-      return 5
+      if (groupType === 'pg') return 2
+      if (groupType === 'flat') return 3
+      if (groupType === 'plot') return 4
+      if (groupType === 'villa') return 5
+      return 6
     }
     if (selCat.includes('flat') || selCat.includes('apartment')) {
       if (groupType === 'flat') return 1
