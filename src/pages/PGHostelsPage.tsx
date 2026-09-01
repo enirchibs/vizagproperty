@@ -97,11 +97,14 @@ export default function PGHostelsPage() {
 
   const handleSearch = () => {
     const params = new URLSearchParams()
+    params.append('category', 'pg')
     params.append('type', 'PG/Hostel')
     if (localityId) {
       params.append('localityId', localityId)
-    } else if (searchQuery) {
-      params.append('keyword', searchQuery)
+    }
+    if (searchQuery.trim()) {
+      params.append('locality', searchQuery.trim())
+      params.append('q', searchQuery.trim())
     }
     window.location.href = `/properties?${params.toString()}`
   }

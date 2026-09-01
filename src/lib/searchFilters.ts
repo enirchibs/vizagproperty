@@ -37,6 +37,8 @@ export async function searchLocalities(query: string, limit: number = 10): Promi
 // 2. FLATS in typed area -> FLATS in Madhurawada -> FLATS in Bhogapuram -> FLATS in other areas
 // 3. VILLAS in typed area -> VILLAS in Madhurawada -> VILLAS in Bhogapuram -> VILLAS in other areas
 // 4. RENT for typed area -> RENT in Madhurawada -> RENT in Bhogapuram -> ALL OTHER RENT & AREAS
+import { getDynamicAreaScore } from './vizagLocalityProximity'
+
 export function sortPropertiesGlobalPreference<T extends Record<string, any>>(
   data: T[],
   query?: string,
@@ -55,14 +57,7 @@ export function sortPropertiesGlobalPreference<T extends Record<string, any>>(
     else if (cleanQuery.includes('rent') || cleanQuery.includes('lease')) selCat = 'rent'
   }
 
-  const matchesArea = (p: any, areaKeyword: string): boolean => {
-    if (!areaKeyword) return false
-    const locObj = Array.isArray(p.localities) ? p.localities[0] : p.localities
-    const locName = ((locObj?.name) || p.location || p.locality_name || '').toLowerCase()
-    const title = (p.title || '').toLowerCase()
-    const desc = (p.description || '').toLowerCase()
-    return locName.includes(areaKeyword) || title.includes(areaKeyword) || desc.includes(areaKeyword)
-  }
+
 
   const getGroupType = (p: any): string => {
     const pt = (p.property_type || '').toLowerCase()
@@ -89,10 +84,7 @@ export function sortPropertiesGlobalPreference<T extends Record<string, any>>(
   }
 
   const getAreaScore = (p: any): number => {
-    if (cleanQuery.length >= 2 && matchesArea(p, cleanQuery)) return 1
-    if (matchesArea(p, 'madhurawada') || matchesArea(p, 'madhurwada')) return 2
-    if (matchesArea(p, 'mvp colony') || matchesArea(p, 'pm palem') || matchesArea(p, 'yendada') || matchesArea(p, 'rushikonda')) return 3
-    return 4
+    return getDynamicAreaScore(p, cleanQuery)
   }
 
   // PG & HOSTELS + RENT FLATS/HOUSES SORTING ENGINE:
@@ -105,19 +97,19 @@ export function sortPropertiesGlobalPreference<T extends Record<string, any>>(
   if (selCat.includes('pg') || selCat.includes('hostel')) {
     const getPgRentScore = (p: any): number => {
       const gType = getGroupType(p)
-      const areaScore = getAreaScore(p)
+      const areaScore = getDynamicAreaScore(p, cleanQuery)
 
       // 1. Hostels & PGs in User Typed Area
       if (gType === 'pg' && areaScore === 1) return 1
       // 2. Hostels & PGs in Nearby Areas
-      if (gType === 'pg' && (areaScore === 2 || areaScore === 3)) return 2
+      if (gType === 'pg' && areaScore === 2) return 2
       // 3. Hostels & PGs in All Remaining Vizag Areas
       if (gType === 'pg') return 3
 
       // 4. Flats or Houses for Rent in User Typed Area
       if (gType === 'rent' && areaScore === 1) return 4
       // 5. Flats or Houses for Rent in Nearby Areas
-      if (gType === 'rent' && (areaScore === 2 || areaScore === 3)) return 5
+      if (gType === 'rent' && areaScore === 2) return 5
       // 6. Flats or Houses for Rent in All Remaining Vizag Areas
       if (gType === 'rent') return 6
 
