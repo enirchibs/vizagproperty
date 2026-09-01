@@ -113,16 +113,8 @@ export function SearchPage() {
   }
 
   const handleSearch = async () => {
-    if (locality.trim().length < 3) {
-      return
-    }
-
-    const propertyType = getPropertyTypeForSearch()
-    if (!propertyType) {
-      return
-    }
-
     setHasSearched(true)
+    const propertyType = getPropertyTypeForSearch()
 
     // Build search params - only include values that exist
     const searchParams: any = {
@@ -200,7 +192,7 @@ export function SearchPage() {
       saveLastSearch({
         localityId,
         localityName: locality,
-        propertyType,
+        propertyType: propertyType || 'flat',
         listingType: actualListingType
       })
     }

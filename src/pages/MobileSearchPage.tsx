@@ -76,6 +76,10 @@ export function MobileSearchPage() {
 
     if (localities.length > 0) {
       params.append('localityId', localities[0].id)
+      params.append('locality', localities[0].name)
+    } else if (localityInput.trim()) {
+      params.append('locality', localityInput.trim())
+      params.append('q', localityInput.trim())
     }
 
     if (bhkType) params.append('bhk', bhkType)

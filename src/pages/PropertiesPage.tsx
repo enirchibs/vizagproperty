@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Search, Mic, MicOff, Filter, X, MapPin, MessageCircle, Map, LayoutGrid } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Property, SearchFilters } from '../types'
@@ -31,6 +32,7 @@ function detectListingTypeFromKeyword(keyword: string): string | null {
 
 
 export function PropertiesPage() {
+  const location = useLocation()
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
@@ -44,20 +46,19 @@ export function PropertiesPage() {
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const query = params.get('keyword') || params.get('q')
+    const params = new URLSearchParams(location.search)
+    const query = params.get('keyword') || params.get('q') || ''
     const propertyTypeRaw = params.get('propertyType') || params.get('category')
     const listingTypeRaw = params.get('listingType') || params.get('listing_type') || params.get('type')
     const localityId = params.get('localityId')
-    const localityName = params.get('locality') || params.get('location')
+    const locName = params.get('locality') || params.get('location') || ''
     const bhk = params.get('bhk') || params.get('bedrooms')
     const status = params.get('status') || params.get('property_status')
     const minPrice = params.get('minPrice') || params.get('min_price')
     const maxPrice = params.get('maxPrice') || params.get('max_price')
 
-    if (query) {
-      setSearchQuery(query)
-    }
+    setSearchQuery(query)
+    setLocalityName(locName)
 
     const initialFilters: SearchFilters = {}
 
@@ -94,12 +95,9 @@ export function PropertiesPage() {
 
     if (localityId && isUUID(localityId)) {
       initialFilters.locality_id = localityId
-    } else if (localityName && localityName.toLowerCase() !== 'vizag') {
-      if (isUUID(localityName)) {
-        initialFilters.locality_id = localityName
-      } else {
-        setLocalityName(localityName)
-        setSearchQuery(localityName)
+    } else if (locName && locName.toLowerCase() !== 'vizag') {
+      if (isUUID(locName)) {
+        initialFilters.locality_id = locName
       }
     }
 
@@ -129,7 +127,8 @@ export function PropertiesPage() {
     }
 
     setFilters(initialFilters)
-  }, [])
+    loadPropertiesWithParams(initialFilters, query, locName)
+  }, [location.search])
 
   useEffect(() => {
     if (transcript) {
@@ -143,11 +142,15 @@ export function PropertiesPage() {
     }
   }, [localityMatch])
 
-  const loadProperties = async () => {
+  const loadPropertiesWithParams = async (
+    activeFilters: SearchFilters = filters,
+    queryStr: string = searchQuery,
+    localityStr: string = localityName
+  ) => {
     setLoading(true)
     try {
-      const keywordDetectedListingType = detectListingTypeFromKeyword(searchQuery)
-      const effectiveCategory = filters.property_type || filters.listing_type || keywordDetectedListingType || searchQuery
+      const keywordDetectedListingType = detectListingTypeFromKeyword(queryStr)
+      const effectiveCategory = activeFilters.property_type || activeFilters.listing_type || keywordDetectedListingType || queryStr
 
       let queryBuilder = supabase
         .from('properties')
@@ -155,16 +158,16 @@ export function PropertiesPage() {
         .eq('localities.city', 'Visakhapatnam')
         .eq('status', 'approved')
 
-      if (filters.bedrooms && filters.bedrooms > 0) {
-        queryBuilder = queryBuilder.eq('bedrooms', filters.bedrooms)
+      if (activeFilters.bedrooms && activeFilters.bedrooms > 0) {
+        queryBuilder = queryBuilder.eq('bedrooms', activeFilters.bedrooms)
       }
 
-      if (filters.min_price) {
-        queryBuilder = queryBuilder.gte('price', filters.min_price)
+      if (activeFilters.min_price) {
+        queryBuilder = queryBuilder.gte('price', activeFilters.min_price)
       }
 
-      if (filters.max_price) {
-        queryBuilder = queryBuilder.lte('price', filters.max_price)
+      if (activeFilters.max_price) {
+        queryBuilder = queryBuilder.lte('price', activeFilters.max_price)
       }
 
       const { data, error } = await queryBuilder
@@ -185,7 +188,7 @@ export function PropertiesPage() {
         fetchedList = fallbackData || []
       }
 
-      const sorted = sortPropertiesGlobalPreference(fetchedList, searchQuery, localityName, effectiveCategory)
+      const sorted = sortPropertiesGlobalPreference(fetchedList, queryStr, localityStr, effectiveCategory)
       setProperties(sorted)
     } catch (error) {
       console.error('Error in loadProperties:', error)
@@ -196,11 +199,15 @@ export function PropertiesPage() {
         .eq('status', 'approved')
         .order('created_at', { ascending: false })
         .limit(200)
-      const sortedFallback = sortPropertiesGlobalPreference(fallbackData || [], searchQuery, localityName, filters.property_type || filters.listing_type)
+      const sortedFallback = sortPropertiesGlobalPreference(fallbackData || [], queryStr, localityStr, activeFilters.property_type || activeFilters.listing_type)
       setProperties(sortedFallback)
     } finally {
       setLoading(false)
     }
+  }
+
+  const loadProperties = () => {
+    loadPropertiesWithParams(filters, searchQuery, localityName)
   }
 
   const handleSearch = () => {
