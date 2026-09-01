@@ -155,7 +155,6 @@ export function PropertiesPage() {
       let queryBuilder = supabase
         .from('properties')
         .select('*, localities!inner(name, slug, city)')
-        .eq('localities.city', 'Visakhapatnam')
         .eq('status', 'approved')
 
       if (activeFilters.bedrooms && activeFilters.bedrooms > 0) {
@@ -181,7 +180,6 @@ export function PropertiesPage() {
         const { data: fallbackData } = await supabase
           .from('properties')
           .select('*, localities!inner(name, slug, city)')
-          .eq('localities.city', 'Visakhapatnam')
           .eq('status', 'approved')
           .order('created_at', { ascending: false })
           .limit(200)
@@ -195,7 +193,6 @@ export function PropertiesPage() {
       const { data: fallbackData } = await supabase
         .from('properties')
         .select('*, localities!inner(name, slug, city)')
-        .eq('localities.city', 'Visakhapatnam')
         .eq('status', 'approved')
         .order('created_at', { ascending: false })
         .limit(200)
