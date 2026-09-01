@@ -95,17 +95,42 @@ export function sortPropertiesGlobalPreference<T extends Record<string, any>>(
     return 4
   }
 
-  // STRICT PG & HOSTELS FILTERING AND AREA PRIORITIZATION
+  // PG & HOSTELS + RENT FLATS/HOUSES SORTING ENGINE:
+  // 1. Hostels & PGs in user typed area
+  // 2. Hostels & PGs in nearby areas
+  // 3. Hostels & PGs in all remaining Vizag areas
+  // 4. Flats & Houses for rent in user typed area
+  // 5. Flats & Houses for rent in nearby areas
+  // 6. Flats & Houses for rent in all remaining Vizag areas
   if (selCat.includes('pg') || selCat.includes('hostel')) {
-    const pgHostelsOnly = data.filter(p => getGroupType(p) === 'pg')
-    if (pgHostelsOnly.length > 0) {
-      return [...pgHostelsOnly].sort((a, b) => {
-        const areaScoreA = getAreaScore(a)
-        const areaScoreB = getAreaScore(b)
-        if (areaScoreA !== areaScoreB) return areaScoreA - areaScoreB
-        return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
-      })
+    const getPgRentScore = (p: any): number => {
+      const gType = getGroupType(p)
+      const areaScore = getAreaScore(p)
+
+      // 1. Hostels & PGs in User Typed Area
+      if (gType === 'pg' && areaScore === 1) return 1
+      // 2. Hostels & PGs in Nearby Areas
+      if (gType === 'pg' && (areaScore === 2 || areaScore === 3)) return 2
+      // 3. Hostels & PGs in All Remaining Vizag Areas
+      if (gType === 'pg') return 3
+
+      // 4. Flats or Houses for Rent in User Typed Area
+      if (gType === 'rent' && areaScore === 1) return 4
+      // 5. Flats or Houses for Rent in Nearby Areas
+      if (gType === 'rent' && (areaScore === 2 || areaScore === 3)) return 5
+      // 6. Flats or Houses for Rent in All Remaining Vizag Areas
+      if (gType === 'rent') return 6
+
+      // 7. Other properties
+      return 7
     }
+
+    return [...data].sort((a, b) => {
+      const scoreA = getPgRentScore(a)
+      const scoreB = getPgRentScore(b)
+      if (scoreA !== scoreB) return scoreA - scoreB
+      return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
+    })
   }
 
   const getGroupRank = (groupType: string): number => {

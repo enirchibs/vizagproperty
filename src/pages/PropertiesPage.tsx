@@ -483,7 +483,7 @@ export function PropertiesPage() {
               <p className="text-xs md:text-sm text-emerald-800 font-semibold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 inline-block mt-1">
                 {
                   filters.property_type === 'pg' || searchQuery.toLowerCase().includes('pg') || searchQuery.toLowerCase().includes('hostel')
-                    ? `Showing PG & Hostels only (matching ${localityName || searchQuery || 'searched area'} first, followed by nearby areas and all Vizag PG/Hostels).`
+                    ? `Showing PG & Hostels (${localityName || searchQuery || 'searched area'} ➔ nearby areas ➔ all Vizag), then Rental Flats & Houses (${localityName || searchQuery || 'searched area'} ➔ nearby areas ➔ all Vizag).`
                     : `Showing ${
                         filters.listing_type === 'rent' || searchQuery.toLowerCase().includes('rent') 
                           ? 'Rental Properties (Flats & Hostels for Rent)' 
