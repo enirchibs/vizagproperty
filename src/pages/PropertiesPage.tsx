@@ -481,19 +481,21 @@ export function PropertiesPage() {
             </h1>
             {searchQuery || filters.listing_type || filters.property_type ? (
               <p className="text-xs md:text-sm text-emerald-800 font-semibold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 inline-block mt-1">
-                Showing {
+                {
                   filters.property_type === 'pg' || searchQuery.toLowerCase().includes('pg') || searchQuery.toLowerCase().includes('hostel')
-                    ? 'PG & Hostels'
-                    : filters.listing_type === 'rent' || searchQuery.toLowerCase().includes('rent') 
-                    ? 'Rental Properties (Flats & Hostels for Rent)' 
-                    : filters.property_type === 'plot' || searchQuery.toLowerCase().includes('plot')
-                    ? 'Open Layout Plots' 
-                    : filters.property_type === 'flat' || searchQuery.toLowerCase().includes('flat')
-                    ? 'Flats & Apartments for Sale'
-                    : filters.property_type === 'villa' || searchQuery.toLowerCase().includes('villa')
-                    ? 'Villas & Houses'
-                    : 'Selected Category'
-                } first, followed by all remaining properties in Vizag.
+                    ? `Showing PG & Hostels only (matching ${localityName || searchQuery || 'searched area'} first, followed by nearby areas and all Vizag PG/Hostels).`
+                    : `Showing ${
+                        filters.listing_type === 'rent' || searchQuery.toLowerCase().includes('rent') 
+                          ? 'Rental Properties (Flats & Hostels for Rent)' 
+                          : filters.property_type === 'plot' || searchQuery.toLowerCase().includes('plot')
+                          ? 'Open Layout Plots' 
+                          : filters.property_type === 'flat' || searchQuery.toLowerCase().includes('flat')
+                          ? 'Flats & Apartments for Sale'
+                          : filters.property_type === 'villa' || searchQuery.toLowerCase().includes('villa')
+                          ? 'Villas & Houses'
+                          : 'Selected Category'
+                      } first, followed by all remaining properties in Vizag.`
+                }
               </p>
             ) : (
               <p className="text-xs md:text-sm text-gray-600 mt-0.5">

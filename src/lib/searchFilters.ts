@@ -48,10 +48,11 @@ export function sortPropertiesGlobalPreference<T extends Record<string, any>>(
   const cleanQuery = (localityName || query || '').toLowerCase().trim()
   let selCat = (selectedCategory || '').toLowerCase().trim()
   if (!selCat && cleanQuery) {
-    if (cleanQuery.includes('flat') || cleanQuery.includes('apartment') || cleanQuery.includes('bhk')) selCat = 'flat'
+    if (cleanQuery.includes('pg') || cleanQuery.includes('hostel')) selCat = 'pg'
+    else if (cleanQuery.includes('flat') || cleanQuery.includes('apartment') || cleanQuery.includes('bhk')) selCat = 'flat'
     else if (cleanQuery.includes('plot') || cleanQuery.includes('land') || cleanQuery.includes('vmrda')) selCat = 'plot'
     else if (cleanQuery.includes('villa') || cleanQuery.includes('house')) selCat = 'villa'
-    else if (cleanQuery.includes('rent') || cleanQuery.includes('lease') || cleanQuery.includes('pg') || cleanQuery.includes('hostel')) selCat = 'rent'
+    else if (cleanQuery.includes('rent') || cleanQuery.includes('lease')) selCat = 'rent'
   }
 
   const matchesArea = (p: any, areaKeyword: string): boolean => {
@@ -90,8 +91,21 @@ export function sortPropertiesGlobalPreference<T extends Record<string, any>>(
   const getAreaScore = (p: any): number => {
     if (cleanQuery.length >= 2 && matchesArea(p, cleanQuery)) return 1
     if (matchesArea(p, 'madhurawada') || matchesArea(p, 'madhurwada')) return 2
-    if (matchesArea(p, 'bhogapuram') || matchesArea(p, 'bogapuram')) return 3
+    if (matchesArea(p, 'mvp colony') || matchesArea(p, 'pm palem') || matchesArea(p, 'yendada') || matchesArea(p, 'rushikonda')) return 3
     return 4
+  }
+
+  // STRICT PG & HOSTELS FILTERING AND AREA PRIORITIZATION
+  if (selCat.includes('pg') || selCat.includes('hostel')) {
+    const pgHostelsOnly = data.filter(p => getGroupType(p) === 'pg')
+    if (pgHostelsOnly.length > 0) {
+      return [...pgHostelsOnly].sort((a, b) => {
+        const areaScoreA = getAreaScore(a)
+        const areaScoreB = getAreaScore(b)
+        if (areaScoreA !== areaScoreB) return areaScoreA - areaScoreB
+        return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
+      })
+    }
   }
 
   const getGroupRank = (groupType: string): number => {
