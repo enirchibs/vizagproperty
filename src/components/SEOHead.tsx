@@ -43,8 +43,10 @@ export function SEOHead({
       setMetaTag('meta[name="keywords"]', 'name', 'keywords', keywords);
     }
 
-    // 4. Update Robots Directives
-    const robotsContent = noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
+    // 4. Update Robots Directives (Automatically noindex search result query parameter URLs to prevent Soft 404s)
+    const hasSearchQuery = typeof window !== 'undefined' && window.location.search.length > 0;
+    const shouldNoIndex = noindex || hasSearchQuery;
+    const robotsContent = shouldNoIndex ? 'noindex, follow' : 'index, follow, max-image-preview:large';
     setMetaTag('meta[name="robots"]', 'name', 'robots', robotsContent);
 
     // 5. Compute Normalized Canonical Link (Forces https://vizagproperty.co.in without www or trailing slash)
