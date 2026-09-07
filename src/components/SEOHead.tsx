@@ -17,7 +17,7 @@ export function SEOHead({
   description,
   schema,
   ogImage = 'https://vizagproperty.co.in/og-image.jpg',
-  url = 'https://vizagproperty.co.in',
+  url,
   canonicalUrl,
   keywords,
   noindex = false
@@ -47,8 +47,19 @@ export function SEOHead({
     const robotsContent = noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
     setMetaTag('meta[name="robots"]', 'name', 'robots', robotsContent);
 
-    // 5. Update Canonical Link
-    const targetCanonical = canonicalUrl || url;
+    // 5. Compute Normalized Canonical Link (Forces https://vizagproperty.co.in without www or trailing slash)
+    let targetCanonical = canonicalUrl || url;
+    if (!targetCanonical) {
+      const pathname = window.location.pathname || '';
+      const cleanPath = (pathname.endsWith('/') && pathname.length > 1) ? pathname.slice(0, -1) : pathname;
+      targetCanonical = `https://vizagproperty.co.in${cleanPath}`;
+    } else {
+      targetCanonical = targetCanonical.replace(/^https?:\/\/(www\.)?vizagproperty\.co\.in/i, 'https://vizagproperty.co.in');
+      if (targetCanonical.endsWith('/') && targetCanonical.length > 'https://vizagproperty.co.in/'.length) {
+        targetCanonical = targetCanonical.slice(0, -1);
+      }
+    }
+
     let canonicalLink = document.querySelector('link[rel="canonical"]');
     if (!canonicalLink) {
       canonicalLink = document.createElement('link');
