@@ -53,24 +53,34 @@ export function Footer() {
             <h4 className="text-white font-semibold mb-4">Property Types</h4>
             <ul className="space-y-2">
               <li>
-                <a href="/vizag" className="text-sm hover:text-primary-400 transition-colors">
+                <Link to="/property-in-vizag" className="text-sm hover:text-primary-400 transition-colors">
                   Property in Vizag
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/properties?q=Flats+in+Vizag" className="text-sm hover:text-primary-400 transition-colors">
-                  Flats in Vizag
-                </a>
+                <Link to="/flats-for-sale-vizag" className="text-sm hover:text-primary-400 transition-colors">
+                  Flats for Sale in Vizag
+                </Link>
               </li>
               <li>
-                <a href="/properties?q=Plots+in+Vizag" className="text-sm hover:text-primary-400 transition-colors">
-                  Plots in Vizag
-                </a>
+                <Link to="/plots-for-sale-vizag" className="text-sm hover:text-primary-400 transition-colors">
+                  Plots for Sale in Vizag
+                </Link>
               </li>
               <li>
-                <a href="/properties?q=Villas+in+Vizag" className="text-sm hover:text-primary-400 transition-colors">
-                  Villas in Vizag
-                </a>
+                <Link to="/villas-for-sale-vizag" className="text-sm hover:text-primary-400 transition-colors">
+                  Villas for Sale in Vizag
+                </Link>
+              </li>
+              <li>
+                <Link to="/property-for-rent-vizag" className="text-sm hover:text-primary-400 transition-colors">
+                  Property for Rent in Vizag
+                </Link>
+              </li>
+              <li>
+                <Link to="/pg-hostels-in-vizag" className="text-sm hover:text-primary-400 transition-colors">
+                  PG & Hostels in Vizag
+                </Link>
               </li>
             </ul>
           </div>
