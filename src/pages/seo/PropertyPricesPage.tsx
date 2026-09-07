@@ -94,9 +94,10 @@ const MARKET_CONFIGS: Record<string, MarketPriceConfig> = {
 
 export function PropertyPricesPage() {
   const { pathSlug } = useParams<{ pathSlug?: string }>();
-  const slug = pathSlug ? pathSlug.replace(/^\//, '') : 'property-prices-vizag';
+  const pathnameSlug = typeof window !== 'undefined' ? window.location.pathname.replace(/^\//, '') : '';
+  const slug = pathSlug || pathnameSlug || 'property-prices-vizag';
   const config = MARKET_CONFIGS[slug] || MARKET_CONFIGS['property-prices-vizag'];
-  const canonicalUrl = `https://vizagproperty.co.in/${config.slug}`;
+  const canonicalUrl = `https://vizagproperty.co.in/${config.slug || 'property-prices-vizag'}`;
 
   // Price Valuation Estimator State
   const [calcLocality, setCalcLocality] = useState('Madhurawada');
