@@ -14,6 +14,7 @@ export function PartnersPage() {
         title="Partner With Vizag Property | Earn Commissions & Grow Your Network"
         description="Join VizagProperty.co.in as an Agent, Builder, or Referral Partner and earn commissions while growing your network across Visakhapatnam."
         url="https://vizagproperty.co.in/partners"
+        canonicalUrl="https://vizagproperty.co.in/partners"
       />
 
       {/* Hero Section */}

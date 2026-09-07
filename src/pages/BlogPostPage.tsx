@@ -92,7 +92,8 @@ export function BlogPostPage() {
         title={blog.meta_title || `${blog.title} | VizagProperty`}
         description={blog.meta_description}
         ogImage={blog.og_image || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"}
-        url={window.location.href}
+        url={`https://vizagproperty.co.in/blog/${blog.slug}`}
+        canonicalUrl={`https://vizagproperty.co.in/blog/${blog.slug}`}
         schema={{
           "@context": "https://schema.org",
           "@type": "Article",
