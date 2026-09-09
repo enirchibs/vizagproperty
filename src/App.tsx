@@ -92,6 +92,10 @@ const NewProjectsPage = lazyWithRetry(() => import('./pages/seo/NewProjectsPage'
 const GuidesPage = lazyWithRetry(() => import('./pages/seo/GuidesPage').then(m => ({ default: m.GuidesPage })))
 const VMRDAAuthorityPage = lazyWithRetry(() => import('./pages/seo/VMRDAAuthorityPage').then(m => ({ default: m.VMRDAAuthorityPage })))
 const VMRDALpDetailPage = lazyWithRetry(() => import('./pages/seo/VMRDALpDetailPage').then(m => ({ default: m.VMRDALpDetailPage })))
+const VMRDAMasterPlanPage = lazyWithRetry(() => import('./pages/seo/VMRDAMasterPlanPage').then(m => ({ default: m.VMRDAMasterPlanPage })))
+const VMRDAMasterPlanLandUsePage = lazyWithRetry(() => import('./pages/seo/VMRDAMasterPlanLandUsePage').then(m => ({ default: m.VMRDAMasterPlanLandUsePage })))
+const VMRDAMasterPlanRoadsPage = lazyWithRetry(() => import('./pages/seo/VMRDAMasterPlanRoadsPage').then(m => ({ default: m.VMRDAMasterPlanRoadsPage })))
+const VMRDAMasterPlanLocalityPage = lazyWithRetry(() => import('./pages/seo/VMRDAMasterPlanLocalityPage').then(m => ({ default: m.VMRDAMasterPlanLocalityPage })))
 const RERAAuthorityPage = lazyWithRetry(() => import('./pages/seo/RERAAuthorityPage').then(m => ({ default: m.RERAAuthorityPage })))
 const SEODashboardPage = lazyWithRetry(() => import('./pages/admin/SEODashboardPage').then(m => ({ default: m.SEODashboardPage })))
 function ScrollToTop() {
@@ -216,6 +220,11 @@ function AppContent() {
               <Route path="/vmrda-approved-plots-vizag" element={<VMRDAAuthorityPage />} />
               <Route path="/vmrda-plots" element={<VMRDAAuthorityPage />} />
               <Route path="/vmrda/lp/:slug" element={<VMRDALpDetailPage />} />
+              <Route path="/vmrda/master-plan" element={<VMRDAMasterPlanPage />} />
+              <Route path="/vmrda/master-plan-2041" element={<VMRDAMasterPlanPage />} />
+              <Route path="/vmrda/master-plan/land-use" element={<VMRDAMasterPlanLandUsePage />} />
+              <Route path="/vmrda/master-plan/roads" element={<VMRDAMasterPlanRoadsPage />} />
+              <Route path="/vmrda/master-plan/:locality" element={<VMRDAMasterPlanLocalityPage />} />
               <Route path="/rera-approved-projects-vizag" element={<RERAAuthorityPage />} />
               <Route path="/rera-approved-flats" element={<RERAAuthorityPage />} />
               <Route path="/rera-projects-vizag" element={<RERAAuthorityPage />} />

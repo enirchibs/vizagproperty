@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getVmrdaLayoutBySlug, VMRDA_VERIFIED_BASELINE, getLayoutSlug } from '../../lib/vmrdaDataEngine';
+import { getLocalityZoning } from '../../lib/vmrdaMasterPlanEngine';
 import { VmrdaLayout } from '../../types';
 import { SEOHead } from '../../components/SEOHead';
 import { VMRDALpSearchTool } from '../../components/VMRDALpSearchTool';
-import { ShieldCheck, CheckCircle2, FileText, MapPin, ExternalLink, MessageCircle, AlertTriangle, ArrowRight, Sparkles } from 'lucide-react';
+import { ShieldCheck, CheckCircle2, FileText, MapPin, ExternalLink, MessageCircle, AlertTriangle, ArrowRight, Sparkles, Compass } from 'lucide-react';
 import { openWhatsApp } from '../../lib/whatsapp';
 
 export function VMRDALpDetailPage() {
@@ -367,6 +368,64 @@ export function VMRDALpDetailPage() {
             </button>
           </div>
         </div>
+
+        {/* Master Plan 2041 Spatial Zoning & Land-Use Overlay */}
+        {(() => {
+          const zoning = getLocalityZoning(layout.village || layout.mandal || layout.locality || '');
+          return (
+            <div className="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b pb-4">
+                <div>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold uppercase tracking-wider mb-1">
+                    <Compass className="w-3.5 h-3.5" /> VMRDA Master Plan 2041 Overlay
+                  </span>
+                  <h3 className="text-xl font-bold text-slate-900">
+                    Master Plan Zoning: {zoning.zone.name}
+                  </h3>
+                </div>
+                <Link
+                  to="/vmrda/master-plan-2041"
+                  className="bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2 rounded-xl text-xs inline-flex items-center gap-1.5 whitespace-nowrap transition"
+                >
+                  Open Master Plan Map Explorer →
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div className="bg-slate-50 p-4 rounded-xl space-y-2 border border-slate-100">
+                  <span className="font-bold text-slate-900 block text-sm">Mapped Land-Use Classification:</span>
+                  <p className="text-slate-700 leading-relaxed">{zoning.zone.description}</p>
+                  <div className="pt-2">
+                    <strong className="text-slate-900">Max Permitted Height / FAR:</strong> {zoning.zone.building_height_max} (FAR {zoning.zone.fd_ratio})
+                  </div>
+                </div>
+
+                <div className="bg-slate-50 p-4 rounded-xl space-y-2 border border-slate-100">
+                  <span className="font-bold text-slate-900 block text-sm">Proposed Road Access & Arterial Corridors:</span>
+                  {zoning.proposedRoads.length > 0 ? (
+                    <ul className="space-y-1.5 text-slate-700">
+                      {zoning.proposedRoads.map(r => (
+                        <li key={r.id} className="flex items-center justify-between font-medium">
+                          <span>{r.road_name}</span>
+                          <span className="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[11px]">
+                            {r.proposed_width_ft} ft Wide ({r.status})
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-slate-600">Standard 40ft & 60ft VMRDA Approved Internal Layout Sector Roads.</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Statutory Disclaimer Box */}
+              <div className="bg-amber-50 p-4 rounded-xl border border-amber-200 text-xs text-amber-900 leading-relaxed">
+                <strong>Statutory Reference Disclaimer:</strong> According to the referenced VMRDA Master Plan 2041 source, this location intersects/appears within the mapped land-use area for {layout.village}, {layout.mandal} Mandal.
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Dynamic Search Tool Box */}
         <div className="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm">

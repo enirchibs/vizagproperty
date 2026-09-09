@@ -256,3 +256,40 @@ export interface VmrdaLayout {
   updated_at?: string
   last_verified_at: string
 }
+
+export interface VmrdaMasterPlanMap {
+  id: number
+  map_type: 'MANDAL' | 'VILLAGE' | 'DISTRICT' | 'SECTOR'
+  district_id: number
+  district_name: string
+  mandal_id: number
+  mandal_name: string
+  village_id?: number | null
+  village_name?: string | null
+  file_url: string
+  file_type: string
+}
+
+export interface VmrdaMasterPlanZone {
+  code: string
+  name: string
+  color: string
+  bg_color: string
+  description: string
+  permitted_uses: string[]
+  restricted_uses: string[]
+  building_height_max: string
+  fd_ratio: string
+}
+
+export interface VmrdaMasterPlanRoad {
+  id: string
+  road_name: string
+  corridor: string
+  proposed_width_ft: number
+  proposed_width_m: number
+  status: 'Proposed Expansion' | 'Existing Arterial' | 'Expressway Corridor' | 'Ring Road'
+  connecting_localities: string[]
+  key_highlights: string
+}
+
