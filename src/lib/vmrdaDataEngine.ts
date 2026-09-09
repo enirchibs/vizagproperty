@@ -690,8 +690,18 @@ export const VMRDA_VERIFIED_BASELINE: VmrdaLayout[] = [
   }
 ];
 
+import masterLayouts from '../data/vmrda_master_layouts.json';
+
 /**
- * Searches VMRDA Layouts by LP Number, Layout Name, Mandal, Village, or Developer.
+ * Full master dataset combining hand-verified baseline details with 2,525+ official VMRDA layout records.
+ */
+export const ALL_VMRDA_MASTER_DATABASE: VmrdaLayout[] = [
+  ...VMRDA_VERIFIED_BASELINE,
+  ...(masterLayouts as unknown as VmrdaLayout[])
+];
+
+/**
+ * Searches VMRDA Layouts by LP Number, Layout Name, Mandal, Village, or Developer across all 2,500+ official records.
  */
 export async function searchVmrdaLayouts(query: string): Promise<VmrdaLayout[]> {
   if (!query.trim()) return VMRDA_VERIFIED_BASELINE;
@@ -705,7 +715,7 @@ export async function searchVmrdaLayouts(query: string): Promise<VmrdaLayout[]> 
       .from('vmrda_layouts')
       .select('*')
       .or(`lp_number.ilike.%${cleanQuery}%,layout_name.ilike.%${cleanQuery}%,village.ilike.%${cleanQuery}%,mandal.ilike.%${cleanQuery}%,developer_name.ilike.%${cleanQuery}%`)
-      .limit(30);
+      .limit(50);
 
     if (!error && data && data.length > 0) {
       return data as VmrdaLayout[];
@@ -714,16 +724,17 @@ export async function searchVmrdaLayouts(query: string): Promise<VmrdaLayout[]> 
     console.warn('Supabase vmrda_layouts query fallback to local cache:', err);
   }
 
-  // 2. Fallback to offline verified baseline
-  return VMRDA_VERIFIED_BASELINE.filter(layout => {
+  // 2. Search local offline master database (2,525+ official VMRDA records)
+  return ALL_VMRDA_MASTER_DATABASE.filter(layout => {
     const matchLp = normalizeLpNumber(layout.lp_number).includes(normalized) || layout.lp_number.toLowerCase().includes(cleanQuery);
     const matchName = layout.layout_name.toLowerCase().includes(cleanQuery);
     const matchVillage = layout.village.toLowerCase().includes(cleanQuery);
     const matchMandal = layout.mandal.toLowerCase().includes(cleanQuery);
     const matchDeveloper = layout.developer_name?.toLowerCase().includes(cleanQuery);
+    const matchYear = layout.approval_year.toString() === cleanQuery;
 
-    return matchLp || matchName || matchVillage || matchMandal || matchDeveloper;
-  });
+    return matchLp || matchName || matchVillage || matchMandal || matchDeveloper || matchYear;
+  }).slice(0, 50);
 }
 
 /**
@@ -736,15 +747,15 @@ export function getLayoutSlug(layout: VmrdaLayout): string {
 }
 
 /**
- * Retrieves a VMRDA Layout by slug or ID or normalized LP string.
+ * Retrieves a VMRDA Layout by slug or ID or normalized LP string across all 2,525+ official records.
  */
 export async function getVmrdaLayoutBySlug(slug: string): Promise<VmrdaLayout | null> {
   if (!slug) return null;
   const cleanSlug = slug.trim().toLowerCase();
   const normalizedInput = cleanSlug.replace(/[^a-z0-9]/g, '');
 
-  // 1. Try local baseline first for instant response
-  const baselineMatch = VMRDA_VERIFIED_BASELINE.find(l => {
+  // 1. Try master database first for instant response
+  const baselineMatch = ALL_VMRDA_MASTER_DATABASE.find(l => {
     const lSlug = getLayoutSlug(l);
     const lId = l.id.toLowerCase();
     const lNorm = l.lp_number_normalized.toLowerCase();
@@ -782,6 +793,7 @@ export async function getAllVmrdaLayouts(): Promise<VmrdaLayout[]> {
   } catch (err) {
     console.warn('Fallback to baseline layouts:', err);
   }
-  return VMRDA_VERIFIED_BASELINE;
+  return ALL_VMRDA_MASTER_DATABASE;
 }
+
 

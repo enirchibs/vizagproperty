@@ -245,6 +245,10 @@ export interface VmrdaLayout {
   source_url: string
   source_document_url?: string
   source_document_hash?: string
+  plan_pdf_url?: string
+  proceeding_pdf_url?: string
+  plan_pdf_title?: string
+  proceeding_pdf_title?: string
   layout_map_url?: string
   latitude?: number
   longitude?: number
