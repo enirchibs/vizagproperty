@@ -3,14 +3,13 @@ import { supabase } from '../../lib/supabase';
 import { Property } from '../../types';
 import { PropertyCard } from '../../components/PropertyCard';
 import { SEOHead } from '../../components/SEOHead';
-import { ShieldCheck, FileText, Search, HelpCircle, MessageCircle } from 'lucide-react';
+import { VMRDALpSearchTool } from '../../components/VMRDALpSearchTool';
+import { ShieldCheck, FileText, HelpCircle, MessageCircle } from 'lucide-react';
 import { openWhatsApp } from '../../lib/whatsapp';
 
 export function VMRDAAuthorityPage() {
   const [plots, setPlots] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
-  const [lpSearchInput, setLpSearchInput] = useState('');
-  const [lpSearchResult, setLpSearchResult] = useState<string | null>(null);
 
   const canonicalUrl = 'https://vizagproperty.co.in/vmrda-approved-layouts-vizag';
 
@@ -33,12 +32,6 @@ export function VMRDAAuthorityPage() {
     }
     loadVmrdaPlots();
   }, []);
-
-  const handleLpSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!lpSearchInput.trim()) return;
-    setLpSearchResult(`L.P. No. "${lpSearchInput.trim()}" verification request initialized. Check against official VMRDA master plan records or click below to verify via WhatsApp legal desk.`);
-  };
 
   const vmrdaFaqs = [
     {
@@ -113,48 +106,8 @@ export function VMRDAAuthorityPage() {
       </section>
 
       <main className="max-w-7xl mx-auto px-4 py-10 space-y-10">
-        {/* Interactive VMRDA L.P. Number Verification Tool */}
-        <div className="bg-white p-6 md:p-10 rounded-3xl border border-gray-200 shadow-sm">
-          <div className="max-w-3xl">
-            <div className="flex items-center gap-2 text-primary-600 text-xs font-bold uppercase tracking-wider mb-2">
-              <Search className="w-4 h-4" /> Official Verification Engine
-            </div>
-            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">
-              VMRDA Layout Permission (L.P.) Number Search
-            </h2>
-            <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-              Enter the L.P. Number provided by your developer (e.g., 45/2024/VMRDA) to check verification guidelines or request a free legal document audit.
-            </p>
-
-            <form onSubmit={handleLpSearch} className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="text"
-                placeholder="Enter L.P. Number (e.g. 12/2024/VMRDA)"
-                value={lpSearchInput}
-                onChange={e => setLpSearchInput(e.target.value)}
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="bg-primary-600 hover:bg-primary-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition-all shadow-sm flex items-center justify-center gap-2"
-              >
-                <Search className="w-4 h-4" /> Verify L.P. Number
-              </button>
-            </form>
-
-            {lpSearchResult && (
-              <div className="mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-900 space-y-2">
-                <p className="font-bold">{lpSearchResult}</p>
-                <button
-                  onClick={() => openWhatsApp(`Hi Vizag Property Legal Desk, I want to verify VMRDA L.P. Number: ${lpSearchInput}`)}
-                  className="inline-flex items-center gap-1 text-primary-700 font-extrabold underline hover:text-primary-900"
-                >
-                  <MessageCircle className="w-4 h-4" /> Connect with VMRDA Legal Audit Desk on WhatsApp
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
+        {/* Interactive VMRDA L.P. Number Verification & Search Engine */}
+        <VMRDALpSearchTool />
 
         {/* 5-Step Official VMRDA Plot Buying Checklist */}
         <div className="bg-white p-6 md:p-10 rounded-3xl border border-gray-200 shadow-sm">

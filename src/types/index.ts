@@ -210,3 +210,45 @@ export interface PartnerReferral {
   created_at: string
   updated_at?: string
 }
+
+export interface VmrdaLayout {
+  id: string
+  layout_name: string
+  normalized_layout_name: string
+  lp_number: string
+  lp_number_normalized: string
+  original_lp_number: string
+  file_number?: string
+  approval_year: number
+  approval_date?: string
+  application_date?: string
+  developer_name?: string
+  applicant_name?: string
+  uda_license_number?: string
+  district: string
+  mandal: string
+  village: string
+  locality?: string
+  survey_numbers?: string[]
+  extent_acres?: number
+  extent_sq_m?: number
+  total_plots?: number
+  mortgage_plot_count?: number
+  mortgage_plot_numbers?: string[]
+  layout_type: string
+  approval_status: 'APPROVED' | 'UNAUTHORIZED' | 'PENDING'
+  development_status?: string
+  nala_status?: string
+  release_status?: string
+  data_confidence_score: number
+  source_authority: string
+  source_url: string
+  source_document_url?: string
+  source_document_hash?: string
+  layout_map_url?: string
+  latitude?: number
+  longitude?: number
+  created_at: string
+  updated_at?: string
+  last_verified_at: string
+}

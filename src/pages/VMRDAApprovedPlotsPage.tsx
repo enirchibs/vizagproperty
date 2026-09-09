@@ -11,6 +11,7 @@ import { FixedWhatsAppCTA } from '../components/FixedWhatsAppCTA'
 import { ScrollWhatsAppIcon } from '../components/ScrollWhatsAppIcon'
 import { WhatsAppZeroResultsModal } from '../components/WhatsAppZeroResultsModal'
 import { SEOHead } from '../components/SEOHead'
+import { VMRDALpSearchTool } from '../components/VMRDALpSearchTool'
 
 export default function VMRDAApprovedPlotsPage() {
   const { isListening, transcript, localityMatch, noMatchMessage, startListening, stopListening, resetTranscript, isSupported } = useVoiceSearch()
@@ -325,6 +326,8 @@ export default function VMRDAApprovedPlotsPage() {
 
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto">
+          {/* Official VMRDA LP Search Tool Engine */}
+          <VMRDALpSearchTool />
           <div className="prose prose-lg max-w-none">
             <p className="text-gray-700 leading-relaxed text-lg">
               Looking for <strong>VMRDA approved plots in Vizag</strong>? Visakhapatnam's real estate market is experiencing unprecedented growth, making it one of India's most promising investment destinations. VMRDA (Visakhapatnam Metropolitan Region Development Authority) ensures that all approved plots meet stringent legal and infrastructure standards, providing complete safety to buyers. With the expanding IT corridor, port development, and metro rail projects, <strong>vizag plots for sale</strong> have shown remarkable appreciation of up to <span className="text-primary-600 font-bold">180% over the last 5 years</span> in key areas like Madhurawada, PM Palem, Yendada, and Kommadi.
