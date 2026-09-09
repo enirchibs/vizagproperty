@@ -144,10 +144,10 @@ export default function FlatsForSalePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <SEOHead 
-        title="Flats for Sale in Vizag | 2 BHK & 3 BHK Apartments in Visakhapatnam"
-        description="Explore 2 BHK & 3 BHK flats for sale in Vizag & Visakhapatnam. Find verified gated community apartments in Madhurawada, MVP Colony, PM Palem, Yendada with price details."
-        canonicalUrl="https://vizagproperty.co.in/flats-for-sale-in-vizag"
-        url="https://vizagproperty.co.in/flats-for-sale-in-vizag"
+        title="Flats for Sale in Vizag: 2, 3 BHK Luxury Apartments & Villas"
+        description="Browse 2 & 3 BHK flats & sea-view villas in MVP Colony, Madhurawada & Rushikonda. Zero brokerage on direct builder properties. Call 7207550499!"
+        canonicalUrl="https://vizagproperty.co.in/flats-for-sale-vizag"
+        url="https://vizagproperty.co.in/flats-for-sale-vizag"
         keywords="flats for sale in vizag, apartments in vizag, 2 bhk flats in vizag, 3 bhk flats in visakhapatnam, buy flat in vizag, ready to move flats vizag"
       />
       <section className="relative bg-gradient-to-r from-blue-600 to-blue-700 text-white py-20 px-4">

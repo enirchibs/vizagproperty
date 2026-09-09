@@ -115,8 +115,8 @@ export default function VillasPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <SEOHead 
-        title="Villas in Vizag | Luxury Gated Community Villas for Sale in Visakhapatnam"
-        description="Discover luxury villas for sale in Vizag & Visakhapatnam. Explore independent houses, gated community villas, sea view villas in Rushikonda, Madhurawada, Yendada."
+        title="Villas in Vizag: Luxury Gated Villas & Independent Houses"
+        description="Explore luxury gated community villas & sea-view independent houses in Rushikonda, Madhurawada & Yendada. Direct builder deals. Call 7207550499!"
         canonicalUrl="https://vizagproperty.co.in/villas-in-vizag"
         url="https://vizagproperty.co.in/villas-in-vizag"
         keywords="villas in vizag, luxury villas in vizag, villas for sale in visakhapatnam, gated community villas vizag, independent house for sale vizag, beach villas vizag"

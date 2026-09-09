@@ -131,8 +131,8 @@ export default function VMRDAApprovedPlotsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <SEOHead 
-        title="VMRDA Approved Plots in Vizag | Open Plots for Sale in Visakhapatnam"
-        description="Buy 100% legal VMRDA approved plots in Vizag & Visakhapatnam. Verified open plots, residential layouts & gated community plots in Madhurawada, PM Palem, Bhogapuram."
+        title="VMRDA LP Number Search & Approved Plots in Vizag [2026 List]"
+        description="Verify VMRDA LP numbers & search approved layout plots in Madhurawada, Bhogapuram & Anandapuram. Download layout maps & plot price sheets instantly!"
         canonicalUrl="https://vizagproperty.co.in/vmrda-approved-plots-vizag"
         url="https://vizagproperty.co.in/vmrda-approved-plots-vizag"
         keywords="vmrda plots in vizag, vmrda approved plots in vizag, plots for sale in vizag, open plots in visakhapatnam, gated community plots vizag, land for sale in vizag"

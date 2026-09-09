@@ -73,8 +73,8 @@ export function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50 pb-16">
       <SEOHead
-        title="Vizag Property | Visakhapatnam Real Estate, Plots & Flats for Sale"
-        description="Find your dream property in Vizag. Explore the best Vizag real estate, verified properties for sale, VMRDA plots, and flats."
+        title="Vizag Property: Buy Flats, VMRDA Plots & Houses in Vizag"
+        description="Search 100% verified flats, VMRDA approved plots & villas for sale in Visakhapatnam. Get direct builder prices & legal advice. Call 7207550499 today!"
         canonicalUrl="https://vizagproperty.co.in/"
         url="https://vizagproperty.co.in/"
         keywords="vizag real estate, visakhapatnam property, property in vizag, plots for sale in vizag, flats for sale in vizag, villas in vizag, VMRDA plots vizag, vizag property"
