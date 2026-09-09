@@ -91,6 +91,7 @@ const AgentsPage = lazyWithRetry(() => import('./pages/seo/AgentsPage').then(m =
 const NewProjectsPage = lazyWithRetry(() => import('./pages/seo/NewProjectsPage').then(m => ({ default: m.NewProjectsPage })))
 const GuidesPage = lazyWithRetry(() => import('./pages/seo/GuidesPage').then(m => ({ default: m.GuidesPage })))
 const VMRDAAuthorityPage = lazyWithRetry(() => import('./pages/seo/VMRDAAuthorityPage').then(m => ({ default: m.VMRDAAuthorityPage })))
+const VMRDALpDetailPage = lazyWithRetry(() => import('./pages/seo/VMRDALpDetailPage').then(m => ({ default: m.VMRDALpDetailPage })))
 const RERAAuthorityPage = lazyWithRetry(() => import('./pages/seo/RERAAuthorityPage').then(m => ({ default: m.RERAAuthorityPage })))
 const SEODashboardPage = lazyWithRetry(() => import('./pages/admin/SEODashboardPage').then(m => ({ default: m.SEODashboardPage })))
 function ScrollToTop() {
@@ -214,6 +215,7 @@ function AppContent() {
               <Route path="/vmrda-approved-layouts-vizag" element={<VMRDAAuthorityPage />} />
               <Route path="/vmrda-approved-plots-vizag" element={<VMRDAAuthorityPage />} />
               <Route path="/vmrda-plots" element={<VMRDAAuthorityPage />} />
+              <Route path="/vmrda/lp/:slug" element={<VMRDALpDetailPage />} />
               <Route path="/rera-approved-projects-vizag" element={<RERAAuthorityPage />} />
               <Route path="/rera-approved-flats" element={<RERAAuthorityPage />} />
               <Route path="/rera-projects-vizag" element={<RERAAuthorityPage />} />

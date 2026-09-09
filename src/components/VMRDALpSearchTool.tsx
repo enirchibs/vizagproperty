@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Search, ShieldCheck, CheckCircle2, FileText, AlertTriangle, ExternalLink, MessageCircle, MapPin, Building } from 'lucide-react';
-import { searchVmrdaLayouts, VMRDA_VERIFIED_BASELINE } from '../lib/vmrdaDataEngine';
+import { Link } from 'react-router-dom';
+import { Search, ShieldCheck, CheckCircle2, FileText, AlertTriangle, ExternalLink, MessageCircle, MapPin, Building, ArrowRight } from 'lucide-react';
+import { searchVmrdaLayouts, VMRDA_VERIFIED_BASELINE, getLayoutSlug } from '../lib/vmrdaDataEngine';
 import { VmrdaLayout } from '../types';
 import { openWhatsApp } from '../lib/whatsapp';
 
@@ -165,19 +166,27 @@ export function VMRDALpSearchTool() {
 
                 {/* Actions Bar */}
                 <div className="pt-3 border-t border-gray-200 flex flex-wrap items-center justify-between gap-2">
-                  <a
-                    href={layout.source_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-primary-600 hover:text-primary-800 font-bold flex items-center gap-1"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" /> Official VMRDA Portal
-                  </a>
+                  <div className="flex items-center gap-3">
+                    <Link
+                      to={`/vmrda/lp/${getLayoutSlug(layout)}`}
+                      className="text-xs bg-slate-900 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-slate-800 transition inline-flex items-center gap-1"
+                    >
+                      View Report <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                    <a
+                      href={layout.source_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-primary-600 hover:text-primary-800 font-bold flex items-center gap-1"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" /> vmrda.ap.gov.in
+                    </a>
+                  </div>
                   <button
                     onClick={() => handleWhatsappCheck(layout.lp_number, layout.layout_name)}
-                    className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-sm transition-all"
+                    className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold px-3.5 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow-sm transition-all"
                   >
-                    <MessageCircle className="w-3.5 h-3.5" /> Legal Verification Check
+                    <MessageCircle className="w-3.5 h-3.5" /> Legal Check
                   </button>
                 </div>
               </div>

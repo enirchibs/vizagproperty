@@ -725,3 +725,63 @@ export async function searchVmrdaLayouts(query: string): Promise<VmrdaLayout[]> 
     return matchLp || matchName || matchVillage || matchMandal || matchDeveloper;
   });
 }
+
+/**
+ * Converts a layout object into a clean URL-friendly slug.
+ * Example: LP "01/2022/VMRDA/MIG" -> "01-2022-vmrda-mig"
+ */
+export function getLayoutSlug(layout: VmrdaLayout): string {
+  if (layout.id) return layout.id;
+  return layout.lp_number.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+/**
+ * Retrieves a VMRDA Layout by slug or ID or normalized LP string.
+ */
+export async function getVmrdaLayoutBySlug(slug: string): Promise<VmrdaLayout | null> {
+  if (!slug) return null;
+  const cleanSlug = slug.trim().toLowerCase();
+  const normalizedInput = cleanSlug.replace(/[^a-z0-9]/g, '');
+
+  // 1. Try local baseline first for instant response
+  const baselineMatch = VMRDA_VERIFIED_BASELINE.find(l => {
+    const lSlug = getLayoutSlug(l);
+    const lId = l.id.toLowerCase();
+    const lNorm = l.lp_number_normalized.toLowerCase();
+    const lCleanNorm = normalizeLpNumber(l.lp_number).toLowerCase();
+    return lSlug === cleanSlug || lId === cleanSlug || lNorm === normalizedInput || lCleanNorm === normalizedInput;
+  });
+
+  if (baselineMatch) return baselineMatch;
+
+  // 2. Fallback to Supabase database
+  try {
+    const { data } = await supabase
+      .from('vmrda_layouts')
+      .select('*')
+      .or(`id.eq.${cleanSlug},lp_number_normalized.ilike.%${normalizedInput}%`)
+      .maybeSingle();
+
+    if (data) return data as VmrdaLayout;
+  } catch (err) {
+    console.warn('Error retrieving layout by slug from Supabase:', err);
+  }
+
+  return null;
+}
+
+/**
+ * Returns all available VMRDA layouts.
+ */
+export async function getAllVmrdaLayouts(): Promise<VmrdaLayout[]> {
+  try {
+    const { data } = await supabase.from('vmrda_layouts').select('*');
+    if (data && data.length > 0) {
+      return data as VmrdaLayout[];
+    }
+  } catch (err) {
+    console.warn('Fallback to baseline layouts:', err);
+  }
+  return VMRDA_VERIFIED_BASELINE;
+}
+
