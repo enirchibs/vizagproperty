@@ -694,17 +694,21 @@ import masterLayouts from '../data/vmrda_master_layouts.json';
 
 /**
  * Full master dataset combining hand-verified baseline details with 2,525+ official VMRDA layout records.
+ * Sorted by approval_year descending (latest 2024 / 2023 / 2022 approvals first).
  */
 export const ALL_VMRDA_MASTER_DATABASE: VmrdaLayout[] = [
   ...VMRDA_VERIFIED_BASELINE,
   ...(masterLayouts as unknown as VmrdaLayout[])
-];
+].sort((a, b) => (b.approval_year || 0) - (a.approval_year || 0));
 
 /**
  * Searches VMRDA Layouts by LP Number, Layout Name, Mandal, Village, or Developer across all 2,500+ official records.
  */
 export async function searchVmrdaLayouts(query: string): Promise<VmrdaLayout[]> {
-  if (!query.trim()) return VMRDA_VERIFIED_BASELINE;
+  if (!query.trim()) {
+    // Immediately return the latest approved VMRDA layout records from database
+    return ALL_VMRDA_MASTER_DATABASE.slice(0, 30);
+  }
 
   const normalized = normalizeLpNumber(query);
   const cleanQuery = query.trim().toLowerCase();

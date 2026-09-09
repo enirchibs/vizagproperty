@@ -138,22 +138,22 @@ export default function VMRDAApprovedPlotsPage() {
         url="https://vizagproperty.co.in/vmrda-approved-plots-vizag"
         keywords="vmrda plots in vizag, vmrda approved plots in vizag, plots for sale in vizag, open plots in visakhapatnam, gated community plots vizag, land for sale in vizag"
       />
-      <section className="relative bg-gradient-to-r from-primary-600 to-primary-700 text-white py-20 px-4">
+      <section className="relative bg-gradient-to-r from-primary-600 to-primary-700 text-white py-10 md:py-12 px-4">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="relative max-w-7xl mx-auto">
           <div className="max-w-3xl">
-            <div className="flex items-center gap-2 mb-4">
-              <Shield className="h-8 w-8" />
-              <span className="text-primary-100 font-semibold">100% Legal & Safe</span>
+            <div className="flex items-center gap-2 mb-2">
+              <Shield className="h-5 w-5 text-emerald-300" />
+              <span className="text-primary-100 text-xs md:text-sm font-semibold">100% Legal & Safe</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              VMRDA Approved Plots in Vizag
+            <h1 className="text-2xl md:text-3xl font-bold mb-2 leading-tight">
+              VMRDA Approved Plots & LP Number Search in Vizag
             </h1>
-            <p className="text-xl text-primary-50 mb-8">
-              Secure your future with government-approved plots in Visakhapatnam's fastest-growing localities
+            <p className="text-xs md:text-sm text-primary-100 mb-4">
+              Search & verify government-approved VMRDA plots, LP numbers, file numbers & sanctioned maps across Visakhapatnam's top localities.
             </p>
 
-            <div className="bg-white rounded-2xl shadow-2xl p-2">
+            <div className="bg-white rounded-xl shadow-lg p-1.5">
               <div className="flex gap-2">
                 <div className="flex-1 relative">
                   <LocationAutocomplete
@@ -163,21 +163,21 @@ export default function VMRDAApprovedPlotsPage() {
                       setLocalityId(locId)
                     }}
                     placeholder="Type 3+ characters to search localities (e.g., Madhurawada, PM Palem, Yendada)"
-                    className="w-full px-6 py-4 text-gray-900 rounded-xl focus:outline-none"
+                    className="w-full px-4 py-3 text-gray-900 rounded-lg text-xs md:text-sm focus:outline-none"
                   />
                   <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10 pointer-events-none">
                     <div className="pointer-events-auto">
                       {isSupported && (
                         <button
                           onClick={handleVoiceToggle}
-                          className={`p-2 rounded-lg transition-all ${
+                          className={`p-1.5 rounded-lg transition-all ${
                             isListening
                               ? 'bg-red-600 text-white animate-pulse'
                               : 'text-gray-600 hover:bg-gray-200'
                           }`}
                           aria-label={isListening ? "Stop voice search" : "Start voice search"}
                         >
-                          {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+                          {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                         </button>
                       )}
                     </div>
@@ -188,10 +188,7 @@ export default function VMRDAApprovedPlotsPage() {
                         <MapPin className="h-5 w-5 text-green-600 flex-shrink-0" />
                         <div>
                           <div className="text-sm font-medium text-green-900">
-                            Found: {localityMatch.locality_name}
-                          </div>
-                          <div className="text-xs text-green-600">
-                            {localityMatch.confidence === 'exact' ? 'Exact match' : 'Similar match'}
+                            Match found: {localityMatch.locality_name}
                           </div>
                         </div>
                       </div>
@@ -220,15 +217,20 @@ export default function VMRDAApprovedPlotsPage() {
                 </div>
                 <button
                   onClick={handleSearch}
-                  className="bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 transition-colors"
+                  className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg text-xs md:text-sm font-semibold flex items-center gap-1.5 transition-colors"
                 >
-                  <Search className="h-5 w-5" />
+                  <Search className="h-4 w-4" />
                   Search
                 </button>
               </div>
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Official VMRDA LP Search Engine & Latest Approved Layouts (Immediately Below Hero) */}
+      <section className="py-6 px-4 max-w-7xl mx-auto">
+        <VMRDALpSearchTool />
       </section>
 
       <section className="py-12 px-4 bg-white border-b-2 border-gray-100">
