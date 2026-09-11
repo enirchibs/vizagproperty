@@ -108,12 +108,89 @@ export function HomePage() {
             <span className="tracking-wider font-black text-yellow-300 underline">7207550499</span>
           </a>
 
-          {/* Shrink and Expand Breathing Title */}
-          <div className="animate-pulse duration-1000">
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-xl transform hover:scale-105 transition-transform duration-500">
-              Find Your <span className="text-yellow-400 drop-shadow-md">Dream Property</span> <br className="md:hidden" />
-              <span className="text-teal-400 drop-shadow-md">in Vizag</span>
-            </h1>
+          {/* Small Clickable Blinking Banners Beside / Above Title */}
+          <div className="flex flex-wrap justify-center items-center gap-1.5 md:gap-2.5 max-w-4xl py-1">
+            <a
+              href="/vmrda-approved-plots-vizag"
+              className="relative group inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-gray-950 font-black text-[10px] sm:text-xs rounded-full shadow-lg border border-yellow-300/80 animate-pulse hover:scale-110 transition-all cursor-pointer"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-80"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+              </span>
+              <span>🔥 VMRDA LP Search</span>
+            </a>
+
+            <a
+              href="/flats-for-sale-in-vizag"
+              className="relative group inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white font-black text-[10px] sm:text-xs rounded-full shadow-lg border border-cyan-300/50 animate-pulse hover:scale-110 transition-all cursor-pointer"
+              style={{ animationDelay: '0.4s' }}
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-300 opacity-80"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-300"></span>
+              </span>
+              <span>⚡ Verified Flats</span>
+            </a>
+
+            <a
+              href="/villas-in-vizag"
+              className="relative group inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-purple-600 via-fuchsia-600 to-purple-700 text-white font-black text-[10px] sm:text-xs rounded-full shadow-lg border border-pink-300/50 animate-pulse hover:scale-110 transition-all cursor-pointer"
+              style={{ animationDelay: '0.8s' }}
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-300 opacity-80"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-pink-300"></span>
+              </span>
+              <span>🏰 Luxury Villas</span>
+            </a>
+
+            <a
+              href="/legal-verification"
+              className="relative group inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white font-black text-[10px] sm:text-xs rounded-full shadow-lg border border-emerald-300/50 animate-pulse hover:scale-110 transition-all cursor-pointer"
+              style={{ animationDelay: '1.2s' }}
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-80"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-300"></span>
+              </span>
+              <span>🛡️ 100% Legal Clear</span>
+            </a>
+          </div>
+
+          {/* Main Title Container with Flanking Clickable Banners on Desktop */}
+          <div className="flex flex-col md:flex-row items-center justify-center gap-3 w-full">
+            {/* Left Side Banner Badge on Desktop */}
+            <a
+              href="/vmrda-approved-plots-vizag"
+              className="hidden lg:inline-flex items-center gap-2 px-3 py-1.5 bg-amber-400 text-gray-950 font-extrabold text-xs rounded-xl shadow-lg border border-amber-300 animate-pulse hover:scale-110 transition-transform cursor-pointer whitespace-nowrap"
+            >
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+              </span>
+              <span>🔥 VMRDA LP Plots</span>
+            </a>
+
+            {/* Shrink and Expand Breathing Title */}
+            <div className="animate-pulse duration-1000">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-xl transform hover:scale-105 transition-transform duration-500">
+                Find Your <span className="text-yellow-400 drop-shadow-md">Dream Property</span> <br className="md:hidden" />
+                <span className="text-teal-400 drop-shadow-md">in Vizag</span>
+              </h1>
+            </div>
+
+            {/* Right Side Banner Badge on Desktop */}
+            <a
+              href="tel:7207550499"
+              className="hidden lg:inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-500 text-white font-extrabold text-xs rounded-xl shadow-lg border border-emerald-300 animate-bounce hover:scale-110 transition-transform cursor-pointer whitespace-nowrap"
+            >
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-300 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow-300"></span>
+              </span>
+              <span>📞 Call 7207550499</span>
+            </a>
           </div>
 
           <p className="text-sm md:text-lg text-gray-200 font-semibold max-w-3xl flex flex-wrap justify-center gap-x-4 gap-y-1">

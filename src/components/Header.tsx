@@ -270,20 +270,24 @@ export function Header() {
           </div>
         </div>
 
-        <div className="hidden md:block bg-primary-400 border-t border-primary-500">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center space-x-6 py-3 overflow-x-auto scrollbar-hide">
+        <div className="bg-primary-700 border-t border-b border-primary-500/80 shadow-md">
+          <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <div className="flex items-center space-x-2 py-1.5 md:py-2.5 overflow-x-auto scrollbar-hide text-xs md:text-sm">
               <a
                 href="/vmrda-approved-plots-vizag"
-                className="text-sm text-white hover:text-primary-800 whitespace-nowrap transition-colors"
+                className="inline-flex items-center gap-1.5 bg-blue-600/90 hover:bg-blue-500 text-white font-bold px-3 py-1 rounded-full whitespace-nowrap transition-all border border-blue-400/40 shadow-sm hover:scale-105"
                 aria-label="VMRDA Approved Plots in Vizag"
                 title="VMRDA Approved Plots in Vizag"
               >
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-300 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-400"></span>
+                </span>
                 VMRDA Approved Plots in Vizag
               </a>
               <a
                 href="/residential-property-in-vizag"
-                className="text-sm text-white hover:text-primary-800 whitespace-nowrap transition-colors"
+                className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold px-3 py-1 rounded-full whitespace-nowrap transition-all border border-white/15 hover:scale-105"
                 aria-label="Residential Property in Vizag"
                 title="Residential Property in Vizag"
               >
@@ -291,7 +295,7 @@ export function Header() {
               </a>
               <a
                 href="/flats-for-sale-in-vizag"
-                className="text-sm text-white hover:text-primary-800 whitespace-nowrap transition-colors"
+                className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold px-3 py-1 rounded-full whitespace-nowrap transition-all border border-white/15 hover:scale-105"
                 aria-label="Flats for Sale in Vizag"
                 title="Flats for Sale in Vizag"
               >
@@ -299,7 +303,7 @@ export function Header() {
               </a>
               <a
                 href="/villas-in-vizag"
-                className="text-sm text-white hover:text-primary-800 whitespace-nowrap transition-colors"
+                className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold px-3 py-1 rounded-full whitespace-nowrap transition-all border border-white/15 hover:scale-105"
                 aria-label="Villas in Vizag"
                 title="Villas in Vizag"
               >
@@ -307,7 +311,7 @@ export function Header() {
               </a>
               <a
                 href="/flats-for-rent-vizag"
-                className="text-sm text-white hover:text-primary-800 whitespace-nowrap transition-colors"
+                className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold px-3 py-1 rounded-full whitespace-nowrap transition-all border border-white/15 hover:scale-105"
                 aria-label="Flats for Rent in Vizag"
                 title="Flats for Rent in Vizag"
               >
@@ -315,7 +319,7 @@ export function Header() {
               </a>
               <a
                 href="/pg-hostels-in-vizag"
-                className="text-sm text-white hover:text-primary-800 whitespace-nowrap transition-colors"
+                className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold px-3 py-1 rounded-full whitespace-nowrap transition-all border border-white/15 hover:scale-105"
                 aria-label="PG & Hostels in Vizag"
                 title="PG & Hostels in Vizag"
               >
