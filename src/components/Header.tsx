@@ -270,60 +270,60 @@ export function Header() {
           </div>
         </div>
 
-        <div className="bg-primary-700 border-t border-b border-primary-500/80 shadow-md">
+        <div className="bg-slate-900 border-y border-amber-400/40 shadow-xl relative z-40">
           <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-            <div className="flex items-center space-x-2 py-1.5 md:py-2.5 overflow-x-auto scrollbar-hide text-xs md:text-sm">
+            <div className="flex items-center space-x-2 py-2 overflow-x-auto scrollbar-hide text-xs md:text-sm">
               <a
                 href="/vmrda-approved-plots-vizag"
-                className="inline-flex items-center gap-1.5 bg-blue-600/90 hover:bg-blue-500 text-white font-bold px-3 py-1 rounded-full whitespace-nowrap transition-all border border-blue-400/40 shadow-sm hover:scale-105"
+                className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-slate-950 font-black px-3.5 py-1.5 rounded-full whitespace-nowrap shadow-md border-2 border-yellow-200 hover:scale-105 transition-all"
                 aria-label="VMRDA Approved Plots in Vizag"
                 title="VMRDA Approved Plots in Vizag"
               >
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-300 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-400"></span>
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-90"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
                 </span>
                 VMRDA Approved Plots in Vizag
               </a>
               <a
                 href="/residential-property-in-vizag"
-                className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold px-3 py-1 rounded-full whitespace-nowrap transition-all border border-white/15 hover:scale-105"
+                className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold px-3.5 py-1.5 rounded-full whitespace-nowrap shadow-md border border-blue-400/40 hover:scale-105 transition-all"
                 aria-label="Residential Property in Vizag"
                 title="Residential Property in Vizag"
               >
-                Residential Property in Vizag
+                🏡 Residential Property
               </a>
               <a
                 href="/flats-for-sale-in-vizag"
-                className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold px-3 py-1 rounded-full whitespace-nowrap transition-all border border-white/15 hover:scale-105"
+                className="inline-flex items-center gap-1.5 bg-gradient-to-r from-emerald-600 to-teal-700 text-white font-bold px-3.5 py-1.5 rounded-full whitespace-nowrap shadow-md border border-emerald-400/40 hover:scale-105 transition-all"
                 aria-label="Flats for Sale in Vizag"
                 title="Flats for Sale in Vizag"
               >
-                Flats for Sale in Vizag
+                🏢 Flats for Sale in Vizag
               </a>
               <a
                 href="/villas-in-vizag"
-                className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold px-3 py-1 rounded-full whitespace-nowrap transition-all border border-white/15 hover:scale-105"
+                className="inline-flex items-center gap-1.5 bg-gradient-to-r from-purple-600 to-pink-700 text-white font-bold px-3.5 py-1.5 rounded-full whitespace-nowrap shadow-md border border-pink-400/40 hover:scale-105 transition-all"
                 aria-label="Villas in Vizag"
                 title="Villas in Vizag"
               >
-                Villas in Vizag
+                🏰 Villas in Vizag
               </a>
               <a
                 href="/flats-for-rent-vizag"
-                className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold px-3 py-1 rounded-full whitespace-nowrap transition-all border border-white/15 hover:scale-105"
+                className="inline-flex items-center gap-1.5 bg-gradient-to-r from-sky-600 to-blue-700 text-white font-bold px-3.5 py-1.5 rounded-full whitespace-nowrap shadow-md border border-sky-400/40 hover:scale-105 transition-all"
                 aria-label="Flats for Rent in Vizag"
                 title="Flats for Rent in Vizag"
               >
-                Flats for Rent in Vizag
+                🔑 Flats for Rent
               </a>
               <a
                 href="/pg-hostels-in-vizag"
-                className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold px-3 py-1 rounded-full whitespace-nowrap transition-all border border-white/15 hover:scale-105"
+                className="inline-flex items-center gap-1.5 bg-gradient-to-r from-orange-600 to-red-700 text-white font-bold px-3.5 py-1.5 rounded-full whitespace-nowrap shadow-md border border-orange-400/40 hover:scale-105 transition-all"
                 aria-label="PG & Hostels in Vizag"
                 title="PG & Hostels in Vizag"
               >
-                PG & Hostels in Vizag
+                🛏️ PG & Hostels
               </a>
             </div>
           </div>
