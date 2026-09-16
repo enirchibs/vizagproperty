@@ -94,102 +94,80 @@ export function HomePage() {
 
         <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center text-center space-y-3">
           
-          {/* Pulsing Shrink & Expand Call Badge for 7207550499 */}
+          {/* Professional Red Background Call Button for 7207550499 with White Text */}
           <a
             href="tel:7207550499"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 text-white font-black px-6 py-2.5 rounded-full shadow-[0_4px_25px_rgba(16,185,129,0.6)] border-2 border-amber-300 text-xs md:text-sm animate-pulse hover:scale-110 transition-all duration-500 transform hover:-translate-y-0.5 group cursor-pointer"
+            className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-2.5 rounded-full shadow-lg border border-red-500 text-xs md:text-sm transition-all duration-300 hover:scale-105 group cursor-pointer"
           >
-            <span className="relative flex h-3.5 w-3.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-300 opacity-90"></span>
-              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-amber-300"></span>
-            </span>
-            <Phone className="w-4 h-4 text-amber-300 group-hover:rotate-12 transition-transform fill-current" />
-            <span className="uppercase tracking-wider text-white font-black drop-shadow-md">Call Direct:</span>
-            <span className="tracking-wider font-black text-amber-300 text-sm md:text-base drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">7207550499</span>
+            <Phone className="w-4 h-4 text-white fill-current group-hover:rotate-12 transition-transform" />
+            <span className="uppercase tracking-wider text-white font-extrabold">Call Now:</span>
+            <span className="tracking-wider font-black text-white text-sm md:text-base underline underline-offset-2">7207550499</span>
           </a>
 
-          {/* Small Clickable Blinking Banners Beside / Above Title */}
+          {/* Small Clickable Banners Beside / Above Title */}
           <div className="flex flex-wrap justify-center items-center gap-2 max-w-4xl py-1.5">
             <a
               href="/vmrda-approved-plots-vizag"
-              className="relative group inline-flex items-center gap-1.5 px-4 py-1.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs md:text-sm rounded-full shadow-[0_4px_15px_rgba(245,158,11,0.5)] border-2 border-yellow-200 animate-pulse hover:scale-110 transition-all cursor-pointer"
+              className="relative group inline-flex items-center gap-1.5 px-4 py-1.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs md:text-sm rounded-full shadow-md border border-amber-300 animate-pulse hover:scale-105 transition-all cursor-pointer"
             >
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-90"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
               </span>
               <span className="tracking-wide">🔥 VMRDA LP Search</span>
             </a>
 
             <a
               href="/flats-for-sale-in-vizag"
-              className="relative group inline-flex items-center gap-1.5 px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs md:text-sm rounded-full shadow-[0_4px_15px_rgba(37,99,235,0.5)] border-2 border-cyan-300 animate-pulse hover:scale-110 transition-all cursor-pointer"
-              style={{ animationDelay: '0.4s' }}
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs md:text-sm rounded-full shadow-sm border border-blue-400/40 hover:scale-105 transition-all cursor-pointer"
             >
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-300 opacity-90"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-300"></span>
-              </span>
-              <span className="tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">⚡ Verified Flats</span>
+              <span>⚡ Verified Flats</span>
             </a>
 
             <a
               href="/villas-in-vizag"
-              className="relative group inline-flex items-center gap-1.5 px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs md:text-sm rounded-full shadow-[0_4px_15px_rgba(147,51,234,0.5)] border-2 border-pink-300 animate-pulse hover:scale-110 transition-all cursor-pointer"
-              style={{ animationDelay: '0.8s' }}
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs md:text-sm rounded-full shadow-sm border border-purple-400/40 hover:scale-105 transition-all cursor-pointer"
             >
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-300 opacity-90"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-pink-300"></span>
-              </span>
-              <span className="tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">🏰 Luxury Villas</span>
+              <span>🏰 Luxury Villas</span>
             </a>
 
             <a
               href="/legal-verification"
-              className="relative group inline-flex items-center gap-1.5 px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs md:text-sm rounded-full shadow-[0_4px_15px_rgba(16,185,129,0.5)] border-2 border-emerald-300 animate-pulse hover:scale-110 transition-all cursor-pointer"
-              style={{ animationDelay: '1.2s' }}
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs md:text-sm rounded-full shadow-sm border border-emerald-400/40 hover:scale-105 transition-all cursor-pointer"
             >
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-90"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-300"></span>
-              </span>
-              <span className="tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">🛡️ 100% Legal Clear</span>
+              <span>🛡️ 100% Legal Clear</span>
             </a>
           </div>
 
-          {/* Main Title Container with Flanking Clickable Banners on Desktop */}
+          {/* Main Title Container */}
           <div className="flex flex-col md:flex-row items-center justify-center gap-3 w-full my-1">
-            {/* Left Side Banner Badge on Desktop */}
+            {/* Left Side VMRDA Banner Badge on Desktop with Subtle Pulse */}
             <a
               href="/vmrda-approved-plots-vizag"
-              className="hidden lg:inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 font-black text-xs rounded-xl shadow-xl border-2 border-yellow-200 animate-pulse hover:scale-110 transition-transform cursor-pointer whitespace-nowrap"
+              className="hidden lg:inline-flex items-center gap-2 px-4 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs rounded-xl shadow-md border border-amber-300 animate-pulse hover:scale-105 transition-transform cursor-pointer whitespace-nowrap"
             >
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-90"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
               </span>
               <span>🔥 VMRDA LP Plots</span>
             </a>
 
-            {/* Shrink and Expand Breathing Title */}
-            <div className="animate-pulse duration-1000">
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)] transform hover:scale-105 transition-transform duration-500">
+            {/* Clean Professional Title */}
+            <div>
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
                 Find Your <span className="text-amber-300 drop-shadow-[0_4px_16px_rgba(245,158,11,0.9)]">Dream Property</span> <br className="md:hidden" />
                 <span className="text-cyan-300 drop-shadow-[0_4px_16px_rgba(6,182,212,0.9)]">in Vizag</span>
               </h1>
             </div>
 
-            {/* Right Side Banner Badge on Desktop */}
+            {/* Right Side Red Call Button Badge on Desktop */}
             <a
               href="tel:7207550499"
-              className="hidden lg:inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black text-xs rounded-xl shadow-xl border-2 border-amber-300 animate-bounce hover:scale-110 transition-transform cursor-pointer whitespace-nowrap"
+              className="hidden lg:inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs rounded-xl shadow-md border border-red-500 hover:scale-105 transition-transform cursor-pointer whitespace-nowrap"
             >
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-300 opacity-90"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow-300"></span>
-              </span>
-              <span>📞 Call 7207550499</span>
+              <Phone className="w-3.5 h-3.5 text-white fill-current" />
+              <span>Call 7207550499</span>
             </a>
           </div>
 

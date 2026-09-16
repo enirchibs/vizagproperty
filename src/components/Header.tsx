@@ -275,7 +275,7 @@ export function Header() {
             <div className="flex items-center space-x-2 py-2 overflow-x-auto scrollbar-hide text-xs md:text-sm">
               <a
                 href="/vmrda-approved-plots-vizag"
-                className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-slate-950 font-black px-3.5 py-1.5 rounded-full whitespace-nowrap shadow-md border-2 border-yellow-200 hover:scale-105 transition-all"
+                className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-slate-950 font-black px-3.5 py-1.5 rounded-full whitespace-nowrap shadow-md border-2 border-yellow-200 animate-pulse hover:scale-105 transition-all"
                 aria-label="VMRDA Approved Plots in Vizag"
                 title="VMRDA Approved Plots in Vizag"
               >
@@ -283,7 +283,7 @@ export function Header() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-90"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
                 </span>
-                VMRDA Approved Plots in Vizag
+                🔥 VMRDA Approved Plots in Vizag
               </a>
               <a
                 href="/residential-property-in-vizag"
