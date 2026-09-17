@@ -470,6 +470,81 @@ export function PropertyDetailsPage() {
                 <h2 className="text-xl font-semibold text-gray-900 mb-3">Description</h2>
                 <p className="text-gray-600 leading-relaxed whitespace-pre-line">{property.description}</p>
                 <PropertyDisclaimer />
+
+                {/* Contact CTA Card Below Description */}
+                <div className="mt-6 pt-5 border-t border-gray-200 bg-gradient-to-r from-slate-50 to-blue-50/50 p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                    <div>
+                      <h3 className="font-extrabold text-base md:text-lg text-slate-900 flex items-center gap-2">
+                        <Phone className="w-5 h-5 text-red-600" />
+                        <span>Interested in this property?</span>
+                      </h3>
+                      <p className="text-xs md:text-sm text-slate-600">
+                        Contact the verified agent or seller directly for site visits, negotiations & legal documents.
+                      </p>
+                    </div>
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full whitespace-nowrap self-start sm:self-center">
+                      <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+                      Verified Agent Response
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <button
+                      onClick={() => {
+                        if (!property) return
+                        const targetPhone = property.agent_whatsapp || property.agent_phone || VIZAG_PROPERTY_PHONE
+                        trackCallOrWhatsAppLead({
+                          property_id: property.id,
+                          property_title: property.title,
+                          target_phone: targetPhone,
+                          contact_type: 'whatsapp',
+                          user_id: user?.id,
+                          source: 'property_details_below_description'
+                        })
+                        openWhatsApp(
+                          `Hi, I'm interested in ${property.title} listed on VizagProperty. Can you provide more details?`,
+                          targetPhone
+                        )
+                      }}
+                      className="w-full bg-green-600 text-white py-3 px-4 rounded-xl hover:bg-green-700 transition-all font-bold text-xs md:text-sm shadow-md flex items-center justify-center gap-2"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                      <span>WhatsApp Agent</span>
+                    </button>
+
+                    <button
+                      onClick={handleCall}
+                      className="w-full bg-red-600 text-white py-3 px-4 rounded-xl hover:bg-red-700 transition-all font-extrabold text-xs md:text-sm shadow-md flex items-center justify-center gap-2"
+                    >
+                      <Phone className="h-4 w-4" />
+                      <span>Call Direct: {property.agent_phone || VIZAG_PROPERTY_PHONE}</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        if (!property) return
+                        const targetPhone = property.agent_whatsapp || property.agent_phone || VIZAG_PROPERTY_PHONE
+                        trackCallOrWhatsAppLead({
+                          property_id: property.id,
+                          property_title: property.title,
+                          target_phone: targetPhone,
+                          contact_type: 'whatsapp',
+                          user_id: user?.id,
+                          source: 'property_details_enquire_below_description'
+                        })
+                        openWhatsApp(
+                          `Hi Vizag Property Experts, I am interested in this property:\n${property.title}\nLocation: ${property.location ?? property.city ?? 'Visakhapatnam'}\nPrice: ${formatPrice(property.price)}\nPlease share more details.`,
+                          targetPhone
+                        )
+                      }}
+                      className="w-full bg-white text-green-700 border-2 border-green-600 py-3 px-4 rounded-xl hover:bg-green-50 transition-all font-bold text-xs md:text-sm shadow-sm flex items-center justify-center gap-2"
+                    >
+                      <MessageSquare className="h-4 w-4 text-green-600" />
+                      <span>Enquire on WhatsApp</span>
+                    </button>
+                  </div>
+                </div>
               </div>
 
               {property.amenities && property.amenities.length > 0 && (
