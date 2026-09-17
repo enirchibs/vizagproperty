@@ -15,6 +15,7 @@ import { SeoKeywordsSection } from '../components/SeoKeywordsSection'
 
 import { PropertyCard } from '../components/PropertyCard'
 import { sortPropertiesGlobalPreference } from '../lib/searchFilters'
+import { trackCallOrWhatsAppLead } from '../lib/callTracker'
 
 export function HomePage() {
   const [latestProperties, setLatestProperties] = useState<Property[]>([])
@@ -97,6 +98,14 @@ export function HomePage() {
           {/* Professional Red Background Call Button for 7207550499 with White Text */}
           <a
             href="tel:7207550499"
+            onClick={() => {
+              trackCallOrWhatsAppLead({
+                property_title: 'Hero Banner Direct Call Button',
+                target_phone: '7207550499',
+                contact_type: 'call',
+                source: 'homepage_hero'
+              })
+            }}
             className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-2.5 rounded-full shadow-lg border border-red-500 text-xs md:text-sm transition-all duration-300 hover:scale-105 group cursor-pointer"
           >
             <Phone className="w-4 h-4 text-white fill-current group-hover:rotate-12 transition-transform" />

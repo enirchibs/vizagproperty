@@ -10,6 +10,9 @@ import {
   Shield, RefreshCw, ArrowLeft
 } from 'lucide-react'
 
+import { PhoneCall, MessageCircle } from 'lucide-react'
+import { fetchCallAnalyticsStats, CallLeadRecord } from '../lib/callTracker'
+
 export function AdminDashboardPage() {
   const navigate = useNavigate()
   const { user, profile } = useAuth()
@@ -28,6 +31,19 @@ export function AdminDashboardPage() {
     loading: true
   })
 
+  // Call analytics state
+  const [callAnalytics, setCallAnalytics] = useState<{
+    totalCalls: number
+    totalWhatsApps: number
+    totalLeads: number
+    allLeads: CallLeadRecord[]
+  }>({
+    totalCalls: 0,
+    totalWhatsApps: 0,
+    totalLeads: 0,
+    allLeads: []
+  })
+
   // Quick Action Modal states
   const [showNewArticleModal, setShowNewArticleModal] = useState(false)
   const [showAiModal, setShowAiModal] = useState(false)
@@ -42,6 +58,10 @@ export function AdminDashboardPage() {
 
   const fetchDashboardStats = async () => {
     try {
+      // 0. Fetch Call & WhatsApp Analytics
+      const callData = await fetchCallAnalyticsStats()
+      setCallAnalytics(callData)
+
       // 1. Fetch properties counts
       const { data: propData, error: propErr } = await supabase
         .from('properties')
@@ -385,6 +405,114 @@ export function AdminDashboardPage() {
               </div>
             </button>
 
+          </div>
+        </div>
+
+        {/* 5.5 PHONE CALL & WHATSAPP BUYER LEAD ANALYTICS (REAL-TIME TRACKING) */}
+        <div className="mb-10 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-slate-100">
+            <div>
+              <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                <PhoneCall className="w-5 h-5 text-red-600" />
+                <span>Buyer Phone Call & WhatsApp Analytics</span>
+              </h2>
+              <p className="text-xs text-slate-500 mt-1">
+                Real-time tracking of buyer clicks on phone numbers and WhatsApp buttons across all property listings
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="bg-red-50 text-red-700 text-xs font-bold px-3 py-1 rounded-full border border-red-200 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+                Live Call Tracker Active
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <div className="bg-red-50/70 border border-red-100 rounded-xl p-4 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-red-600 text-white flex items-center justify-center font-bold shadow-sm">
+                <PhoneCall className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="text-2xl font-black text-slate-900">{callAnalytics.totalCalls}</div>
+                <div className="text-xs font-bold text-red-700 uppercase tracking-wide">Phone Calls Initiated</div>
+              </div>
+            </div>
+
+            <div className="bg-emerald-50/70 border border-emerald-100 rounded-xl p-4 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold shadow-sm">
+                <MessageCircle className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="text-2xl font-black text-slate-900">{callAnalytics.totalWhatsApps}</div>
+                <div className="text-xs font-bold text-emerald-700 uppercase tracking-wide">WhatsApp Inquiries</div>
+              </div>
+            </div>
+
+            <div className="bg-blue-50/70 border border-blue-100 rounded-xl p-4 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-sm">
+                <BarChart3 className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="text-2xl font-black text-slate-900">{callAnalytics.totalLeads}</div>
+                <div className="text-xs font-bold text-blue-700 uppercase tracking-wide">Total Buyer Lead Clicks</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Call Lead Table */}
+          <div>
+            <h3 className="font-extrabold text-sm text-slate-800 mb-3 uppercase tracking-wider">
+              Recent Buyer Contact Log
+            </h3>
+            {callAnalytics.allLeads.length === 0 ? (
+              <div className="bg-slate-50 rounded-xl p-6 text-center text-slate-500 text-xs font-medium border border-dashed border-slate-200">
+                No call clicks recorded yet. Every time a buyer clicks "Call" or "WhatsApp" on any property, it will automatically log here!
+              </div>
+            ) : (
+              <div className="overflow-x-auto border border-slate-200 rounded-xl">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-100 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
+                    <tr>
+                      <th className="py-2.5 px-3">Date & Time</th>
+                      <th className="py-2.5 px-3">Action Type</th>
+                      <th className="py-2.5 px-3">Property / Target Title</th>
+                      <th className="py-2.5 px-3">Target Phone</th>
+                      <th className="py-2.5 px-3">Source Page</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
+                    {callAnalytics.allLeads.slice(0, 10).map((lead, idx) => (
+                      <tr key={lead.id || idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-2.5 px-3 whitespace-nowrap text-slate-500">
+                          {new Date(lead.created_at).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}
+                        </td>
+                        <td className="py-2.5 px-3 whitespace-nowrap">
+                          {lead.contact_type === 'call' ? (
+                            <span className="inline-flex items-center gap-1 bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full text-[10px]">
+                              <PhoneCall className="w-3 h-3" /> Phone Call
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full text-[10px]">
+                              <MessageCircle className="w-3 h-3" /> WhatsApp
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-2.5 px-3 font-semibold text-slate-900 max-w-xs truncate">
+                          {lead.property_title || 'General Platform Lead'}
+                        </td>
+                        <td className="py-2.5 px-3 whitespace-nowrap font-mono text-slate-600">
+                          {lead.target_phone}
+                        </td>
+                        <td className="py-2.5 px-3 whitespace-nowrap text-slate-500 capitalize">
+                          {lead.source?.replace('_', ' ')}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
 

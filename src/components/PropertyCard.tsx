@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { openWhatsApp } from '../lib/whatsapp'
 import { VIZAG_PROPERTY_PHONE } from '../config/contact'
+import { trackCallOrWhatsAppLead } from '../lib/callTracker'
 
 interface PropertyCardProps {
   property: Property
@@ -105,14 +106,30 @@ export function PropertyCard({ property }: PropertyCardProps) {
     e.preventDefault()
     e.stopPropagation()
     const targetPhone = property.agent_phone || VIZAG_PROPERTY_PHONE
+    trackCallOrWhatsAppLead({
+      property_id: property.id,
+      property_title: property.title,
+      target_phone: targetPhone,
+      contact_type: 'call',
+      user_id: user?.id,
+      source: 'property_card'
+    })
     window.location.href = `tel:${targetPhone}`
   }
 
   const handleWhatsApp = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    const message = `Hi, I'm interested in your property: ${property.title} - ${formatPrice(property.price)}`
     const targetPhone = property.agent_whatsapp || property.agent_phone || VIZAG_PROPERTY_PHONE
+    const message = `Hi, I'm interested in your property: ${property.title} - ${formatPrice(property.price)}`
+    trackCallOrWhatsAppLead({
+      property_id: property.id,
+      property_title: property.title,
+      target_phone: targetPhone,
+      contact_type: 'whatsapp',
+      user_id: user?.id,
+      source: 'property_card'
+    })
     openWhatsApp(message, targetPhone)
   }
 
