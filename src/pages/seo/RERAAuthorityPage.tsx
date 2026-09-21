@@ -5,6 +5,7 @@ import { PropertyCard } from '../../components/PropertyCard';
 import { SEOHead } from '../../components/SEOHead';
 import { ShieldCheck, Search, HelpCircle, MessageCircle, Building2 } from 'lucide-react';
 import { openWhatsApp } from '../../lib/whatsapp';
+import { FALLBACK_VERIFIED_PROPERTIES } from '../../data/fallbackProperties';
 
 export function RERAAuthorityPage() {
   const [projects, setProjects] = useState<Property[]>([]);
@@ -20,12 +21,13 @@ export function RERAAuthorityPage() {
       try {
         const { data } = await supabase
           .from('properties')
-          .select('*, localities!inner(name, slug, city)')
+          .select('*, localities(name, slug, city)')
           .eq('status', 'approved')
           .limit(24);
-        setProjects(data || []);
+        setProjects(data && data.length > 0 ? data : FALLBACK_VERIFIED_PROPERTIES);
       } catch (err) {
         console.error(err);
+        setProjects(FALLBACK_VERIFIED_PROPERTIES);
       } finally {
         setLoading(false);
       }

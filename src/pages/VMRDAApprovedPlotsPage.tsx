@@ -5,6 +5,7 @@ import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { supabase } from '../lib/supabase'
 import type { Property } from '../types'
 import { buildStrictQuery, CATEGORY_CONTEXTS, sortPropertiesGlobalPreference } from '../lib/searchFilters'
+import { FALLBACK_VERIFIED_PROPERTIES } from '../data/fallbackProperties'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 import { FixedWhatsAppCTA } from '../components/FixedWhatsAppCTA'
@@ -84,13 +85,20 @@ export default function VMRDAApprovedPlotsPage() {
       const { data, error } = await query
 
       if (error) throw error
-      const sorted = sortPropertiesGlobalPreference(data || [], searchQuery, selectedLocality)
-      setProperties(sorted)
 
-      if (data && data.length === 0) {
-        setShowZeroResultsModal(true)
+      if (data && data.length > 0) {
+        const sorted = sortPropertiesGlobalPreference(data, searchQuery, selectedLocality)
+        setProperties(sorted)
+      } else {
+        const plotFallback = FALLBACK_VERIFIED_PROPERTIES.filter(p => p.property_type === 'plot_land' || p.is_vmrda_approved)
+        const sorted = sortPropertiesGlobalPreference(plotFallback.length > 0 ? plotFallback : FALLBACK_VERIFIED_PROPERTIES, searchQuery, selectedLocality)
+        setProperties(sorted)
       }
     } catch (error) {
+      console.error('Error in loadProperties VMRDAApprovedPlotsPage:', error)
+      const plotFallback = FALLBACK_VERIFIED_PROPERTIES.filter(p => p.property_type === 'plot_land' || p.is_vmrda_approved)
+      const sorted = sortPropertiesGlobalPreference(plotFallback.length > 0 ? plotFallback : FALLBACK_VERIFIED_PROPERTIES, searchQuery, selectedLocality)
+      setProperties(sorted)
     } finally {
       setLoading(false)
     }

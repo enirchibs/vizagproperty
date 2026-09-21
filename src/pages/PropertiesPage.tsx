@@ -10,6 +10,7 @@ import { AdSenseInFeedCard } from '../components/AdSenseInFeedCard'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp } from '../lib/whatsapp'
 import { sortPropertiesGlobalPreference } from '../lib/searchFilters'
+import { FALLBACK_VERIFIED_PROPERTIES } from '../data/fallbackProperties'
 import { SEOHead } from '../components/SEOHead'
 
 const KEYWORD_LISTING_TYPE_MAP: Record<string, string[]> = {
@@ -154,7 +155,7 @@ export function PropertiesPage() {
 
       let queryBuilder = supabase
         .from('properties')
-        .select('*, localities!inner(name, slug, city)')
+        .select('*, localities(name, slug, city)')
         .eq('status', 'approved')
 
       if (activeFilters.bedrooms && activeFilters.bedrooms > 0) {
@@ -176,27 +177,15 @@ export function PropertiesPage() {
       if (error) throw error
       let fetchedList = data || []
 
-      if (fetchedList.length < 5) {
-        const { data: fallbackData } = await supabase
-          .from('properties')
-          .select('*, localities!inner(name, slug, city)')
-          .eq('status', 'approved')
-          .order('created_at', { ascending: false })
-          .limit(200)
-        fetchedList = fallbackData || []
+      if (fetchedList.length === 0) {
+        fetchedList = FALLBACK_VERIFIED_PROPERTIES
       }
 
       const sorted = sortPropertiesGlobalPreference(fetchedList, queryStr, localityStr, effectiveCategory)
       setProperties(sorted)
     } catch (error) {
       console.error('Error in loadProperties:', error)
-      const { data: fallbackData } = await supabase
-        .from('properties')
-        .select('*, localities!inner(name, slug, city)')
-        .eq('status', 'approved')
-        .order('created_at', { ascending: false })
-        .limit(200)
-      const sortedFallback = sortPropertiesGlobalPreference(fallbackData || [], queryStr, localityStr, activeFilters.property_type || activeFilters.listing_type)
+      const sortedFallback = sortPropertiesGlobalPreference(FALLBACK_VERIFIED_PROPERTIES, queryStr, localityStr, activeFilters.property_type || activeFilters.listing_type)
       setProperties(sortedFallback)
     } finally {
       setLoading(false)

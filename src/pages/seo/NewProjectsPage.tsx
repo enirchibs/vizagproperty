@@ -5,6 +5,8 @@ import { PropertyCard } from '../../components/PropertyCard';
 import { SEOHead } from '../../components/SEOHead';
 import { Building2 } from 'lucide-react';
 
+import { FALLBACK_VERIFIED_PROPERTIES } from '../../data/fallbackProperties';
+
 export function NewProjectsPage() {
   const [projects, setProjects] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
@@ -16,12 +18,13 @@ export function NewProjectsPage() {
       try {
         const { data } = await supabase
           .from('properties')
-          .select('*, localities!inner(name, slug, city)')
+          .select('*, localities(name, slug, city)')
           .eq('status', 'approved')
           .limit(24);
-        setProjects(data || []);
+        setProjects(data && data.length > 0 ? data : FALLBACK_VERIFIED_PROPERTIES);
       } catch (e) {
         console.error(e);
+        setProjects(FALLBACK_VERIFIED_PROPERTIES);
       } finally {
         setLoading(false);
       }

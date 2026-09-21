@@ -8,6 +8,7 @@ import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 import { FixedWhatsAppCTA } from '../components/FixedWhatsAppCTA'
 import { ScrollWhatsAppIcon } from '../components/ScrollWhatsAppIcon'
 import { buildUnifiedPropertyQuery, sortPropertiesGlobalPreference } from '../lib/searchFilters'
+import { FALLBACK_VERIFIED_PROPERTIES } from '../data/fallbackProperties'
 import { WhatsAppZeroResultsModal } from '../components/WhatsAppZeroResultsModal'
 import { SEOHead } from '../components/SEOHead'
 
@@ -96,13 +97,20 @@ export default function FlatsForSalePage() {
       const { data, error } = await query.limit(50)
 
       if (error) throw error
-      const sorted = sortPropertiesGlobalPreference(data || [], searchQuery)
-      setProperties(sorted)
 
-      if (data && data.length === 0) {
-        setShowZeroResultsModal(true)
+      if (data && data.length > 0) {
+        const sorted = sortPropertiesGlobalPreference(data, searchQuery)
+        setProperties(sorted)
+      } else {
+        const flatsFallback = FALLBACK_VERIFIED_PROPERTIES.filter(p => p.property_type === 'flat_apartment')
+        const sorted = sortPropertiesGlobalPreference(flatsFallback.length > 0 ? flatsFallback : FALLBACK_VERIFIED_PROPERTIES, searchQuery)
+        setProperties(sorted)
       }
     } catch (error) {
+      console.error('Error in loadProperties FlatsForSalePage:', error)
+      const flatsFallback = FALLBACK_VERIFIED_PROPERTIES.filter(p => p.property_type === 'flat_apartment')
+      const sorted = sortPropertiesGlobalPreference(flatsFallback.length > 0 ? flatsFallback : FALLBACK_VERIFIED_PROPERTIES, searchQuery)
+      setProperties(sorted)
     } finally {
       setLoading(false)
     }

@@ -46,7 +46,7 @@ export interface Property {
   bedrooms?: number
   bathrooms?: number
   area_sqft: number
-  locality_id: string
+  locality_id?: string
   location?: string
   city?: string
   state?: string

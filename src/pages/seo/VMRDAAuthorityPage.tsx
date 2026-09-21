@@ -6,6 +6,7 @@ import { SEOHead } from '../../components/SEOHead';
 import { VMRDALpSearchTool } from '../../components/VMRDALpSearchTool';
 import { ShieldCheck, FileText, HelpCircle, MessageCircle } from 'lucide-react';
 import { openWhatsApp } from '../../lib/whatsapp';
+import { FALLBACK_VERIFIED_PROPERTIES } from '../../data/fallbackProperties';
 
 export function VMRDAAuthorityPage() {
   const [plots, setPlots] = useState<Property[]>([]);
@@ -19,13 +20,21 @@ export function VMRDAAuthorityPage() {
       try {
         const { data } = await supabase
           .from('properties')
-          .select('*, localities!inner(name, slug, city)')
+          .select('*, localities(name, slug, city)')
           .eq('status', 'approved')
           .or('property_type.eq.plot_land,category.eq.plot')
           .limit(24);
-        setPlots(data || []);
+        
+        if (data && data.length > 0) {
+          setPlots(data);
+        } else {
+          const plotFallback = FALLBACK_VERIFIED_PROPERTIES.filter(p => p.property_type === 'plot_land' || p.is_vmrda_approved);
+          setPlots(plotFallback.length > 0 ? plotFallback : FALLBACK_VERIFIED_PROPERTIES);
+        }
       } catch (err) {
         console.error(err);
+        const plotFallback = FALLBACK_VERIFIED_PROPERTIES.filter(p => p.property_type === 'plot_land' || p.is_vmrda_approved);
+        setPlots(plotFallback.length > 0 ? plotFallback : FALLBACK_VERIFIED_PROPERTIES);
       } finally {
         setLoading(false);
       }

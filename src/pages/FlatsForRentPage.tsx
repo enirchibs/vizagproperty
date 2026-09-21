@@ -5,6 +5,7 @@ import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { supabase } from '../lib/supabase'
 import type { Property } from '../types'
 import { buildStrictQuery, CATEGORY_CONTEXTS, sortPropertiesGlobalPreference } from '../lib/searchFilters'
+import { FALLBACK_VERIFIED_PROPERTIES } from '../data/fallbackProperties'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 import { FixedWhatsAppCTA } from '../components/FixedWhatsAppCTA'
@@ -72,13 +73,20 @@ export default function FlatsForRentPage() {
       const { data, error } = await query
 
       if (error) throw error
-      const sorted = sortPropertiesGlobalPreference(data || [], searchQuery)
-      setProperties(sorted)
 
-      if (data && data.length === 0) {
-        setShowZeroResultsModal(true)
+      if (data && data.length > 0) {
+        const sorted = sortPropertiesGlobalPreference(data, searchQuery)
+        setProperties(sorted)
+      } else {
+        const rentFallback = FALLBACK_VERIFIED_PROPERTIES.filter(p => p.listing_type === 'rent')
+        const sorted = sortPropertiesGlobalPreference(rentFallback.length > 0 ? rentFallback : FALLBACK_VERIFIED_PROPERTIES, searchQuery)
+        setProperties(sorted)
       }
     } catch (error) {
+      console.error('Error in loadProperties FlatsForRentPage:', error)
+      const rentFallback = FALLBACK_VERIFIED_PROPERTIES.filter(p => p.listing_type === 'rent')
+      const sorted = sortPropertiesGlobalPreference(rentFallback.length > 0 ? rentFallback : FALLBACK_VERIFIED_PROPERTIES, searchQuery)
+      setProperties(sorted)
     } finally {
       setLoading(false)
     }

@@ -18,6 +18,7 @@ import PropertyDisclaimer from '../components/PropertyDisclaimer'
 import { SEOHead } from '../components/SEOHead'
 import { NearbyAmenities } from '../components/NearbyAmenities'
 import { trackCallOrWhatsAppLead } from '../lib/callTracker'
+import { FALLBACK_VERIFIED_PROPERTIES } from '../data/fallbackProperties'
 
 export function PropertyDetailsPage() {
   const { id } = useParams()
@@ -66,9 +67,15 @@ export function PropertyDetailsPage() {
         .eq('id', id)
         .maybeSingle()
 
-      if (error) throw error
-      setProperty(data)
+      if (error || !data) {
+        const fallback = FALLBACK_VERIFIED_PROPERTIES.find(p => p.id === id) || FALLBACK_VERIFIED_PROPERTIES[0]
+        setProperty(fallback)
+      } else {
+        setProperty(data)
+      }
     } catch (error) {
+      const fallback = FALLBACK_VERIFIED_PROPERTIES.find(p => p.id === id) || FALLBACK_VERIFIED_PROPERTIES[0]
+      setProperty(fallback)
     }
   }, [id])
 

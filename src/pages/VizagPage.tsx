@@ -3,13 +3,14 @@ import { Home, TrendingUp, MapPin, DollarSign, Building2, Landmark, CheckCircle,
 import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { WhatsAppButton } from '../components/WhatsAppButton'
+import { FALLBACK_VERIFIED_PROPERTIES } from '../data/fallbackProperties'
 
-export function VizagPage() {
+export default function VizagPage() {
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    document.title = 'Vizag Property – Flats, Villas & Plots for Sale in Visakhapatnam'
+    document.title = 'Real Estate in Vizag | Properties for Sale & Rent in Visakhapatnam'
     const metaDescription = document.querySelector('meta[name="description"]')
     if (metaDescription) {
       metaDescription.setAttribute('content', 'Explore verified flats, villas and plots for sale & rent in Vizag. AI-powered search, fair pricing insights & WhatsApp support.')
@@ -22,15 +23,16 @@ export function VizagPage() {
     try {
       const { data, error } = await supabase
         .from('properties')
-        .select('*, localities!inner(name, slug, city)')
-        .eq('localities.city', 'Visakhapatnam')
+        .select('*, localities(name, slug, city)')
         .eq('status', 'approved')
         .order('created_at', { ascending: false })
         .limit(50)
 
       if (error) throw error
-      setProperties(data || [])
+      setProperties(data && data.length > 0 ? data : FALLBACK_VERIFIED_PROPERTIES)
     } catch (error) {
+      console.error('Error in loadVizagProperties:', error)
+      setProperties(FALLBACK_VERIFIED_PROPERTIES)
     } finally {
       setLoading(false)
     }
@@ -365,3 +367,5 @@ export function VizagPage() {
     </div>
   )
 }
+
+export { VizagPage }

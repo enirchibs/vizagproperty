@@ -6,6 +6,7 @@ import { CategorySiloBar } from '../../components/CategorySiloBar';
 import { PropertyCard } from '../../components/PropertyCard';
 import { SEOHead } from '../../components/SEOHead';
 import { sortPropertiesGlobalPreference } from '../../lib/searchFilters';
+import { FALLBACK_VERIFIED_PROPERTIES } from '../../data/fallbackProperties';
 import { openWhatsApp } from '../../lib/whatsapp';
 import { Building2, ArrowRight, MessageCircle, Phone } from 'lucide-react';
 import { VIZAG_PROPERTY_PHONE_WITH_CODE } from '../../config/contact';
@@ -293,7 +294,7 @@ export function HubLandingPage() {
       try {
         let query = supabase
           .from('properties')
-          .select('*, localities!inner(name, slug, city)')
+          .select('*, localities(name, slug, city)')
           .eq('status', 'approved')
           .order('created_at', { ascending: false })
           .limit(40);
@@ -316,25 +317,21 @@ export function HubLandingPage() {
         if (error) throw error;
         
         let fetchedProps = data || [];
-        if (fetchedProps.length < 4) {
-          const { data: fallbackData } = await supabase
-            .from('properties')
-            .select('*, localities!inner(name, slug, city)')
-            .eq('status', 'approved')
-            .limit(20);
-          fetchedProps = fallbackData || [];
+        if (fetchedProps.length === 0) {
+          fetchedProps = FALLBACK_VERIFIED_PROPERTIES;
         }
 
         setProperties(sortPropertiesGlobalPreference(fetchedProps));
       } catch (err) {
         console.error('Hub load error:', err);
+        setProperties(sortPropertiesGlobalPreference(FALLBACK_VERIFIED_PROPERTIES));
       } finally {
         setLoading(false);
       }
     }
 
     loadHubData();
-  }, [config]);
+  }, [config.categoryFilter, config.listingTypeFilter]);
 
   const schema = [
     {

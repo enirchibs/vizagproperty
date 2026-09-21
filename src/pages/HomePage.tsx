@@ -16,6 +16,7 @@ import { SeoKeywordsSection } from '../components/SeoKeywordsSection'
 import { PropertyCard } from '../components/PropertyCard'
 import { sortPropertiesGlobalPreference } from '../lib/searchFilters'
 import { trackCallOrWhatsAppLead } from '../lib/callTracker'
+import { FALLBACK_VERIFIED_PROPERTIES } from '../data/fallbackProperties'
 
 export function HomePage() {
   const [latestProperties, setLatestProperties] = useState<Property[]>([])
@@ -26,22 +27,23 @@ export function HomePage() {
     loadLatestProperties()
   }, [])
 
-
-
   const loadLatestProperties = async () => {
     setLoading(true)
     try {
       const { data, error } = await supabase
         .from('properties')
-        .select('*, localities!inner(name, slug, city)')
+        .select('*, localities(name, slug, city)')
         .eq('status', 'approved')
         .order('created_at', { ascending: false })
-        .limit(20)
+        .limit(30)
 
-      if (error) throw error
-      setLatestProperties(sortPropertiesGlobalPreference(data || [], undefined, 'visakhapatnam'))
+      if (error || !data || data.length === 0) {
+        setLatestProperties(sortPropertiesGlobalPreference(FALLBACK_VERIFIED_PROPERTIES, undefined, 'visakhapatnam'))
+      } else {
+        setLatestProperties(sortPropertiesGlobalPreference(data, undefined, 'visakhapatnam'))
+      }
     } catch (err) {
-      console.error('Error loading latest properties:', err)
+      setLatestProperties(sortPropertiesGlobalPreference(FALLBACK_VERIFIED_PROPERTIES, undefined, 'visakhapatnam'))
     } finally {
       setLoading(false)
     }

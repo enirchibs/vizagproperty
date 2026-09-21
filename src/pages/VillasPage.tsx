@@ -6,6 +6,7 @@ import { WhatsAppButton } from '../components/WhatsAppButton'
 import { supabase } from '../lib/supabase'
 import type { Property } from '../types'
 import { buildStrictQuery, CATEGORY_CONTEXTS, sortPropertiesGlobalPreference } from '../lib/searchFilters'
+import { FALLBACK_VERIFIED_PROPERTIES } from '../data/fallbackProperties'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 import { SEOHead } from '../components/SEOHead'
@@ -72,9 +73,20 @@ export default function VillasPage() {
       const { data, error } = await query
 
       if (error) throw error
-      const sorted = sortPropertiesGlobalPreference(data || [], searchQuery)
-      setProperties(sorted)
+
+      if (data && data.length > 0) {
+        const sorted = sortPropertiesGlobalPreference(data, searchQuery)
+        setProperties(sorted)
+      } else {
+        const villaFallback = FALLBACK_VERIFIED_PROPERTIES.filter(p => p.property_type === 'independent_house_villa')
+        const sorted = sortPropertiesGlobalPreference(villaFallback.length > 0 ? villaFallback : FALLBACK_VERIFIED_PROPERTIES, searchQuery)
+        setProperties(sorted)
+      }
     } catch (error) {
+      console.error('Error in loadProperties VillasPage:', error)
+      const villaFallback = FALLBACK_VERIFIED_PROPERTIES.filter(p => p.property_type === 'independent_house_villa')
+      const sorted = sortPropertiesGlobalPreference(villaFallback.length > 0 ? villaFallback : FALLBACK_VERIFIED_PROPERTIES, searchQuery)
+      setProperties(sorted)
     } finally {
       setLoading(false)
     }

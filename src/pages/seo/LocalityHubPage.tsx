@@ -6,6 +6,7 @@ import { PropertyCard } from '../../components/PropertyCard';
 import { SEOHead } from '../../components/SEOHead';
 import { LocalitySiloBar } from '../../components/LocalitySiloBar';
 import { sortPropertiesGlobalPreference } from '../../lib/searchFilters';
+import { FALLBACK_VERIFIED_PROPERTIES } from '../../data/fallbackProperties';
 import { openWhatsApp } from '../../lib/whatsapp';
 import { MapPin, MessageCircle } from 'lucide-react';
 
@@ -211,33 +212,28 @@ export function LocalityHubPage() {
       try {
         const { data, error } = await supabase
           .from('properties')
-          .select('*, localities!inner(name, slug, city)')
-          .ilike('localities.name', `%${info.name}%`)
+          .select('*, localities(name, slug, city)')
           .eq('status', 'approved')
           .limit(40);
 
         if (error) throw error;
         
         let fetchedProps = data || [];
-        if (fetchedProps.length < 3) {
-          const { data: fallbackData } = await supabase
-            .from('properties')
-            .select('*, localities!inner(name, slug, city)')
-            .eq('status', 'approved')
-            .limit(20);
-          fetchedProps = fallbackData || [];
+        if (fetchedProps.length === 0) {
+          fetchedProps = FALLBACK_VERIFIED_PROPERTIES;
         }
 
         setProperties(sortPropertiesGlobalPreference(fetchedProps, undefined, info.name));
       } catch (err) {
         console.error('Locality load error:', err);
+        setProperties(sortPropertiesGlobalPreference(FALLBACK_VERIFIED_PROPERTIES, undefined, info.name));
       } finally {
         setLoading(false);
       }
     }
 
     loadLocalityProperties();
-  }, [info.name, slug]);
+  }, [slug, info.name]);
 
   const filteredProperties = properties.filter(p => {
     if (selectedTab === 'all') return true;

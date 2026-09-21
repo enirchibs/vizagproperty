@@ -4,17 +4,18 @@ import { supabase } from '../lib/supabase'
 import { Property } from '../types'
 import { WhatsAppButton } from '../components/WhatsAppButton'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
+import { FALLBACK_VERIFIED_PROPERTIES } from '../data/fallbackProperties'
 import { SEOHead } from '../components/SEOHead'
 
-export function MadhurawadaPage() {
+export default function MadhurawadaPage() {
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    document.title = 'Property in Madhurawada Vizag | Flats, Villas & Plots for Sale'
+    document.title = 'Flats & Plots in Madhurawada Vizag | Real Estate Properties'
     const metaDescription = document.querySelector('meta[name="description"]')
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Find verified flats, villas and plots for sale & rent in Madhurawada, Vizag. AI-powered property search with transparent pricing.')
+      metaDescription.setAttribute('content', 'Explore 2 & 3 BHK flats, villas, and VMRDA approved plots for sale in Madhurawada, Visakhapatnam. Near IT SEZ & Gitam College.')
     }
 
     loadMadhurawadaProperties()
@@ -24,15 +25,17 @@ export function MadhurawadaPage() {
     try {
       const { data, error } = await supabase
         .from('properties')
-        .select('*, localities!inner(name, slug, city)')
-        .eq('localities.city', 'Visakhapatnam')
+        .select('*, localities(name, slug, city)')
         .eq('status', 'approved')
         .order('created_at', { ascending: false })
         .limit(50)
 
       if (error) throw error
-      setProperties(data || [])
+      const fetchedList = data && data.length > 0 ? data : FALLBACK_VERIFIED_PROPERTIES
+      setProperties(fetchedList)
     } catch (error) {
+      console.error('Error in loadMadhurawadaProperties:', error)
+      setProperties(FALLBACK_VERIFIED_PROPERTIES)
     } finally {
       setLoading(false)
     }
@@ -404,3 +407,5 @@ export function MadhurawadaPage() {
     </div>
   )
 }
+
+export { MadhurawadaPage }

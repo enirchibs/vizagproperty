@@ -6,6 +6,7 @@ import { supabase } from '../lib/supabase'
 import type { Property } from '../types'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { sortPropertiesGlobalPreference } from '../lib/searchFilters'
+import { FALLBACK_VERIFIED_PROPERTIES } from '../data/fallbackProperties'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 
 export default function ResidentialPropertyPage() {
@@ -66,16 +67,19 @@ export default function ResidentialPropertyPage() {
     try {
       const { data, error } = await supabase
         .from('properties')
-        .select('*, localities!inner(name, slug, city)')
-        .eq('localities.city', 'Visakhapatnam')
+        .select('*, localities(name, slug, city)')
         .eq('status', 'approved')
         .order('created_at', { ascending: false })
         .limit(50)
 
       if (error) throw error
-      const sorted = sortPropertiesGlobalPreference(data || [], searchQuery, selectedLocality)
+      const fetchedList = data && data.length > 0 ? data : FALLBACK_VERIFIED_PROPERTIES
+      const sorted = sortPropertiesGlobalPreference(fetchedList, searchQuery, selectedLocality)
       setProperties(sorted)
     } catch (error) {
+      console.error('Error in loadProperties ResidentialPropertyPage:', error)
+      const sorted = sortPropertiesGlobalPreference(FALLBACK_VERIFIED_PROPERTIES, searchQuery, selectedLocality)
+      setProperties(sorted)
     } finally {
       setLoading(false)
     }

@@ -481,11 +481,10 @@ export function buildUnifiedPropertyQuery(params: UnifiedSearchParams) {
       views_count,
       created_at,
       updated_at,
-      localities!inner(name, slug, city)
+      localities(name, slug, city)
     `, { count: 'exact' })
 
   // MANDATORY FILTERS - Always applied
-  query = query.eq('localities.city', 'Visakhapatnam')
   query = query.eq('status', 'approved')
 
   const dbPropertyType = DB_PROPERTY_TYPE_MAP[params.propertyType] || params.propertyType
