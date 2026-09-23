@@ -327,6 +327,31 @@ export function getLocalityContextById(localityId: string): CategoryContext {
   }
 }
 
+export const PUBLIC_LISTING_FIELDS = `
+  id,
+  title,
+  description,
+  price,
+  property_type,
+  listing_type,
+  category,
+  bedrooms,
+  bathrooms,
+  area_sqft,
+  location,
+  city,
+  images,
+  status,
+  featured,
+  verified,
+  is_vmrda_approved,
+  agent_name,
+  agent_phone,
+  agent_whatsapp,
+  created_at,
+  localities(name, slug, city)
+`
+
 // Build Supabase query with strict filters
 export function buildStrictQuery(
   supabase: SupabaseClient,
@@ -336,7 +361,7 @@ export function buildStrictQuery(
 ) {
   let query = supabase
     .from('properties')
-    .select('*')
+    .select(PUBLIC_LISTING_FIELDS)
 
   // Apply immutable category filters FIRST (cannot be overridden)
   const immutableFilters = categoryContext?.immutable_filters || {}
@@ -450,39 +475,7 @@ export interface UnifiedSearchParams {
 export function buildUnifiedPropertyQuery(params: UnifiedSearchParams) {
   let query = supabase
     .from('properties')
-    .select(`
-      id,
-      title,
-      description,
-      category,
-      property_type,
-      listing_type,
-      price,
-      bedrooms,
-      bathrooms,
-      area_sqft,
-      locality_id,
-      location,
-      city,
-      state,
-      pincode,
-      latitude,
-      longitude,
-      amenities,
-      images,
-      video_url,
-      status,
-      featured,
-      verified,
-      owner_id,
-      agent_name,
-      agent_phone,
-      agent_whatsapp,
-      views_count,
-      created_at,
-      updated_at,
-      localities(name, slug, city)
-    `, { count: 'exact' })
+    .select(PUBLIC_LISTING_FIELDS, { count: 'exact' })
 
   // MANDATORY FILTERS - Always applied
   query = query.eq('status', 'approved')

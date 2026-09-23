@@ -5,6 +5,8 @@ import { Property } from '../types'
 import { WhatsAppButton } from '../components/WhatsAppButton'
 import { FALLBACK_VERIFIED_PROPERTIES } from '../data/fallbackProperties'
 
+import { PUBLIC_LISTING_FIELDS } from '../lib/searchFilters'
+
 export default function VizagPage() {
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
@@ -23,10 +25,10 @@ export default function VizagPage() {
     try {
       const { data, error } = await supabase
         .from('properties')
-        .select('*, localities(name, slug, city)')
+        .select(PUBLIC_LISTING_FIELDS)
         .eq('status', 'approved')
         .order('created_at', { ascending: false })
-        .limit(50)
+        .limit(20)
 
       if (error) throw error
       setProperties(data && data.length > 0 ? data : FALLBACK_VERIFIED_PROPERTIES)

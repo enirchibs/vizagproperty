@@ -5,7 +5,7 @@ import { Property } from '../../types';
 import { PropertyCard } from '../../components/PropertyCard';
 import { SEOHead } from '../../components/SEOHead';
 import { LocalitySiloBar } from '../../components/LocalitySiloBar';
-import { sortPropertiesGlobalPreference } from '../../lib/searchFilters';
+import { sortPropertiesGlobalPreference, PUBLIC_LISTING_FIELDS } from '../../lib/searchFilters';
 import { FALLBACK_VERIFIED_PROPERTIES } from '../../data/fallbackProperties';
 import { openWhatsApp } from '../../lib/whatsapp';
 import { MapPin, MessageCircle } from 'lucide-react';
@@ -212,13 +212,13 @@ export function LocalityHubPage() {
       try {
         const { data, error } = await supabase
           .from('properties')
-          .select('*, localities(name, slug, city)')
+          .select(PUBLIC_LISTING_FIELDS)
           .eq('status', 'approved')
-          .limit(40);
+          .limit(20);
 
         if (error) throw error;
         
-        let fetchedProps = data || [];
+        let fetchedProps: Property[] = (data as unknown as Property[]) || [];
         if (fetchedProps.length === 0) {
           fetchedProps = FALLBACK_VERIFIED_PROPERTIES;
         }

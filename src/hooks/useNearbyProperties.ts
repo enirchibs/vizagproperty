@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { getLastSearch } from '../lib/searchMemory'
 import { Property } from '../types'
+import { PUBLIC_LISTING_FIELDS } from '../lib/searchFilters'
 
 interface LocationSource {
   type: 'last_search' | 'geolocation' | 'default'
@@ -160,7 +161,7 @@ export function useNearbyProperties() {
     try {
       const { data, error } = await supabase
         .from('properties')
-        .select('*')
+        .select(PUBLIC_LISTING_FIELDS)
         .eq('status', 'approved')
         .eq('locality_id', localityId)
         .order('created_at', { ascending: false })

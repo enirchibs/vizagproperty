@@ -7,6 +7,7 @@ import { VMRDALpSearchTool } from '../../components/VMRDALpSearchTool';
 import { ShieldCheck, FileText, HelpCircle, MessageCircle } from 'lucide-react';
 import { openWhatsApp } from '../../lib/whatsapp';
 import { FALLBACK_VERIFIED_PROPERTIES } from '../../data/fallbackProperties';
+import { PUBLIC_LISTING_FIELDS } from '../../lib/searchFilters';
 
 export function VMRDAAuthorityPage() {
   const [plots, setPlots] = useState<Property[]>([]);
@@ -20,10 +21,10 @@ export function VMRDAAuthorityPage() {
       try {
         const { data } = await supabase
           .from('properties')
-          .select('*, localities(name, slug, city)')
+          .select(PUBLIC_LISTING_FIELDS)
           .eq('status', 'approved')
           .or('property_type.eq.plot_land,category.eq.plot')
-          .limit(24);
+          .limit(20);
         
         if (data && data.length > 0) {
           setPlots(data);

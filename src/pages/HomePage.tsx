@@ -14,7 +14,7 @@ import { SponsoredBanners } from '../components/SponsoredBanners'
 import { SeoKeywordsSection } from '../components/SeoKeywordsSection'
 
 import { PropertyCard } from '../components/PropertyCard'
-import { sortPropertiesGlobalPreference } from '../lib/searchFilters'
+import { sortPropertiesGlobalPreference, PUBLIC_LISTING_FIELDS } from '../lib/searchFilters'
 import { trackCallOrWhatsAppLead } from '../lib/callTracker'
 import { FALLBACK_VERIFIED_PROPERTIES } from '../data/fallbackProperties'
 
@@ -32,10 +32,10 @@ export function HomePage() {
     try {
       const { data, error } = await supabase
         .from('properties')
-        .select('*, localities(name, slug, city)')
+        .select(PUBLIC_LISTING_FIELDS)
         .eq('status', 'approved')
         .order('created_at', { ascending: false })
-        .limit(30)
+        .limit(12)
 
       if (error || !data || data.length === 0) {
         setLatestProperties(sortPropertiesGlobalPreference(FALLBACK_VERIFIED_PROPERTIES, undefined, 'visakhapatnam'))

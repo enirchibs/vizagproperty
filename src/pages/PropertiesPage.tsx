@@ -9,7 +9,7 @@ import { GoogleMapView } from '../components/GoogleMapView'
 import { AdSenseInFeedCard } from '../components/AdSenseInFeedCard'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
 import { openWhatsApp } from '../lib/whatsapp'
-import { sortPropertiesGlobalPreference } from '../lib/searchFilters'
+import { sortPropertiesGlobalPreference, PUBLIC_LISTING_FIELDS } from '../lib/searchFilters'
 import { FALLBACK_VERIFIED_PROPERTIES } from '../data/fallbackProperties'
 import { SEOHead } from '../components/SEOHead'
 
@@ -155,7 +155,7 @@ export function PropertiesPage() {
 
       let queryBuilder = supabase
         .from('properties')
-        .select('*, localities(name, slug, city)')
+        .select(PUBLIC_LISTING_FIELDS)
         .eq('status', 'approved')
 
       if (activeFilters.bedrooms && activeFilters.bedrooms > 0) {
@@ -172,10 +172,10 @@ export function PropertiesPage() {
 
       const { data, error } = await queryBuilder
         .order('created_at', { ascending: false })
-        .limit(200)
+        .limit(20)
 
       if (error) throw error
-      let fetchedList = data || []
+      let fetchedList: Property[] = (data as unknown as Property[]) || []
 
       if (fetchedList.length === 0) {
         fetchedList = FALLBACK_VERIFIED_PROPERTIES

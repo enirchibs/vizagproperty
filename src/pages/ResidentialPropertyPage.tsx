@@ -5,7 +5,7 @@ import { LocationAutocomplete } from '../components/LocationAutocomplete'
 import { supabase } from '../lib/supabase'
 import type { Property } from '../types'
 import { useVoiceSearch } from '../hooks/useVoiceSearch'
-import { sortPropertiesGlobalPreference } from '../lib/searchFilters'
+import { sortPropertiesGlobalPreference, PUBLIC_LISTING_FIELDS } from '../lib/searchFilters'
 import { FALLBACK_VERIFIED_PROPERTIES } from '../data/fallbackProperties'
 import { openWhatsApp, getWhatsAppLink } from '../lib/whatsapp'
 
@@ -67,10 +67,10 @@ export default function ResidentialPropertyPage() {
     try {
       const { data, error } = await supabase
         .from('properties')
-        .select('*, localities(name, slug, city)')
+        .select(PUBLIC_LISTING_FIELDS)
         .eq('status', 'approved')
         .order('created_at', { ascending: false })
-        .limit(50)
+        .limit(20)
 
       if (error) throw error
       const fetchedList = data && data.length > 0 ? data : FALLBACK_VERIFIED_PROPERTIES

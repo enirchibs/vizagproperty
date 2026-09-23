@@ -6,6 +6,7 @@ import { SEOHead } from '../../components/SEOHead';
 import { Building2 } from 'lucide-react';
 
 import { FALLBACK_VERIFIED_PROPERTIES } from '../../data/fallbackProperties';
+import { PUBLIC_LISTING_FIELDS } from '../../lib/searchFilters';
 
 export function NewProjectsPage() {
   const [projects, setProjects] = useState<Property[]>([]);
@@ -18,9 +19,9 @@ export function NewProjectsPage() {
       try {
         const { data } = await supabase
           .from('properties')
-          .select('*, localities(name, slug, city)')
+          .select(PUBLIC_LISTING_FIELDS)
           .eq('status', 'approved')
-          .limit(24);
+          .limit(20);
         setProjects(data && data.length > 0 ? data : FALLBACK_VERIFIED_PROPERTIES);
       } catch (e) {
         console.error(e);

@@ -5,7 +5,7 @@ import { Property } from '../../types';
 import { CategorySiloBar } from '../../components/CategorySiloBar';
 import { PropertyCard } from '../../components/PropertyCard';
 import { SEOHead } from '../../components/SEOHead';
-import { sortPropertiesGlobalPreference } from '../../lib/searchFilters';
+import { sortPropertiesGlobalPreference, PUBLIC_LISTING_FIELDS } from '../../lib/searchFilters';
 import { FALLBACK_VERIFIED_PROPERTIES } from '../../data/fallbackProperties';
 import { openWhatsApp } from '../../lib/whatsapp';
 import { Building2, ArrowRight, MessageCircle, Phone } from 'lucide-react';
@@ -294,10 +294,10 @@ export function HubLandingPage() {
       try {
         let query = supabase
           .from('properties')
-          .select('*, localities(name, slug, city)')
+          .select(PUBLIC_LISTING_FIELDS)
           .eq('status', 'approved')
           .order('created_at', { ascending: false })
-          .limit(40);
+          .limit(20);
 
         if (config.categoryFilter === 'plot') {
           query = query.or('property_type.eq.plot_land,category.eq.plot');
@@ -316,7 +316,7 @@ export function HubLandingPage() {
         const { data, error } = await query;
         if (error) throw error;
         
-        let fetchedProps = data || [];
+        let fetchedProps: Property[] = (data as unknown as Property[]) || [];
         if (fetchedProps.length === 0) {
           fetchedProps = FALLBACK_VERIFIED_PROPERTIES;
         }

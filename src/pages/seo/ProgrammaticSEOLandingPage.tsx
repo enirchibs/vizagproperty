@@ -4,6 +4,7 @@ import { supabase } from '../../lib/supabase';
 import { Property } from '../../types';
 import { PropertyCard } from '../../components/PropertyCard';
 import { SEOHead } from '../../components/SEOHead';
+import { PUBLIC_LISTING_FIELDS } from '../../lib/searchFilters';
 import { MapPin, Search, ArrowRight } from 'lucide-react';
 
 export function ProgrammaticSEOLandingPage() {
@@ -25,7 +26,7 @@ export function ProgrammaticSEOLandingPage() {
     async function fetchProperties() {
       setLoading(true);
       try {
-        let query = supabase.from('properties').select('*, localities(*)').eq('status', 'available').order('created_at', { ascending: false }).limit(12);
+        let query = supabase.from('properties').select(PUBLIC_LISTING_FIELDS).eq('status', 'approved').order('created_at', { ascending: false }).limit(12);
 
         // Very basic matching for demo purposes
         if (displayLocation.toLowerCase() !== 'vizag') {
